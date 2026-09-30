@@ -7,7 +7,7 @@ const storybook = require('eslint-plugin-storybook');
 
 module.exports = tseslint.config(
   {
-    ignores: ['dist/**', 'coverage/**', 'storybook-static/**', '.angular/**'],
+    ignores: ['dist/**', 'coverage/**', 'storybook-static/**', '.angular/**', 'out-tsc/**'],
   },
   {
     files: ['**/*.ts'],

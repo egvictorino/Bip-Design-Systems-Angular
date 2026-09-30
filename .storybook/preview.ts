@@ -1,4 +1,7 @@
 import type { Preview } from '@storybook/angular-vite';
+import { componentWrapperDecorator } from '@storybook/angular-vite';
+import { BRAND_PRESET_KEYS } from '../projects/bip-angular/foundations/brand-presets';
+import { BipStorybookThemeDecorator } from '../projects/bip-angular/foundations/theme-decorator.component';
 
 const preview: Preview = {
   parameters: {
@@ -12,7 +15,8 @@ const preview: Preview = {
       test: 'todo',
     },
   },
-  // Globals de theming: se activan (decorator real) a partir del Bloque 2.
+  // Globals de theming (Bloque 2) — el decorator de abajo envuelve cada story en
+  // <bip-theme-provider> leyendo estos valores del toolbar.
   globalTypes: {
     theme: {
       description: 'Tema',
@@ -55,7 +59,7 @@ const preview: Preview = {
       toolbar: {
         title: 'Brand',
         icon: 'paintbrush',
-        items: ['default'],
+        items: BRAND_PRESET_KEYS,
         dynamicTitle: true,
       },
     },
@@ -67,6 +71,15 @@ const preview: Preview = {
     dir: 'ltr',
     brand: 'default',
   },
+  decorators: [
+    componentWrapperDecorator(BipStorybookThemeDecorator, (storyContext) => ({
+      theme: storyContext.globals['theme'],
+      colorScheme: storyContext.globals['colorScheme'],
+      density: storyContext.globals['density'],
+      dir: storyContext.globals['dir'],
+      brand: storyContext.globals['brand'],
+    })),
+  ],
 };
 
 export default preview;

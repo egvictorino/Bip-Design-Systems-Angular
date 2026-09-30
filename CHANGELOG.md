@@ -10,6 +10,26 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Theming y puente de overlays (Bloque 2): `<bip-theme-provider>` y la directiva `[bipTheme]`
+  (misma lógica, `theme`/`colorScheme` como `model()` controlado/no-controlado con
+  `defaultTheme`/`defaultColorScheme`/`storageKey`; `density`/`dir`/`tokens`/`radius`/
+  `focusRing`/`motion`/`spacing`/`cssVars`; anidación con merge de vars y herencia de
+  density/dir; `colorScheme="system"` resuelto en vivo vía `matchMedia`, nunca estampado en
+  el DOM; integra un `Directionality` propio de `@angular/cdk/bidi`) en `core/theme`;
+  `provideBipTheme()` para defaults a nivel app; `injectThemeControls()`
+  (`setTheme`/`setColorScheme`/`toggleColorScheme`, no-op sin provider ancestro);
+  `getThemeInitScript()`/`THEME_RESET_STYLE` para anti-FOUC en SSR; mapas
+  `TOKEN_VAR_MAP`/`RADIUS_VAR_MAP`/`ON_TEXT_VAR_MAP`/`FOCUS_RING_VAR_MAP`/`MOTION_VAR_MAP`/
+  `SPACING_VAR_MAP` + `resolveVarMap()`/`resolveTokenVars()` (con contraste automático
+  `--color-txt-on-*` vía `pickReadableText()` y `console.warn` en dev si el contraste
+  resultante no alcanza WCAG AA). `BipOverlay` en `core/overlay`: wrapper de `Overlay` (CDK)
+  que estampa `data-theme`/`data-color-scheme`/`data-density`/`dir` + las CSS vars resueltas
+  del `<bip-theme-provider>` más cercano al llamador en el panel del overlay, pensado como el
+  único punto de creación de overlays para toda la librería. `@angular/cdk` agregado como
+  dependencia del workspace y peer dependency de `@bip-design-systems/angular`. Story
+  `Foundations/Theming` (Playground, SideBySide, PortalTheming, SystemColorScheme,
+  UncontrolledWithPersistence) y decorator global de Storybook que envuelve cada story en
+  `<bip-theme-provider>` leyendo los globals del toolbar.
 - Foundations (Bloque 1): hoja global `@bip-design-systems/angular/styles/bip.css` (tokens,
   primitives, themes, density, rtl, fonts, base) publicada vía ng-packagr `assets`; utilidades
   `contrastRatio()`/`pickReadableText()` y `BREAKPOINTS`/`mediaQuery()` en `core/utils`; tipos
