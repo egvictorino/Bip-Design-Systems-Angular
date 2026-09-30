@@ -40,6 +40,7 @@ const A11Y_REGISTRY: Record<string, string> = {
   select: 'BipSelect: <select> nativo (no listbox custom) — teclado/rol de combobox intactos; for/id, aria-invalid+aria-describedby igual que Input; chevron decorativo aria-hidden; placeholder es <option disabled> real, no un truco visual.',
   'number-input': 'BipNumberInput: role="spinbutton" + aria-valuenow/min/max; botones +/- con aria-label localizado y tabindex=-1 (no interrumpen el tab order del formulario); aria-invalid+aria-describedby igual que Input; flechas de teclado incrementan/decrementan con preventDefault.',
   'search-input': 'BipSearchInput: wrapper con role="search"; input[type=search] (rol searchbox nativo) con aria-invalid/aria-describedby/aria-busy igual que Input; ícono de búsqueda y spinner decorativos aria-hidden; botón de limpiar con aria-label localizado.',
+  slider: 'BipSlider: <input type="range"> nativo (rol slider, flechas de teclado nativas) — aria-invalid+aria-describedby igual que Input; el valor numérico junto al label es texto normal.',
 };
 
 /**

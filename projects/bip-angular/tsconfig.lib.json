@@ -35,7 +35,8 @@
     "toggle/**/*.ts",
     "select/**/*.ts",
     "number-input/**/*.ts",
-    "search-input/**/*.ts"
+    "search-input/**/*.ts",
+    "slider/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
