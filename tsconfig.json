@@ -9,7 +9,10 @@
       "@bip-design-systems/angular/container": ["./projects/bip-angular/container/index.ts"],
       "@bip-design-systems/angular/stack": ["./projects/bip-angular/stack/index.ts"],
       "@bip-design-systems/angular/grid": ["./projects/bip-angular/grid/index.ts"],
-      "@bip-design-systems/angular/divider": ["./projects/bip-angular/divider/index.ts"]
+      "@bip-design-systems/angular/divider": ["./projects/bip-angular/divider/index.ts"],
+      "@bip-design-systems/angular/text": ["./projects/bip-angular/text/index.ts"],
+      "@bip-design-systems/angular/heading": ["./projects/bip-angular/heading/index.ts"],
+      "@bip-design-systems/angular/link": ["./projects/bip-angular/link/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

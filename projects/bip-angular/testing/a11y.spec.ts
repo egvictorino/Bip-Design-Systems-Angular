@@ -19,6 +19,9 @@ const A11Y_REGISTRY: Record<string, string> = {
   stack: 'BipStack: sin semántica propia, solo layout — el elemento host la conserva.',
   grid: 'BipGrid: sin semántica propia, solo layout — el elemento host la conserva.',
   divider: 'BipDivider: role="separator" + aria-orientation (hr nativo cuando es horizontal sin label).',
+  text: 'BipText: sin semántica propia, solo tipografía — el elemento host la conserva.',
+  heading: 'BipHeading: infiere aria-level del tag h1-h6; añade role="heading"/aria-level cuando el host no es un tag de heading nativo.',
+  link: 'BipLink: aria-disabled+tabindex=-1 cuando disabled; hint accesible "abre en pestaña nueva" (bip-visually-hidden) cuando external.',
 };
 
 /**

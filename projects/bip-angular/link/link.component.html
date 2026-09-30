@@ -1,0 +1,19 @@
+<ng-content />
+@if (external()) {
+  <svg
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="bip-link-external-icon"
+    width="0.875em"
+    height="0.875em"
+    aria-hidden="true"
+  >
+    <path d="M6.5 3.5h6v6" />
+    <path d="M12.5 3.5 3.5 12.5" />
+  </svg>
+  <bip-visually-hidden> {{ locale().link.opensInNewTab }}</bip-visually-hidden>
+}
