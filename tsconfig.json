@@ -26,7 +26,8 @@
       "@bip-design-systems/angular/input": ["./projects/bip-angular/input/index.ts"],
       "@bip-design-systems/angular/textarea": ["./projects/bip-angular/textarea/index.ts"],
       "@bip-design-systems/angular/checkbox": ["./projects/bip-angular/checkbox/index.ts"],
-      "@bip-design-systems/angular/radio": ["./projects/bip-angular/radio/index.ts"]
+      "@bip-design-systems/angular/radio": ["./projects/bip-angular/radio/index.ts"],
+      "@bip-design-systems/angular/toggle": ["./projects/bip-angular/toggle/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

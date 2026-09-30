@@ -36,6 +36,7 @@ const A11Y_REGISTRY: Record<string, string> = {
   textarea: 'BipTextarea: for/id entre label y textarea; aria-invalid solo con error explícito o NgControl inválido+tocado; aria-describedby al helper/error (role="alert" en error); contador de caracteres es texto normal (no necesita anuncio por cada tecla).',
   checkbox: 'BipCheckbox: checkbox nativo real (input type=checkbox) bajo un box visual — teclado/rol nativos intactos; aria-invalid+aria-describedby igual que Input; indeterminate seteado vía viewChild (propiedad DOM, no atributo). BipCheckboxGroup: <fieldset>+<legend>, aria-describedby al helper/error; cascada size/disabled/error a los checkboxes hijos vía inject(optional), sin defaults silenciosos erróneos (el hijo puede sobreescribir cualquiera explícitamente).',
   radio: 'BipRadio: radio nativo real bajo un ring visual, mismo name compartido vía BipRadioGroup (exclusividad nativa, navegación con flechas del navegador); a propósito NO lleva aria-invalid (regla del CLAUDE.md) — el error se comunica vía aria-describedby del <fieldset> del grupo al mensaje. inject(BipRadioGroup) sin optional lanza si se usa fuera del grupo (compound component, sin default silencioso). BipRadioGroup es ControlValueAccessor (el valor seleccionado vive en el grupo, no en cada radio).',
+  toggle: 'BipToggle: input[type=checkbox] nativo con role="switch" bajo un track/thumb visual — aria-invalid+aria-describedby igual que Checkbox; el thumb decorativo es aria-hidden.',
 };
 
 /**
