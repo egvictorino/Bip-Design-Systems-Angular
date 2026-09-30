@@ -1,0 +1,51 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "pnpm"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "bip-angular": {
+      "projectType": "library",
+      "root": "projects/bip-angular",
+      "sourceRoot": "projects/bip-angular/src",
+      "prefix": "bip",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/bip-angular/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/bip-angular/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/bip-angular/tsconfig.spec.json",
+            "setupFiles": ["projects/bip-angular/src/test-setup.ts"]
+          }
+        },
+        "storybook": {
+          "builder": "@storybook/angular-vite:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular-vite:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "outputDir": "storybook-static"
+          }
+        }
+      }
+    }
+  }
+}

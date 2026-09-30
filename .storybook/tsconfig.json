@@ -1,0 +1,15 @@
+{
+  "extends": "../projects/bip-angular/tsconfig.lib.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
+  },
+  "exclude": ["../projects/bip-angular/**/*.spec.ts"],
+  "include": [
+    "../projects/bip-angular/**/*.ts",
+    "../projects/bip-angular/**/*.stories.*",
+    "./preview.ts"
+  ],
+  "files": ["./typings.d.ts"]
+}
