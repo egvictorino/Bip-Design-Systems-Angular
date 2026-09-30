@@ -21,7 +21,8 @@
       "@bip-design-systems/angular/empty-state": ["./projects/bip-angular/empty-state/index.ts"],
       "@bip-design-systems/angular/card": ["./projects/bip-angular/card/index.ts"],
       "@bip-design-systems/angular/stats-card": ["./projects/bip-angular/stats-card/index.ts"],
-      "@bip-design-systems/angular/alert": ["./projects/bip-angular/alert/index.ts"]
+      "@bip-design-systems/angular/alert": ["./projects/bip-angular/alert/index.ts"],
+      "@bip-design-systems/angular/button": ["./projects/bip-angular/button/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

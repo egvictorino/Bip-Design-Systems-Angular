@@ -48,7 +48,8 @@
               "../empty-state/**/*.spec.ts",
               "../card/**/*.spec.ts",
               "../stats-card/**/*.spec.ts",
-              "../alert/**/*.spec.ts"
+              "../alert/**/*.spec.ts",
+              "../button/**/*.spec.ts"
             ]
           }
         },

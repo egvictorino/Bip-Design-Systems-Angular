@@ -28,6 +28,7 @@
     "empty-state/**/*.ts",
     "card/**/*.ts",
     "stats-card/**/*.ts",
-    "alert/**/*.ts"
+    "alert/**/*.ts",
+    "button/**/*.ts"
   ]
 }
