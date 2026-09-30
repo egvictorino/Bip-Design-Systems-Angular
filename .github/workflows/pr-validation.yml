@@ -1,0 +1,93 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  branch-check:
+    name: Branch flow check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR target branch
+        run: |
+          TARGET="${{ github.base_ref }}"
+          SOURCE="${{ github.head_ref }}"
+
+          echo "📋 PR: $SOURCE → $TARGET"
+
+          if [[ "$TARGET" == "main" ]] && [[ "$SOURCE" != "qa" ]] && [[ "$SOURCE" != "hotfix/"* ]]; then
+            echo "❌ ERROR: Solo se puede mergear a 'main' desde 'qa' o 'hotfix/*'"
+            echo "Debe ser: qa → main  |  hotfix/* → main"
+            exit 1
+          fi
+
+          if [[ "$TARGET" == "qa" ]] && [[ "$SOURCE" != "dev" ]] && [[ "$SOURCE" != "hotfix/"* ]] && [[ "$SOURCE" != "main" ]]; then
+            echo "❌ ERROR: Solo se puede mergear a 'qa' desde 'dev', 'hotfix/*' o 'main'"
+            echo "Debe ser: dev → qa  |  hotfix/* → qa  |  main → qa"
+            exit 1
+          fi
+
+          if [[ "$TARGET" == "dev" ]] && [[ "$SOURCE" != "feature/"* ]] && [[ "$SOURCE" != "hotfix/"* ]] && [[ "$SOURCE" != "main" ]]; then
+            echo "❌ ERROR: Solo se puede mergear a 'dev' desde 'feature/*', 'hotfix/*' o 'main'"
+            echo "Debe ser: feature/* → dev  |  hotfix/* → dev  |  main → dev"
+            exit 1
+          fi
+
+          echo "✅ Flujo de branches correcto"
+
+  build-and-test:
+    name: Build & Test PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9.15.9
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  changeset-check:
+    name: Changeset Check
+    runs-on: ubuntu-latest
+    if: github.base_ref == 'dev'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9.15.9
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for a changeset
+        run: |
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" -- 'projects/bip-angular/**/src/**' | grep -q .; then
+            pnpm exec changeset status --since="origin/${{ github.base_ref }}"
+          else
+            echo "No hay cambios bajo projects/bip-angular/**/src — no se requiere changeset."
+          fi

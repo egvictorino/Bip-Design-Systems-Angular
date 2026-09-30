@@ -29,8 +29,8 @@ dependencia:
 
 | Área | Elección |
 |---|---|
-| Framework | Angular última estable (verificar con `npm view @angular/core version` en Bloque 0; mínimo v20) |
-| Package manager | pnpm (≥ 9), Node LTS que exija esa versión de Angular |
+| Framework | **Angular 21** (`^21.2.0`). Decisión explícita del dueño del repo (2026-09-30): se fija esta major, en vez de seguir siempre "última estable", para que este repo y el resto de sus proyectos Angular queden en el mismo canal de versión. No actualizar a Angular 22+ sin decisión explícita — actualizar es trabajo de un `feature/deps-*` aparte, no un efecto colateral de tocar un bloque |
+| Package manager | pnpm (≥ 9), Node **22 LTS** (Angular 21 exige `^20.19.0 \|\| ^22.12.0 \|\| >=24.0.0`; usar [nvm](https://github.com/nvm-sh/nvm) — `nvm install 22 && nvm alias default 22` — si el Node del sistema es v21.x u otro no soportado) |
 | Build librería | Angular CLI + **ng-packagr** (Angular Package Format), ES2022, FESM |
 | Componentes | **Standalone**, `ChangeDetectionStrategy.OnPush`, **signals** (`input()`, `input.required()`, `output()`, `model()`, `computed()`, `effect()`), control flow `@if/@for/@switch`. Sin NgModules. Deben funcionar **con y sin zone.js** (zoneless) |
 | Primitivas | **@angular/cdk**: Overlay, Portal, A11y (FocusTrap, ListKeyManager, FocusMonitor, LiveAnnouncer), Bidi (Directionality), Layout (BreakpointObserver), ScrollStrategies |
@@ -257,7 +257,7 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 
 ## Estado de bloques
 
-- [ ] Bloque 0 — Bootstrap del workspace y tooling
+- [x] Bloque 0 — Bootstrap del workspace y tooling
 - [ ] Bloque 1 — Foundations: tokens, estilos globales y guards
 - [ ] Bloque 2 — Theming y puente de overlays
 - [ ] Bloque 3 — i18n, utilidades y primitivas de a11y
@@ -290,15 +290,18 @@ contrast-tokens, css-comment-balance, no-hardcoded-strings, a11y coverage, compo
 visual Docker · a11y en navegador · e2e del tarball · Changesets · 6 workflows
 (**sin** `dependabot.yml` — excluido a propósito, ver Bloque 12).
 
-## Comandos (se completan al terminar el Bloque 0)
+## Comandos
 
 ```bash
 pnpm install
-pnpm build            # ng-packagr → dist/bip-angular
-pnpm test             # vitest run (una vez); pnpm test:watch para watch
+pnpm build             # ng-packagr → dist/bip-angular
+pnpm test               # vitest run (una vez); pnpm test:watch para watch
 pnpm lint
-pnpm storybook        # http://localhost:6006
-pnpm test:visual:docker [--update-snapshots]   # nunca test:visual nativo
-pnpm test:e2e
+pnpm typecheck
+pnpm format / pnpm format:check
+pnpm storybook          # http://localhost:6006
+pnpm build-storybook
 pnpm changeset
+pnpm test:visual:docker [--update-snapshots]   # nunca test:visual nativo — llega en el Bloque 11
+pnpm test:e2e                                   # llega en el Bloque 11
 ```
