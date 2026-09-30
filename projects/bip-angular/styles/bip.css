@@ -1,0 +1,16 @@
+/**
+ * Hoja de estilos global publicada por @bip-design-systems/angular.
+ * Orden de importación fijo — no reordenar: themes.css/density.css asumen que
+ * tokens.css y primitives.css ya se resolvieron, y base.css consume variables
+ * de todas las anteriores.
+ *
+ * Uso en angular.json del consumidor:
+ *   "styles": ["@bip-design-systems/angular/styles/bip.css"]
+ */
+@import './fonts.css';
+@import './tokens.css';
+@import './primitives.css';
+@import './themes.css';
+@import './density.css';
+@import './rtl.css';
+@import './base.css';

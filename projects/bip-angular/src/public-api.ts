@@ -5,4 +5,4 @@
  * componentes. Se llena a partir del Bloque 1.
  */
 
-export {};
+export * from '@bip-design-systems/angular/core';
