@@ -38,6 +38,7 @@
     "select/**/*.ts",
     "number-input/**/*.ts",
     "search-input/**/*.ts",
-    "slider/**/*.ts"
+    "slider/**/*.ts",
+    "file-upload/**/*.ts"
   ]
 }

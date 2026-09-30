@@ -31,7 +31,8 @@
       "@bip-design-systems/angular/select": ["./projects/bip-angular/select/index.ts"],
       "@bip-design-systems/angular/number-input": ["./projects/bip-angular/number-input/index.ts"],
       "@bip-design-systems/angular/search-input": ["./projects/bip-angular/search-input/index.ts"],
-      "@bip-design-systems/angular/slider": ["./projects/bip-angular/slider/index.ts"]
+      "@bip-design-systems/angular/slider": ["./projects/bip-angular/slider/index.ts"],
+      "@bip-design-systems/angular/file-upload": ["./projects/bip-angular/file-upload/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

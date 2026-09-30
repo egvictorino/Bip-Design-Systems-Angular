@@ -41,6 +41,7 @@ const A11Y_REGISTRY: Record<string, string> = {
   'number-input': 'BipNumberInput: role="spinbutton" + aria-valuenow/min/max; botones +/- con aria-label localizado y tabindex=-1 (no interrumpen el tab order del formulario); aria-invalid+aria-describedby igual que Input; flechas de teclado incrementan/decrementan con preventDefault.',
   'search-input': 'BipSearchInput: wrapper con role="search"; input[type=search] (rol searchbox nativo) con aria-invalid/aria-describedby/aria-busy igual que Input; ícono de búsqueda y spinner decorativos aria-hidden; botón de limpiar con aria-label localizado.',
   slider: 'BipSlider: <input type="range"> nativo (rol slider, flechas de teclado nativas) — aria-invalid+aria-describedby igual que Input; el valor numérico junto al label es texto normal.',
+  'file-upload': 'BipFileUpload: <label> es la zona de drop y dispara el <input type="file"> real (oculto visualmente con el mismo patrón clip-rect de BipVisuallyHidden, no display:none — mantiene foco/teclado nativos); aria-invalid+aria-describedby+aria-busy igual que Input; botón de quitar por archivo con aria-label localizado (incluye el nombre del archivo); iconos e ilustraciones decorativos aria-hidden.',
 };
 
 /**
