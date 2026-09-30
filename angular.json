@@ -56,7 +56,8 @@
               "../radio/**/*.spec.ts",
               "../toggle/**/*.spec.ts",
               "../select/**/*.spec.ts",
-              "../number-input/**/*.spec.ts"
+              "../number-input/**/*.spec.ts",
+              "../search-input/**/*.spec.ts"
             ]
           }
         },

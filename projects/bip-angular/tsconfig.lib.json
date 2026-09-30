@@ -34,7 +34,8 @@
     "radio/**/*.ts",
     "toggle/**/*.ts",
     "select/**/*.ts",
-    "number-input/**/*.ts"
+    "number-input/**/*.ts",
+    "search-input/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
