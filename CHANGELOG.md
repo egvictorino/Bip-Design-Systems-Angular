@@ -10,6 +10,13 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Foundations (Bloque 1): hoja global `@bip-design-systems/angular/styles/bip.css` (tokens,
+  primitives, themes, density, rtl, fonts, base) publicada vía ng-packagr `assets`; utilidades
+  `contrastRatio()`/`pickReadableText()` y `BREAKPOINTS`/`mediaQuery()` en `core/utils`; tipos
+  `BipSize`/`BipSizeExtended`/tipos de theme en `core/types`; guards de estilos en `testing/`
+  (spacing, on-text, rtl, tokens, contrast-tokens, css-comment-balance, breakpoints) que escanean
+  `*.component.css`; Storybook Foundations (Colors, Radius, Spacing, Typography, Motion,
+  Breakpoints) parseando `tokens.css` en runtime.
 - Bootstrap del workspace (Bloque 0): Angular CLI + pnpm, librería `@bip-design-systems/angular`
   con secondary entry point `core` de plantilla, Vitest + Testing Library + jest-dom + axe,
   ESLint (`angular-eslint`, prefijo `bip`) + Prettier, Storybook con `addon-a11y`/`addon-docs`,

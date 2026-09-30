@@ -4,7 +4,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "bip-angular": ["./dist/bip-angular"]
+      "bip-angular": ["./dist/bip-angular"],
+      "@bip-design-systems/angular/core": ["./projects/bip-angular/core/src/public-api.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

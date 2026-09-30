@@ -28,7 +28,8 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/bip-angular/tsconfig.spec.json",
-            "setupFiles": ["projects/bip-angular/src/test-setup.ts"]
+            "setupFiles": ["projects/bip-angular/src/test-setup.ts"],
+            "include": ["**/*.spec.ts", "../core/src/**/*.spec.ts", "../testing/**/*.spec.ts"]
           }
         },
         "storybook": {
