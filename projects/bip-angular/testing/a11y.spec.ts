@@ -28,6 +28,7 @@ const A11Y_REGISTRY: Record<string, string> = {
   avatar: 'BipAvatar: role="img"+aria-label cuando no es <img> (iniciales/ícono); status es aria-hidden. BipAvatarGroup: role="group"; overflow "+N" es role="img"+aria-label con el conteo.',
   'progress-bar': 'BipProgressBar: role="progressbar" + aria-valuemin/max/now (omitido si indeterminate) + aria-label (locale o custom) + aria-valuetext opcional + aria-busy si indeterminate + aria-describedby al helperText.',
   'empty-state': 'BipEmptyState: icon box decorativo aria-hidden="true"; título/descripción son texto normal.',
+  card: 'BipCard: clickable añade role="button"+tabindex=0+Enter/Espacio; loading añade aria-busy+aria-label al contenedor del skeleton. CardHeader/Body/Footer/Media son contenedores sin semántica propia.',
 };
 
 /**

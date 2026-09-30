@@ -1,0 +1,91 @@
+:host {
+  display: block;
+  overflow: hidden;
+}
+
+/* ─── Variantes ──────────────────────────────────────────────────────────── */
+
+.bip-card--elevated {
+  background-color: var(--color-surface-1);
+  box-shadow: var(--shadow-md);
+}
+
+.bip-card--outlined {
+  background-color: var(--color-surface-1);
+  border: 1px solid var(--color-edge);
+}
+
+.bip-card--flat {
+  background-color: var(--color-surface-3);
+}
+
+/* ─── Padding ────────────────────────────────────────────────────────────── */
+
+.bip-card--padding-none {
+  padding: var(--space-0);
+}
+.bip-card--padding-sm {
+  padding: var(--space-3);
+}
+.bip-card--padding-md {
+  padding: var(--space-5);
+}
+.bip-card--padding-lg {
+  padding: var(--space-7);
+}
+
+/* ─── Radius ─────────────────────────────────────────────────────────────── */
+
+.bip-card--radius-none {
+  border-radius: var(--radius-none);
+}
+.bip-card--radius-sm {
+  border-radius: var(--radius-marker);
+}
+.bip-card--radius-md {
+  border-radius: var(--radius-surface);
+}
+.bip-card--radius-lg {
+  border-radius: var(--radius-container);
+}
+.bip-card--radius-xl {
+  border-radius: var(--radius-container-lg);
+}
+
+/* ─── Full width ─────────────────────────────────────────────────────────── */
+
+.bip-card--full-width {
+  width: 100%;
+}
+
+/* ─── Clickable ──────────────────────────────────────────────────────────── */
+
+.bip-card--clickable {
+  cursor: pointer;
+  transition: box-shadow var(--duration-normal) var(--ease-standard);
+}
+.bip-card--clickable:hover {
+  box-shadow: var(--shadow-lg);
+}
+.bip-card--clickable:active {
+  box-shadow: var(--shadow-xs);
+}
+.bip-card--clickable:focus {
+  outline: none;
+}
+.bip-card--clickable:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+/* ─── Skeleton de carga ──────────────────────────────────────────────────── */
+
+.bip-card-loading-container {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bip-card-skeleton-short {
+  width: 50%;
+}

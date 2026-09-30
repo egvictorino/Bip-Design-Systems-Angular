@@ -19,3 +19,4 @@ export * from '@bip-design-systems/angular/badge';
 export * from '@bip-design-systems/angular/avatar';
 export * from '@bip-design-systems/angular/progress-bar';
 export * from '@bip-design-systems/angular/empty-state';
+export * from '@bip-design-systems/angular/card';

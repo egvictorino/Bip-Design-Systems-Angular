@@ -18,7 +18,8 @@
       "@bip-design-systems/angular/badge": ["./projects/bip-angular/badge/index.ts"],
       "@bip-design-systems/angular/avatar": ["./projects/bip-angular/avatar/index.ts"],
       "@bip-design-systems/angular/progress-bar": ["./projects/bip-angular/progress-bar/index.ts"],
-      "@bip-design-systems/angular/empty-state": ["./projects/bip-angular/empty-state/index.ts"]
+      "@bip-design-systems/angular/empty-state": ["./projects/bip-angular/empty-state/index.ts"],
+      "@bip-design-systems/angular/card": ["./projects/bip-angular/card/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,
