@@ -28,3 +28,4 @@ export * from '@bip-design-systems/angular/textarea';
 export * from '@bip-design-systems/angular/checkbox';
 export * from '@bip-design-systems/angular/radio';
 export * from '@bip-design-systems/angular/toggle';
+export * from '@bip-design-systems/angular/select';
