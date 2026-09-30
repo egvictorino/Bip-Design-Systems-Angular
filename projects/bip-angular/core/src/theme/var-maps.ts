@@ -103,7 +103,12 @@ const AA_CONTRAST_THRESHOLD = 4.5;
 /** Evita re-avisar el mismo hex en cada render — solo una vez por valor visto. */
 const warnedLowContrastValues = new Set<string>();
 
-function warnIfLowContrast(seedKey: string, hex: string, onTextHex: string, devMode: boolean): void {
+function warnIfLowContrast(
+  seedKey: string,
+  hex: string,
+  onTextHex: string,
+  devMode: boolean
+): void {
   if (!devMode) return;
   if (warnedLowContrastValues.has(hex)) return;
   const ratio = contrastRatio(hex, onTextHex);

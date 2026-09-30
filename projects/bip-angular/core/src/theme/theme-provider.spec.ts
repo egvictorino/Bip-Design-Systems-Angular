@@ -18,13 +18,12 @@ function mockMatchMedia(matchesDark: boolean): MatchMediaMock {
   const mql = {
     matches: matchesDark,
     media: '(prefers-color-scheme: dark)',
-    addEventListener: (_type: string, cb: (event: MediaQueryListEvent) => void) => listeners.add(cb),
-    removeEventListener: (_type: string, cb: (event: MediaQueryListEvent) => void) => listeners.delete(cb),
+    addEventListener: (_type: string, cb: (event: MediaQueryListEvent) => void) =>
+      listeners.add(cb),
+    removeEventListener: (_type: string, cb: (event: MediaQueryListEvent) => void) =>
+      listeners.delete(cb),
   };
-  vi.stubGlobal(
-    'matchMedia',
-    vi.fn().mockReturnValue(mql) as unknown as typeof window.matchMedia
-  );
+  vi.stubGlobal('matchMedia', vi.fn().mockReturnValue(mql) as unknown as typeof window.matchMedia);
   return {
     fireChange: (matches: boolean) => {
       mql.matches = matches;
@@ -70,7 +69,10 @@ describe('BipThemeProvider', () => {
         `<bip-theme-provider theme="square" [tokens]="tokens">
            <span data-testid="child">contenido</span>
          </bip-theme-provider>`,
-        { imports: [BipThemeProvider], componentProperties: { tokens: { colorPrimary: '#e2007a' } } }
+        {
+          imports: [BipThemeProvider],
+          componentProperties: { tokens: { colorPrimary: '#e2007a' } },
+        }
       );
       const wrapper = screen.getByTestId('child').parentElement as HTMLElement;
       expect(wrapper.style.getPropertyValue('--color-primary')).toBe('#e2007a');
@@ -136,7 +138,10 @@ describe('BipThemeProvider', () => {
         `<bip-theme-provider theme="square" [radius]="radius">
            <span data-testid="child">contenido</span>
          </bip-theme-provider>`,
-        { imports: [BipThemeProvider], componentProperties: { radius: { field: '12px', container: '24px' } } }
+        {
+          imports: [BipThemeProvider],
+          componentProperties: { radius: { field: '12px', container: '24px' } },
+        }
       );
       const wrapper = screen.getByTestId('child').parentElement as HTMLElement;
       expect(wrapper.style.getPropertyValue('--radius-field')).toBe('12px');
@@ -150,7 +155,10 @@ describe('BipThemeProvider', () => {
          </bip-theme-provider>`,
         {
           imports: [BipThemeProvider],
-          componentProperties: { radius: { field: '12px' }, cssVars: { '--radius-field': '999px' } },
+          componentProperties: {
+            radius: { field: '12px' },
+            cssVars: { '--radius-field': '999px' },
+          },
         }
       );
       const wrapper = screen.getByTestId('child').parentElement as HTMLElement;
@@ -264,7 +272,10 @@ describe('BipThemeProvider', () => {
         { imports: [BipThemeProvider] }
       );
       await flush();
-      expect(screen.getByTestId('child').parentElement).toHaveAttribute('data-color-scheme', 'dark');
+      expect(screen.getByTestId('child').parentElement).toHaveAttribute(
+        'data-color-scheme',
+        'dark'
+      );
     });
   });
 });

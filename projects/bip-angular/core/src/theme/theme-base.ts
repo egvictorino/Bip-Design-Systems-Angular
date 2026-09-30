@@ -18,7 +18,11 @@ import {
 } from '@angular/core';
 import { BipThemeContext } from './theme-context';
 import { BIP_THEME_DEFAULTS } from './provide-bip-theme';
-import { readStoredPreference, writeStoredPreference, type StoredThemePreference } from './theme.storage';
+import {
+  readStoredPreference,
+  writeStoredPreference,
+  type StoredThemePreference,
+} from './theme.storage';
 import { THEME_RESET_STYLE } from './theme-init-script';
 import {
   FOCUS_RING_VAR_MAP,
@@ -93,7 +97,9 @@ export abstract class BipThemeHost {
   /** El provider padre, si hay uno — habilita la herencia/merge (ver CLAUDE.md § Anidación). */
   private readonly parent = inject(BipThemeContext, { optional: true, skipSelf: true });
   private readonly context = inject(BipThemeContext, { self: true });
-  private readonly directionality = inject(Directionality, { self: true }) as BipDirectionalityBridge;
+  private readonly directionality = inject(Directionality, {
+    self: true,
+  }) as BipDirectionalityBridge;
   private readonly destroyRef = inject(DestroyRef);
 
   /** Controlado (two-way `[(theme)]`). `undefined` = no-controlado, ver `defaultTheme`. */
@@ -135,7 +141,9 @@ export abstract class BipThemeHost {
   protected readonly resolvedDensity = computed<BipDensity | undefined>(
     () => this.density() ?? this.parent?.density()
   );
-  protected readonly resolvedDir = computed<BipDir | undefined>(() => this.dir() ?? this.parent?.dir());
+  protected readonly resolvedDir = computed<BipDir | undefined>(
+    () => this.dir() ?? this.parent?.dir()
+  );
 
   private readonly resolvedVars = computed<Record<string, string>>(() => ({
     ...(this.parent?.resolvedVars() ?? {}),

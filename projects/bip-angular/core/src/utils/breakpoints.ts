@@ -14,7 +14,10 @@ export const BREAKPOINTS = {
 
 export type BreakpointKey = keyof typeof BREAKPOINTS;
 
-/** `mediaQuery('md')` → `'(min-width: 768px)'`, igual que escribirlo a mano. */
-export function mediaQuery(breakpoint: BreakpointKey): string {
+/**
+ * `breakpointQuery('md')` → `'(min-width: 768px)'`, igual que escribirlo a mano. Pensado para
+ * alimentar `mediaQuery()` (core/a11y, Bloque 3): `mediaQuery(breakpointQuery('md'))`.
+ */
+export function breakpointQuery(breakpoint: BreakpointKey): string {
   return `(min-width: ${BREAKPOINTS[breakpoint]}px)`;
 }
