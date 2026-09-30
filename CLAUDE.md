@@ -240,6 +240,13 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
   | `production.yml` | push/PR a `main` | security + lint + test + typecheck → build → e2e-consumer → publish npm (`needs: e2e-consumer`, publica desde `dist/bip-angular`) → Storybook a GitHub Pages → GitHub Release (cuerpo extraído de `CHANGELOG.md` con awk por `## [x.y.z]`) |
   | `codeql.yml`, `dependency-review.yml` | estándar | — |
 - Siempre `pnpm install --frozen-lockfile`. Tests antes de build.
+- El repo es **público** → GitHub Actions sin costo; todos los pipelines de arriba se mantienen.
+- **NO usar Dependabot** (ni Renovate u otro bot que abra PRs `chore(deps)` periódicos): no se
+  crea `.github/dependabot.yml`. Decisión explícita del dueño del repo. Las dependencias se
+  actualizan a mano, en ramas `feature/deps-*`, cuando se decida. `dependency-review.yml` (revisa
+  solo los PRs que ya existen) y `codeql.yml` sí se mantienen.
+- Sí se portan de `../bip-design-system/.github/`: `PULL_REQUEST_TEMPLATE.md`, `ISSUE_TEMPLATE/`,
+  `CODEOWNERS`, y `CONTRIBUTING.md`/`CODE_OF_CONDUCT.md`/`SECURITY.md` en la raíz (adaptados a Angular).
 - Versionado: Changesets calcula el número; CHANGELOG a mano. Al liberar: renombrar `## [Unreleased]` → `## [x.y.z] - YYYY-MM-DD`, agregar `## [Unreleased]` nuevo, **después** `pnpm exec changeset version`.
 - Versiones: `0.x` mientras haya bloques pendientes; **`1.0.0`** cuando los Bloques 0–12 estén completos.
 - README de consumo: instalación, `bip.css` en `angular.json`, `provideBipTheme()`, `provideBipLocale()`, `getThemeInitScript` para SSR, ejemplos.
@@ -280,7 +287,8 @@ i18n (esMX/enUS, mergeLocale) · hooks (clickOutside, disclosure, focusTrap, med
 shared-utils (formatCurrency, formatDate, validateRFC) · Foundations docs (Colors, Radius, Spacing,
 Typography, Motion, Breakpoints, Theming, I18n) · guards (spacing, on-text, rtl, tokens,
 contrast-tokens, css-comment-balance, no-hardcoded-strings, a11y coverage, component-matrix coverage) ·
-visual Docker · a11y en navegador · e2e del tarball · Changesets · 6 workflows.
+visual Docker · a11y en navegador · e2e del tarball · Changesets · 6 workflows
+(**sin** `dependabot.yml` — excluido a propósito, ver Bloque 12).
 
 ## Comandos (se completan al terminar el Bloque 0)
 
