@@ -20,3 +20,5 @@ export * from '@bip-design-systems/angular/avatar';
 export * from '@bip-design-systems/angular/progress-bar';
 export * from '@bip-design-systems/angular/empty-state';
 export * from '@bip-design-systems/angular/card';
+export * from '@bip-design-systems/angular/stats-card';
+export * from '@bip-design-systems/angular/alert';
