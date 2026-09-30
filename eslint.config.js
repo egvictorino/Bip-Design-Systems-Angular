@@ -25,7 +25,10 @@ module.exports = tseslint.config(
       ],
       '@angular-eslint/component-selector': [
         'error',
-        { type: 'element', prefix: 'bip', style: 'kebab-case' },
+        [
+          { type: 'element', prefix: 'bip', style: 'kebab-case' },
+          { type: 'attribute', prefix: 'bip', style: 'camelCase' },
+        ],
       ],
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },

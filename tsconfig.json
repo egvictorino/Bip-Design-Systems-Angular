@@ -5,7 +5,8 @@
   "compilerOptions": {
     "paths": {
       "bip-angular": ["./dist/bip-angular"],
-      "@bip-design-systems/angular/core": ["./projects/bip-angular/core/src/public-api.ts"]
+      "@bip-design-systems/angular/core": ["./projects/bip-angular/core/src/public-api.ts"],
+      "@bip-design-systems/angular/container": ["./projects/bip-angular/container/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

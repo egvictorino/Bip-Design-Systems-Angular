@@ -15,6 +15,7 @@ const SRC_DIR = resolve(__dirname, '..');
  */
 const A11Y_REGISTRY: Record<string, string> = {
   a11y: 'BipVisuallyHidden: span recortado visualmente (clip-rect), siempre expuesto a lectores de pantalla.',
+  container: 'BipContainer: sin semántica propia, solo layout — el elemento host la conserva.',
 };
 
 /**

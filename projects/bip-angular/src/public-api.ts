@@ -6,3 +6,4 @@
  */
 
 export * from '@bip-design-systems/angular/core';
+export * from '@bip-design-systems/angular/container';
