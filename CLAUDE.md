@@ -259,7 +259,7 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 
 - [x] Bloque 0 — Bootstrap del workspace y tooling
 - [x] Bloque 1 — Foundations: tokens, estilos globales y guards
-- [ ] Bloque 2 — Theming y puente de overlays
+- [x] Bloque 2 — Theming y puente de overlays
 - [ ] Bloque 3 — i18n, utilidades y primitivas de a11y
 - [ ] Bloque 4 — Layout, tipografía y display (17)
 - [ ] Bloque 5 — Formularios básicos (13)
