@@ -26,6 +26,8 @@ const A11Y_REGISTRY: Record<string, string> = {
   skeleton: 'BipSkeleton: aria-hidden="true" en la raíz — placeholder puramente decorativo.',
   badge: 'BipBadge: contenido de texto normal; el dot decorativo es aria-hidden.',
   avatar: 'BipAvatar: role="img"+aria-label cuando no es <img> (iniciales/ícono); status es aria-hidden. BipAvatarGroup: role="group"; overflow "+N" es role="img"+aria-label con el conteo.',
+  'progress-bar': 'BipProgressBar: role="progressbar" + aria-valuemin/max/now (omitido si indeterminate) + aria-label (locale o custom) + aria-valuetext opcional + aria-busy si indeterminate + aria-describedby al helperText.',
+  'empty-state': 'BipEmptyState: icon box decorativo aria-hidden="true"; título/descripción son texto normal.',
 };
 
 /**

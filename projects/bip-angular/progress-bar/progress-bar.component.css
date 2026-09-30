@@ -1,0 +1,136 @@
+/* Animación decorativa (sin significado direccional que transmitir) — física a propósito,
+   sin --rtl-x, igual que la referencia React. */
+@keyframes bip-progress-indeterminate-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+
+.bip-progress-header {
+  margin-bottom: var(--space-1-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bip-progress-label {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+  font-weight: var(--font-medium);
+  color: var(--color-txt);
+}
+
+.bip-progress-value-text {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+  color: var(--color-txt-secondary);
+}
+
+/* ─── Track ──────────────────────────────────────────────────────────────── */
+
+.bip-progress-track {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-3);
+}
+
+.bip-progress-track--sm {
+  height: 0.25rem;
+}
+.bip-progress-track--md {
+  height: 0.5rem;
+}
+.bip-progress-track--lg {
+  height: 0.75rem;
+}
+
+/* ─── Fill ───────────────────────────────────────────────────────────────── */
+
+.bip-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width var(--duration-slow) var(--ease-standard);
+}
+
+.bip-progress-fill--default {
+  background-color: var(--color-primary);
+}
+.bip-progress-fill--success {
+  background-color: var(--color-success);
+}
+.bip-progress-fill--warning {
+  background-color: var(--color-warning);
+}
+.bip-progress-fill--danger {
+  background-color: var(--color-danger);
+}
+
+/* ─── Indeterminate ──────────────────────────────────────────────────────── */
+
+.bip-progress-indeterminate {
+  position: absolute;
+  inset-block: 0;
+  width: 33.333%;
+  border-radius: var(--radius-pill);
+  animation: bip-progress-indeterminate-slide 1.5s var(--ease-standard) infinite;
+}
+
+/* ─── Striped ────────────────────────────────────────────────────────────── */
+
+@keyframes bip-progress-striped-move {
+  from {
+    background-position: 1rem 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+.bip-progress-fill--striped {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+
+.bip-progress-fill--animated {
+  animation: bip-progress-striped-move 1s linear infinite;
+}
+
+/* ─── Helper text ────────────────────────────────────────────────────────── */
+
+.bip-progress-helper-text {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  line-height: 1rem;
+  color: var(--color-txt-secondary);
+}
+
+/* ─── Reduced motion ─────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bip-progress-indeterminate,
+  .bip-progress-fill--animated {
+    animation: none;
+  }
+}
