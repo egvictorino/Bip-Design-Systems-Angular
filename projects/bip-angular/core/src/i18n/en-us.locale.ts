@@ -10,6 +10,7 @@ export const enUS: BipLocale = {
 
   avatar: {
     overflow: (count) => `+${count}`,
+    fallbackAlt: 'Avatar',
   },
 
   breadcrumb: {

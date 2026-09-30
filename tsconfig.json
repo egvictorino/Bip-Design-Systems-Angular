@@ -14,7 +14,9 @@
       "@bip-design-systems/angular/heading": ["./projects/bip-angular/heading/index.ts"],
       "@bip-design-systems/angular/link": ["./projects/bip-angular/link/index.ts"],
       "@bip-design-systems/angular/spinner": ["./projects/bip-angular/spinner/index.ts"],
-      "@bip-design-systems/angular/skeleton": ["./projects/bip-angular/skeleton/index.ts"]
+      "@bip-design-systems/angular/skeleton": ["./projects/bip-angular/skeleton/index.ts"],
+      "@bip-design-systems/angular/badge": ["./projects/bip-angular/badge/index.ts"],
+      "@bip-design-systems/angular/avatar": ["./projects/bip-angular/avatar/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

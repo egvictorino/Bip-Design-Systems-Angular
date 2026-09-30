@@ -24,6 +24,8 @@ const A11Y_REGISTRY: Record<string, string> = {
   link: 'BipLink: aria-disabled+tabindex=-1 cuando disabled; hint accesible "abre en pestaña nueva" (bip-visually-hidden) cuando external.',
   spinner: 'BipSpinner: role="status" + aria-label (locale o custom); SVG interno decorativo aria-hidden.',
   skeleton: 'BipSkeleton: aria-hidden="true" en la raíz — placeholder puramente decorativo.',
+  badge: 'BipBadge: contenido de texto normal; el dot decorativo es aria-hidden.',
+  avatar: 'BipAvatar: role="img"+aria-label cuando no es <img> (iniciales/ícono); status es aria-hidden. BipAvatarGroup: role="group"; overflow "+N" es role="img"+aria-label con el conteo.',
 };
 
 /**
