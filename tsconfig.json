@@ -28,7 +28,8 @@
       "@bip-design-systems/angular/checkbox": ["./projects/bip-angular/checkbox/index.ts"],
       "@bip-design-systems/angular/radio": ["./projects/bip-angular/radio/index.ts"],
       "@bip-design-systems/angular/toggle": ["./projects/bip-angular/toggle/index.ts"],
-      "@bip-design-systems/angular/select": ["./projects/bip-angular/select/index.ts"]
+      "@bip-design-systems/angular/select": ["./projects/bip-angular/select/index.ts"],
+      "@bip-design-systems/angular/number-input": ["./projects/bip-angular/number-input/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

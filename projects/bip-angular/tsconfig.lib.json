@@ -33,7 +33,8 @@
     "checkbox/**/*.ts",
     "radio/**/*.ts",
     "toggle/**/*.ts",
-    "select/**/*.ts"
+    "select/**/*.ts",
+    "number-input/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

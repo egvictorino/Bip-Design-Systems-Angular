@@ -55,7 +55,8 @@
               "../checkbox/**/*.spec.ts",
               "../radio/**/*.spec.ts",
               "../toggle/**/*.spec.ts",
-              "../select/**/*.spec.ts"
+              "../select/**/*.spec.ts",
+              "../number-input/**/*.spec.ts"
             ]
           }
         },
