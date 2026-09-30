@@ -50,7 +50,8 @@
               "../stats-card/**/*.spec.ts",
               "../alert/**/*.spec.ts",
               "../button/**/*.spec.ts",
-              "../input/**/*.spec.ts"
+              "../input/**/*.spec.ts",
+              "../textarea/**/*.spec.ts"
             ]
           }
         },

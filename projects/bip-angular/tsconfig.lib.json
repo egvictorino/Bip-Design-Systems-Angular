@@ -28,7 +28,8 @@
     "stats-card/**/*.ts",
     "alert/**/*.ts",
     "button/**/*.ts",
-    "input/**/*.ts"
+    "input/**/*.ts",
+    "textarea/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
