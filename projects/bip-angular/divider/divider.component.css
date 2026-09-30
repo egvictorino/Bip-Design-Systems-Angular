@@ -1,0 +1,51 @@
+:host {
+  display: contents;
+}
+
+/* ─── Vertical ──────────────────────────────────────────────────────────────── */
+
+.bip-divider-vertical {
+  align-self: stretch;
+  width: 1px;
+  border-inline-start: 1px solid var(--color-edge);
+}
+
+.bip-divider-vertical.dashed {
+  border-inline-start-style: dashed;
+}
+
+/* ─── Horizontal con label ─────────────────────────────────────────────────── */
+
+.bip-divider-with-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.bip-divider-line {
+  flex: 1;
+  border-top: 1px solid var(--color-edge);
+}
+
+.bip-divider-line.dashed {
+  border-top-style: dashed;
+}
+
+.bip-divider-label-text {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+  color: var(--color-txt-secondary);
+  white-space: nowrap;
+}
+
+/* ─── Horizontal plano ──────────────────────────────────────────────────────── */
+
+.bip-divider-horizontal {
+  border: 0;
+  border-top: 1px solid var(--color-edge);
+  margin: var(--space-0);
+}
+
+.bip-divider-horizontal.dashed {
+  border-top-style: dashed;
+}

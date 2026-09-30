@@ -6,7 +6,10 @@
     "paths": {
       "bip-angular": ["./dist/bip-angular"],
       "@bip-design-systems/angular/core": ["./projects/bip-angular/core/src/public-api.ts"],
-      "@bip-design-systems/angular/container": ["./projects/bip-angular/container/index.ts"]
+      "@bip-design-systems/angular/container": ["./projects/bip-angular/container/index.ts"],
+      "@bip-design-systems/angular/stack": ["./projects/bip-angular/stack/index.ts"],
+      "@bip-design-systems/angular/grid": ["./projects/bip-angular/grid/index.ts"],
+      "@bip-design-systems/angular/divider": ["./projects/bip-angular/divider/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

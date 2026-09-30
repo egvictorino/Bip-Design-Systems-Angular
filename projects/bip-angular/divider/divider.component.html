@@ -1,0 +1,16 @@
+@if (orientation() === 'vertical') {
+  <div
+    role="separator"
+    aria-orientation="vertical"
+    class="bip-divider-vertical"
+    [class.dashed]="variant() === 'dashed'"
+  ></div>
+} @else if (label()) {
+  <div role="separator" aria-orientation="horizontal" class="bip-divider-with-label">
+    <span class="bip-divider-line" [class.dashed]="variant() === 'dashed'"></span>
+    <span class="bip-divider-label-text">{{ label() }}</span>
+    <span class="bip-divider-line" [class.dashed]="variant() === 'dashed'"></span>
+  </div>
+} @else {
+  <hr aria-orientation="horizontal" class="bip-divider-horizontal" [class.dashed]="variant() === 'dashed'" />
+}

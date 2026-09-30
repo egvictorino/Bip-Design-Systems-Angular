@@ -16,6 +16,9 @@ const SRC_DIR = resolve(__dirname, '..');
 const A11Y_REGISTRY: Record<string, string> = {
   a11y: 'BipVisuallyHidden: span recortado visualmente (clip-rect), siempre expuesto a lectores de pantalla.',
   container: 'BipContainer: sin semántica propia, solo layout — el elemento host la conserva.',
+  stack: 'BipStack: sin semántica propia, solo layout — el elemento host la conserva.',
+  grid: 'BipGrid: sin semántica propia, solo layout — el elemento host la conserva.',
+  divider: 'BipDivider: role="separator" + aria-orientation (hr nativo cuando es horizontal sin label).',
 };
 
 /**
