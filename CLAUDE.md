@@ -15,6 +15,7 @@ dependencia:
 - GitHub: https://github.com/egvictorino/Bip-Design-Systems (público)
 
 **Reglas sobre la referencia React:**
+
 - Se LEE para copiar comportamiento, API de props, estados, estilos, textos i18n, casos de test
   y decisiones de a11y. Por cada componente: leer `X.tsx`, `X.module.css`, `X.test.tsx`,
   `X.stories.tsx` antes de escribir la versión Angular.
@@ -27,20 +28,20 @@ dependencia:
 
 ## Stack
 
-| Área | Elección |
-|---|---|
-| Framework | **Angular 21** (`^21.2.0`). Decisión explícita del dueño del repo (2026-09-30): se fija esta major, en vez de seguir siempre "última estable", para que este repo y el resto de sus proyectos Angular queden en el mismo canal de versión. No actualizar a Angular 22+ sin decisión explícita — actualizar es trabajo de un `feature/deps-*` aparte, no un efecto colateral de tocar un bloque |
-| Package manager | pnpm (≥ 9), Node **22 LTS** (Angular 21 exige `^20.19.0 \|\| ^22.12.0 \|\| >=24.0.0`; usar [nvm](https://github.com/nvm-sh/nvm) — `nvm install 22 && nvm alias default 22` — si el Node del sistema es v21.x u otro no soportado). Fijado en `.nvmrc` y `engines` (`package.json`) + `engine-strict=true` (`.npmrc`), así `pnpm install` falla con un mensaje claro en un Node no soportado en vez de un error críptico a mitad de build |
-| Build librería | Angular CLI + **ng-packagr** (Angular Package Format), ES2022, FESM |
-| Componentes | **Standalone**, `ChangeDetectionStrategy.OnPush`, **signals** (`input()`, `input.required()`, `output()`, `model()`, `computed()`, `effect()`), control flow `@if/@for/@switch`. Sin NgModules. Deben funcionar **con y sin zone.js** (zoneless) |
-| Primitivas | **@angular/cdk**: Overlay, Portal, A11y (FocusTrap, ListKeyManager, FocusMonitor, LiveAnnouncer), Bidi (Directionality), Layout (BreakpointObserver), ScrollStrategies |
-| Formularios | Todo control de formulario implementa **ControlValueAccessor** (Reactive Forms + Template-driven + signal forms si están estables) |
-| Estilos | CSS plano por componente (`styleUrl`), `ViewEncapsulation.Emulated` (equivalente a CSS Modules). Tokens vía CSS custom properties. **Sin Tailwind, sin SCSS** |
-| Tests unitarios | Vitest vía `@angular/build:unit-test` + `@testing-library/angular` + `@testing-library/user-event` + `@testing-library/jest-dom` + `axe-core` (vitest-axe o jest-axe) |
-| Docs | Storybook para Angular (`@storybook/angular`), CSF3 |
-| Visual / a11y real | Playwright + `@axe-core/playwright`, **solo en Docker** (imagen `mcr.microsoft.com/playwright:vX-jammy` fijada a la versión de `@playwright/test`) |
-| Lint | `angular-eslint` (prefijo `bip` obligatorio en selectores), ESLint flat config, Prettier |
-| Versionado | Changesets + `CHANGELOG.md` curado a mano (Keep a Changelog) |
+| Área               | Elección                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework          | **Angular 21** (`^21.2.0`). Decisión explícita del dueño del repo (2026-09-30): se fija esta major, en vez de seguir siempre "última estable", para que este repo y el resto de sus proyectos Angular queden en el mismo canal de versión. No actualizar a Angular 22+ sin decisión explícita — actualizar es trabajo de un `feature/deps-*` aparte, no un efecto colateral de tocar un bloque                                           |
+| Package manager    | pnpm (≥ 9), Node **22 LTS** (Angular 21 exige `^20.19.0 \|\| ^22.12.0 \|\| >=24.0.0`; usar [nvm](https://github.com/nvm-sh/nvm) — `nvm install 22 && nvm alias default 22` — si el Node del sistema es v21.x u otro no soportado). Fijado en `.nvmrc` y `engines` (`package.json`) + `engine-strict=true` (`.npmrc`), así `pnpm install` falla con un mensaje claro en un Node no soportado en vez de un error críptico a mitad de build |
+| Build librería     | Angular CLI + **ng-packagr** (Angular Package Format), ES2022, FESM                                                                                                                                                                                                                                                                                                                                                                      |
+| Componentes        | **Standalone**, `ChangeDetectionStrategy.OnPush`, **signals** (`input()`, `input.required()`, `output()`, `model()`, `computed()`, `effect()`), control flow `@if/@for/@switch`. Sin NgModules. Deben funcionar **con y sin zone.js** (zoneless)                                                                                                                                                                                         |
+| Primitivas         | **@angular/cdk**: Overlay, Portal, A11y (FocusTrap, ListKeyManager, FocusMonitor, LiveAnnouncer), Bidi (Directionality), Layout (BreakpointObserver), ScrollStrategies                                                                                                                                                                                                                                                                   |
+| Formularios        | Todo control de formulario implementa **ControlValueAccessor** (Reactive Forms + Template-driven + signal forms si están estables)                                                                                                                                                                                                                                                                                                       |
+| Estilos            | CSS plano por componente (`styleUrl`), `ViewEncapsulation.Emulated` (equivalente a CSS Modules). Tokens vía CSS custom properties. **Sin Tailwind, sin SCSS**                                                                                                                                                                                                                                                                            |
+| Tests unitarios    | Vitest vía `@angular/build:unit-test` + `@testing-library/angular` + `@testing-library/user-event` + `@testing-library/jest-dom` + `axe-core` (vitest-axe o jest-axe)                                                                                                                                                                                                                                                                    |
+| Docs               | Storybook para Angular (`@storybook/angular`), CSF3                                                                                                                                                                                                                                                                                                                                                                                      |
+| Visual / a11y real | Playwright + `@axe-core/playwright`, **solo en Docker** (imagen `mcr.microsoft.com/playwright:vX-jammy` fijada a la versión de `@playwright/test`)                                                                                                                                                                                                                                                                                       |
+| Lint               | `angular-eslint` (prefijo `bip` obligatorio en selectores), ESLint flat config, Prettier                                                                                                                                                                                                                                                                                                                                                 |
+| Versionado         | Changesets + `CHANGELOG.md` curado a mano (Keep a Changelog)                                                                                                                                                                                                                                                                                                                                                                             |
 
 ## Estructura objetivo
 
@@ -80,26 +81,26 @@ el equivalente al export `./*` del paquete React. El entry primario re-exporta t
 
 ## Traducción de patrones React → Angular (obligatoria)
 
-| React (referencia) | Angular (este repo) |
-|---|---|
-| `React.FC` / `forwardRef` | Componente standalone. Si mejora un elemento nativo, **selector de atributo** (`button[bipButton], a[bipButton]`, `a[bipLink]`); si encapsula estructura (label+input+helper), **selector de elemento** (`bip-input`) |
-| props | `input()` / `input.required()`; props booleanas con `transform: booleanAttribute`; numéricas con `numberAttribute` |
-| `onX` callbacks | `output()` |
-| controlado/no controlado (`value`+`onChange`+`defaultValue`) | `model()` (two-way `[(value)]`) + ControlValueAccessor para forms |
-| `children` | `<ng-content>` / `<ng-content select="...">`; slots con templates vía `<ng-template bipXxx>` + `contentChild()` |
-| Compound components + Context con guard `null` | El padre se inyecta en los hijos: `inject(BipTabs, { optional: true })` y si es `null` → `throw new Error('<bip-tab> debe usarse dentro de <bip-tabs>')`. **Nunca** defaults silenciosos |
-| `useId()` | `BipIdGenerator` en `core/a11y`: `inject(BipIdGenerator).next('bip-input')` (contador por app + `APP_ID`, estable en SSR). Nunca IDs derivados del label |
-| `cn()` / CSS Modules | `host: { '[class]': 'hostClasses()' }` con `computed()`; clases dentro del CSS encapsulado del componente |
-| `className` prop | No hace falta: el consumidor pone `class` en el host |
-| `createPortal` | CDK Overlay/Portal a través de `BipOverlay` (ver Bloque 2) para heredar theme |
-| `useFocusTrap` | `cdkTrapFocus` / `FocusTrapFactory` |
-| `useClickOutside` | `overlayRef.outsidePointerEvents()` o directiva `bipClickOutside` |
-| `useDisclosure` | helper `disclosure()` basado en signals (`isOpen`, `open`, `close`, `toggle`) |
-| `useMediaQuery` | `mediaQuery(query)` → `Signal<boolean>` sobre `BreakpointObserver` |
-| `useScrollLock` | `ScrollStrategyOptions.block()` del CDK |
-| `displayName` | No aplica; en su lugar nombres de clase `BipButton`, `BipInput`… (prefijo `Bip`, sin sufijo `Component`) |
-| Provider + hook (Toast) | Servicio + `provideBipToast()` (`BipToast.show({...})`) |
-| `useBipLocale()` | `injectBipLocale()` → `Signal<BipLocale>` |
+| React (referencia)                                           | Angular (este repo)                                                                                                                                                                                                   |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `React.FC` / `forwardRef`                                    | Componente standalone. Si mejora un elemento nativo, **selector de atributo** (`button[bipButton], a[bipButton]`, `a[bipLink]`); si encapsula estructura (label+input+helper), **selector de elemento** (`bip-input`) |
+| props                                                        | `input()` / `input.required()`; props booleanas con `transform: booleanAttribute`; numéricas con `numberAttribute`                                                                                                    |
+| `onX` callbacks                                              | `output()`                                                                                                                                                                                                            |
+| controlado/no controlado (`value`+`onChange`+`defaultValue`) | `model()` (two-way `[(value)]`) + ControlValueAccessor para forms                                                                                                                                                     |
+| `children`                                                   | `<ng-content>` / `<ng-content select="...">`; slots con templates vía `<ng-template bipXxx>` + `contentChild()`                                                                                                       |
+| Compound components + Context con guard `null`               | El padre se inyecta en los hijos: `inject(BipTabs, { optional: true })` y si es `null` → `throw new Error('<bip-tab> debe usarse dentro de <bip-tabs>')`. **Nunca** defaults silenciosos                              |
+| `useId()`                                                    | `BipIdGenerator` en `core/a11y`: `inject(BipIdGenerator).next('bip-input')` (contador por app + `APP_ID`, estable en SSR). Nunca IDs derivados del label                                                              |
+| `cn()` / CSS Modules                                         | `host: { '[class]': 'hostClasses()' }` con `computed()`; clases dentro del CSS encapsulado del componente                                                                                                             |
+| `className` prop                                             | No hace falta: el consumidor pone `class` en el host                                                                                                                                                                  |
+| `createPortal`                                               | CDK Overlay/Portal a través de `BipOverlay` (ver Bloque 2) para heredar theme                                                                                                                                         |
+| `useFocusTrap`                                               | `cdkTrapFocus` / `FocusTrapFactory`                                                                                                                                                                                   |
+| `useClickOutside`                                            | `overlayRef.outsidePointerEvents()` o directiva `bipClickOutside`                                                                                                                                                     |
+| `useDisclosure`                                              | helper `disclosure()` basado en signals (`isOpen`, `open`, `close`, `toggle`)                                                                                                                                         |
+| `useMediaQuery`                                              | `mediaQuery(query)` → `Signal<boolean>` sobre `BreakpointObserver`                                                                                                                                                    |
+| `useScrollLock`                                              | `ScrollStrategyOptions.block()` del CDK                                                                                                                                                                               |
+| `displayName`                                                | No aplica; en su lugar nombres de clase `BipButton`, `BipInput`… (prefijo `Bip`, sin sufijo `Component`)                                                                                                              |
+| Provider + hook (Toast)                                      | Servicio + `provideBipToast()` (`BipToast.show({...})`)                                                                                                                                                               |
+| `useBipLocale()`                                             | `injectBipLocale()` → `Signal<BipLocale>`                                                                                                                                                                             |
 
 ## Reglas de código (aplican a todos los bloques)
 
@@ -116,6 +117,7 @@ el equivalente al export `./*` del paquete React. El entry primario re-exporta t
 ## Definición de terminado (DoD) — por componente
 
 Un componente está terminado solo si tiene **todo** esto:
+
 1. `*.component.ts/.html/.css` con la misma API funcional que la versión React (props → inputs/outputs, mismos variantes/tamaños/estados).
 2. `*.spec.ts` que porta los casos del `X.test.tsx` de React (mínimo: render, variantes, interacción teclado/mouse, ARIA, CVA si es form).
 3. `*.stories.ts` (CSF3, `tags: ['autodocs']`, `layout: 'centered'` o `'padded'`), sin clases utilitarias inexistentes — layout de stories con `style` inline.
@@ -139,7 +141,9 @@ pueden hacerse en el orden listado (cada uno depende de los anteriores). 11 y 12
 y release, aunque su infraestructura mínima se arranca antes (ver cada bloque).
 
 ### Bloque 0 — Bootstrap del workspace y tooling
+
 **Objetivo:** repo que compila, testea, lintea y levanta Storybook vacío, con CI mínima.
+
 - Workspace Angular CLI sin app (`ng new bip-design-system-angular --no-create-application --package-manager pnpm`) y librería `ng g library bip-angular` → renombrar paquete a `@bip-design-systems/angular`, versión `0.0.0`.
 - tsconfig estricto (ver Reglas). `angular-eslint` + prefijo `bip` (component-selector/directive-selector), Prettier (`printWidth 100`, `singleQuote`, `semi`, `trailingComma es5`).
 - Unit tests con Vitest (`@angular/build:unit-test`), `@testing-library/angular`, jest-dom, user-event, axe. Un test dummy en verde.
@@ -152,10 +156,12 @@ y release, aunque su infraestructura mínima se arranca antes (ver cada bloque).
 - Referencia: `../bip-design-system/package.json`, `.changeset/config.json`, `.github/workflows/pr-validation.yml`.
 
 ### Bloque 1 — Foundations: tokens, estilos globales y guards
+
 **Objetivo:** la capa de diseño completa, sin componentes aún.
+
 - Copiar a `projects/bip-angular/styles/`: `tokens.css` (seeds + derivados `color-mix()`, light/dark con selectores dobles `:root,[data-color-scheme=…]`), `primitives.css` (tipografía, motion, focus-ring, `--space-*`, z-index), `themes.css` (square/rounded), `density.css` (comfortable/compact → `--space-control-*`), `rtl.css` (`--rtl-x`), `fonts.css` (Inter/Figtree variable vía `@fontsource-variable`), `base.css` (reset + `prefers-reduced-motion` → `--duration-*: 0ms`). Un `bip.css` que los importa en orden fijo.
 - Publicar `styles/` con ng-packagr `assets` → consumidor: `"styles": ["@bip-design-systems/angular/styles/bip.css"]` en `angular.json`.
-- `core/utils`: `contrastRatio()`, `pickReadableText()` (portar `src/lib/contrast.ts`), `BREAKPOINTS` + `mediaQuery()` string helper (portar `styles/breakpoints.ts`).
+- `core/utils`: `contrastRatio()`, `pickReadableText()` (portar `src/lib/contrast.ts`), `BREAKPOINTS` + `breakpointQuery()` string helper (portar `styles/breakpoints.ts`; renombrado desde `mediaQuery()` en el Bloque 3 para liberar ese nombre al `mediaQuery(query)` reactivo de `core/a11y`).
 - `core/types`: `BipSize`, `BipSizeExtended`, tipos de theme.
 - **Guards como tests** (portar de `src/styles/*.test.ts`): `spacing` (sin longitudes literales en padding/margin/gap; `OUTLIER_VALUES`), `on-text` (allowlist de `--color-txt-white`), `rtl` (sin `left/right` físicos; `PHYSICAL_BY_DESIGN_ALLOWLIST`), `tokens` (cada entrada de los VAR_MAP apunta a un token real), `contrast-tokens` (AA de defaults en ambos esquemas), `css-comment-balance`, `breakpoints`. Deben escanear `projects/bip-angular/**/*.component.css`.
 - Storybook Foundations: Introduction, Colors (parseando `tokens.css` con `?raw`, clasificando seed/derived — nunca lista duplicada a mano), Radius, Spacing, Typography, Motion, Breakpoints.
@@ -163,7 +169,9 @@ y release, aunque su infraestructura mínima se arranca antes (ver cada bloque).
 - Referencia: `src/tokens.css`, `src/styles/*`, `src/lib/contrast.ts`, `src/foundations/*`.
 
 ### Bloque 2 — Theming (`bipTheme`) y puente de overlays
+
 **Objetivo:** paridad total con `ThemeProvider` React (`src/components/ThemeProvider/ThemeProvider.tsx`, 648 líneas + 614 de tests).
+
 - Componente `<bip-theme-provider>` **y** directiva `[bipTheme]` (misma lógica; el componente es un wrapper `display: contents`/div). `provideBipTheme(config)` para defaults a nivel app.
 - Ejes: `theme` (`square|rounded`), `colorScheme` (`light|dark|system` → nunca se estampa `system`, siempre el resuelto vía `matchMedia` en signal), `density` (`comfortable|compact`), `dir` (`ltr|rtl`, integrado con CDK `Directionality` proveyendo un `Directionality` propio), `tokens` (flat + `light`/`dark` anidados), `radius`, `focusRing`, `motion`, `spacing`, `cssVars` (escape hatch, gana a todo).
 - Mapas exportados: `TOKEN_VAR_MAP`, `RADIUS_VAR_MAP`, `ON_TEXT_VAR_MAP`, `FOCUS_RING_VAR_MAP`, `MOTION_VAR_MAP`, `SPACING_VAR_MAP`, y **un único** `resolveVarMap(overrides, VAR_MAP)` + `resolveTokenVars()`.
@@ -176,7 +184,9 @@ y release, aunque su infraestructura mínima se arranca antes (ver cada bloque).
 - **Terminado cuando:** se portan los casos de `ThemeProvider.test.tsx` y pasan; overlay de prueba hereda theme/dark/tokens.
 
 ### Bloque 3 — i18n, utilidades y primitivas de a11y
+
 **Objetivo:** todo lo transversal que necesitan los componentes.
+
 - `core/i18n`: interfaz `BipLocale` (copiar la forma exacta de `src/i18n/types.ts`), diccionarios `esMX` (default) y `enUS`, `mergeLocale()`, `PartialBipLocale`, `provideBipLocale(locale | Signal<BipLocale>)`, `injectBipLocale()`. `locale.locale` alimenta todos los `Intl.*`.
 - Test guard `no-hardcoded-strings` (portar `src/i18n/no-hardcoded-strings.test.ts` escaneando `.html` y `.ts` de componentes) + `dictionaries` (ambos diccionarios con las mismas llaves).
 - `core/utils` (reemplaza `shared-utils`): `formatCurrency(amount, { locale?, currency? })`, `formatDate()`, `validateRFC()` (regex `/^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/`, sin normalizar) + versiones Angular: pipes `bipCurrency`, `bipDate`, validator `bipRfcValidator` para Reactive Forms. Portar los 21 tests.
@@ -187,41 +197,57 @@ y release, aunque su infraestructura mínima se arranca antes (ver cada bloque).
 - **Terminado cuando:** guards en verde, `provideBipLocale(enUS)` cambia textos en una story de prueba.
 
 ### Bloque 4 — Componentes de layout, tipografía y display
+
 Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la lista.)
 `Container`, `Stack`, `Grid`, `Text`, `Heading`, `Divider`, `Link` (`a[bipLink]`), `Spinner`, `Skeleton`, `Badge`, `Avatar` + `AvatarGroup` (overflow i18n), `ProgressBar`, `EmptyState`, `Card` + `CardHeader/CardBody/CardFooter/CardMedia`, `StatsCard`, `Alert` (`role=status` para info/success, `role=alert` para warning/error; botón cerrar i18n).
+
 - **Terminado cuando:** los 17 cumplen la DoD.
 
 ### Bloque 5 — Formularios básicos (todos con ControlValueAccessor)
+
 `Button` (`button[bipButton], a[bipButton]`, variantes, tamaños, loading, `--color-txt-on-*`), `Input`, `Textarea`, `Checkbox` + `CheckboxGroup`, `Radio` + `RadioGroup` (group = CVA; radio sin `aria-invalid`), `Toggle` (thumb con `--rtl-x`), `Select` (nativo o custom según React — replicar exactamente; opciones y grupos), `NumberInput`, `SearchInput`, `Slider`, `FileUpload` (drag&drop, rechazados `RejectedFile`).
+
 - Cada uno probado con `FormControl`, `ngModel` y `[(value)]`; `disabled` desde el form.
 - Story extra por componente: "Reactive Forms" con validación y error visible.
 - **Terminado cuando:** los 13 cumplen la DoD.
 
 ### Bloque 6 — Overlays y feedback (todos vía `BipOverlay`)
+
 `Modal` + `ModalHeader/Body/Footer` (declarativo `[(open)]` con template portal; focus trap, restaura foco, Escape, primer focusable; scroll lock), `ConfirmDialog` (textos i18n), `DrawerPanel` (`placement` left/right físico por diseño), `Toast` (`BipToast` service + `provideBipToast({ position })`, región `role=region` con label i18n, `duration: 0` persistente, default 5000ms, barra de progreso, reusa `bip-alert`), `Tooltip` (`[bipTooltip]` directiva; `position` físico, `align` lógico; burbuja `--color-surface-inverse`), `Popover` + trigger/content, `Dropdown` (patrón WAI-ARIA Menu Button con `ListKeyManager`: ↑↓ Home End, Escape devuelve foco, `role=menuitem`, separadores).
+
 - **Terminado cuando:** los 7 cumplen la DoD y la story `PortalTheming` muestra Modal/Toast heredando dark + brand.
 
 ### Bloque 7 — Navegación y disclosure
+
 `Tabs` + `TabList/Tab/TabPanel` (variantes, tamaños, orientación, flechas con `ListKeyManager`), `Accordion` + `AccordionItem/Trigger/Content` (variantes), `Breadcrumb` (nav label i18n), `Pagination`, `Stepper` + `StepperStep`, `Navbar` + `NavbarBrand/Nav/Item/Actions` (landmark, hamburguesa con disclosure, panel móvil renderizado condicional, Escape/click fuera, `aria-current`), `Sidebar` + subpartes (aside + nav, colapsado con tooltip, trigger `aria-expanded/controls`, overlay móvil con `--rtl-x`, variantes `dark`/`primary`), `Timeline` + `TimelineItem`.
+
 - Integración opcional con Router: `NavbarItem`/`SidebarItem`/`Breadcrumb` aceptan `routerLink` y calculan `aria-current` con `routerLinkActive`.
 - **Terminado cuando:** los 8 cumplen la DoD.
 
 ### Bloque 8 — Selección avanzada y fechas
+
 `MultiSelect` (706 líneas React: búsqueda, chips, teclado), `Calendar` (1413 líneas: vistas `CalendarView`, eventos con `CalendarEventStatus`, popovers — el más grande; dividir en subcomponentes internos), `DatePicker` (vistas día/mes/año, navegación por teclado en las 4 direcciones), `DateRangePicker`, `TimePicker`.
+
 - Helpers de fechas compartidos en `core/utils/date` (portar `src/lib/dateHelpers.ts`), todo formateo vía `Intl` con `locale.locale`. Sin librerías de fechas externas.
 - Todos CVA (`Date | null`, `{ start, end }`, string de hora).
 - **Terminado cuando:** los 5 cumplen la DoD; tests de teclado portados completos (año/mes/día).
 
 ### Bloque 9 — Datos
+
 `Table` + `TableHead/Body/Row/Header/Cell/Empty` (`selected` → `aria-selected`; header `sortable` con `tabindex=0` + Enter/Space), `DataTable` (búsqueda, ordenamiento, selección con conteo, visibilidad de columnas, resumen — todos los textos i18n; columnas definidas con `<ng-template bipCell="key">` y `bipHeader`).
+
 - **Terminado cuando:** los 2 cumplen la DoD.
 
 ### Bloque 10 — Odontogram (dominio dental)
+
 `Odontogram`, `ToothSVG`, `ToothDetail`, `NotePopover`, `ImagePopover` + `types.ts` (`ToothCondition`, `ToothImageType`, `ToothSurface`). Popovers vía `BipOverlay`. Portar los 976 líneas de tests.
+
 - **Terminado cuando:** cumple la DoD.
 
 ### Bloque 11 — Calidad end-to-end
+
 (La infraestructura se puede arrancar desde el Bloque 4 para ir agregando baselines; se **cierra** aquí.)
+
 - `visual/theme-matrix.spec.ts`: square/rounded × light/dark, brand custom, Foundations/Colors (timeout 15s en ese screenshot), Radius, SideBySide, PortalTheming, SystemColorScheme, SideBySide con `&globals=dir:rtl`. No screenshotear UncontrolledWithPersistence.
 - `visual/component-matrix.ts` (manifiesto único; storyIds sacados de `http://localhost:6006/index.json`, nunca calculados a mano) + `component-matrix.spec.ts` (screenshot de `#storybook-root`, + RTL para los marcados) con coverage guard.
 - `visual/a11y-browser.spec.ts`: mismo manifiesto, `AxeBuilder` con reglas default (incluye `color-contrast`) en light y dark.
@@ -231,14 +257,15 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 - **Terminado cuando:** `pnpm test:visual:docker` y `pnpm test:e2e` en verde y ya sin violaciones de contraste.
 
 ### Bloque 12 — CI/CD, versionado y publicación
+
 - Workflows (mismo diseño que React):
-  | Workflow | Trigger | Pasos |
-  |---|---|---|
-  | `pr-validation.yml` | PR a cualquier rama | branch check → lint → test → build → visual-regression (job paralelo en container Playwright) → changeset-check (solo PR a `dev`) |
-  | `dev.yml` | push/PR a `dev` | lint → test → build → storybook preview |
-  | `qa.yml` | push/PR a `qa` | audit ∥ lint → test → build → e2e-consumer → storybook QA |
-  | `production.yml` | push/PR a `main` | security + lint + test + typecheck → build → e2e-consumer → publish npm (`needs: e2e-consumer`, publica desde `dist/bip-angular`) → Storybook a GitHub Pages → GitHub Release (cuerpo extraído de `CHANGELOG.md` con awk por `## [x.y.z]`) |
-  | `codeql.yml`, `dependency-review.yml` | estándar | — |
+  | Workflow                              | Trigger             | Pasos                                                                                                                                                                                                                                      |
+  | ------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | `pr-validation.yml`                   | PR a cualquier rama | branch check → lint → test → build → visual-regression (job paralelo en container Playwright) → changeset-check (solo PR a `dev`)                                                                                                          |
+  | `dev.yml`                             | push/PR a `dev`     | lint → test → build → storybook preview                                                                                                                                                                                                    |
+  | `qa.yml`                              | push/PR a `qa`      | audit ∥ lint → test → build → e2e-consumer → storybook QA                                                                                                                                                                                  |
+  | `production.yml`                      | push/PR a `main`    | security + lint + test + typecheck → build → e2e-consumer → publish npm (`needs: e2e-consumer`, publica desde `dist/bip-angular`) → Storybook a GitHub Pages → GitHub Release (cuerpo extraído de `CHANGELOG.md` con awk por `## [x.y.z]`) |
+  | `codeql.yml`, `dependency-review.yml` | estándar            | —                                                                                                                                                                                                                                          |
 - Siempre `pnpm install --frozen-lockfile`. Tests antes de build.
 - El repo es **público** → GitHub Actions sin costo; todos los pipelines de arriba se mantienen.
 - **NO usar Dependabot** (ni Renovate u otro bot que abra PRs `chore(deps)` periódicos): no se
@@ -260,7 +287,7 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 - [x] Bloque 0 — Bootstrap del workspace y tooling
 - [x] Bloque 1 — Foundations: tokens, estilos globales y guards
 - [x] Bloque 2 — Theming y puente de overlays
-- [ ] Bloque 3 — i18n, utilidades y primitivas de a11y
+- [x] Bloque 3 — i18n, utilidades y primitivas de a11y
 - [ ] Bloque 4 — Layout, tipografía y display (17)
 - [ ] Bloque 5 — Formularios básicos (13)
 - [ ] Bloque 6 — Overlays y feedback (7)

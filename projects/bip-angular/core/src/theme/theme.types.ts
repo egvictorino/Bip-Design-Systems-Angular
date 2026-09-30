@@ -3,7 +3,13 @@
  * bip-design-system (React) src/components/ThemeProvider/ThemeProvider.tsx.
  * Sin dependencias de Angular: puro TypeScript, reutilizable en tests/tooling.
  */
-import type { BipColorScheme, BipDensity, BipDir, BipResolvedColorScheme, BipThemeName } from '../types';
+import type {
+  BipColorScheme,
+  BipDensity,
+  BipDir,
+  BipResolvedColorScheme,
+  BipThemeName,
+} from '../types';
 
 export type { BipColorScheme, BipDensity, BipDir, BipResolvedColorScheme, BipThemeName };
 

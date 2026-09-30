@@ -68,7 +68,10 @@ describe('resolveTokenVars', () => {
 
 describe('resolveVarMap', () => {
   it('applies each override key to its mapped CSS var, skipping undefined values', () => {
-    const vars = resolveVarMap({ field: '12px', container: undefined, marker: '4px' }, RADIUS_VAR_MAP);
+    const vars = resolveVarMap(
+      { field: '12px', container: undefined, marker: '4px' },
+      RADIUS_VAR_MAP
+    );
     expect(vars).toEqual({ '--radius-field': '12px', '--radius-marker': '4px' });
   });
 

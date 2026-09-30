@@ -10,6 +10,24 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- i18n, utilidades y primitivas de a11y (Bloque 3): `core/i18n` con la interfaz `BipLocale`
+  (paridad exacta con la referencia React, incluye `calendar`/`odontogram` para los Bloques
+  8/10, tipados con `CalendarView`/`CalendarEventStatus`/`ToothCondition`/`ToothSurface`/
+  `ToothImageType` nuevos en `core/types`), diccionarios `esMX` (default) y `enUS`,
+  `mergeLocale()`, `provideBipLocale(locale | Signal<BipLocale>)` e `injectBipLocale()`
+  (`Signal<BipLocale>` reactivo, con fallback a `esMX` sin provider ancestro). `core/utils`:
+  `formatCurrency()`/`formatDate()`/`validateRFC()` + sus versiones Angular (`BipCurrencyPipe`,
+  `BipDatePipe`, `bipRfcValidator()` para Reactive Forms) que toman el locale activo por
+  defecto; `mediaQuery(breakpoint)` renombrado a `breakpointQuery(breakpoint)` para liberar el
+  nombre `mediaQuery()` en `core/a11y`. `core/a11y`: `BipIdGenerator` (puerto de `useId()`,
+  estable en SSR vía `APP_ID`), `disclosure()`, `mediaQuery(query)` (sobre `BreakpointObserver`
+  del CDK), `[bipClickOutside]`, `<bip-visually-hidden>`. `core/forms`: `BipFormControlBase`,
+  base compartida de `ControlValueAccessor` para los controles del Bloque 5 (disabled/touched/
+  cómputo de error/ids de label-helper-error/wiring de `NgControl`). Guard nuevo
+  `testing/no-hardcoded-strings` (escanea `.html`/`.ts` de componentes), test `dictionaries`
+  junto a los diccionarios (mismas claves en ambos, cada función de interpolación probada), y
+  registro de cobertura de a11y (`testing/a11y.spec.ts`, `A11Y_REGISTRY`) con coverage guard.
+  Story `Foundations/I18n`.
 - Theming y puente de overlays (Bloque 2): `<bip-theme-provider>` y la directiva `[bipTheme]`
   (misma lógica, `theme`/`colorScheme` como `model()` controlado/no-controlado con
   `defaultTheme`/`defaultColorScheme`/`storageKey`; `density`/`dir`/`tokens`/`radius`/
@@ -32,7 +50,7 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   `<bip-theme-provider>` leyendo los globals del toolbar.
 - Foundations (Bloque 1): hoja global `@bip-design-systems/angular/styles/bip.css` (tokens,
   primitives, themes, density, rtl, fonts, base) publicada vía ng-packagr `assets`; utilidades
-  `contrastRatio()`/`pickReadableText()` y `BREAKPOINTS`/`mediaQuery()` en `core/utils`; tipos
+  `contrastRatio()`/`pickReadableText()` y `BREAKPOINTS`/`breakpointQuery()` en `core/utils`; tipos
   `BipSize`/`BipSizeExtended`/tipos de theme en `core/types`; guards de estilos en `testing/`
   (spacing, on-text, rtl, tokens, contrast-tokens, css-comment-balance, breakpoints) que escanean
   `*.component.css`; Storybook Foundations (Colors, Radius, Spacing, Typography, Motion,

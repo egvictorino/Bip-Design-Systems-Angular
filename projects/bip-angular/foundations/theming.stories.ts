@@ -26,8 +26,12 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
   selector: 'bip-theming-playground-demo',
   template: `
     <bip-theme-provider theme="rounded" [tokens]="{ colorPrimary: colorPrimary() }">
-      <div style="display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-4);">
-        <label style="display: flex; gap: var(--space-2); align-items: center; color: var(--color-txt);">
+      <div
+        style="display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-4);"
+      >
+        <label
+          style="display: flex; gap: var(--space-2); align-items: center; color: var(--color-txt);"
+        >
           colorPrimary
           <input type="color" [value]="colorPrimary()" (input)="onColorInput($event)" />
         </label>
@@ -60,7 +64,9 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 
         <p style="color: var(--color-txt);">
           Contraste --color-txt-on-primary vs colorPrimary:
-          <strong>{{ contrastLabel() }}</strong> ({{ contrastLabel() === 'AA' ? '&gt;= 4.5:1' : '&lt; 4.5:1' }})
+          <strong>{{ contrastLabel() }}</strong> ({{
+            contrastLabel() === 'AA' ? '&gt;= 4.5:1' : '&lt; 4.5:1'
+          }})
         </p>
 
         <pre
@@ -71,8 +77,8 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
             border-radius: var(--radius-surface);
             overflow: auto;
           "
-        >&lt;bip-theme-provider [tokens]="&#123; colorPrimary: '{{ colorPrimary() }}' &#125;"&gt;</pre
         >
+&lt;bip-theme-provider [tokens]="&#123; colorPrimary: '{{ colorPrimary() }}' &#125;"&gt;</pre>
       </div>
     </bip-theme-provider>
   `,
@@ -147,8 +153,8 @@ class ThemingSideBySideDemo {
     <button type="button" (click)="open()">Abrir overlay (rounded)</button>
     <ng-template #panel>
       <div [style]="boxStyle">
-        El panel se crea vía <code>BipOverlay</code> (CDK Overlay + Portal, fuera del árbol
-        DOM del provider) y aun así hereda el tema activo — theme="rounded".
+        El panel se crea vía <code>BipOverlay</code> (CDK Overlay + Portal, fuera del árbol DOM del
+        provider) y aun así hereda el tema activo — theme="rounded".
         <button type="button" (click)="close()">Cerrar</button>
       </div>
     </ng-template>
@@ -165,8 +171,15 @@ class ThemingPortalOpener {
   protected readonly boxStyle = themedBoxStyle();
 
   protected open(): void {
-    const positionStrategy = this.cdkOverlay.position().global().centerHorizontally().centerVertically();
-    this.overlayRef = this.bipOverlay.create({ hasBackdrop: true, positionStrategy }, this.injector);
+    const positionStrategy = this.cdkOverlay
+      .position()
+      .global()
+      .centerHorizontally()
+      .centerVertically();
+    this.overlayRef = this.bipOverlay.create(
+      { hasBackdrop: true, positionStrategy },
+      this.injector
+    );
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.attach(new TemplatePortal(this.panelTemplate(), this.viewContainerRef));
   }
@@ -183,8 +196,8 @@ class ThemingPortalOpener {
     <div [style]="boxStyle">
       colorScheme="system" → resuelto: <strong>{{ controls.resolvedColorScheme }}</strong>
       <p style="margin: 0; font-size: var(--font-size-sm);">
-        Cambia el modo oscuro del sistema operativo con esta story abierta para verlo
-        actualizarse en vivo.
+        Cambia el modo oscuro del sistema operativo con esta story abierta para verlo actualizarse
+        en vivo.
       </p>
     </div>
   `,
@@ -212,8 +225,8 @@ class ThemingSystemDemo {
         </button>
       </div>
       <p style="margin: 0; font-size: var(--font-size-sm);">
-        Persistido en localStorage bajo <code>bip-storybook-theme</code> — recarga esta story
-        para comprobarlo.
+        Persistido en localStorage bajo <code>bip-storybook-theme</code> — recarga esta story para
+        comprobarlo.
       </p>
     </div>
   `,
@@ -234,7 +247,10 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
-  render: () => ({ template: `<bip-theming-playground-demo />`, moduleMetadata: { imports: [ThemingPlaygroundDemo] } }),
+  render: () => ({
+    template: `<bip-theming-playground-demo />`,
+    moduleMetadata: { imports: [ThemingPlaygroundDemo] },
+  }),
 };
 
 export const SideBySide: Story = {
