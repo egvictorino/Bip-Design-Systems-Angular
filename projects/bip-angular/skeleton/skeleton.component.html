@@ -1,0 +1,9 @@
+@if (isMultiline()) {
+  <div aria-hidden="true" class="bip-skeleton-multiline" [style.width]="width()" [style.height]="height()">
+    @for (index of lineIndexes(); track index) {
+      <div [class]="lineClasses(index)"></div>
+    }
+  </div>
+} @else {
+  <div aria-hidden="true" [class]="singleClasses()" [style.width]="width()" [style.height]="height()"></div>
+}

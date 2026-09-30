@@ -288,7 +288,7 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 - [x] Bloque 1 — Foundations: tokens, estilos globales y guards
 - [x] Bloque 2 — Theming y puente de overlays
 - [x] Bloque 3 — i18n, utilidades y primitivas de a11y
-- [ ] Bloque 4 — Layout, tipografía y display (17)
+- [x] Bloque 4 — Layout, tipografía y display (17)
 - [ ] Bloque 5 — Formularios básicos (13)
 - [ ] Bloque 6 — Overlays y feedback (7)
 - [ ] Bloque 7 — Navegación y disclosure (8)

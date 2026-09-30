@@ -15,6 +15,22 @@ const SRC_DIR = resolve(__dirname, '..');
  */
 const A11Y_REGISTRY: Record<string, string> = {
   a11y: 'BipVisuallyHidden: span recortado visualmente (clip-rect), siempre expuesto a lectores de pantalla.',
+  container: 'BipContainer: sin semántica propia, solo layout — el elemento host la conserva.',
+  stack: 'BipStack: sin semántica propia, solo layout — el elemento host la conserva.',
+  grid: 'BipGrid: sin semántica propia, solo layout — el elemento host la conserva.',
+  divider: 'BipDivider: role="separator" + aria-orientation (hr nativo cuando es horizontal sin label).',
+  text: 'BipText: sin semántica propia, solo tipografía — el elemento host la conserva.',
+  heading: 'BipHeading: infiere aria-level del tag h1-h6; añade role="heading"/aria-level cuando el host no es un tag de heading nativo.',
+  link: 'BipLink: aria-disabled+tabindex=-1 cuando disabled; hint accesible "abre en pestaña nueva" (bip-visually-hidden) cuando external.',
+  spinner: 'BipSpinner: role="status" + aria-label (locale o custom); SVG interno decorativo aria-hidden.',
+  skeleton: 'BipSkeleton: aria-hidden="true" en la raíz — placeholder puramente decorativo.',
+  badge: 'BipBadge: contenido de texto normal; el dot decorativo es aria-hidden.',
+  avatar: 'BipAvatar: role="img"+aria-label cuando no es <img> (iniciales/ícono); status es aria-hidden. BipAvatarGroup: role="group"; overflow "+N" es role="img"+aria-label con el conteo.',
+  'progress-bar': 'BipProgressBar: role="progressbar" + aria-valuemin/max/now (omitido si indeterminate) + aria-label (locale o custom) + aria-valuetext opcional + aria-busy si indeterminate + aria-describedby al helperText.',
+  'empty-state': 'BipEmptyState: icon box decorativo aria-hidden="true"; título/descripción son texto normal.',
+  card: 'BipCard: clickable añade role="button"+tabindex=0+Enter/Espacio; loading añade aria-busy+aria-label al contenedor del skeleton. CardHeader/Body/Footer/Media son contenedores sin semántica propia.',
+  'stats-card': 'BipStatsCard: role="region" + aria-label (title, o locale.statsCard.loading si loading) + aria-busy; icon slot es aria-hidden; trend tiene aria-label localizado con el signo/valor.',
+  alert: 'BipAlert: role="status" (info/success, aria-live polite) o role="alert" (warning/danger, aria-live assertive); botón cerrar opcional (closable) con aria-label localizado.',
 };
 
 /**

@@ -10,6 +10,32 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Layout, tipografía y display (Bloque 4): 17 componentes con paridad funcional con la
+  referencia React. `BipContainer`/`BipStack`/`BipGrid` (`[bipContainer]`/`[bipStack]`/
+  `[bipGrid]`, selectores de atributo — primitivas de layout puro sobre el elemento host
+  elegido por el consumidor, sin semántica propia). `BipText`/`BipHeading` (`[bipText]`/
+  `[bipHeading]`; `BipHeading` infiere el nivel accesible del propio tag `h1`-`h6` host en vez
+  de duplicarlo en un input, y añade `role="heading"`/`aria-level` solo cuando se aplica sobre
+  un elemento no-heading con `level` explícito). `BipDivider` (`<bip-divider>`,
+  `role="separator"`, `<hr>` nativo en el caso horizontal sin label). `BipLink` (`a[bipLink]`,
+  `underline`/`disabled`/`external` con hint accesible "abre en pestaña nueva" vía
+  `<bip-visually-hidden>`). `BipSpinner`/`BipSkeleton` (indicadores de carga;
+  `role="status"`+`aria-label` y `aria-hidden` respectivamente). `BipBadge` (variant/size/dot).
+  `BipAvatar` + `BipAvatarGroup` (fallback en cascada imagen→iniciales (color hasheado
+  estable, contraste automático sobre semillas de marca)→ícono; `size` de grupo propagado a
+  los `<bip-avatar>` hijos vía DI — equivalente Angular al `cloneElement` de React; truncado
+  `max` + badge "+N" de overflow). `BipProgressBar` (`role="progressbar"`,
+  indeterminate/striped/animated, helperText vía `aria-describedby`). `BipEmptyState` (slots
+  `[bipEmptyStateIcon]` con fallback nativo de `<ng-content>`, y `[bipEmptyStateAction]`).
+  `BipCard` + `BipCardHeader`/`BipCardBody`/`BipCardFooter`/`BipCardMedia` (variant/padding/
+  radius, `loading` con skeleton, `clickable` con `role="button"`+Enter/Espacio). `BipStatsCard`
+  (`role="region"`, slot `[bipStatsCardIcon]`, tendencia con ícono direccional + aria-label
+  localizado). `BipAlert` (`role="status"` info/success, `role="alert"` warning/danger; botón
+  cerrar opcional vía `closable`/`(closed)`, ya que Angular no puede detectar un `onClose`
+  condicional como React). Nueva clave `avatar.fallbackAlt` en `core/i18n` (`esMX`/`enUS`) —
+  la referencia React hardcodea `'Avatar'`, aquí pasa por el diccionario para cumplir el guard
+  `no-hardcoded-strings`. `eslint.config.js`: `component-selector` ahora acepta también
+  selector de atributo (no solo elemento) para los componentes que mejoran un elemento nativo.
 - i18n, utilidades y primitivas de a11y (Bloque 3): `core/i18n` con la interfaz `BipLocale`
   (paridad exacta con la referencia React, incluye `calendar`/`odontogram` para los Bloques
   8/10, tipados con `CalendarView`/`CalendarEventStatus`/`ToothCondition`/`ToothSurface`/

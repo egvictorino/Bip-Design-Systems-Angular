@@ -13,6 +13,7 @@ export const esMX: BipLocale = {
 
   avatar: {
     overflow: (count) => `${count} más`,
+    fallbackAlt: 'Avatar',
   },
 
   breadcrumb: {

@@ -25,6 +25,10 @@ export interface BipLocale {
   avatar: {
     /** ej. (n) => `${n} más` */
     overflow: (count: number) => string;
+    /** Fallback de `alt`/`aria-label` cuando no se provee `alt` ni `name` — la referencia React
+     * hardcodea `'Avatar'`; aquí pasa por el diccionario para cumplir el guard
+     * `no-hardcoded-strings`. */
+    fallbackAlt: string;
   };
 
   breadcrumb: {

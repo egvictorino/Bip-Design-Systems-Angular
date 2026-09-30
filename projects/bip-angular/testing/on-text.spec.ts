@@ -11,7 +11,15 @@ const SRC_DIR = resolve(__dirname, '..');
  * el propio *.component.css. Se puebla a partir del Bloque 4/6/7 (Sidebar dark,
  * Spinner inverse, Avatar fallback...) — ver CLAUDE.md § Reglas de código.
  */
-const ALLOWLIST = new Set<string>([]);
+const ALLOWLIST = new Set<string>([
+  // Spinner variant="inverse": color fijo pensado para superficies oscuras (sidebar dark,
+  // overlays con scrim), no un texto sobre un fill de marca recalculable por contraste.
+  'spinner/spinner.component.css',
+  // Avatar initials fallback: color fijo sobre fondos hasheados (no una semilla de marca
+  // recalculable) — las variantes que SÍ son semillas (primary/danger/unique) sobreescriben
+  // con --color-txt-on-* más abajo en el mismo archivo.
+  'avatar/avatar.component.css',
+]);
 
 describe('--color-txt-white no se usa fuera del allowlist justificado', () => {
   it('todo componente que pinte texto sobre un fill de marca debe usar --color-txt-on-*, no --color-txt-white', () => {

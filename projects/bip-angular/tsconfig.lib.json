@@ -8,6 +8,25 @@
     "declarationMap": true,
     "types": []
   },
-  "include": ["src/**/*.ts", "core/src/**/*.ts"],
-  "exclude": ["**/*.spec.ts"]
+  "include": [
+    "src/**/*.ts",
+    "core/src/**/*.ts",
+    "container/**/*.ts",
+    "stack/**/*.ts",
+    "grid/**/*.ts",
+    "text/**/*.ts",
+    "heading/**/*.ts",
+    "divider/**/*.ts",
+    "link/**/*.ts",
+    "spinner/**/*.ts",
+    "skeleton/**/*.ts",
+    "badge/**/*.ts",
+    "avatar/**/*.ts",
+    "progress-bar/**/*.ts",
+    "empty-state/**/*.ts",
+    "card/**/*.ts",
+    "stats-card/**/*.ts",
+    "alert/**/*.ts"
+  ],
+  "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

@@ -29,7 +29,27 @@
           "options": {
             "tsConfig": "projects/bip-angular/tsconfig.spec.json",
             "setupFiles": ["projects/bip-angular/src/test-setup.ts"],
-            "include": ["**/*.spec.ts", "../core/src/**/*.spec.ts", "../testing/**/*.spec.ts"]
+            "include": [
+              "**/*.spec.ts",
+              "../core/src/**/*.spec.ts",
+              "../testing/**/*.spec.ts",
+              "../container/**/*.spec.ts",
+              "../stack/**/*.spec.ts",
+              "../grid/**/*.spec.ts",
+              "../text/**/*.spec.ts",
+              "../heading/**/*.spec.ts",
+              "../divider/**/*.spec.ts",
+              "../link/**/*.spec.ts",
+              "../spinner/**/*.spec.ts",
+              "../skeleton/**/*.spec.ts",
+              "../badge/**/*.spec.ts",
+              "../avatar/**/*.spec.ts",
+              "../progress-bar/**/*.spec.ts",
+              "../empty-state/**/*.spec.ts",
+              "../card/**/*.spec.ts",
+              "../stats-card/**/*.spec.ts",
+              "../alert/**/*.spec.ts"
+            ]
           }
         },
         "storybook": {

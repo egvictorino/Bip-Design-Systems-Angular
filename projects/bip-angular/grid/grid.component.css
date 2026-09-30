@@ -1,0 +1,78 @@
+.bip-grid {
+  display: grid;
+}
+
+/* ─── Columns ────────────────────────────────────────────────────────────── */
+
+.bip-grid--cols-responsive {
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+}
+
+/* Mobile-first: una sola columna por defecto, se expande desde `md` (768px — ver
+   core/utils/breakpoints.ts BREAKPOINTS.md), mismo umbral que Navbar/Sidebar. */
+.bip-grid--cols-1,
+.bip-grid--cols-2,
+.bip-grid--cols-3,
+.bip-grid--cols-4,
+.bip-grid--cols-5,
+.bip-grid--cols-6,
+.bip-grid--cols-12 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .bip-grid--cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bip-grid--cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .bip-grid--cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .bip-grid--cols-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .bip-grid--cols-6 {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .bip-grid--cols-12 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+/* ─── Gap ────────────────────────────────────────────────────────────────── */
+
+.bip-grid--gap-0 {
+  gap: var(--space-0);
+}
+.bip-grid--gap-1 {
+  gap: var(--space-1);
+}
+.bip-grid--gap-2 {
+  gap: var(--space-2);
+}
+.bip-grid--gap-3 {
+  gap: var(--space-3);
+}
+.bip-grid--gap-4 {
+  gap: var(--space-4);
+}
+.bip-grid--gap-5 {
+  gap: var(--space-5);
+}
+.bip-grid--gap-6 {
+  gap: var(--space-6);
+}
+.bip-grid--gap-8 {
+  gap: var(--space-8);
+}
+.bip-grid--gap-10 {
+  gap: var(--space-10);
+}
+.bip-grid--gap-12 {
+  gap: var(--space-12);
+}
+.bip-grid--gap-16 {
+  gap: var(--space-16);
+}

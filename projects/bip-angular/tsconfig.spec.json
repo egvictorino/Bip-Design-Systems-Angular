@@ -12,6 +12,22 @@
     "src/test-setup.ts",
     "core/src/**/*.d.ts",
     "core/src/**/*.spec.ts",
-    "testing/**/*.ts"
+    "testing/**/*.ts",
+    "container/**/*.ts",
+    "stack/**/*.ts",
+    "grid/**/*.ts",
+    "text/**/*.ts",
+    "heading/**/*.ts",
+    "divider/**/*.ts",
+    "link/**/*.ts",
+    "spinner/**/*.ts",
+    "skeleton/**/*.ts",
+    "badge/**/*.ts",
+    "avatar/**/*.ts",
+    "progress-bar/**/*.ts",
+    "empty-state/**/*.ts",
+    "card/**/*.ts",
+    "stats-card/**/*.ts",
+    "alert/**/*.ts"
   ]
 }

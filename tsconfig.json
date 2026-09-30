@@ -5,7 +5,23 @@
   "compilerOptions": {
     "paths": {
       "bip-angular": ["./dist/bip-angular"],
-      "@bip-design-systems/angular/core": ["./projects/bip-angular/core/src/public-api.ts"]
+      "@bip-design-systems/angular/core": ["./projects/bip-angular/core/src/public-api.ts"],
+      "@bip-design-systems/angular/container": ["./projects/bip-angular/container/index.ts"],
+      "@bip-design-systems/angular/stack": ["./projects/bip-angular/stack/index.ts"],
+      "@bip-design-systems/angular/grid": ["./projects/bip-angular/grid/index.ts"],
+      "@bip-design-systems/angular/divider": ["./projects/bip-angular/divider/index.ts"],
+      "@bip-design-systems/angular/text": ["./projects/bip-angular/text/index.ts"],
+      "@bip-design-systems/angular/heading": ["./projects/bip-angular/heading/index.ts"],
+      "@bip-design-systems/angular/link": ["./projects/bip-angular/link/index.ts"],
+      "@bip-design-systems/angular/spinner": ["./projects/bip-angular/spinner/index.ts"],
+      "@bip-design-systems/angular/skeleton": ["./projects/bip-angular/skeleton/index.ts"],
+      "@bip-design-systems/angular/badge": ["./projects/bip-angular/badge/index.ts"],
+      "@bip-design-systems/angular/avatar": ["./projects/bip-angular/avatar/index.ts"],
+      "@bip-design-systems/angular/progress-bar": ["./projects/bip-angular/progress-bar/index.ts"],
+      "@bip-design-systems/angular/empty-state": ["./projects/bip-angular/empty-state/index.ts"],
+      "@bip-design-systems/angular/card": ["./projects/bip-angular/card/index.ts"],
+      "@bip-design-systems/angular/stats-card": ["./projects/bip-angular/stats-card/index.ts"],
+      "@bip-design-systems/angular/alert": ["./projects/bip-angular/alert/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,
