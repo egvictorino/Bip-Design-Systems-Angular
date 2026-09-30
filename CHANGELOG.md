@@ -10,6 +10,39 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Formularios básicos (Bloque 5): 13 componentes, todos con `ControlValueAccessor` (probados
+  con `FormControl`, `ngModel` y `[(value)]`). `BipButton` (`button[bipButton], a[bipButton]`,
+  variantes primary/secondary/bare/soul/danger, tamaños, `loading` con spinner+`aria-busy`,
+  `fullWidth`; en `<a>` el `disabled` se emula con `aria-disabled`+`tabindex=-1`+
+  `pointer-events:none`, ya que los anchors no tienen `disabled` nativo). `BipInput`
+  (`<bip-input>`, `variant` outlined/filled/bare, `type` con toggle de contraseña,
+  `clearable`, icon slots proyectados vía `[bipInputStartIcon]`/`[bipInputEndIcon]`).
+  `BipTextarea` (mismo patrón label+control+footer que `BipInput`, `resize`, `autoGrow`
+  ajustando `scrollHeight` vía `viewChild`, contador de caracteres con `maxLength`).
+  `BipCheckbox` + `BipCheckboxGroup` (el grupo es un `<fieldset>` puramente contextual, no
+  CVA — `size`/`disabled`/`error` cascadean a los checkboxes hijos vía
+  `inject(BipCheckboxGroup, { optional: true })`, cada checkbox mantiene su propio valor
+  booleano independiente, igual que la referencia React; `indeterminate` seteado como
+  propiedad DOM vía `viewChild`, no como atributo). `BipRadio` + `BipRadioGroup` (a diferencia
+  de Checkbox, `BipRadioGroup` SÍ es `ControlValueAccessor` — el valor seleccionado vive en el
+  grupo, no en cada radio, reflejando la exclusividad mutua; todos los `<bip-radio>` de un
+  grupo comparten el mismo `name` nativo, dando exclusividad y navegación con flechas de
+  teclado gratis del navegador; `BipRadio` no lleva `aria-invalid` por diseño y lanza un error
+  explícito si se usa fuera de `<bip-radio-group>`). `BipToggle` (`role="switch"` sobre un
+  checkbox nativo, thumb desplazado con `--rtl-x`). `BipSelect` (envuelve un `<select>` nativo
+  — no un listbox custom, misma decisión que la referencia React; opciones/grupos vía inputs
+  `options`/`groups`, `placeholder` como `<option disabled>` real). `BipNumberInput`
+  (`role="spinbutton"`, botones +/- con `tabindex=-1` y `aria-label` localizado, `min`/`max`/
+  `step`/`decimals`, prefix/suffix de texto; el valor se edita internamente como texto para no
+  perder estados intermedios de tecleo). `BipSearchInput` (wrapper `role="search"`, outputs
+  `searched` (debounced o solo en `Enter` vía `searchOnEnter`) y `cleared` — renombrados desde
+  `search`/`clear` de la referencia React porque `@angular-eslint/no-output-native` prohíbe
+  nombrar un output igual que un evento DOM nativo). `BipSlider` (envuelve un
+  `<input type="range">` nativo, sin reimplementar el thumb con CDK drag). `BipFileUpload`
+  (`<label>` como zona de drop y disparador del `<input type="file">` oculto con el mismo
+  patrón clip-rect que `BipVisuallyHidden`, no `display:none` — mantiene foco/teclado nativos;
+  `multiple`/`accept`/`maxSize`/`maxFiles` con rechazo de archivos vía output
+  `rejected: BipRejectedFile[]`; `loading` con `BipSpinner`+`aria-busy`).
 - Layout, tipografía y display (Bloque 4): 17 componentes con paridad funcional con la
   referencia React. `BipContainer`/`BipStack`/`BipGrid` (`[bipContainer]`/`[bipStack]`/
   `[bipGrid]`, selectores de atributo — primitivas de layout puro sobre el elemento host
