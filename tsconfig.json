@@ -12,7 +12,9 @@
       "@bip-design-systems/angular/divider": ["./projects/bip-angular/divider/index.ts"],
       "@bip-design-systems/angular/text": ["./projects/bip-angular/text/index.ts"],
       "@bip-design-systems/angular/heading": ["./projects/bip-angular/heading/index.ts"],
-      "@bip-design-systems/angular/link": ["./projects/bip-angular/link/index.ts"]
+      "@bip-design-systems/angular/link": ["./projects/bip-angular/link/index.ts"],
+      "@bip-design-systems/angular/spinner": ["./projects/bip-angular/spinner/index.ts"],
+      "@bip-design-systems/angular/skeleton": ["./projects/bip-angular/skeleton/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

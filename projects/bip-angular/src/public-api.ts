@@ -13,3 +13,5 @@ export * from '@bip-design-systems/angular/divider';
 export * from '@bip-design-systems/angular/text';
 export * from '@bip-design-systems/angular/heading';
 export * from '@bip-design-systems/angular/link';
+export * from '@bip-design-systems/angular/spinner';
+export * from '@bip-design-systems/angular/skeleton';

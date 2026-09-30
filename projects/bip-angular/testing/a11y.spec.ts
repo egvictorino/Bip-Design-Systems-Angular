@@ -22,6 +22,8 @@ const A11Y_REGISTRY: Record<string, string> = {
   text: 'BipText: sin semántica propia, solo tipografía — el elemento host la conserva.',
   heading: 'BipHeading: infiere aria-level del tag h1-h6; añade role="heading"/aria-level cuando el host no es un tag de heading nativo.',
   link: 'BipLink: aria-disabled+tabindex=-1 cuando disabled; hint accesible "abre en pestaña nueva" (bip-visually-hidden) cuando external.',
+  spinner: 'BipSpinner: role="status" + aria-label (locale o custom); SVG interno decorativo aria-hidden.',
+  skeleton: 'BipSkeleton: aria-hidden="true" en la raíz — placeholder puramente decorativo.',
 };
 
 /**
