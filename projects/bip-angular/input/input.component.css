@@ -1,0 +1,238 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+:host.bip-input-wrapper--full-width {
+  width: 100%;
+}
+
+/* ─── Label ───────────────────────────────────────────────────────────────── */
+
+.bip-input-label {
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.bip-input-label--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-input-label--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-input-label--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+
+.bip-input-label--normal {
+  color: var(--color-txt-utility);
+}
+.bip-input-label--focused {
+  color: var(--color-txt);
+}
+.bip-input-label--error {
+  color: var(--color-danger);
+}
+.bip-input-label--disabled {
+  opacity: 0.5;
+}
+
+.bip-input-required-mark {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-0-5);
+}
+
+/* ─── Container ───────────────────────────────────────────────────────────── */
+
+.bip-input-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+:host.bip-input-wrapper--full-width .bip-input-container {
+  width: 100%;
+}
+
+.bip-input-container > .bip-input {
+  width: 100%;
+}
+
+/* ─── Input base ──────────────────────────────────────────────────────────── */
+
+.bip-input {
+  border-radius: var(--radius-field);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+  cursor: text;
+}
+
+.bip-input:focus {
+  outline: none;
+}
+
+.bip-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-disabled);
+}
+
+.bip-input:read-only {
+  background-color: var(--color-field-readonly);
+}
+
+/* ─── Sizes ───────────────────────────────────────────────────────────────── */
+
+.bip-input--sm {
+  padding: var(--space-control-y-sm) var(--space-control-x-sm);
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-input--md {
+  padding: var(--space-control-y-md) var(--space-control-x-md);
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-input--lg {
+  padding: var(--space-control-y-lg) var(--space-control-x-lg);
+  font-size: var(--text-lg);
+  line-height: 1.75rem;
+}
+
+/* ─── Icon padding ────────────────────────────────────────────────────────── */
+
+.bip-input--has-start-icon {
+  padding-inline-start: var(--space-10);
+}
+.bip-input--has-end-adornment {
+  padding-inline-end: var(--space-10);
+}
+
+.bip-input-icon-start {
+  position: absolute;
+  inset-inline-start: var(--space-3);
+  display: flex;
+  align-items: center;
+  color: var(--color-txt-utility);
+  pointer-events: none;
+  z-index: var(--z-base);
+}
+
+.bip-input-right-adornments {
+  position: absolute;
+  inset-inline-end: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  z-index: var(--z-base);
+}
+
+/* ─── Action buttons inside input ────────────────────────────────────────── */
+
+.bip-input-clear-button,
+.bip-input-password-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-0);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-txt-utility);
+  border-radius: var(--radius-marker);
+  transition: color var(--duration-fast) var(--ease-standard);
+  line-height: 0;
+}
+
+.bip-input-clear-button:hover,
+.bip-input-password-toggle:hover {
+  color: var(--color-txt);
+}
+
+.bip-input-clear-button:focus-visible,
+.bip-input-password-toggle:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+/* ─── Variant: outlined ───────────────────────────────────────────────────── */
+
+.bip-input--outlined {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-field);
+}
+.bip-input--outlined:hover:not(:disabled) {
+  border-color: var(--color-edge-hover);
+}
+.bip-input--outlined:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.bip-input--outlined.bip-input--error {
+  border-color: var(--color-danger);
+}
+.bip-input--outlined.bip-input--error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+}
+
+/* ─── Variant: filled ─────────────────────────────────────────────────────── */
+
+.bip-input--filled {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-secondary);
+}
+.bip-input--filled:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.bip-input--filled.bip-input--error {
+  background-color: var(--color-danger-light);
+  border-color: transparent;
+}
+.bip-input--filled.bip-input--error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+}
+
+/* ─── Variant: bare ───────────────────────────────────────────────────────── */
+
+.bip-input--bare {
+  border: none;
+  border-bottom: 2px solid var(--color-primary);
+  background-color: transparent;
+  border-radius: var(--radius-none);
+}
+.bip-input--bare:hover:not(:disabled) {
+  border-bottom-color: var(--color-primary-hover);
+}
+.bip-input--bare:focus-visible {
+  box-shadow: none;
+  border-bottom-color: var(--color-primary-hover);
+}
+.bip-input--bare.bip-input--error {
+  border-bottom-color: var(--color-danger);
+}
+.bip-input--bare.bip-input--error:focus-visible {
+  box-shadow: none;
+}
+
+/* ─── Helper / Error message ─────────────────────────────────────────────── */
+
+.bip-input-helper--sm,
+.bip-input-helper--md {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-input-helper--lg {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+
+.bip-input-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-input-error-text {
+  color: var(--color-danger);
+}

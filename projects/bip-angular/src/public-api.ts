@@ -23,3 +23,4 @@ export * from '@bip-design-systems/angular/card';
 export * from '@bip-design-systems/angular/stats-card';
 export * from '@bip-design-systems/angular/alert';
 export * from '@bip-design-systems/angular/button';
+export * from '@bip-design-systems/angular/input';

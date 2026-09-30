@@ -49,7 +49,8 @@
               "../card/**/*.spec.ts",
               "../stats-card/**/*.spec.ts",
               "../alert/**/*.spec.ts",
-              "../button/**/*.spec.ts"
+              "../button/**/*.spec.ts",
+              "../input/**/*.spec.ts"
             ]
           }
         },

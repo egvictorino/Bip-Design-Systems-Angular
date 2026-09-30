@@ -32,6 +32,7 @@ const A11Y_REGISTRY: Record<string, string> = {
   'stats-card': 'BipStatsCard: role="region" + aria-label (title, o locale.statsCard.loading si loading) + aria-busy; icon slot es aria-hidden; trend tiene aria-label localizado con el signo/valor.',
   alert: 'BipAlert: role="status" (info/success, aria-live polite) o role="alert" (warning/danger, aria-live assertive); botón cerrar opcional (closable) con aria-label localizado.',
   button: 'BipButton: selector de atributo sobre button/a nativos — conserva la semántica del elemento host; en <a> emula disabled con aria-disabled+tabindex=-1+bloqueo de click (no existe disabled nativo en anchors); aria-busy durante loading; spinner decorativo aria-hidden.',
+  input: 'BipInput: for/id entre label e input; aria-invalid solo con error explícito o NgControl inválido+tocado; aria-describedby al helper/error (role="alert" en error); botones de limpiar/mostrar-ocultar contraseña con aria-label localizado y tabindex=-1 (no roban el foco al flujo del campo).',
 };
 
 /**

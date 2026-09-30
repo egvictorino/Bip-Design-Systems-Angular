@@ -27,7 +27,8 @@
     "card/**/*.ts",
     "stats-card/**/*.ts",
     "alert/**/*.ts",
-    "button/**/*.ts"
+    "button/**/*.ts",
+    "input/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
