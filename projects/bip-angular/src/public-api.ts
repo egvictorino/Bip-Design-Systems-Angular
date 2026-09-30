@@ -26,3 +26,4 @@ export * from '@bip-design-systems/angular/button';
 export * from '@bip-design-systems/angular/input';
 export * from '@bip-design-systems/angular/textarea';
 export * from '@bip-design-systems/angular/checkbox';
+export * from '@bip-design-systems/angular/radio';

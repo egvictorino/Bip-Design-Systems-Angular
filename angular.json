@@ -52,7 +52,8 @@
               "../button/**/*.spec.ts",
               "../input/**/*.spec.ts",
               "../textarea/**/*.spec.ts",
-              "../checkbox/**/*.spec.ts"
+              "../checkbox/**/*.spec.ts",
+              "../radio/**/*.spec.ts"
             ]
           }
         },

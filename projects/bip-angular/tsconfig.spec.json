@@ -32,6 +32,7 @@
     "button/**/*.ts",
     "input/**/*.ts",
     "textarea/**/*.ts",
-    "checkbox/**/*.ts"
+    "checkbox/**/*.ts",
+    "radio/**/*.ts"
   ]
 }
