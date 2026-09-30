@@ -29,7 +29,8 @@
     "alert/**/*.ts",
     "button/**/*.ts",
     "input/**/*.ts",
-    "textarea/**/*.ts"
+    "textarea/**/*.ts",
+    "checkbox/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

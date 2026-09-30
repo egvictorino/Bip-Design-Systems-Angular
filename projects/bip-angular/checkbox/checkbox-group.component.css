@@ -1,0 +1,50 @@
+.bip-checkbox-group-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border: 0;
+  padding: var(--space-0);
+  margin: var(--space-0);
+}
+
+.bip-checkbox-group-legend {
+  font-weight: 500;
+}
+
+.bip-checkbox-group-legend--sm {
+  font-size: var(--text-xs);
+}
+.bip-checkbox-group-legend--md {
+  font-size: var(--text-sm);
+}
+.bip-checkbox-group-legend--lg {
+  font-size: var(--text-base);
+}
+
+.bip-checkbox-group-legend--default {
+  color: var(--color-txt);
+}
+.bip-checkbox-group-legend--error {
+  color: var(--color-danger);
+}
+
+.bip-checkbox-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bip-checkbox-group-helper--sm,
+.bip-checkbox-group-helper--md {
+  font-size: var(--text-xs);
+}
+.bip-checkbox-group-helper--lg {
+  font-size: var(--text-sm);
+}
+
+.bip-checkbox-group-message--error {
+  color: var(--color-danger);
+}
+.bip-checkbox-group-message--helper {
+  color: var(--color-txt-secondary);
+}

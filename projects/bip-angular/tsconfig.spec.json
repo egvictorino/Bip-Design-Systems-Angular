@@ -31,6 +31,7 @@
     "alert/**/*.ts",
     "button/**/*.ts",
     "input/**/*.ts",
-    "textarea/**/*.ts"
+    "textarea/**/*.ts",
+    "checkbox/**/*.ts"
   ]
 }

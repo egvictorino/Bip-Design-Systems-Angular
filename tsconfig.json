@@ -24,7 +24,8 @@
       "@bip-design-systems/angular/alert": ["./projects/bip-angular/alert/index.ts"],
       "@bip-design-systems/angular/button": ["./projects/bip-angular/button/index.ts"],
       "@bip-design-systems/angular/input": ["./projects/bip-angular/input/index.ts"],
-      "@bip-design-systems/angular/textarea": ["./projects/bip-angular/textarea/index.ts"]
+      "@bip-design-systems/angular/textarea": ["./projects/bip-angular/textarea/index.ts"],
+      "@bip-design-systems/angular/checkbox": ["./projects/bip-angular/checkbox/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

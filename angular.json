@@ -51,7 +51,8 @@
               "../alert/**/*.spec.ts",
               "../button/**/*.spec.ts",
               "../input/**/*.spec.ts",
-              "../textarea/**/*.spec.ts"
+              "../textarea/**/*.spec.ts",
+              "../checkbox/**/*.spec.ts"
             ]
           }
         },

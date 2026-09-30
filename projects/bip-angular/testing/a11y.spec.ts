@@ -34,6 +34,7 @@ const A11Y_REGISTRY: Record<string, string> = {
   button: 'BipButton: selector de atributo sobre button/a nativos — conserva la semántica del elemento host; en <a> emula disabled con aria-disabled+tabindex=-1+bloqueo de click (no existe disabled nativo en anchors); aria-busy durante loading; spinner decorativo aria-hidden.',
   input: 'BipInput: for/id entre label e input; aria-invalid solo con error explícito o NgControl inválido+tocado; aria-describedby al helper/error (role="alert" en error); botones de limpiar/mostrar-ocultar contraseña con aria-label localizado y tabindex=-1 (no roban el foco al flujo del campo).',
   textarea: 'BipTextarea: for/id entre label y textarea; aria-invalid solo con error explícito o NgControl inválido+tocado; aria-describedby al helper/error (role="alert" en error); contador de caracteres es texto normal (no necesita anuncio por cada tecla).',
+  checkbox: 'BipCheckbox: checkbox nativo real (input type=checkbox) bajo un box visual — teclado/rol nativos intactos; aria-invalid+aria-describedby igual que Input; indeterminate seteado vía viewChild (propiedad DOM, no atributo). BipCheckboxGroup: <fieldset>+<legend>, aria-describedby al helper/error; cascada size/disabled/error a los checkboxes hijos vía inject(optional), sin defaults silenciosos erróneos (el hijo puede sobreescribir cualquiera explícitamente).',
 };
 
 /**
