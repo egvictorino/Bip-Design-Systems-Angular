@@ -1,0 +1,437 @@
+:host {
+  display: block;
+  color: var(--color-txt);
+}
+:host.bip-calendar--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ─── Header ──────────────────────────────────────────────────────────────── */
+
+.bip-calendar-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-block-end: var(--space-3);
+}
+
+.bip-calendar-header-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.bip-calendar-nav-btn,
+.bip-calendar-today-btn {
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-control);
+  background-color: var(--color-field);
+  color: var(--color-txt);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+}
+.bip-calendar-nav-btn:hover:not(:disabled),
+.bip-calendar-today-btn:hover:not(:disabled) {
+  background-color: var(--color-secondary);
+}
+.bip-calendar-nav-btn:focus-visible,
+.bip-calendar-today-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.bip-calendar-nav-btn:disabled,
+.bip-calendar-today-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bip-calendar-title {
+  font-weight: 600;
+  font-size: var(--text-base);
+  margin-inline-start: var(--space-2);
+  text-transform: capitalize;
+}
+
+.bip-calendar-view-switcher {
+  display: flex;
+  gap: var(--space-1);
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-control);
+  padding: var(--space-0-5);
+}
+.bip-calendar-view-btn {
+  border: none;
+  background: none;
+  border-radius: var(--radius-control);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-txt-secondary);
+  cursor: pointer;
+}
+.bip-calendar-view-btn:hover:not(:disabled) {
+  background-color: var(--color-secondary);
+}
+.bip-calendar-view-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.bip-calendar-view-btn--active {
+  background-color: var(--color-primary);
+  color: var(--color-txt-on-primary);
+}
+.bip-calendar-view-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Vista mes ───────────────────────────────────────────────────────────── */
+
+.bip-calendar-month-day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+  padding-block-end: var(--space-1);
+}
+.bip-calendar-month-day-header {
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-txt-secondary);
+}
+
+.bip-calendar-month-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  user-select: none;
+}
+.bip-calendar-month-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+}
+.bip-calendar-month-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  min-height: 6rem;
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-control);
+  padding: var(--space-1);
+  cursor: pointer;
+}
+.bip-calendar-month-cell:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.bip-calendar-month-cell--other-month {
+  opacity: 0.45;
+}
+.bip-calendar-month-cell--in-range {
+  background-color: var(--color-secondary);
+}
+.bip-calendar-month-cell-date {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  align-self: flex-end;
+  color: var(--color-txt-secondary);
+}
+.bip-calendar-month-cell-date--today {
+  color: var(--color-txt-on-primary);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-circle);
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bip-calendar-event-chip {
+  border-radius: var(--radius-control);
+  padding: var(--space-0-5) var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-txt-on-primary);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bip-calendar-event-chip:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.bip-calendar-overflow-btn {
+  border: none;
+  background: none;
+  color: var(--color-txt-secondary);
+  font-size: var(--text-xs);
+  text-align: start;
+  cursor: pointer;
+  padding: 0;
+}
+.bip-calendar-overflow-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Estados de color por status (cuando el evento no trae `color` propio). */
+.bip-calendar-status-pending {
+  background-color: var(--color-warning);
+}
+.bip-calendar-status-confirmed {
+  background-color: var(--color-info);
+}
+.bip-calendar-status-completed {
+  background-color: var(--color-success);
+}
+.bip-calendar-status-cancelled {
+  background-color: var(--color-txt-secondary);
+}
+
+/* ─── TimeGrid (semana/día) ───────────────────────────────────────────────── */
+
+.bip-calendar-time-grid {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+.bip-calendar-time-labels {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 3rem;
+  padding-block-start: 1.75rem;
+}
+.bip-calendar-time-label {
+  font-size: var(--text-xs);
+  color: var(--color-txt-secondary);
+  transform: translateY(-50%);
+}
+.bip-calendar-time-columns {
+  display: flex;
+  flex: 1;
+  gap: var(--space-1);
+}
+.bip-calendar-time-column-group {
+  flex: 1;
+  min-width: 8rem;
+  display: flex;
+  flex-direction: column;
+}
+.bip-calendar-time-column-header {
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-txt-secondary);
+  padding-block-end: var(--space-1);
+  text-transform: capitalize;
+}
+.bip-calendar-time-column-header--today {
+  color: var(--color-primary);
+}
+.bip-calendar-time-column-body {
+  display: flex;
+  gap: var(--space-0-5);
+  position: relative;
+}
+.bip-calendar-time-column {
+  flex: 1;
+  position: relative;
+  border-inline-start: 1px solid var(--color-edge);
+  cursor: pointer;
+}
+.bip-calendar-time-grid-line {
+  border-block-end: 1px solid var(--color-edge);
+}
+
+.bip-calendar-event-block {
+  position: absolute;
+  inset-inline: var(--space-0-5);
+  border-radius: var(--radius-control);
+  padding: var(--space-0-5) var(--space-1);
+  color: var(--color-txt-on-primary);
+  font-size: var(--text-xs);
+  overflow: hidden;
+  cursor: pointer;
+}
+.bip-calendar-event-block:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.bip-calendar-event-block-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── Agenda ──────────────────────────────────────────────────────────────── */
+
+.bip-calendar-agenda-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-block-end: var(--space-3);
+}
+.bip-calendar-agenda-filter-btn {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-txt-on-primary);
+  cursor: pointer;
+}
+.bip-calendar-agenda-filter-btn--inactive {
+  opacity: 0.35;
+}
+.bip-calendar-agenda-filter-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.bip-calendar-agenda-empty {
+  text-align: center;
+  color: var(--color-txt-secondary);
+  padding: var(--space-6);
+}
+
+.bip-calendar-agenda-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.bip-calendar-agenda-day-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+}
+.bip-calendar-agenda-today-badge {
+  background-color: var(--color-primary);
+  color: var(--color-txt-on-primary);
+  border-radius: var(--radius-pill);
+  padding: var(--space-0-5) var(--space-2);
+  font-size: var(--text-xs);
+}
+.bip-calendar-agenda-events {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.bip-calendar-agenda-event {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-control);
+  padding: var(--space-2);
+  cursor: pointer;
+}
+.bip-calendar-agenda-event:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.bip-calendar-agenda-event--cancelled {
+  opacity: 0.6;
+}
+.bip-calendar-agenda-event-color {
+  width: var(--space-1);
+  align-self: stretch;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+.bip-calendar-agenda-event-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+}
+.bip-calendar-agenda-event-title {
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+.bip-calendar-agenda-event-time,
+.bip-calendar-agenda-event-subtext {
+  font-size: var(--text-xs);
+  color: var(--color-txt-secondary);
+}
+.bip-calendar-agenda-event-notes {
+  font-size: var(--text-xs);
+  color: var(--color-txt-secondary);
+  margin: 0;
+}
+.bip-calendar-agenda-status-badge {
+  border-radius: var(--radius-pill);
+  padding: var(--space-0-5) var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-txt-on-primary);
+  flex-shrink: 0;
+}
+
+/* ─── Popover de rango (vista mes) ────────────────────────────────────────── */
+
+.bip-calendar-range-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 40%);
+}
+
+.bip-calendar-range-popover {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-radius: var(--radius-container);
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-surface-1);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-4);
+  min-width: 16rem;
+}
+.bip-calendar-range-popover:focus-visible {
+  outline: none;
+}
+.bip-calendar-range-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+.bip-calendar-range-popover-close {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: var(--text-lg);
+  color: var(--color-txt-secondary);
+  line-height: 1;
+}
+.bip-calendar-range-popover-close:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.bip-calendar-range-popover-confirm {
+  border: none;
+  border-radius: var(--radius-control);
+  background-color: var(--color-primary);
+  color: var(--color-txt-on-primary);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.bip-calendar-range-popover-confirm:hover {
+  background-color: var(--color-primary-hover);
+}
+.bip-calendar-range-popover-confirm:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

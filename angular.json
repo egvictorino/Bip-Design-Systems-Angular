@@ -78,7 +78,8 @@
               "../multi-select/**/*.spec.ts",
               "../date-picker/**/*.spec.ts",
               "../date-range-picker/**/*.spec.ts",
-              "../time-picker/**/*.spec.ts"
+              "../time-picker/**/*.spec.ts",
+              "../calendar/**/*.spec.ts"
             ]
           }
         },

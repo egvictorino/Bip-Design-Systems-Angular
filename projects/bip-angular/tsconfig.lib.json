@@ -56,7 +56,8 @@
     "multi-select/**/*.ts",
     "date-picker/**/*.ts",
     "date-range-picker/**/*.ts",
-    "time-picker/**/*.ts"
+    "time-picker/**/*.ts",
+    "calendar/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
