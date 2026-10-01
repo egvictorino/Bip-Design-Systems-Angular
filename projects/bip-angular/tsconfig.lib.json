@@ -54,7 +54,8 @@
     "navbar/**/*.ts",
     "sidebar/**/*.ts",
     "multi-select/**/*.ts",
-    "date-picker/**/*.ts"
+    "date-picker/**/*.ts",
+    "date-range-picker/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

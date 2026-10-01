@@ -1,0 +1,92 @@
+@if (label()) {
+  <label [for]="fieldId" class="bip-date-range-picker-label">
+    {{ label() }}
+    @if (required()) {
+      <span aria-hidden="true" class="bip-date-range-picker-required-mark"> *</span>
+    }
+  </label>
+}
+
+<div class="bip-date-range-picker-trigger-wrapper">
+  <button
+    #triggerRef
+    type="button"
+    [id]="fieldId"
+    [class]="'bip-date-range-picker-trigger ' + triggerClass()"
+    [disabled]="disabled()"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-describedby]="messageId()"
+    [attr.aria-invalid]="hasError() || null"
+    (click)="toggle()"
+    (blur)="onBlur()"
+  >
+    @if (value().from) {
+      <span class="bip-date-range-picker-value">{{ displayValue() }}</span>
+    } @else {
+      <span class="bip-date-range-picker-placeholder">
+        {{ placeholder() || locale().dateRangePicker.placeholder }}
+      </span>
+    }
+    @if (value().from && !disabled()) {
+      <span
+        class="bip-date-range-picker-clear"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="locale().dateRangePicker.clearSelection"
+        (click)="onClearRange($event)"
+        (keydown.enter)="onClearRange($event)"
+        (keydown.space)="onClearRange($event)"
+      >
+        ×
+      </span>
+    } @else {
+      <span class="bip-date-range-picker-calendar-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="currentColor">
+          <path
+            d="M4.5 1a.5.5 0 01.5.5V2h6v-.5a.5.5 0 011 0V2h.5A1.5 1.5 0 0114 3.5v9A1.5 1.5 0 0112.5 14h-9A1.5 1.5 0 012 12.5v-9A1.5 1.5 0 013.5 2H4v-.5a.5.5 0 01.5-.5zM3 5v7.5a.5.5 0 00.5.5h9a.5.5 0 00.5-.5V5H3z"
+          />
+        </svg>
+      </span>
+    }
+  </button>
+</div>
+
+@if (error() && errorMessage()) {
+  <span [id]="errorId" class="bip-date-range-picker-message bip-date-range-picker-error-text" role="alert">
+    {{ errorMessage() }}
+  </span>
+} @else if (helperText()) {
+  <span [id]="errorId" class="bip-date-range-picker-message bip-date-range-picker-helper-text">
+    {{ helperText() }}
+  </span>
+}
+
+<ng-template #panelTemplate>
+  <div
+    class="bip-date-range-picker-panel"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-label]="locale().dateRangePicker.selectRange"
+    (keydown.escape)="onEscape($event)"
+  >
+    <bip-calendar-grid
+      mode="range"
+      [(viewDate)]="viewDate"
+      [min]="min()"
+      [max]="max()"
+      [disabledDates]="disabledDates()"
+      [rangeFrom]="value().from"
+      [rangeTo]="value().to"
+      [previewTo]="previewTo()"
+      [strings]="gridStrings()"
+      [localeTag]="locale().locale"
+      [clearLabel]="locale().dateRangePicker.clearSelection"
+      [showClearLink]="showClearLink()"
+      (daySelected)="onDaySelected($event)"
+      (dayHover)="onDayHover($event)"
+      (clearSelected)="onClearFromGrid()"
+    />
+  </div>
+</ng-template>
