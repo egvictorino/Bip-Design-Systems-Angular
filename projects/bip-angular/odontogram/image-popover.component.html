@@ -141,6 +141,10 @@
         {{ addUrl() ? locale().odontogram.changeFile : locale().odontogram.selectFile }}
       </button>
 
+      @if (fileError()) {
+        <p class="bip-image-popover-file-error" role="alert">{{ fileError() }}</p>
+      }
+
       <div class="bip-image-popover-add-actions">
         @if (images().length > 0) {
           <button type="button" (click)="handleAddCancel()" class="bip-image-popover-cancel-btn">

@@ -6,6 +6,7 @@ export { formatCurrency } from './currency';
 export type { FormatCurrencyOptions } from './currency';
 export { formatDate } from './date-format';
 export type { FormatDateOptions } from './date-format';
+export { formatFileSize } from './file-size';
 export {
   addDays,
   dateKey,

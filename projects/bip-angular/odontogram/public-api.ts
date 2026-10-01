@@ -7,6 +7,7 @@ export { BipToothDetail } from './tooth-detail.component';
 export { BipToothSvg } from './tooth-svg.component';
 export { BipNotePopover } from './note-popover.component';
 export { BipImagePopover } from './image-popover.component';
+export type { BipRejectedImage } from './image-popover.component';
 export type {
   DentitionMode,
   OdontogramValue,

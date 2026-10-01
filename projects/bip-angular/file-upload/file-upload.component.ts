@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
-import { BipFormControlBase, injectBipLocale } from '@bip-design-systems/angular/core';
+import { BipFormControlBase, formatFileSize, injectBipLocale } from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 import { BipSpinner } from '@bip-design-systems/angular/spinner';
 import { input as ngInput } from '@angular/core';
@@ -32,12 +32,6 @@ const HELPER_SIZE_CLASS: Record<BipSize, string> = {
   md: 'bip-file-upload-helper--sm',
   lg: 'bip-file-upload-helper--lg',
 };
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
 
 /**
  * `value` es `File[]` (CVA). El `<label>` ES la zona de drop y el disparador del selector de
