@@ -42,3 +42,4 @@ export * from '@bip-design-systems/angular/popover';
 export * from '@bip-design-systems/angular/dropdown';
 export * from '@bip-design-systems/angular/timeline';
 export * from '@bip-design-systems/angular/breadcrumb';
+export * from '@bip-design-systems/angular/pagination';
