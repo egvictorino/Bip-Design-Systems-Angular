@@ -71,7 +71,8 @@
               "../breadcrumb/**/*.spec.ts",
               "../pagination/**/*.spec.ts",
               "../tabs/**/*.spec.ts",
-              "../accordion/**/*.spec.ts"
+              "../accordion/**/*.spec.ts",
+              "../stepper/**/*.spec.ts"
             ]
           }
         },

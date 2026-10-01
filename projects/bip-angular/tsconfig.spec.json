@@ -51,6 +51,7 @@
     "breadcrumb/**/*.ts",
     "pagination/**/*.ts",
     "tabs/**/*.ts",
-    "accordion/**/*.ts"
+    "accordion/**/*.ts",
+    "stepper/**/*.ts"
   ]
 }
