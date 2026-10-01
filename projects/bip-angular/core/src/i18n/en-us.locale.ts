@@ -325,6 +325,7 @@ export const enUS: BipLocale = {
     navLandmark: 'Navigation',
     expand: 'Expand sidebar',
     collapse: 'Collapse sidebar',
+    badgeCount: (count) => ` (${count} notifications)`,
   },
 
   spinner: {

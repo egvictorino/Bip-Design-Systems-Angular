@@ -51,7 +51,8 @@
     "tabs/**/*.ts",
     "accordion/**/*.ts",
     "stepper/**/*.ts",
-    "navbar/**/*.ts"
+    "navbar/**/*.ts",
+    "sidebar/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

@@ -19,6 +19,9 @@ const ALLOWLIST = new Set<string>([
   // recalculable) — las variantes que SÍ son semillas (primary/danger/unique) sobreescriben
   // con --color-txt-on-* más abajo en el mismo archivo.
   'avatar/avatar.component.css',
+  // Sidebar variant="dark": superficie oscura fija de diseño (sidebar.surface-inverse), no una
+  // semilla de marca recalculable por contraste — igual motivo que Spinner inverse.
+  'sidebar/sidebar.component.css',
 ]);
 
 describe('--color-txt-white no se usa fuera del allowlist justificado', () => {

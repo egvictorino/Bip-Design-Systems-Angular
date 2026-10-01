@@ -1,0 +1,28 @@
+.bip-sidebar-submenu-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.bip-sidebar-submenu-chevron {
+  flex-shrink: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-inline-start: auto;
+  border-inline-end: 2px solid currentColor;
+  border-block-end: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.bip-sidebar-submenu-chevron--open {
+  transform: rotate(45deg);
+}
+
+.bip-sidebar-submenu-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  margin: var(--space-0);
+  padding-inline-start: var(--space-6);
+  list-style: none;
+}

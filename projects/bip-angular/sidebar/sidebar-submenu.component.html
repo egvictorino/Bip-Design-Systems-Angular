@@ -1,0 +1,38 @@
+@if (context.isCollapsed()) {
+  <li class="bip-sidebar-submenu-wrapper">
+    <button
+      type="button"
+      class="bip-sidebar-item"
+      data-sidebar-item
+      [bipTooltip]="label()"
+      bipTooltipPosition="right"
+      (keydown)="onTriggerKeydown($event)"
+    >
+      <ng-content select="[bipSidebarSubMenuIcon]" />
+    </button>
+  </li>
+} @else {
+  <li class="bip-sidebar-submenu-wrapper">
+    <button
+      type="button"
+      class="bip-sidebar-item"
+      data-sidebar-item
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="subMenuId"
+      (click)="toggle()"
+      (keydown)="onTriggerKeydown($event)"
+    >
+      <ng-content select="[bipSidebarSubMenuIcon]" />
+      <span class="bip-sidebar-item-label">{{ label() }}</span>
+      @if (badge() !== undefined) {
+        <span class="bip-sidebar-item-badge" aria-hidden="true">{{ badge() }}</span>
+      }
+      <span class="bip-sidebar-submenu-chevron" [class.bip-sidebar-submenu-chevron--open]="isOpen()" aria-hidden="true"></span>
+    </button>
+    @if (isOpen()) {
+      <ul [id]="subMenuId" class="bip-sidebar-submenu-list">
+        <ng-content />
+      </ul>
+    }
+  </li>
+}

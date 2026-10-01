@@ -73,7 +73,8 @@
               "../tabs/**/*.spec.ts",
               "../accordion/**/*.spec.ts",
               "../stepper/**/*.spec.ts",
-              "../navbar/**/*.spec.ts"
+              "../navbar/**/*.spec.ts",
+              "../sidebar/**/*.spec.ts"
             ]
           }
         },
