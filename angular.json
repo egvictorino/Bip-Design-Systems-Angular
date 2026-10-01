@@ -77,7 +77,8 @@
               "../sidebar/**/*.spec.ts",
               "../multi-select/**/*.spec.ts",
               "../date-picker/**/*.spec.ts",
-              "../date-range-picker/**/*.spec.ts"
+              "../date-range-picker/**/*.spec.ts",
+              "../time-picker/**/*.spec.ts"
             ]
           }
         },

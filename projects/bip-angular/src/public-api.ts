@@ -51,3 +51,4 @@ export * from '@bip-design-systems/angular/sidebar';
 export * from '@bip-design-systems/angular/multi-select';
 export * from '@bip-design-systems/angular/date-picker';
 export * from '@bip-design-systems/angular/date-range-picker';
+export * from '@bip-design-systems/angular/time-picker';

@@ -247,6 +247,9 @@ export interface BipLocale {
     hourSelectedAnnouncement: (hour: string) => string;
     timeSelectedAnnouncement: (time: string) => string;
     periodSelectedAnnouncement: (period: string) => string;
+    /** Atajo "hora actual" dentro del panel. La referencia React lo hardcodea como literal
+     * "Ahora"; aquí pasa por el diccionario para cumplir el guard `no-hardcoded-strings`. */
+    now: string;
   };
 
   toast: {
