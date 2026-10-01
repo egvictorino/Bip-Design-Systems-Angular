@@ -7,12 +7,12 @@ import type { BipDataTableCellContext } from './data-table.types';
  * Angular no tiene sentido: aquí el consumidor proyecta templates, no pasa funciones).
  */
 @Directive({ selector: 'ng-template[bipCell]' })
-export class BipDataTableCellDirective<T = Record<string, unknown>> {
+export class BipDataTableCell<T = Record<string, unknown>> {
   readonly key = input.required<string>({ alias: 'bipCell' });
   readonly templateRef = inject<TemplateRef<BipDataTableCellContext<T>>>(TemplateRef);
 
   static ngTemplateContextGuard<T>(
-    _dir: BipDataTableCellDirective<T>,
+    _dir: BipDataTableCell<T>,
     _ctx: unknown
   ): _ctx is BipDataTableCellContext<T> {
     return true;

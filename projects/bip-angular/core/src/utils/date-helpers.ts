@@ -10,6 +10,13 @@ export function isSameDay(a: Date, b: Date): boolean {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
 
+/** Nueva `Date` a medianoche del mismo día (inmutable, clona antes de mutar). */
+export function startOfDay(date: Date): Date {
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
+  return result;
+}
+
 /** Nueva `Date` desplazada `delta` días (inmutable, clona antes de mutar). */
 export function addDays(date: Date, delta: number): Date {
   const result = new Date(date);

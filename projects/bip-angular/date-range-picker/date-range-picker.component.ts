@@ -19,7 +19,15 @@ import {
 import type { ControlValueAccessor } from '@angular/forms';
 import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { BipCalendarGrid, BipFormControlBase, BipOverlay, injectBipLocale } from '@bip-design-systems/angular/core';
+import {
+  BipCalendarGrid,
+  BipFormControlBase,
+  BipOverlay,
+  formatDate,
+  injectBipLocale,
+  isSameDay,
+  startOfDay,
+} from '@bip-design-systems/angular/core';
 import type { BipCalendarGridStrings, BipSize } from '@bip-design-systems/angular/core';
 
 export interface BipDateRange {
@@ -35,16 +43,6 @@ const SIZE_CLASS: Record<BipSize, string> = {
   md: 'bip-date-range-picker-trigger--md',
   lg: 'bip-date-range-picker-trigger--lg',
 };
-
-function startOfDay(date: Date): Date {
-  const result = new Date(date);
-  result.setHours(0, 0, 0, 0);
-  return result;
-}
-
-function isSameDay(a: Date, b: Date): boolean {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-}
 
 /**
  * Selector de rango de fechas — puerto de DateRangePicker (React), misma máquina de estados de
@@ -135,8 +133,14 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
   protected readonly displayValue = computed(() => {
     const { from, to } = this.value();
     if (!from) return '';
-    const fmt = new Intl.DateTimeFormat(this.locale().locale, { day: '2-digit', month: '2-digit', year: 'numeric' });
-    return to ? `${fmt.format(from)} – ${fmt.format(to)}` : `${fmt.format(from)} – ...`;
+    const fmtOptions = {
+      locale: this.locale().locale,
+      day: '2-digit' as const,
+      month: '2-digit' as const,
+      year: 'numeric' as const,
+    };
+    const fromLabel = formatDate(from, fmtOptions);
+    return to ? `${fromLabel} – ${formatDate(to, fmtOptions)}` : `${fromLabel} – ...`;
   });
 
   constructor() {

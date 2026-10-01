@@ -77,14 +77,15 @@ export class BipNavbar implements BipNavbarContext {
 
     // Foco: al abrir, va al primer item del panel; al cerrar, vuelve al botón de hamburguesa.
     let wasOpen = false;
-    effect(() => {
+    effect((onCleanup) => {
       const open = this.isMobileOpen();
       untracked(() => {
         if (open && !wasOpen) {
-          setTimeout(() => {
+          const timeoutId = setTimeout(() => {
             const firstItem: HTMLElement | null = this.elementRef.nativeElement.querySelector('[data-navbar-item]');
             firstItem?.focus();
           });
+          onCleanup(() => clearTimeout(timeoutId));
         } else if (!open && wasOpen) {
           this.document.getElementById(this.toggleButtonId)?.focus();
         }

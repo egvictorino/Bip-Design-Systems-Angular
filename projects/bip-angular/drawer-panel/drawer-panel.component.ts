@@ -1,8 +1,10 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Injector,
+  PLATFORM_ID,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -81,6 +83,8 @@ export class BipDrawerPanel {
   private readonly injector = inject(Injector);
   private readonly scrollStrategies = inject(ScrollStrategyOptions);
   private readonly document = inject(DOCUMENT);
+  // Mismo criterio que BipModal: el overlay solo existe en el navegador.
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   private overlayRef: OverlayRef | null = null;
   private previouslyFocusedElement: HTMLElement | null = null;
@@ -89,12 +93,18 @@ export class BipDrawerPanel {
     effect(() => {
       const isOpen = this.open();
       untracked(() => {
+        if (!this.isBrowser) return;
         if (isOpen) {
           this.show();
         } else {
           this.hide();
         }
       });
+    });
+
+    inject(DestroyRef).onDestroy(() => {
+      this.overlayRef?.dispose();
+      this.overlayRef = null;
     });
   }
 

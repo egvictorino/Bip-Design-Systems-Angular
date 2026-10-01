@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   TemplateRef,
@@ -114,6 +115,14 @@ export class BipToothDetail {
         if (open) this.showImageOverlay();
         else this.hideImageOverlay();
       });
+    });
+
+    // Si el componente se destruye con un popover abierto, nadie más dispondría el overlay.
+    inject(DestroyRef).onDestroy(() => {
+      this.noteOverlayRef?.dispose();
+      this.noteOverlayRef = null;
+      this.imageOverlayRef?.dispose();
+      this.imageOverlayRef = null;
     });
   }
 

@@ -1,8 +1,10 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Injector,
+  PLATFORM_ID,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -74,6 +76,10 @@ export class BipModal implements BipModalContext {
   private readonly injector = inject(Injector);
   private readonly scrollStrategies = inject(ScrollStrategyOptions);
   private readonly document = inject(DOCUMENT);
+  // El overlay (CDK, requestAnimationFrame) solo existe en el navegador — en el servidor el
+  // modal no se adjunta: el contenido del portal aparece tras la hidratación, como cualquier
+  // overlay (no es contenido indexable, así que no hace falta en el HTML inicial).
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   private overlayRef: OverlayRef | null = null;
   private previouslyFocusedElement: HTMLElement | null = null;
@@ -85,12 +91,21 @@ export class BipModal implements BipModalContext {
       // context") porque seguiríamos dentro de la ejecución de este mismo effect.
       const isOpen = this.open();
       untracked(() => {
+        if (!this.isBrowser) return;
         if (isOpen) {
           this.show();
         } else {
           this.hide();
         }
       });
+    });
+
+    // Si el componente se destruye mientras el modal está abierto (p. ej. un cambio de ruta),
+    // nadie más va a llamar a hide()/dispose() — sin esto el overlay y su effect de sync de
+    // theming (ver BipOverlay) quedan vivos huérfanos.
+    inject(DestroyRef).onDestroy(() => {
+      this.overlayRef?.dispose();
+      this.overlayRef = null;
     });
   }
 

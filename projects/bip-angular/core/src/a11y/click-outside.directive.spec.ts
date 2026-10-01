@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { fireEvent, render, screen } from '@testing-library/angular';
 import { describe, expect, it } from 'vitest';
-import { BipClickOutsideDirective } from './click-outside.directive';
+import { BipClickOutside } from './click-outside.directive';
 
 @Component({
   selector: 'bip-click-outside-test',
@@ -12,7 +12,7 @@ import { BipClickOutsideDirective } from './click-outside.directive';
     <div data-testid="outside">Outside</div>
     <p data-testid="count">{{ outsideCount() }}</p>
   `,
-  imports: [BipClickOutsideDirective],
+  imports: [BipClickOutside],
 })
 class ClickOutsideTest {
   readonly enabled = signal(true);
@@ -22,7 +22,7 @@ class ClickOutsideTest {
   }
 }
 
-describe('BipClickOutsideDirective', () => {
+describe('BipClickOutside', () => {
   it('emite bipClickOutside en un pointerdown fuera del elemento', async () => {
     await render(ClickOutsideTest);
     fireEvent(screen.getByTestId('outside'), new PointerEvent('pointerdown', { bubbles: true }));

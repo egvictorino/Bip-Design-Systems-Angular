@@ -19,7 +19,15 @@ import {
 import type { ControlValueAccessor } from '@angular/forms';
 import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { BipCalendarGrid, BipFormControlBase, BipOverlay, injectBipLocale } from '@bip-design-systems/angular/core';
+import {
+  BipCalendarGrid,
+  BipFormControlBase,
+  BipOverlay,
+  formatDate,
+  injectBipLocale,
+  isSameDay,
+  startOfDay,
+} from '@bip-design-systems/angular/core';
 import type { BipCalendarGridStrings, BipSize } from '@bip-design-systems/angular/core';
 
 const GAP_PX = 4;
@@ -29,16 +37,6 @@ const SIZE_CLASS: Record<BipSize, string> = {
   md: 'bip-date-picker-trigger--md',
   lg: 'bip-date-picker-trigger--lg',
 };
-
-function startOfDay(date: Date): Date {
-  const result = new Date(date);
-  result.setHours(0, 0, 0, 0);
-  return result;
-}
-
-function isSameDay(a: Date, b: Date): boolean {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-}
 
 /**
  * Selector de una fecha — puerto de DatePicker (React). Usa `BipCalendarGrid` (core) para el
@@ -120,9 +118,12 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
   protected readonly displayValue = computed(() => {
     const value = this.value();
     if (!value) return '';
-    return new Intl.DateTimeFormat(this.locale().locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(
-      value
-    );
+    return formatDate(value, {
+      locale: this.locale().locale,
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
   });
 
   constructor() {

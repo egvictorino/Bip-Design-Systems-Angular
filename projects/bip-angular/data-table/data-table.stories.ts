@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { BipDataTable } from './data-table.component';
-import { BipDataTableCellDirective } from './data-table-cell.directive';
-import { BipDataTableHeaderDirective } from './data-table-header.directive';
+import { BipDataTableCell } from './data-table-cell.directive';
+import { BipDataTableHeader } from './data-table-header.directive';
 import type { BipDataTableBulkAction, BipDataTableColumn } from './data-table.types';
 
 interface Patient {
@@ -28,7 +28,7 @@ const COLUMNS: BipDataTableColumn<Patient>[] = [
   { key: 'status', header: 'Estado' },
 ];
 
-const IMPORTS = [BipDataTable, BipDataTableCellDirective, BipDataTableHeaderDirective];
+const IMPORTS = [BipDataTable, BipDataTableCell, BipDataTableHeader];
 
 @Component({
   selector: 'bip-data-table-demo',

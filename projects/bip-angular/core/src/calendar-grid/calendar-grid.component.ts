@@ -13,7 +13,7 @@ import {
   untracked,
 } from '@angular/core';
 import { BipIdGenerator } from '../a11y';
-import { addDays, dateKey, getDaysInMonth, getMondayOffset, monthIndex } from '../utils';
+import { addDays, dateKey, getDaysInMonth, getMondayOffset, monthIndex, startOfDay } from '../utils';
 
 export type BipCalendarGridMode = 'single' | 'range';
 export type BipCalendarGridView = 'days' | 'months' | 'years';
@@ -48,12 +48,6 @@ interface BipCalendarDayCell {
 }
 
 const YEARS_PER_BLOCK = 12;
-
-function startOfDay(date: Date): Date {
-  const result = new Date(date);
-  result.setHours(0, 0, 0, 0);
-  return result;
-}
 
 function clampDayOfMonth(year: number, month: number, day: number): number {
   return Math.min(day, getDaysInMonth(year, month));

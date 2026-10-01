@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { BipBreadcrumb, type BipBreadcrumbItem } from './breadcrumb.component';
-import { BipBreadcrumbSeparatorDirective } from './breadcrumb-separator.directive';
+import { BipBreadcrumbSeparator } from './breadcrumb-separator.directive';
 
 const ITEMS: BipBreadcrumbItem[] = [
   { label: 'Inicio', href: '#' },
@@ -28,7 +28,7 @@ export const SingleItem: Story = {
 export const CustomSeparator: Story = {
   render: (args) => ({
     props: args,
-    moduleMetadata: { imports: [BipBreadcrumbSeparatorDirective] },
+    moduleMetadata: { imports: [BipBreadcrumbSeparator] },
     template: `
       <bip-breadcrumb [items]="items">
         <ng-template bipBreadcrumbSeparator>/</ng-template>

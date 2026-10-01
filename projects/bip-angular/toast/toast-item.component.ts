@@ -46,7 +46,7 @@ const PROGRESS_CLASS: Record<BipToastVariant, string> = {
     '[class]': 'isIn() ? "" : slideOutClass()',
   },
 })
-export class BipToastItemComponent {
+export class BipToastItem {
   readonly variant = input<BipToastVariant>('info');
   readonly title = input<string | undefined>(undefined);
   readonly message = input.required<string>();
@@ -58,6 +58,9 @@ export class BipToastItemComponent {
   readonly heightChange = output<number>();
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
+  // Capturado en el constructor (contexto de inyección válido) — `afterNextRender` corre
+  // fuera de ese contexto, así que un `inject()` dentro de su callback lanza NG0203.
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly visible = signal(false);
   protected readonly progress = signal(100);
@@ -75,7 +78,7 @@ export class BipToastItemComponent {
       if (typeof ResizeObserver === 'undefined') return;
       const observer = new ResizeObserver(() => this.reportHeight());
       observer.observe(this.elementRef.nativeElement);
-      inject(DestroyRef).onDestroy(() => observer.disconnect());
+      this.destroyRef.onDestroy(() => observer.disconnect());
     });
 
     effect((onCleanup) => {

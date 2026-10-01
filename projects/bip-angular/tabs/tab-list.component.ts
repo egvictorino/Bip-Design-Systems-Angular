@@ -1,9 +1,11 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   Injector,
   OnDestroy,
+  PLATFORM_ID,
   computed,
   contentChildren,
   effect,
@@ -60,6 +62,7 @@ export class BipTabList implements OnDestroy {
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly injector = inject(Injector);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly directionality = inject(Directionality);
   private readonly dir = toSignal(this.directionality.change, { initialValue: this.directionality.value });
 
@@ -123,6 +126,8 @@ export class BipTabList implements OnDestroy {
   }
 
   private updateIndicator(): void {
+    // getBoundingClientRect() no existe en el DOM ligero del renderer de SSR de Angular.
+    if (!this.isBrowser) return;
     const activeItem = this.items().find((item) => item.isActive());
     if (!activeItem) return;
 

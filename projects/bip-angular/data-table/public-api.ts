@@ -3,8 +3,8 @@
  */
 
 export { BipDataTable } from './data-table.component';
-export { BipDataTableCellDirective } from './data-table-cell.directive';
-export { BipDataTableHeaderDirective } from './data-table-header.directive';
+export { BipDataTableCell } from './data-table-cell.directive';
+export { BipDataTableHeader } from './data-table-header.directive';
 export type {
   BipDataTableBulkAction,
   BipDataTableCellContext,

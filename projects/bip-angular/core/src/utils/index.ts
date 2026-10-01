@@ -6,7 +6,15 @@ export { formatCurrency } from './currency';
 export type { FormatCurrencyOptions } from './currency';
 export { formatDate } from './date-format';
 export type { FormatDateOptions } from './date-format';
-export { addDays, dateKey, getDaysInMonth, getMondayOffset, isSameDay, monthIndex } from './date-helpers';
+export {
+  addDays,
+  dateKey,
+  getDaysInMonth,
+  getMondayOffset,
+  isSameDay,
+  monthIndex,
+  startOfDay,
+} from './date-helpers';
 export { validateRFC } from './rfc';
 export { BipCurrencyPipe } from './bip-currency.pipe';
 export { BipDatePipe } from './bip-date.pipe';
