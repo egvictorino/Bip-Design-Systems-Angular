@@ -60,7 +60,8 @@
               "../search-input/**/*.spec.ts",
               "../slider/**/*.spec.ts",
               "../file-upload/**/*.spec.ts",
-              "../modal/**/*.spec.ts"
+              "../modal/**/*.spec.ts",
+              "../confirm-dialog/**/*.spec.ts"
             ]
           }
         },

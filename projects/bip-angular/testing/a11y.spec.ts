@@ -43,6 +43,7 @@ const A11Y_REGISTRY: Record<string, string> = {
   slider: 'BipSlider: <input type="range"> nativo (rol slider, flechas de teclado nativas) — aria-invalid+aria-describedby igual que Input; el valor numérico junto al label es texto normal.',
   'file-upload': 'BipFileUpload: <label> es la zona de drop y dispara el <input type="file"> real (oculto visualmente con el mismo patrón clip-rect de BipVisuallyHidden, no display:none — mantiene foco/teclado nativos); aria-invalid+aria-describedby+aria-busy igual que Input; botón de quitar por archivo con aria-label localizado (incluye el nombre del archivo); iconos e ilustraciones decorativos aria-hidden.',
   modal: 'BipModal: vía BipOverlay + TemplatePortal; role="dialog"+aria-modal+aria-labelledby al título; cdkTrapFocus con autocapture del primer focusable, restaura el foco previo al cerrar; Escape (configurable) y clic en backdrop (configurable) cierran; scroll lock con ScrollStrategyOptions.block(). BipModalHeader: botón de cerrar con aria-label localizado; lanza si se usa fuera de <bip-modal> (sin BIP_MODAL_CONTEXT). BipModalBody/BipModalFooter: contenedores sin semántica propia.',
+  'confirm-dialog': 'BipConfirmDialog: composición sobre <bip-modal> (closeOnBackdrop siempre false — evita descartar una acción destructiva con un clic accidental); hereda role="dialog"+aria-modal+aria-labelledby+focus trap+Escape de BipModal; botones de confirmar/cancelar localizados (o custom via inputs).',
 };
 
 /**

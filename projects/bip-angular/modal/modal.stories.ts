@@ -1,14 +1,13 @@
 import { Component, signal } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { BipModal, type BipModalSize } from './modal.component';
-import { BipModalHeader } from './modal-header.component';
 import { BipModalBody } from './modal-body.component';
 import { BipModalFooter } from './modal-footer.component';
 
 /** Wrapper con estado local — `open` es un `model()`, necesita un disparador real para demostrar el ciclo abrir/cerrar en Storybook (los args de CSF3 son estáticos por render). */
 @Component({
-  selector: 'modal-demo',
-  imports: [BipModal, BipModalHeader, BipModalBody, BipModalFooter],
+  selector: 'bip-modal-demo',
+  imports: [BipModal, BipModalBody, BipModalFooter],
   template: `
     <button type="button" style="padding: 8px 16px" (click)="open.set(true)">Abrir modal</button>
     <bip-modal
@@ -55,10 +54,10 @@ export const Sizes: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-        <modal-demo [size]="'sm'" [title]="'Pequeño (sm)'" />
-        <modal-demo [size]="'md'" [title]="'Mediano (md)'" />
-        <modal-demo [size]="'lg'" [title]="'Grande (lg)'" />
-        <modal-demo [size]="'xl'" [title]="'Extra grande (xl)'" />
+        <bip-modal-demo [size]="'sm'" [title]="'Pequeño (sm)'" />
+        <bip-modal-demo [size]="'md'" [title]="'Mediano (md)'" />
+        <bip-modal-demo [size]="'lg'" [title]="'Grande (lg)'" />
+        <bip-modal-demo [size]="'xl'" [title]="'Extra grande (xl)'" />
       </div>
     `,
     moduleMetadata: { imports: [ModalDemo] },

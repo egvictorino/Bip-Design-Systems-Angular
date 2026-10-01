@@ -1,0 +1,23 @@
+<bip-modal [(open)]="open" size="sm" [closeOnBackdrop]="false" (closed)="onCancel()">
+  <bip-modal-header>{{ title() }}</bip-modal-header>
+  <bip-modal-body>
+    @if (description()) {
+      <p class="bip-confirm-dialog-description">{{ description() }}</p>
+    }
+  </bip-modal-body>
+  <bip-modal-footer>
+    <button bipButton variant="bare" size="sm" type="button" (click)="onCancel()">
+      {{ resolvedCancelLabel() }}
+    </button>
+    <button
+      bipButton
+      [variant]="confirmBtnVariant()"
+      [class]="confirmBtnClass()"
+      size="sm"
+      type="button"
+      (click)="onConfirm()"
+    >
+      {{ resolvedConfirmLabel() }}
+    </button>
+  </bip-modal-footer>
+</bip-modal>

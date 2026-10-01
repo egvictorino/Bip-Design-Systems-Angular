@@ -1,0 +1,20 @@
+.bip-confirm-dialog-description {
+  font-size: var(--text-sm);
+  color: var(--color-txt-secondary);
+}
+
+.bip-confirm-dialog-confirm-btn--warning {
+  background-color: var(--color-warning);
+}
+
+.bip-confirm-dialog-confirm-btn--warning:hover {
+  opacity: 0.9;
+}
+
+.bip-confirm-dialog-confirm-btn--warning:active {
+  opacity: 0.8;
+}
+
+.bip-confirm-dialog-confirm-btn--warning:focus-visible {
+  box-shadow: var(--focus-ring);
+}

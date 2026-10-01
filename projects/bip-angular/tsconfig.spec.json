@@ -40,6 +40,7 @@
     "search-input/**/*.ts",
     "slider/**/*.ts",
     "file-upload/**/*.ts",
-    "modal/**/*.ts"
+    "modal/**/*.ts",
+    "confirm-dialog/**/*.ts"
   ]
 }
