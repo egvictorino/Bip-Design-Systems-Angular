@@ -89,4 +89,22 @@ describe('BipFormControlBase', () => {
 
     expect(screen.getByRole('textbox')).toHaveValue('inicial');
   });
+
+  /**
+   * Regresión: `hasError` leía `control.invalid`/`control.touched` dentro de un `computed()`
+   * sin ninguna dependencia reactiva de por medio — un `markAllAsTouched()` programático (el
+   * patrón típico al enviar un formulario) no tocaba el signal `_touched()` propio del
+   * control, así que el computed nunca se recalculaba y `aria-invalid` se quedaba desfasado.
+   */
+  it('markAllAsTouched() en el FormControl (sin blur) también activa hasError()', async () => {
+    const { fixture } = await render(HostTest);
+    const input = screen.getByRole('textbox');
+    expect(input).not.toHaveAttribute('aria-invalid');
+
+    fixture.componentInstance.formControl.markAllAsTouched();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+  });
 });
