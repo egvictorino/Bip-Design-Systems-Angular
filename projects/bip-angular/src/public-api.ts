@@ -48,3 +48,4 @@ export * from '@bip-design-systems/angular/accordion';
 export * from '@bip-design-systems/angular/stepper';
 export * from '@bip-design-systems/angular/navbar';
 export * from '@bip-design-systems/angular/sidebar';
+export * from '@bip-design-systems/angular/multi-select';

@@ -54,6 +54,7 @@
     "accordion/**/*.ts",
     "stepper/**/*.ts",
     "navbar/**/*.ts",
-    "sidebar/**/*.ts"
+    "sidebar/**/*.ts",
+    "multi-select/**/*.ts"
   ]
 }
