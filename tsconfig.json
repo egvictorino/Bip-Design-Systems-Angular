@@ -37,7 +37,8 @@
       "@bip-design-systems/angular/confirm-dialog": ["./projects/bip-angular/confirm-dialog/index.ts"],
       "@bip-design-systems/angular/drawer-panel": ["./projects/bip-angular/drawer-panel/index.ts"],
       "@bip-design-systems/angular/toast": ["./projects/bip-angular/toast/index.ts"],
-      "@bip-design-systems/angular/tooltip": ["./projects/bip-angular/tooltip/index.ts"]
+      "@bip-design-systems/angular/tooltip": ["./projects/bip-angular/tooltip/index.ts"],
+      "@bip-design-systems/angular/popover": ["./projects/bip-angular/popover/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

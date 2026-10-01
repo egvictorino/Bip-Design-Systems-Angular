@@ -44,6 +44,7 @@
     "confirm-dialog/**/*.ts",
     "drawer-panel/**/*.ts",
     "toast/**/*.ts",
-    "tooltip/**/*.ts"
+    "tooltip/**/*.ts",
+    "popover/**/*.ts"
   ]
 }
