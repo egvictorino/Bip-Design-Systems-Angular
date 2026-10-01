@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { resolveTokenVars, resolveVarMap, RADIUS_VAR_MAP } from './var-maps';
+import { resolveTokenVars, resolveVarMap, sanitizeCssVars, RADIUS_VAR_MAP } from './var-maps';
 
 /**
  * Puerto de los casos "tokens prop" de ThemeProvider.test.tsx (React) que no dependen de
@@ -77,5 +77,49 @@ describe('resolveVarMap', () => {
 
   it('returns {} without overrides', () => {
     expect(resolveVarMap(undefined, RADIUS_VAR_MAP)).toEqual({});
+  });
+});
+
+/**
+ * Regresión de seguridad: `cssVars` (el escape hatch de `<bip-theme-provider>`) termina en
+ * un `[style]` que Angular no sanitiza — a diferencia de los demás *_VAR_MAP, aquí la CLAVE
+ * también la define quien llama, no solo el valor. Una clave que no sea una custom property
+ * no debe llegar nunca al DOM. Ver sanitizeCssVars() en var-maps.ts.
+ */
+describe('sanitizeCssVars', () => {
+  it('conserva las custom properties (--algo) tal cual', () => {
+    expect(sanitizeCssVars({ '--color-primary': '#2939cc', '--my-var': '1px' })).toEqual({
+      '--color-primary': '#2939cc',
+      '--my-var': '1px',
+    });
+  });
+
+  it('descarta cualquier clave que no sea una custom property', () => {
+    expect(
+      sanitizeCssVars({
+        '--color-primary': '#2939cc',
+        'background-image': 'url(https://evil.example/pixel.png)',
+        behavior: 'url(xss.htc)',
+      })
+    ).toEqual({ '--color-primary': '#2939cc' });
+  });
+
+  it('sin cssVars, devuelve {}', () => {
+    expect(sanitizeCssVars(undefined)).toEqual({});
+  });
+
+  it('en dev mode, avisa por consola de la clave descartada sin lanzar', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(() => sanitizeCssVars({ color: 'red' }, true)).not.toThrow();
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('color'));
+    warnSpy.mockRestore();
+  });
+
+  it('resolveTokenVars también sanitiza su propio parámetro cssVars', () => {
+    const vars = resolveTokenVars(undefined, 'light', {
+      '--color-danger': '#333',
+      'background-image': 'url(https://evil.example/pixel.png)',
+    });
+    expect(vars).toEqual({ '--color-danger': '#333' });
   });
 });
