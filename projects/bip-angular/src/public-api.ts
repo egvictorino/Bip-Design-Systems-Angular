@@ -40,3 +40,4 @@ export * from '@bip-design-systems/angular/toast';
 export * from '@bip-design-systems/angular/tooltip';
 export * from '@bip-design-systems/angular/popover';
 export * from '@bip-design-systems/angular/dropdown';
+export * from '@bip-design-systems/angular/timeline';

@@ -1,0 +1,10 @@
+.bip-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.bip-timeline--horizontal {
+  flex-direction: row;
+  overflow-x: auto;
+}

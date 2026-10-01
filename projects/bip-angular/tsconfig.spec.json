@@ -46,6 +46,7 @@
     "toast/**/*.ts",
     "tooltip/**/*.ts",
     "popover/**/*.ts",
-    "dropdown/**/*.ts"
+    "dropdown/**/*.ts",
+    "timeline/**/*.ts"
   ]
 }
