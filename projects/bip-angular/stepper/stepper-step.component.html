@@ -1,0 +1,82 @@
+<div class="bip-stepper-step-row">
+  @if (isActive()) {
+    <div
+      class="bip-stepper-step-marker"
+      aria-current="step"
+      [attr.aria-label]="label()"
+      [attr.aria-describedby]="descId()"
+    >
+      <ng-container [ngTemplateOutlet]="markerContent" />
+    </div>
+  } @else {
+    <button
+      type="button"
+      class="bip-stepper-step-marker"
+      [disabled]="disabled()"
+      [attr.aria-label]="label()"
+      [attr.aria-describedby]="descId()"
+      (click)="activate()"
+      (keydown)="onKeydown($event)"
+    >
+      <ng-container [ngTemplateOutlet]="markerContent" />
+    </button>
+  }
+
+  @if (!isLast()) {
+    <span class="bip-stepper-step-connector" aria-hidden="true"></span>
+  }
+</div>
+
+<div class="bip-stepper-step-label">
+  <span class="bip-stepper-step-title">{{ label() }}</span>
+  @if (description()) {
+    <span class="bip-stepper-step-description" [id]="descId()">{{ description() }}</span>
+  }
+</div>
+
+<ng-template #markerContent>
+  @switch (iconState()) {
+    @case ('loading') {
+      <svg class="bip-stepper-step-spinner" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle class="bip-stepper-step-spinner-track" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" />
+        <path
+          class="bip-stepper-step-spinner-fill"
+          d="M12 2a10 10 0 0 1 10 10"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+      </svg>
+    }
+    @case ('error') {
+      <svg viewBox="0 0 20 20" fill="currentColor" width="1em" height="1em" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    }
+    @case ('warning') {
+      <svg viewBox="0 0 20 20" fill="currentColor" width="1em" height="1em" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    }
+    @case ('success') {
+      <svg viewBox="0 0 20 20" fill="currentColor" width="1em" height="1em" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    }
+    @default {
+      {{ value() + 1 }}
+    }
+  }
+</ng-template>

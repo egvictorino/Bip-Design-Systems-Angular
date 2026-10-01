@@ -44,7 +44,15 @@
     "toast/**/*.ts",
     "tooltip/**/*.ts",
     "popover/**/*.ts",
-    "dropdown/**/*.ts"
+    "dropdown/**/*.ts",
+    "timeline/**/*.ts",
+    "breadcrumb/**/*.ts",
+    "pagination/**/*.ts",
+    "tabs/**/*.ts",
+    "accordion/**/*.ts",
+    "stepper/**/*.ts",
+    "navbar/**/*.ts",
+    "sidebar/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

@@ -254,7 +254,22 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 - `scripts/visual-docker.sh` + `pnpm test:visual:docker [--update-snapshots]`: imagen Playwright fijada a la versión exacta de `@playwright/test` (el script aborta si difieren), `--platform linux/amd64`, `node_modules` como volúmenes anónimos. Baselines **solo Linux** (`-chromium-linux.png`), nunca generar nativo en macOS.
 - `e2e/`: `scripts/e2e-consumer.sh` → build librería → `pnpm pack` (desde `dist/bip-angular`) → app Angular limpia en `e2e/consumer-app` (fuera del workspace, `pnpm-workspace.yaml` con `packages: []`) que instala el **tarball** → `ng build` → servir → Playwright verifica: background de `bipButton` = hex de `--color-primary`, `border-radius` distinto entre square/rounded, overlay hereda theme, sin errores de consola. Además un build **SSR** del consumer para verificar que nada toca `window` en servidor.
 - `publint`, `@arethetypeswrong/cli`, `size-limit` por entry point.
-- **Terminado cuando:** `pnpm test:visual:docker` y `pnpm test:e2e` en verde y ya sin violaciones de contraste.
+- Revisión de buenas prácticas de Angular y arquitectura limpia sobre toda la librería: uso
+  consistente de signals/`OnPush`/standalone (sin regresiones a patrones pre-signal), límites
+  claros entre `core` y los componentes (nada de imports cruzados entre secondary entries que no
+  sea a través de `core`), ausencia de lógica duplicada que debería vivir en un helper compartido,
+  nombres/selectores consistentes con la tabla de traducción React→Angular del CLAUDE.md, y
+  cohesión de cada secondary entry (un componente no debería depender de detalles internos de
+  otro). Documentar hallazgos y corregir antes de cerrar el bloque.
+- Security review de la librería y su tooling (`/security-review` o equivalente): sanitización
+  en cualquier punto que inserte HTML/URLs dinámicos (p. ej. `href` en Breadcrumb/Navbar/Sidebar,
+  contenido de Tooltip/Popover/Toast), uso seguro de `DomSanitizer` si llega a introducirse,
+  revisión de dependencias (`pnpm audit`, `dependency-review.yml`), y que ningún script de
+  build/CI ejecute contenido no confiable. Documentar hallazgos y corregir antes de cerrar el
+  bloque.
+- **Terminado cuando:** `pnpm test:visual:docker` y `pnpm test:e2e` en verde, ya sin violaciones
+  de contraste, y las revisiones de buenas prácticas Angular/arquitectura limpia y de seguridad
+  completas sin hallazgos abiertos.
 
 ### Bloque 12 — CI/CD, versionado y publicación
 
@@ -291,7 +306,7 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 - [x] Bloque 4 — Layout, tipografía y display (17)
 - [x] Bloque 5 — Formularios básicos (13)
 - [x] Bloque 6 — Overlays y feedback (7)
-- [ ] Bloque 7 — Navegación y disclosure (8)
+- [x] Bloque 7 — Navegación y disclosure (8)
 - [ ] Bloque 8 — Selección avanzada y fechas (5)
 - [ ] Bloque 9 — Datos (2)
 - [ ] Bloque 10 — Odontogram

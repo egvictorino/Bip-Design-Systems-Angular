@@ -328,6 +328,7 @@ export const esMX: BipLocale = {
     navLandmark: 'Navegación',
     expand: 'Expandir sidebar',
     collapse: 'Colapsar sidebar',
+    badgeCount: (count) => ` (${count} notificaciones)`,
   },
 
   spinner: {

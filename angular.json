@@ -66,7 +66,15 @@
               "../toast/**/*.spec.ts",
               "../tooltip/**/*.spec.ts",
               "../popover/**/*.spec.ts",
-              "../dropdown/**/*.spec.ts"
+              "../dropdown/**/*.spec.ts",
+              "../timeline/**/*.spec.ts",
+              "../breadcrumb/**/*.spec.ts",
+              "../pagination/**/*.spec.ts",
+              "../tabs/**/*.spec.ts",
+              "../accordion/**/*.spec.ts",
+              "../stepper/**/*.spec.ts",
+              "../navbar/**/*.spec.ts",
+              "../sidebar/**/*.spec.ts"
             ]
           }
         },

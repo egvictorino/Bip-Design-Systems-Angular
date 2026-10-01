@@ -1,0 +1,67 @@
+.bip-sidebar {
+  display: block;
+}
+
+/* Mobile-first: el panel es un drawer fijo, oculto fuera de pantalla hasta que se abre. */
+.bip-sidebar-panel {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  display: flex;
+  flex-direction: column;
+  width: 15rem;
+  height: 100%;
+  background-color: var(--color-surface-1);
+  border-inline-end: 1px solid var(--color-edge);
+  z-index: var(--z-overlay, 40);
+  /* Entra desde inset-inline-start, que es la izquierda física en LTR y la derecha en RTL — por
+     eso el transform se invierte con --rtl-x en vez de ser un valor fijo. */
+  transform: translateX(calc(var(--rtl-x) * -100%));
+  transition:
+    transform var(--duration-normal) var(--ease-standard),
+    width var(--duration-normal) var(--ease-standard);
+}
+
+.bip-sidebar-panel--mobile-open {
+  transform: translateX(0);
+}
+
+.bip-sidebar-panel--collapsed {
+  width: 4rem;
+}
+
+/* ─── Variantes ───────────────────────────────────────────────────────────── */
+
+.bip-sidebar--dark .bip-sidebar-panel {
+  background-color: var(--color-surface-inverse);
+  color: var(--color-txt-white);
+  border-inline-end-color: transparent;
+}
+
+.bip-sidebar--primary .bip-sidebar-panel {
+  background-color: var(--color-primary);
+  color: var(--color-txt-on-primary);
+  border-inline-end-color: transparent;
+}
+
+/* ─── Drawer móvil (overlay) ─────────────────────────────────────────────────── */
+
+.bip-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 40%);
+  z-index: var(--z-overlay, 40);
+}
+
+@media (min-width: 768px) {
+  .bip-sidebar-panel {
+    position: static;
+    height: auto;
+    transform: none;
+    transition: width var(--duration-normal) var(--ease-standard);
+  }
+
+  .bip-sidebar-overlay {
+    display: none;
+  }
+}

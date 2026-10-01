@@ -214,6 +214,10 @@ export interface BipLocale {
     navLandmark: string;
     expand: string;
     collapse: string;
+    /** Sufijo de notificaciones del badge cuando el sidebar está colapsado (solo el ícono es
+     * visible) — la referencia React lo hardcodea en español; aquí pasa por el diccionario para
+     * cumplir el guard `no-hardcoded-strings`. */
+    badgeCount: (count: number) => string;
   };
 
   spinner: {

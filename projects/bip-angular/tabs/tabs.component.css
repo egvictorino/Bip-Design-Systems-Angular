@@ -1,0 +1,8 @@
+.bip-tabs {
+  display: block;
+}
+
+.bip-tabs--vertical {
+  display: flex;
+  gap: var(--space-4);
+}

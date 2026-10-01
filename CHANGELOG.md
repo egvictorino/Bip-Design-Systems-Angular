@@ -10,6 +10,52 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Navegación y disclosure (Bloque 7): 8 componentes. `BipTimeline` + `BipTimelineItem`
+  (puramente presentacional, sin teclado; contexto plano solo para `orientation`; marcador
+  punto+conector decorativo `aria-hidden`; sin `aria-label` por defecto, fiel a React).
+  `BipBreadcrumb` (sin partes compuestas; el último item es siempre texto no interactivo con
+  `aria-current="page"` aunque tenga `href`/`routerLink`; items intermedios navegan con
+  `RouterLink` de Angular o `href` nativo; separador reemplazable vía
+  `<ng-template bipBreadcrumbSeparator>` — no `<ng-content>` directo, porque se repite una vez
+  por item; chevron por defecto espejado en RTL con `--rtl-x`). `BipPagination` (totalmente
+  controlado, sin modelo propio; `getPageRange()` portado 1:1; no renderiza nada si
+  `totalPages<=1`; flechas espejadas en RTL). `BipTabs` + `BipTabList`/`BipTab`/`BipTabPanel`
+  (contexto plano, `value` como `model()`; `BipTabList` usa `FocusKeyManager` del CDK para las
+  flechas según `orientation` — con wrap, Home/End, salta disabled — pero con activación
+  manual: las flechas solo mueven el foco, clic/Enter/Espacio activa, igual que React; indicador
+  animado mide con `getBoundingClientRect()` pero posiciona con `inset-inline-start` invertido
+  según `Directionality`, no con `left` físico). `BipAccordion` +
+  `BipAccordionItem`/`BipAccordionTrigger`/`BipAccordionContent` (contexto anidado raíz+item;
+  `value` es un único `model()` cuya forma pública, string o string[], depende de
+  `type="single"|"multiple"`, normalizado internamente a `Set<string>`; sin navegación por
+  flechas entre encabezados, solo tabulación nativa; `BipAccordionContent` siempre en el DOM,
+  abre/cierra con transición de `grid-template-rows` en vez de medir altura en JS). `BipStepper`
+  + `BipStepperStep` (totalmente controlado, `value` como `model.required()`; un `variant` de
+  estado explícito — danger/success/warning/loading — desplaza al indicador activo/completado
+  con prioridad loading>error>warning>success>completado>número; el paso activo es un `<div
+  aria-current="step">` no interactivo, los demás son `<button>` cuyas flechas saltan el valor
+  activo ±1 directamente, no es roving focus; fix de a11y: el marcador siempre lleva
+  `aria-label` para no quedar sin nombre accesible cuando muestra un icono en vez del número).
+  `BipNavbar` + `BipNavbarBrand`/`BipNavbarNav`/`BipNavbarItem`/`BipNavbarActions` (apertura del
+  panel móvil puramente interna, sin input/output, como React; a diferencia de la referencia,
+  que mantiene dos árboles de nav/actions duplicados por un efecto para alimentar un panel móvil
+  separado, aquí se proyecta una sola vez dentro de un panel cuyo layout cambia por CSS — barra
+  horizontal en desktop, dropdown vertical en mobile; `inert` solo se activa bajo el breakpoint
+  `md` y con el panel cerrado, decidido vía `BreakpointObserver`, nunca solo CSS; `BipNavbarItem`
+  decide `<a routerLink>`/`<a href>`/`<button>` según props, flechas ←→/Home/End navegan dentro
+  del mismo `<bip-navbar-nav>`). `BipSidebar` + `BipSidebarHeader`/`BipSidebarBrand`/
+  `BipSidebarContent`/`BipSidebarGroup`/`BipSidebarGroupLabel`/`BipSidebarItem`/
+  `BipSidebarSubMenu`/`BipSidebarFooter`/`BipSidebarTrigger` (ejes `open` drawer móvil y
+  `collapsed` riel de iconos independientes, ambos `model()`; drawer móvil con overlay +
+  `cdkTrapFocus` solo mientras `open` — mejora sobre React, que no atrapaba foco ahí — + Escape;
+  slide-in con `--rtl-x`; `BipSidebarContent` es un landmark de navegación propio, separado del
+  aside; `BipSidebarItem` recibe `label` como input explícito — Angular no puede leer texto
+  proyectado como string — que sirve de nombre accesible, tooltip y texto visible a la vez, con
+  `aria-label` que incluye el conteo del badge colapsado vía la nueva clave de locale
+  `sidebar.badgeCount()` (fix de un hardcodeo en español de la referencia React);
+  `BipSidebarSubMenu` colapsado muestra solo el ícono con tooltip, sin flyout, y se auto-cierra
+  si el sidebar colapsa; flechas ↑↓/Home/End navegan por todo el sidebar recortando en los
+  extremos — clamp, no wrap — fiel a `navigateSidebarItems()` de React).
 - Overlays y feedback (Bloque 6): 7 componentes, todos vía `BipOverlay` (nunca `Overlay`
   directo). `BipModal` + `BipModalHeader`/`BipModalBody`/`BipModalFooter` (primer componente
   de overlay real de la librería: `BipOverlay.create()` + `TemplatePortal`; `cdkTrapFocus` con
