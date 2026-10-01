@@ -41,6 +41,7 @@
     "slider/**/*.ts",
     "file-upload/**/*.ts",
     "modal/**/*.ts",
-    "confirm-dialog/**/*.ts"
+    "confirm-dialog/**/*.ts",
+    "drawer-panel/**/*.ts"
   ]
 }

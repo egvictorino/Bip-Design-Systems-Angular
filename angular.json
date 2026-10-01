@@ -61,7 +61,8 @@
               "../slider/**/*.spec.ts",
               "../file-upload/**/*.spec.ts",
               "../modal/**/*.spec.ts",
-              "../confirm-dialog/**/*.spec.ts"
+              "../confirm-dialog/**/*.spec.ts",
+              "../drawer-panel/**/*.spec.ts"
             ]
           }
         },

@@ -34,7 +34,8 @@
       "@bip-design-systems/angular/slider": ["./projects/bip-angular/slider/index.ts"],
       "@bip-design-systems/angular/file-upload": ["./projects/bip-angular/file-upload/index.ts"],
       "@bip-design-systems/angular/modal": ["./projects/bip-angular/modal/index.ts"],
-      "@bip-design-systems/angular/confirm-dialog": ["./projects/bip-angular/confirm-dialog/index.ts"]
+      "@bip-design-systems/angular/confirm-dialog": ["./projects/bip-angular/confirm-dialog/index.ts"],
+      "@bip-design-systems/angular/drawer-panel": ["./projects/bip-angular/drawer-panel/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

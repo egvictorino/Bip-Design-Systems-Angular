@@ -12,7 +12,7 @@ const SRC_DIR = resolve(__dirname, '..');
  * DrawerPanel `placement`, Toast `position`, Tooltip `position` (su `align` sí es
  * lógico y debe usar inset-inline-start/end).
  */
-const PHYSICAL_BY_DESIGN_ALLOWLIST = new Set<string>([]);
+const PHYSICAL_BY_DESIGN_ALLOWLIST = new Set<string>(['drawer-panel/drawer-panel.component.css']);
 
 const PHYSICAL_PROP_RE =
   /\b(margin-left|margin-right|padding-left|padding-right|border-left(-\w+)?|border-right(-\w+)?|left|right)\s*:/g;
