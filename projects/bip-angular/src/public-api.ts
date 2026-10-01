@@ -44,3 +44,4 @@ export * from '@bip-design-systems/angular/timeline';
 export * from '@bip-design-systems/angular/breadcrumb';
 export * from '@bip-design-systems/angular/pagination';
 export * from '@bip-design-systems/angular/tabs';
+export * from '@bip-design-systems/angular/accordion';

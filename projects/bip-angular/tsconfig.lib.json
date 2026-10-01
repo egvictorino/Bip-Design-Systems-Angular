@@ -48,7 +48,8 @@
     "timeline/**/*.ts",
     "breadcrumb/**/*.ts",
     "pagination/**/*.ts",
-    "tabs/**/*.ts"
+    "tabs/**/*.ts",
+    "accordion/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

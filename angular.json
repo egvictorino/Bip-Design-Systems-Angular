@@ -70,7 +70,8 @@
               "../timeline/**/*.spec.ts",
               "../breadcrumb/**/*.spec.ts",
               "../pagination/**/*.spec.ts",
-              "../tabs/**/*.spec.ts"
+              "../tabs/**/*.spec.ts",
+              "../accordion/**/*.spec.ts"
             ]
           }
         },
