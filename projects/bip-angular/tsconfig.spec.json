@@ -39,6 +39,13 @@
     "number-input/**/*.ts",
     "search-input/**/*.ts",
     "slider/**/*.ts",
-    "file-upload/**/*.ts"
+    "file-upload/**/*.ts",
+    "modal/**/*.ts",
+    "confirm-dialog/**/*.ts",
+    "drawer-panel/**/*.ts",
+    "toast/**/*.ts",
+    "tooltip/**/*.ts",
+    "popover/**/*.ts",
+    "dropdown/**/*.ts"
   ]
 }

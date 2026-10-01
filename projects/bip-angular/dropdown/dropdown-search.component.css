@@ -1,0 +1,26 @@
+.bip-dropdown-search {
+  display: block;
+  padding: var(--space-1-5) var(--space-2);
+  border-bottom: 1px solid var(--color-edge);
+}
+
+.bip-dropdown-search-input {
+  width: 100%;
+  padding: var(--space-1-5) var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-txt);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-control);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.bip-dropdown-search-input::placeholder {
+  color: var(--color-txt-secondary);
+}
+
+.bip-dropdown-search-input:focus-visible {
+  border-color: var(--color-edge-focus);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}

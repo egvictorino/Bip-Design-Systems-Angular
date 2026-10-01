@@ -59,7 +59,14 @@
               "../number-input/**/*.spec.ts",
               "../search-input/**/*.spec.ts",
               "../slider/**/*.spec.ts",
-              "../file-upload/**/*.spec.ts"
+              "../file-upload/**/*.spec.ts",
+              "../modal/**/*.spec.ts",
+              "../confirm-dialog/**/*.spec.ts",
+              "../drawer-panel/**/*.spec.ts",
+              "../toast/**/*.spec.ts",
+              "../tooltip/**/*.spec.ts",
+              "../popover/**/*.spec.ts",
+              "../dropdown/**/*.spec.ts"
             ]
           }
         },
