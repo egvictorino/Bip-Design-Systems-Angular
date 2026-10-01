@@ -1,0 +1,43 @@
+<div class="bip-note-popover-backdrop" role="presentation" (mousedown)="closed.emit()"></div>
+<div
+  class="bip-note-popover"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="locale().odontogram.toothNote(toothNumber())"
+  [style.top.px]="position().top"
+  [style.left.px]="position().left"
+  tabindex="-1"
+  cdkTrapFocus
+  [cdkTrapFocusAutoCapture]="false"
+>
+  <div class="bip-note-popover-header">
+    <span class="bip-note-popover-title">{{ locale().odontogram.tooth(toothNumber()) }}</span>
+    <button
+      type="button"
+      (click)="closed.emit()"
+      [attr.aria-label]="locale().odontogram.closeNote"
+      class="bip-note-popover-close"
+    >
+      ✕
+    </button>
+  </div>
+
+  <textarea
+    #textareaRef
+    [value]="draft()"
+    (input)="onDraftInput($any($event.target).value)"
+    [readOnly]="!editable()"
+    rows="4"
+    [placeholder]="editable() ? locale().odontogram.notePlaceholder : null"
+    class="bip-note-popover-textarea"
+    [class.bip-note-popover-textarea--readonly]="!editable()"
+  ></textarea>
+
+  @if (editable()) {
+    <div class="bip-note-popover-actions">
+      <button type="button" (click)="save.emit(draft())" class="bip-note-popover-save">
+        {{ locale().odontogram.save }}
+      </button>
+    </div>
+  }
+</div>

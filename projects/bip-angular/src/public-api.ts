@@ -55,3 +55,4 @@ export * from '@bip-design-systems/angular/time-picker';
 export * from '@bip-design-systems/angular/calendar';
 export * from '@bip-design-systems/angular/table';
 export * from '@bip-design-systems/angular/data-table';
+export * from '@bip-design-systems/angular/odontogram';
