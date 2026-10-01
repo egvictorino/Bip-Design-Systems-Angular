@@ -216,9 +216,6 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 `Modal` + `ModalHeader/Body/Footer` (declarativo `[(open)]` con template portal; focus trap, restaura foco, Escape, primer focusable; scroll lock), `ConfirmDialog` (textos i18n), `DrawerPanel` (`placement` left/right físico por diseño), `Toast` (`BipToast` service + `provideBipToast({ position })`, región `role=region` con label i18n, `duration: 0` persistente, default 5000ms, barra de progreso, reusa `bip-alert`), `Tooltip` (`[bipTooltip]` directiva; `position` físico, `align` lógico; burbuja `--color-surface-inverse`), `Popover` + trigger/content, `Dropdown` (patrón WAI-ARIA Menu Button con `ListKeyManager`: ↑↓ Home End, Escape devuelve foco, `role=menuitem`, separadores).
 
 - **Terminado cuando:** los 7 cumplen la DoD y la story `PortalTheming` muestra Modal/Toast heredando dark + brand.
-- **Nota de alcance (2026-10-01):** `DropdownSubmenu` (navegación anidada ArrowRight/Left +
-  `stopImmediatePropagation` de la referencia React) no se portó — costo/beneficio dado el
-  tamaño ya grande del bloque. Pendiente como follow-up explícito si se necesita.
 
 ### Bloque 7 — Navegación y disclosure
 

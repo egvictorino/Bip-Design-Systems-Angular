@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, model } from '@angular/core';
 import { BipDropdownFocusableItem } from './dropdown-focusable-item';
+import { BIP_DROPDOWN_MENU_SCOPE } from './dropdown-menu-scope';
 
 /**
  * `role="menuitemcheckbox"` — a diferencia de `[bipDropdownItem]` (directiva de atributo),
@@ -29,16 +30,18 @@ export class BipDropdownItemCheckbox extends BipDropdownFocusableItem {
 
   private readonly elementRef = inject(ElementRef<HTMLButtonElement>);
 
+  override readonly menuScope = inject(BIP_DROPDOWN_MENU_SCOPE, { optional: true });
+
   override focus(): void {
     this.elementRef.nativeElement.focus();
   }
 
-  override get disabled(): boolean {
+  override get isDisabled(): boolean {
     return this.elementRef.nativeElement.disabled;
   }
 
   protected onClick(): void {
-    if (!this.disabled) {
+    if (!this.isDisabled) {
       this.checked.update((value) => !value);
     }
   }

@@ -1,0 +1,75 @@
+.bip-dropdown-submenu-container {
+  position: relative;
+  display: block;
+}
+
+/* Base compartida con BipDropdownItem/BipDropdownMenu — duplicada a propósito:
+   ViewEncapsulation.Emulated scopea el CSS por componente, así que una clase con el mismo
+   nombre en otro *.component.css no llegaría a aplicarse aquí. */
+.bip-dropdown-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  text-align: start;
+  transition: background-color var(--duration-fast), color var(--duration-fast);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-txt);
+}
+
+.bip-dropdown-item:focus {
+  outline: none;
+}
+
+.bip-dropdown-item:focus-visible {
+  background-color: var(--color-surface-3);
+}
+
+.bip-dropdown-item:hover {
+  background-color: var(--color-surface-3);
+}
+
+.bip-dropdown-item:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.bip-dropdown-menu {
+  z-index: var(--z-modal);
+  min-width: 160px;
+  border-radius: var(--radius-surface);
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-surface-1);
+  padding: var(--space-1) var(--space-0);
+  box-shadow: var(--shadow-md);
+}
+
+.bip-dropdown-menu:focus {
+  outline: none;
+}
+
+.bip-dropdown-submenu-trigger {
+  justify-content: flex-start;
+}
+
+.bip-dropdown-submenu-label {
+  flex: 1;
+}
+
+.bip-dropdown-submenu-arrow {
+  margin-inline-start: auto;
+  font-size: var(--text-base);
+  line-height: 1;
+  color: var(--color-txt-secondary);
+}
+
+.bip-dropdown-submenu-panel {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 100%;
+  margin-inline-start: var(--space-1);
+}

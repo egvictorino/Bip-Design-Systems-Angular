@@ -10,4 +10,5 @@ export { BipDropdownItemCheckbox } from './dropdown-item-checkbox.component';
 export { BipDropdownDivider } from './dropdown-divider.component';
 export { BipDropdownGroup } from './dropdown-group.component';
 export { BipDropdownSearch } from './dropdown-search.component';
+export { BipDropdownSubmenu } from './dropdown-submenu.component';
 export { type BipDropdownContext } from './dropdown-context';

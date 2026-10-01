@@ -14,5 +14,6 @@ progreso, `duration: 0` persistente). `[bipTooltip]` (directiva de atributo, pos
 `BipPopoverTrigger`/`BipPopoverContent` (compound component, posiciona anclado al trigger,
 cierra con Escape/clic fuera). `BipDropdown` + `BipDropdownTrigger`/`BipDropdownMenu`/
 `BipDropdownItem`/`BipDropdownItemCheckbox`/`BipDropdownDivider`/`BipDropdownGroup`/
-`BipDropdownSearch` (patrón WAI-ARIA Menu Button, navegación con `FocusKeyManager` del CDK).
-`DropdownSubmenu` queda fuera de este bloque (follow-up explícito).
+`BipDropdownSearch`/`BipDropdownSubmenu` (patrón WAI-ARIA Menu Button, navegación con
+`FocusKeyManager` del CDK; `BipDropdownSubmenu` se registra como item del menú padre vía un
+token de scope para que el `FocusKeyManager` raíz no navegue por sus items anidados).

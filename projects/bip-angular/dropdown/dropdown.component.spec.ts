@@ -9,6 +9,7 @@ import { BipDropdownItem } from './dropdown-item.component';
 import { BipDropdownItemCheckbox } from './dropdown-item-checkbox.component';
 import { BipDropdownDivider } from './dropdown-divider.component';
 import { BipDropdownGroup } from './dropdown-group.component';
+import { BipDropdownSubmenu } from './dropdown-submenu.component';
 
 @Component({
   imports: [
@@ -19,6 +20,7 @@ import { BipDropdownGroup } from './dropdown-group.component';
     BipDropdownItemCheckbox,
     BipDropdownDivider,
     BipDropdownGroup,
+    BipDropdownSubmenu,
   ],
   template: `
     <bip-dropdown [(open)]="open">
@@ -31,6 +33,10 @@ import { BipDropdownGroup } from './dropdown-group.component';
           <button type="button" bipDropdownItem variant="danger" (click)="onDelete()">Eliminar</button>
         </bip-dropdown-group>
         <button type="button" bipDropdownItemCheckbox [(checked)]="checked">Marcar</button>
+        <bip-dropdown-submenu label="Más opciones">
+          <button type="button" bipDropdownItem (click)="onArchive()">Archivar</button>
+          <button type="button" bipDropdownItem (click)="onMove()">Mover a...</button>
+        </bip-dropdown-submenu>
       </bip-dropdown-menu>
     </bip-dropdown>
   `,
@@ -40,6 +46,8 @@ class HostComponent {
   checked = false;
   onEdit = vi.fn();
   onDelete = vi.fn();
+  onArchive = vi.fn();
+  onMove = vi.fn();
 }
 
 describe('BipDropdown', () => {
@@ -90,7 +98,7 @@ describe('BipDropdown', () => {
     await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Editar' })).toHaveFocus());
 
     fireEvent.keyDown(screen.getByRole('menu'), { key: 'ArrowUp', keyCode: 38 });
-    expect(screen.getByRole('menuitemcheckbox', { name: 'Marcar' })).toHaveFocus();
+    expect(screen.getByRole('menuitem', { name: 'Más opciones' })).toHaveFocus();
   });
 
   it('End mueve el foco al último item', async () => {
@@ -99,7 +107,7 @@ describe('BipDropdown', () => {
     await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Editar' })).toHaveFocus());
 
     fireEvent.keyDown(screen.getByRole('menu'), { key: 'End', keyCode: 35 });
-    expect(screen.getByRole('menuitemcheckbox', { name: 'Marcar' })).toHaveFocus();
+    expect(screen.getByRole('menuitem', { name: 'Más opciones' })).toHaveFocus();
   });
 
   it('Escape cierra el menú y devuelve el foco al trigger', async () => {
@@ -157,5 +165,114 @@ describe('BipDropdown', () => {
     await expect(render(OrphanMenuHost)).rejects.toThrow(
       '<bip-dropdown-menu> debe usarse dentro de <bip-dropdown>'
     );
+  });
+});
+
+describe('BipDropdownSubmenu', () => {
+  it('clic en el trigger del submenú lo abre, sin cerrar el dropdown', async () => {
+    await render(HostComponent);
+    await userEvent.click(screen.getByRole('button', { name: 'Opciones' }));
+    await waitFor(() => expect(screen.getByRole('menu')).toBeInTheDocument());
+
+    const submenuTrigger = screen.getByRole('menuitem', { name: 'Más opciones' });
+    expect(submenuTrigger).toHaveAttribute('aria-haspopup', 'menu');
+    expect(submenuTrigger).toHaveAttribute('aria-expanded', 'false');
+
+    // fireEvent.click (no userEvent.click): userEvent simula el hover real antes del click, y
+    // el (mouseenter) del contenedor ya abriría el submenú, haciendo que toggle() lo cierre de
+    // nuevo en el mismo gesto — fireEvent.click dispara solo el evento click, como Enter/Espacio
+    // desde teclado.
+    fireEvent.click(submenuTrigger);
+    expect(submenuTrigger).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('menuitem', { name: 'Archivar' })).toBeInTheDocument();
+    expect(screen.getAllByRole('menu')).toHaveLength(2); // el dropdown raíz + el submenú
+  });
+
+  it('ArrowRight en el trigger abre el submenú y enfoca su primer item', async () => {
+    await render(HostComponent);
+    await userEvent.click(screen.getByRole('button', { name: 'Opciones' }));
+    await waitFor(() => expect(screen.getByRole('menu')).toBeInTheDocument());
+
+    const submenuTrigger = screen.getByRole('menuitem', { name: 'Más opciones' });
+    submenuTrigger.focus();
+    fireEvent.keyDown(submenuTrigger, { key: 'ArrowRight' });
+
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Archivar' })).toHaveFocus());
+  });
+
+  it('ArrowDown dentro del submenú navega entre sus propios items', async () => {
+    await render(HostComponent);
+    await userEvent.click(screen.getByRole('button', { name: 'Opciones' }));
+    await waitFor(() => expect(screen.getByRole('menu')).toBeInTheDocument());
+
+    const submenuTrigger = screen.getByRole('menuitem', { name: 'Más opciones' });
+    submenuTrigger.focus();
+    fireEvent.keyDown(submenuTrigger, { key: 'ArrowRight' });
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Archivar' })).toHaveFocus());
+
+    fireEvent.keyDown(screen.getByRole('menuitem', { name: 'Archivar' }), {
+      key: 'ArrowDown',
+      keyCode: 40,
+    });
+    expect(screen.getByRole('menuitem', { name: 'Mover a...' })).toHaveFocus();
+  });
+
+  it('ArrowLeft dentro del submenú lo cierra y devuelve el foco al trigger, sin cerrar el dropdown', async () => {
+    await render(HostComponent);
+    await userEvent.click(screen.getByRole('button', { name: 'Opciones' }));
+    await waitFor(() => expect(screen.getByRole('menu')).toBeInTheDocument());
+
+    const submenuTrigger = screen.getByRole('menuitem', { name: 'Más opciones' });
+    submenuTrigger.focus();
+    fireEvent.keyDown(submenuTrigger, { key: 'ArrowRight' });
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Archivar' })).toHaveFocus());
+
+    fireEvent.keyDown(screen.getByRole('menuitem', { name: 'Archivar' }), { key: 'ArrowLeft' });
+    expect(screen.queryByRole('menuitem', { name: 'Archivar' })).not.toBeInTheDocument();
+    expect(submenuTrigger).toHaveFocus();
+    expect(screen.getByRole('menu', { name: 'Opciones' })).toBeInTheDocument();
+  });
+
+  it('Escape dentro del submenú solo lo cierra a él, no todo el dropdown', async () => {
+    await render(HostComponent);
+    await userEvent.click(screen.getByRole('button', { name: 'Opciones' }));
+    await waitFor(() => expect(screen.getByRole('menu')).toBeInTheDocument());
+
+    const submenuTrigger = screen.getByRole('menuitem', { name: 'Más opciones' });
+    submenuTrigger.focus();
+    fireEvent.keyDown(submenuTrigger, { key: 'ArrowRight' });
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Archivar' })).toHaveFocus());
+
+    fireEvent.keyDown(screen.getByRole('menuitem', { name: 'Archivar' }), { key: 'Escape' });
+    expect(screen.queryByRole('menuitem', { name: 'Archivar' })).not.toBeInTheDocument();
+    expect(submenuTrigger).toHaveFocus();
+    expect(screen.getAllByRole('menu')).toHaveLength(1); // el dropdown raíz sigue abierto
+  });
+
+  it('clic en un item del submenú lo ejecuta y cierra todo el dropdown', async () => {
+    const { fixture } = await render(HostComponent);
+    await userEvent.click(screen.getByRole('button', { name: 'Opciones' }));
+    await waitFor(() => expect(screen.getByRole('menu')).toBeInTheDocument());
+
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Más opciones' }));
+    await userEvent.click(screen.getByRole('menuitem', { name: 'Archivar' }));
+
+    expect(fixture.componentInstance.onArchive).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  it('mouseenter/mouseleave en el contenedor abren y cierran el submenú', async () => {
+    await render(HostComponent);
+    await userEvent.click(screen.getByRole('button', { name: 'Opciones' }));
+    await waitFor(() => expect(screen.getByRole('menu')).toBeInTheDocument());
+
+    const submenuTrigger = screen.getByRole('menuitem', { name: 'Más opciones' });
+    const container = submenuTrigger.parentElement as HTMLElement;
+
+    fireEvent.mouseEnter(container);
+    expect(screen.getByRole('menuitem', { name: 'Archivar' })).toBeInTheDocument();
+
+    fireEvent.mouseLeave(container);
+    expect(screen.queryByRole('menuitem', { name: 'Archivar' })).not.toBeInTheDocument();
   });
 });

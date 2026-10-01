@@ -37,12 +37,16 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   posiciona vía `BipOverlay` anclada al elemento que registró el trigger; cierra con Escape o
   `overlayRef.outsidePointerEvents()`, ignorando clics en el propio trigger). `BipDropdown` +
   `BipDropdownTrigger`/`BipDropdownMenu`/`BipDropdownItem`/`BipDropdownItemCheckbox`/
-  `BipDropdownDivider`/`BipDropdownGroup`/`BipDropdownSearch` (patrón WAI-ARIA Menu Button;
-  navegación de teclado con `FocusKeyManager` del CDK — ↑↓ con wrap, Home/End, se saltan los
-  items disabled — en vez del recorrido manual de `querySelector` de React; Escape cierra y
-  devuelve el foco al trigger, Tab cierra sin bloquear el avance natural del foco). **Alcance
-  reducido a propósito:** no se portó `DropdownSubmenu` (navegación anidada
-  ArrowRight/Left + `stopImmediatePropagation`) — queda como follow-up explícito.
+  `BipDropdownDivider`/`BipDropdownGroup`/`BipDropdownSearch`/`BipDropdownSubmenu` (patrón
+  WAI-ARIA Menu Button; navegación de teclado con `FocusKeyManager` del CDK — ↑↓ con wrap,
+  Home/End, se saltan los items disabled — en vez del recorrido manual de `querySelector` de
+  React; Escape cierra y devuelve el foco al trigger, Tab cierra sin bloquear el avance
+  natural del foco. `BipDropdownSubmenu` se registra como un item más del menú padre vía un
+  token `BIP_DROPDOWN_MENU_SCOPE` — necesario porque `contentChildren(..., { descendants:
+  true })` también encuentra los items anidados dentro de su propio panel, y sin ese filtro
+  el `FocusKeyManager` del menú raíz navegaría por ellos aunque el submenú esté cerrado;
+  `ArrowRight` en el trigger abre y enfoca el primer item anidado, `ArrowLeft`/`Escape` dentro
+  del panel cierran solo el submenú — no todo el dropdown — y devuelven el foco al trigger).
 - Formularios básicos (Bloque 5): 13 componentes, todos con `ControlValueAccessor` (probados
   con `FormControl`, `ngModel` y `[(value)]`). `BipButton` (`button[bipButton], a[bipButton]`,
   variantes primary/secondary/bare/soul/danger, tamaños, `loading` con spinner+`aria-busy`,

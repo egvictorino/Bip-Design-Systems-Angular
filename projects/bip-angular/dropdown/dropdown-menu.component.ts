@@ -6,6 +6,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewContainerRef,
+  computed,
   contentChildren,
   effect,
   inject,
@@ -18,6 +19,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { BipOverlay } from '@bip-design-systems/angular/core';
 import { BIP_DROPDOWN_CONTEXT } from './dropdown-context';
 import { BipDropdownFocusableItem } from './dropdown-focusable-item';
+import { BIP_DROPDOWN_MENU_SCOPE } from './dropdown-menu-scope';
 
 export type BipDropdownPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
 
@@ -46,6 +48,7 @@ const PLACEMENT_POSITION: Record<BipDropdownPlacement, ConnectedPosition> = {
   templateUrl: './dropdown-menu.component.html',
   styleUrl: './dropdown-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{ provide: BIP_DROPDOWN_MENU_SCOPE, useExisting: BipDropdownMenu }],
 })
 export class BipDropdownMenu implements OnDestroy {
   readonly placement = input<BipDropdownPlacement>('bottom-start');
@@ -58,7 +61,9 @@ export class BipDropdownMenu implements OnDestroy {
     return ctx;
   })();
 
-  private readonly items = contentChildren(BipDropdownFocusableItem, { descendants: true });
+  private readonly allItems = contentChildren(BipDropdownFocusableItem, { descendants: true });
+  /** Solo los items que me pertenecen directamente — excluye los de un <bip-dropdown-submenu> anidado (ver dropdown-menu-scope.ts). */
+  private readonly items = computed(() => this.allItems().filter((item) => item.menuScope === this));
 
   @ViewChild('portalTemplate', { static: true })
   private readonly portalTemplate!: TemplateRef<unknown>;
@@ -131,7 +136,7 @@ export class BipDropdownMenu implements OnDestroy {
     this.keyManager = new FocusKeyManager(this.items, this.injector)
       .withWrap()
       .withHomeAndEnd()
-      .skipPredicate((item) => item.disabled);
+      .skipPredicate((item) => item.isDisabled);
     queueMicrotask(() => this.keyManager?.setFirstItemActive());
 
     this.overlayRef = overlayRef;
