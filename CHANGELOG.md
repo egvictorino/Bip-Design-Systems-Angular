@@ -10,6 +10,37 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Selección avanzada y fechas (Bloque 8): 5 componentes. `BipMultiSelect` (combobox
+  multiselección con búsqueda, chips con overflow configurable vía `maxVisibleChips`,
+  agrupación por `group`, "Seleccionar todo"/"Seleccionar visibles" según haya búsqueda activa;
+  foco real movido entre `<li role="option">` vía `querySelectorAll` sobre el panel — sin
+  `aria-activedescendant` —, igual que la referencia React; panel vía `BipOverlay` +
+  `TemplatePortal`). Nueva cuadrícula compartida `BipCalendarGrid` en `core` (unifica
+  `CalendarGrid`/`RangeCalendarGrid` de la referencia, que son casi idénticas salvo el
+  resaltado de selección): drill-down días→meses→años, navegación de teclado sin wrap en
+  días/años (←→↑↓, Home/End, PageUp/PageDown saltan mes/década), roving focus basado en
+  signals; vive en `core` porque la comparten dos secondary entries distintos
+  (`date-picker`/`date-range-picker`), que no pueden importarse entre sí directamente.
+  `BipDatePicker` (trigger con ícono final de 3 estados carga/limpiar/calendario, botón "Hoy").
+  `BipDateRangePicker` (replica la máquina de estados de selección exacta de la referencia:
+  primer click fija `from`, segundo click completa el rango o lo intercambia si es anterior a
+  `from` o lo limpia si repite el mismo día; preview en vivo del rango mientras se hace hover
+  sobre el segundo día, vía un input `previewTo` alimentado por el hover de la grilla). Ambos
+  pickers de fecha con `min`/`max`/`disabledDates`, popover `role="dialog"` vía `BipOverlay`,
+  Escape cierra y devuelve el foco al trigger. `BipTimePicker` (columnas de horas/minutos con
+  patrón `aria-activedescendant` — foco DOM real en el `listbox`, opciones solo resaltadas
+  visualmente, a diferencia del resto de la librería —, columna AM/PM solo-click, modo
+  `inputMode="text"` con validación en vivo, auto-ajuste cuando el valor cae fuera de
+  `minTime`/`maxTime`; nueva clave de locale `timePicker.now` — la referencia React hardcodea
+  el botón "Ahora" como literal, aquí pasa por el diccionario). `BipCalendar` (4 vistas
+  totalmente controladas — mes/semana/día/agenda, sin estado interno —: vista mes con
+  selección de rango por arrastre que abre un popover de confirmación vía `BipOverlay` — la
+  referencia usa `createPortal` directo —, sin navegación por flechas en la grilla, gap
+  conocido replicado a propósito; semana/día comparten un TimeGrid con columnas por doctor
+  cuando se proveen `resources`; agenda con filtros de estado `role="checkbox"`). Helpers de
+  fechas puros portados 1:1 a `core/utils` (`isSameDay`, `addDays`, `getDaysInMonth`,
+  `getMondayOffset`, `monthIndex`, `dateKey`), sin librerías de fechas externas, usados por
+  `BipCalendarGrid`, `BipCalendar` y ambos pickers de rango/fecha.
 - Navegación y disclosure (Bloque 7): 8 componentes. `BipTimeline` + `BipTimelineItem`
   (puramente presentacional, sin teclado; contexto plano solo para `orientation`; marcador
   punto+conector decorativo `aria-hidden`; sin `aria-label` por defecto, fiel a React).

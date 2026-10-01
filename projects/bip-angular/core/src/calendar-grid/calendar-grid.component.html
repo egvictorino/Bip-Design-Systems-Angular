@@ -1,0 +1,175 @@
+@switch (calendarView()) {
+  @case ('days') {
+    <div class="bip-calendar-grid-nav">
+      <button
+        type="button"
+        class="bip-calendar-grid-nav-btn"
+        [attr.aria-label]="strings().prevMonth"
+        [disabled]="!canGoPrevMonth()"
+        (click)="prevMonth()"
+      >
+        ‹
+      </button>
+      <button type="button" class="bip-calendar-grid-heading-btn" [id]="headingId" (click)="showMonthPicker()">
+        {{ monthYearLabel() }}
+      </button>
+      <button
+        type="button"
+        class="bip-calendar-grid-nav-btn"
+        [attr.aria-label]="strings().nextMonth"
+        [disabled]="!canGoNextMonth()"
+        (click)="nextMonth()"
+      >
+        ›
+      </button>
+    </div>
+
+    <div
+      class="bip-calendar-grid-days"
+      role="grid"
+      tabindex="-1"
+      [attr.aria-labelledby]="headingId"
+      (keydown)="onDaysKeydown($event)"
+    >
+      <div class="bip-calendar-grid-row bip-calendar-grid-row--header" role="row">
+        @for (label of strings().dayLabels; track label) {
+          <span class="bip-calendar-grid-column-header" role="columnheader">{{ label }}</span>
+        }
+      </div>
+      @for (week of [0, 1, 2, 3, 4, 5]; track week) {
+        <div class="bip-calendar-grid-row" role="row">
+          @for (cell of days().slice(week * 7, week * 7 + 7); track cell.key) {
+            <div
+              class="bip-calendar-grid-cell"
+              role="gridcell"
+              [class.bip-calendar-grid-cell--in-range]="isInRange(cell.date)"
+              [attr.aria-selected]="mode() === 'range' ? isRangeFrom(cell.date) || isRangeTo(cell.date) || null : isSelected(cell.date) || null"
+            >
+              <button
+                type="button"
+                class="bip-calendar-grid-day"
+                [class.bip-calendar-grid-day--other-month]="!cell.inCurrentMonth"
+                [class.bip-calendar-grid-day--today]="isToday(cell.date)"
+                [class.bip-calendar-grid-day--selected]="mode() === 'single' ? isSelected(cell.date) : isRangeFrom(cell.date) || isRangeTo(cell.date)"
+                [attr.data-date]="cell.key"
+                [attr.tabindex]="cell.key === focusedDateKey() ? 0 : -1"
+                [disabled]="isDayDisabled(cell.date)"
+                [attr.aria-label]="dayAriaLabel(cell.date)"
+                (click)="selectDay(cell.date)"
+                (mouseenter)="onDayHover(cell.date)"
+                (mouseleave)="onDayHover(null)"
+              >
+                {{ cell.date.getDate() }}
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    @if (todayLabel()) {
+      <div class="bip-calendar-grid-footer">
+        <button type="button" class="bip-calendar-grid-today-btn" [disabled]="todayDisabled()" (click)="onToday()">
+          {{ todayLabel() }}
+        </button>
+      </div>
+    }
+    @if (showClearLink() && clearLabel()) {
+      <div class="bip-calendar-grid-footer">
+        <button type="button" class="bip-calendar-grid-clear-btn" (click)="onClear()">
+          {{ clearLabel() }}
+        </button>
+      </div>
+    }
+  }
+  @case ('months') {
+    <div class="bip-calendar-grid-nav">
+      <button
+        type="button"
+        class="bip-calendar-grid-nav-btn"
+        [attr.aria-label]="strings().prevYear"
+        [disabled]="isYearDisabled(pickerYear() - 1)"
+        (click)="prevPickerYear()"
+      >
+        ‹
+      </button>
+      <button type="button" class="bip-calendar-grid-heading-btn" (click)="showYearPicker()">
+        {{ pickerYear() }}
+      </button>
+      <button
+        type="button"
+        class="bip-calendar-grid-nav-btn"
+        [attr.aria-label]="strings().nextYear"
+        [disabled]="isYearDisabled(pickerYear() + 1)"
+        (click)="nextPickerYear()"
+      >
+        ›
+      </button>
+    </div>
+    <div class="bip-calendar-grid-months" role="grid" [attr.aria-label]="strings().selectMonth">
+      @for (monthName of strings().monthNamesShort; track monthName; let idx = $index) {
+        <div class="bip-calendar-grid-month-cell" role="gridcell">
+          <button
+            type="button"
+            class="bip-calendar-grid-month-btn"
+            [class.bip-calendar-grid-month-btn--current]="idx === month() && pickerYear() === year()"
+            [disabled]="isMonthDisabled(idx)"
+            [attr.aria-pressed]="idx === month() && pickerYear() === year()"
+            [attr.aria-label]="strings().monthOfYear(strings().monthNames[idx], pickerYear())"
+            (click)="selectMonth(idx)"
+          >
+            {{ monthName }}
+          </button>
+        </div>
+      }
+    </div>
+  }
+  @case ('years') {
+    <div class="bip-calendar-grid-nav">
+      <button
+        type="button"
+        class="bip-calendar-grid-nav-btn"
+        [attr.aria-label]="strings().prevYears"
+        [disabled]="!canGoPrevYears()"
+        (click)="prevYears()"
+      >
+        ‹
+      </button>
+      <span class="bip-calendar-grid-heading-static">{{ yearRangeLabel() }}</span>
+      <button
+        type="button"
+        class="bip-calendar-grid-nav-btn"
+        [attr.aria-label]="strings().nextYears"
+        [disabled]="!canGoNextYears()"
+        (click)="nextYears()"
+      >
+        ›
+      </button>
+    </div>
+    <div
+      class="bip-calendar-grid-years"
+      role="grid"
+      tabindex="-1"
+      [attr.aria-label]="strings().selectYear"
+      (keydown)="onYearsKeydown($event)"
+    >
+      @for (yearValue of visibleYears(); track yearValue) {
+        <div class="bip-calendar-grid-year-cell" role="gridcell">
+          <button
+            type="button"
+            class="bip-calendar-grid-year-btn"
+            [class.bip-calendar-grid-year-btn--current]="yearValue === pickerYear()"
+            [attr.data-year]="yearValue"
+            [attr.tabindex]="yearValue === focusedYear() ? 0 : -1"
+            [disabled]="isYearDisabled(yearValue)"
+            [attr.aria-pressed]="yearValue === pickerYear()"
+            [attr.aria-label]="yearValue"
+            (click)="selectYear(yearValue)"
+          >
+            {{ yearValue }}
+          </button>
+        </div>
+      }
+    </div>
+  }
+}

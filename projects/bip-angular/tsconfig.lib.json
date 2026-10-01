@@ -52,7 +52,12 @@
     "accordion/**/*.ts",
     "stepper/**/*.ts",
     "navbar/**/*.ts",
-    "sidebar/**/*.ts"
+    "sidebar/**/*.ts",
+    "multi-select/**/*.ts",
+    "date-picker/**/*.ts",
+    "date-range-picker/**/*.ts",
+    "time-picker/**/*.ts",
+    "calendar/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

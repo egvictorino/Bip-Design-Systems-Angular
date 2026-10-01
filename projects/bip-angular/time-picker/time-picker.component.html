@@ -1,0 +1,169 @@
+@if (label()) {
+  <label [for]="fieldId" class="bip-time-picker-label">
+    {{ label() }}
+    @if (required()) {
+      <span aria-hidden="true" class="bip-time-picker-required-mark"> *</span>
+    }
+  </label>
+}
+
+<div class="bip-time-picker-trigger-wrapper">
+  @if (inputMode() === 'text') {
+    <input
+      #textInputRef
+      type="text"
+      [id]="fieldId"
+      class="bip-time-picker-trigger bip-time-picker-trigger-text"
+      [class]="triggerClass()"
+      [disabled]="disabled()"
+      [attr.aria-describedby]="messageId()"
+      [attr.aria-invalid]="(hasError() || !textValid()) || null"
+      [placeholder]="placeholder() || locale().timePicker.placeholder"
+      [value]="textValue()"
+      (input)="onTextChange($any($event.target).value)"
+      (blur)="onTextBlur()"
+    />
+    <button
+      type="button"
+      class="bip-time-picker-clock-btn"
+      tabindex="-1"
+      [attr.aria-label]="locale().timePicker.openPicker"
+      (click)="onClockClick()"
+    >
+      <span class="bip-time-picker-clock-icon" aria-hidden="true">🕐</span>
+    </button>
+  } @else {
+    <button
+      #triggerRef
+      type="button"
+      [id]="fieldId"
+      [class]="'bip-time-picker-trigger ' + triggerClass()"
+      [disabled]="disabled()"
+      aria-haspopup="dialog"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-describedby]="messageId()"
+      [attr.aria-invalid]="hasError() || null"
+      [attr.aria-busy]="loading() || null"
+      (click)="toggle()"
+      (blur)="onBlur()"
+    >
+      @if (displayValue()) {
+        <span class="bip-time-picker-value">{{ displayValue() }}</span>
+      } @else {
+        <span class="bip-time-picker-placeholder">{{ placeholder() || locale().timePicker.placeholder }}</span>
+      }
+      <span class="bip-time-picker-clock-icon" aria-hidden="true">🕐</span>
+    </button>
+  }
+</div>
+
+<span role="status" aria-live="polite" aria-atomic="true" class="bip-time-picker-sr-only">{{ announcement() }}</span>
+
+@if (error() && errorMessage()) {
+  <span [id]="errorId" class="bip-time-picker-message bip-time-picker-error-text" role="alert">
+    {{ errorMessage() }}
+  </span>
+} @else if (helperText()) {
+  <span [id]="errorId" class="bip-time-picker-message bip-time-picker-helper-text">
+    {{ helperText() }}
+  </span>
+}
+
+<ng-template #panelTemplate>
+  <div
+    class="bip-time-picker-panel"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-label]="locale().timePicker.selectTime"
+    (keydown.escape)="onEscape($event)"
+  >
+    <div class="bip-time-picker-columns">
+      <div class="bip-time-picker-column">
+        <div class="bip-time-picker-column-header">{{ locale().timePicker.hours }}</div>
+        <div
+          [id]="hoursListId"
+          class="bip-time-picker-column-list"
+          role="listbox"
+          tabindex="0"
+          [attr.aria-label]="locale().timePicker.hours"
+          [attr.aria-activedescendant]="focusedHourIdx() !== null ? hoursListId + '-opt-' + hoursOptions()[focusedHourIdx()!] : null"
+          (keydown)="onHourColumnKeydown($event)"
+        >
+          @for (hourOption of hoursOptions(); track hourOption; let idx = $index) {
+            <button
+              type="button"
+              [id]="hoursListId + '-opt-' + hourOption"
+              class="bip-time-picker-option"
+              [class.bip-time-picker-option--selected]="selectedHourDisplay() === hourOption"
+              [class.bip-time-picker-option--focused]="focusedHourIdx() === idx"
+              [class.bip-time-picker-option--disabled]="isHourOptionDisabled(hourOption)"
+              role="option"
+              tabindex="-1"
+              [attr.aria-selected]="selectedHourDisplay() === hourOption"
+              [attr.aria-disabled]="isHourOptionDisabled(hourOption) || null"
+              (click)="onHourSelect(hourOption)"
+            >
+              {{ pad(hourOption) }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="bip-time-picker-column">
+        <div class="bip-time-picker-column-header">{{ locale().timePicker.minutes }}</div>
+        <div
+          [id]="minutesListId"
+          class="bip-time-picker-column-list"
+          role="listbox"
+          tabindex="0"
+          [attr.aria-label]="locale().timePicker.minutes"
+          [attr.aria-activedescendant]="focusedMinuteIdx() !== null ? minutesListId + '-opt-' + minutesOptions()[focusedMinuteIdx()!] : null"
+          (keydown)="onMinuteColumnKeydown($event)"
+        >
+          @for (minuteOption of minutesOptions(); track minuteOption; let idx = $index) {
+            <button
+              type="button"
+              [id]="minutesListId + '-opt-' + minuteOption"
+              class="bip-time-picker-option"
+              [class.bip-time-picker-option--selected]="selectedMinute() === minuteOption"
+              [class.bip-time-picker-option--focused]="focusedMinuteIdx() === idx"
+              [class.bip-time-picker-option--disabled]="isMinuteDisabled(minuteOption)"
+              role="option"
+              tabindex="-1"
+              [attr.aria-selected]="selectedMinute() === minuteOption"
+              [attr.aria-disabled]="isMinuteDisabled(minuteOption) || null"
+              (click)="onMinuteSelect(minuteOption)"
+            >
+              {{ pad(minuteOption) }}
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (hourCycle() === '12') {
+        <div class="bip-time-picker-column bip-time-picker-column--period">
+          <div class="bip-time-picker-column-header">{{ locale().timePicker.amPm }}</div>
+          <div [id]="periodListId" class="bip-time-picker-column-list" role="listbox" [attr.aria-label]="locale().timePicker.amPm">
+            @for (period of periods; track period) {
+              <button
+                type="button"
+                class="bip-time-picker-option"
+                [class.bip-time-picker-option--selected]="selectedPeriod() === period"
+                role="option"
+                [attr.aria-selected]="selectedPeriod() === period"
+                (click)="onPeriodSelect(period)"
+              >
+                {{ period }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="bip-time-picker-now-section">
+      <button type="button" class="bip-time-picker-now-btn" (click)="onNow()">{{ locale().timePicker.now }}</button>
+    </div>
+  </div>
+</ng-template>

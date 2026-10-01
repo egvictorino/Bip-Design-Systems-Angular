@@ -1,0 +1,143 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+:host.bip-date-picker-wrapper--full-width {
+  width: 100%;
+}
+
+.bip-date-picker-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-txt);
+}
+.bip-date-picker-required-mark {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-0-5);
+}
+
+.bip-date-picker-trigger-wrapper {
+  display: flex;
+}
+:host.bip-date-picker-wrapper--full-width .bip-date-picker-trigger-wrapper {
+  width: 100%;
+}
+
+.bip-date-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-field);
+  background-color: var(--color-field);
+  cursor: pointer;
+  color: var(--color-txt);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+.bip-date-picker-trigger:hover:not(:disabled) {
+  border-color: var(--color-primary);
+}
+.bip-date-picker-trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.bip-date-picker-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bip-date-picker-trigger--error {
+  border-color: var(--color-danger);
+}
+
+.bip-date-picker-trigger--sm {
+  padding: var(--space-control-y-sm) var(--space-control-x-sm);
+  font-size: var(--text-xs);
+}
+.bip-date-picker-trigger--md {
+  padding: var(--space-control-y-md) var(--space-4);
+  font-size: var(--text-sm);
+}
+.bip-date-picker-trigger--lg {
+  padding: var(--space-control-y-lg) var(--space-control-x-lg);
+  font-size: var(--text-base);
+}
+
+.bip-date-picker-value {
+  color: var(--color-txt);
+}
+.bip-date-picker-placeholder {
+  color: var(--color-txt-secondary);
+}
+
+.bip-date-picker-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-txt-secondary);
+  cursor: pointer;
+  line-height: 1;
+  border-radius: var(--radius-control);
+}
+.bip-date-picker-clear:hover {
+  color: var(--color-txt);
+}
+.bip-date-picker-clear:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.bip-date-picker-calendar-icon {
+  display: inline-flex;
+  color: var(--color-txt-secondary);
+  flex-shrink: 0;
+}
+.bip-date-picker-calendar-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.bip-date-picker-spinner {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-circle);
+  border: 2px solid var(--color-edge);
+  border-block-start-color: var(--color-primary);
+  animation: bip-date-picker-spin var(--duration-slow) linear infinite;
+}
+@keyframes bip-date-picker-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bip-date-picker-spinner {
+    animation-duration: 0ms;
+  }
+}
+
+.bip-date-picker-message {
+  font-size: var(--text-xs);
+}
+.bip-date-picker-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-date-picker-error-text {
+  color: var(--color-danger);
+}
+
+.bip-date-picker-panel {
+  border-radius: var(--radius-container);
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-surface-1);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-3);
+}
+.bip-date-picker-panel:focus-visible {
+  outline: none;
+}

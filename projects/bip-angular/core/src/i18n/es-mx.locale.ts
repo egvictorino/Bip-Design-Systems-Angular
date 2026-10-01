@@ -358,6 +358,7 @@ export const esMX: BipLocale = {
     hourSelectedAnnouncement: (hour) => `Hora ${hour} seleccionada`,
     timeSelectedAnnouncement: (time) => `${time} seleccionado`,
     periodSelectedAnnouncement: (period) => `${period} seleccionado`,
+    now: 'Ahora',
   },
 
   toast: {

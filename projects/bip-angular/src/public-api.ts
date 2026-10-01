@@ -48,3 +48,8 @@ export * from '@bip-design-systems/angular/accordion';
 export * from '@bip-design-systems/angular/stepper';
 export * from '@bip-design-systems/angular/navbar';
 export * from '@bip-design-systems/angular/sidebar';
+export * from '@bip-design-systems/angular/multi-select';
+export * from '@bip-design-systems/angular/date-picker';
+export * from '@bip-design-systems/angular/date-range-picker';
+export * from '@bip-design-systems/angular/time-picker';
+export * from '@bip-design-systems/angular/calendar';

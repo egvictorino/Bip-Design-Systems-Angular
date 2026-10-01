@@ -355,6 +355,7 @@ export const enUS: BipLocale = {
     hourSelectedAnnouncement: (hour) => `Hour ${hour} selected`,
     timeSelectedAnnouncement: (time) => `${time} selected`,
     periodSelectedAnnouncement: (period) => `${period} selected`,
+    now: 'Now',
   },
 
   toast: {
