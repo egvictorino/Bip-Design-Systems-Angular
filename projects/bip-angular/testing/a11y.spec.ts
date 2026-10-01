@@ -15,6 +15,8 @@ const SRC_DIR = resolve(__dirname, '..');
  */
 const A11Y_REGISTRY: Record<string, string> = {
   a11y: 'BipVisuallyHidden: span recortado visualmente (clip-rect), siempre expuesto a lectores de pantalla.',
+  'calendar-grid':
+    'BipCalendarGrid (compartido por date-picker y date-range-picker, vive en core): vista de días role="grid" con aria-labelledby al botón de encabezado mes/año, columnas role="columnheader", celdas role="gridcell" (aria-selected en modo range sobre from/to); roving tabindex por foco gestionado con signals (sin aria-activedescendant), botones de día con aria-label de fecha completa vía Intl.DateTimeFormat y disabled nativo para min/max/disabledDates. Navegación por teclado en la grilla de días: ←→ ±1 día, ↑↓ ±7, Home/End a los extremos del mes, PageUp/PageDown saltan de mes, Enter/Espacio seleccionan (sin wrap, calca DatePicker.test.tsx/DateRangePicker.test.tsx de React). Vista de meses: role="grid" con aria-label, cada botón aria-pressed + aria-label mes/año (sin navegación por flechas, gap conocido igual que la referencia React). Vista de años: role="grid" con la misma navegación por teclado que los días (±1/±4/±12), roving tabindex vía signals, aria-pressed en el año actual.',
   container: 'BipContainer: sin semántica propia, solo layout — el elemento host la conserva.',
   stack: 'BipStack: sin semántica propia, solo layout — el elemento host la conserva.',
   grid: 'BipGrid: sin semántica propia, solo layout — el elemento host la conserva.',

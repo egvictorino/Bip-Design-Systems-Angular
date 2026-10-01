@@ -11,3 +11,4 @@ export * from './overlay';
 export * from './i18n';
 export * from './a11y';
 export * from './forms';
+export * from './calendar-grid';
