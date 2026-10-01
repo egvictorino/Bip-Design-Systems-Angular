@@ -33,3 +33,4 @@ export * from '@bip-design-systems/angular/number-input';
 export * from '@bip-design-systems/angular/search-input';
 export * from '@bip-design-systems/angular/slider';
 export * from '@bip-design-systems/angular/file-upload';
+export * from '@bip-design-systems/angular/modal';

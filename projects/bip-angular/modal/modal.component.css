@@ -1,0 +1,55 @@
+.bip-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background-color: var(--color-scrim);
+  opacity: 0;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.bip-modal-backdrop--open {
+  opacity: 1;
+}
+
+.bip-modal-dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - var(--space-8));
+  border-radius: var(--radius-container);
+  background-color: var(--color-surface-1);
+  box-shadow: var(--shadow-xl);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+
+.bip-modal-dialog:focus {
+  outline: none;
+}
+
+.bip-modal-dialog--open {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.bip-modal-dialog--sm {
+  max-width: 24rem;
+}
+
+.bip-modal-dialog--md {
+  max-width: 28rem;
+}
+
+.bip-modal-dialog--lg {
+  max-width: 32rem;
+}
+
+.bip-modal-dialog--xl {
+  max-width: 36rem;
+}

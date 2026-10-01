@@ -59,7 +59,8 @@
               "../number-input/**/*.spec.ts",
               "../search-input/**/*.spec.ts",
               "../slider/**/*.spec.ts",
-              "../file-upload/**/*.spec.ts"
+              "../file-upload/**/*.spec.ts",
+              "../modal/**/*.spec.ts"
             ]
           }
         },
