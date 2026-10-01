@@ -69,7 +69,8 @@
               "../dropdown/**/*.spec.ts",
               "../timeline/**/*.spec.ts",
               "../breadcrumb/**/*.spec.ts",
-              "../pagination/**/*.spec.ts"
+              "../pagination/**/*.spec.ts",
+              "../tabs/**/*.spec.ts"
             ]
           }
         },
