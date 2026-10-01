@@ -1,0 +1,13 @@
+<ng-template #portalTemplate>
+  <div
+    class="bip-dropdown-menu"
+    [id]="context.menuId"
+    role="menu"
+    aria-orientation="vertical"
+    [attr.aria-labelledby]="context.triggerId"
+    tabindex="-1"
+    (keydown)="onMenuKeydown($event)"
+  >
+    <ng-content />
+  </div>
+</ng-template>

@@ -45,6 +45,7 @@
     "drawer-panel/**/*.ts",
     "toast/**/*.ts",
     "tooltip/**/*.ts",
-    "popover/**/*.ts"
+    "popover/**/*.ts",
+    "dropdown/**/*.ts"
   ]
 }
