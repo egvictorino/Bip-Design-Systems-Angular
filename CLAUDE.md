@@ -216,6 +216,9 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 `Modal` + `ModalHeader/Body/Footer` (declarativo `[(open)]` con template portal; focus trap, restaura foco, Escape, primer focusable; scroll lock), `ConfirmDialog` (textos i18n), `DrawerPanel` (`placement` left/right físico por diseño), `Toast` (`BipToast` service + `provideBipToast({ position })`, región `role=region` con label i18n, `duration: 0` persistente, default 5000ms, barra de progreso, reusa `bip-alert`), `Tooltip` (`[bipTooltip]` directiva; `position` físico, `align` lógico; burbuja `--color-surface-inverse`), `Popover` + trigger/content, `Dropdown` (patrón WAI-ARIA Menu Button con `ListKeyManager`: ↑↓ Home End, Escape devuelve foco, `role=menuitem`, separadores).
 
 - **Terminado cuando:** los 7 cumplen la DoD y la story `PortalTheming` muestra Modal/Toast heredando dark + brand.
+- **Nota de alcance (2026-10-01):** `DropdownSubmenu` (navegación anidada ArrowRight/Left +
+  `stopImmediatePropagation` de la referencia React) no se portó — costo/beneficio dado el
+  tamaño ya grande del bloque. Pendiente como follow-up explícito si se necesita.
 
 ### Bloque 7 — Navegación y disclosure
 
@@ -290,7 +293,7 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 - [x] Bloque 3 — i18n, utilidades y primitivas de a11y
 - [x] Bloque 4 — Layout, tipografía y display (17)
 - [x] Bloque 5 — Formularios básicos (13)
-- [ ] Bloque 6 — Overlays y feedback (7)
+- [x] Bloque 6 — Overlays y feedback (7)
 - [ ] Bloque 7 — Navegación y disclosure (8)
 - [ ] Bloque 8 — Selección avanzada y fechas (5)
 - [ ] Bloque 9 — Datos (2)

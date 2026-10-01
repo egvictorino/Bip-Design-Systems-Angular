@@ -10,6 +10,39 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Overlays y feedback (Bloque 6): 7 componentes, todos vía `BipOverlay` (nunca `Overlay`
+  directo). `BipModal` + `BipModalHeader`/`BipModalBody`/`BipModalFooter` (primer componente
+  de overlay real de la librería: `BipOverlay.create()` + `TemplatePortal`; `cdkTrapFocus` con
+  autocapture del primer focusable y restauración de foco al cerrar; `closeOnBackdrop`/
+  `closeOnEscape` configurables; scroll lock con `ScrollStrategyOptions.block()`;
+  `BipModalHeader` inyecta un token `BIP_MODAL_CONTEXT` — no la clase `BipModal` — para evitar
+  un import circular, y lanza si se usa fuera de `<bip-modal>`). `BipConfirmDialog`
+  (composición declarativa sobre `<bip-modal>`, `closeOnBackdrop` fijo en `false`; `variant`
+  danger reutiliza `BipButton` `variant="danger"`, warning aplica un override de color propio).
+  `BipDrawerPanel` (mismo patrón de overlay que Modal; `placement` físico left/right a
+  propósito, en el allowlist de `rtl.spec.ts`; slots `[bipDrawerPanelHeaderActions]`/
+  `[bipDrawerPanelFooter]` con directivas marcador sin comportamiento para que el componente
+  sepa vía `contentChild()` si hay algo proyectado). `BipToast` (servicio `providedIn: 'root'`
+  + `provideBipToast({ max, position })` opcional — sin `<ToastProvider>` envolviendo el árbol;
+  overlay creado perezosamente en el primer `show()`; reusa `<bip-alert>` por toast; puerto
+  completo de la lógica de stacking de React — colapsado con peek de los de atrás, hover
+  expande todo verticalmente; barra de progreso solo si `duration > 0`, `duration: 0` es
+  persistente). `[bipTooltip]` (directiva de atributo, no un wrapper — Angular no tiene
+  `cloneElement`; posiciona vía `FlexibleConnectedPositionStrategy` del CDK en vez del CSS
+  absoluto de la referencia, por la regla de Bloque 2; `position` físico fuerza
+  `OverlayConfig.direction: 'ltr'` para left/right, `align` lógico sigue la `Directionality`
+  real; sin modo controlado `open`/`onOpenChange` de React — un `model()` no distingue
+  "enlazado" de "en su default"). `BipPopover` + `BipPopoverTrigger`/`BipPopoverContent`
+  (compound component — contexto vía token `BIP_POPOVER_CONTEXT`; `BipPopoverContent`
+  posiciona vía `BipOverlay` anclada al elemento que registró el trigger; cierra con Escape o
+  `overlayRef.outsidePointerEvents()`, ignorando clics en el propio trigger). `BipDropdown` +
+  `BipDropdownTrigger`/`BipDropdownMenu`/`BipDropdownItem`/`BipDropdownItemCheckbox`/
+  `BipDropdownDivider`/`BipDropdownGroup`/`BipDropdownSearch` (patrón WAI-ARIA Menu Button;
+  navegación de teclado con `FocusKeyManager` del CDK — ↑↓ con wrap, Home/End, se saltan los
+  items disabled — en vez del recorrido manual de `querySelector` de React; Escape cierra y
+  devuelve el foco al trigger, Tab cierra sin bloquear el avance natural del foco). **Alcance
+  reducido a propósito:** no se portó `DropdownSubmenu` (navegación anidada
+  ArrowRight/Left + `stopImmediatePropagation`) — queda como follow-up explícito.
 - Formularios básicos (Bloque 5): 13 componentes, todos con `ControlValueAccessor` (probados
   con `FormControl`, `ngModel` y `[(value)]`). `BipButton` (`button[bipButton], a[bipButton]`,
   variantes primary/secondary/bare/soul/danger, tamaños, `loading` con spinner+`aria-busy`,
