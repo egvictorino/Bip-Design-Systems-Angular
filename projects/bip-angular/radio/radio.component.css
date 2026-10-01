@@ -1,0 +1,178 @@
+:host {
+  display: block;
+}
+
+.bip-radio-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bip-radio-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ─── Visual ring ─────────────────────────────────────────────────────────── */
+
+.bip-radio-ring {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-primary);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.bip-radio-ring:hover {
+  border-color: var(--color-primary-hover);
+}
+
+.bip-radio-ring--error {
+  border-color: var(--color-danger);
+}
+.bip-radio-ring--error:hover {
+  border-color: var(--color-danger-hover);
+}
+
+.bip-radio-row:has(:focus-visible) .bip-radio-ring {
+  box-shadow: var(--focus-ring);
+}
+.bip-radio-row:has(:focus-visible) .bip-radio-ring--error {
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
+}
+
+.bip-radio-ring--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bip-radio-ring--sm {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.bip-radio-ring--md {
+  width: 1rem;
+  height: 1rem;
+}
+.bip-radio-ring--lg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ─── Native input (hidden, overlays ring) ───────────────────────────────── */
+
+.bip-radio-native-input {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.bip-radio-native-input:disabled {
+  cursor: not-allowed;
+}
+
+/* ─── Inner dot ───────────────────────────────────────────────────────────── */
+
+.bip-radio-dot {
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary);
+  transform: scale(0);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.bip-radio-dot--error {
+  background-color: var(--color-danger);
+}
+
+.bip-radio-row:has(:checked) .bip-radio-dot {
+  transform: scale(1);
+}
+
+.bip-radio-dot--sm {
+  width: 0.375rem;
+  height: 0.375rem;
+}
+.bip-radio-dot--md {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+.bip-radio-dot--lg {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+/* ─── Label ───────────────────────────────────────────────────────────────── */
+
+.bip-radio-label {
+  user-select: none;
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-standard);
+  cursor: pointer;
+}
+
+.bip-radio-label--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-radio-label--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-radio-label--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+
+.bip-radio-label--normal {
+  color: var(--color-txt);
+}
+.bip-radio-label--error {
+  color: var(--color-danger);
+}
+.bip-radio-label--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bip-radio-required-mark {
+  margin-inline-start: var(--space-0-5);
+  color: var(--color-danger);
+}
+
+/* ─── Helper / Error message ─────────────────────────────────────────────── */
+
+.bip-radio-helper--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-radio-helper--lg {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+
+.bip-radio-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-radio-error-text {
+  color: var(--color-danger);
+}
+
+.bip-radio-indent--sm {
+  margin-inline-start: 1.375rem;
+}
+.bip-radio-indent--md {
+  margin-inline-start: var(--space-6);
+}
+.bip-radio-indent--lg {
+  margin-inline-start: var(--space-7);
+}

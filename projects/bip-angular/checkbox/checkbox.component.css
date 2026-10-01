@@ -1,0 +1,201 @@
+:host {
+  display: block;
+}
+
+.bip-checkbox-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bip-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ─── Visual box ──────────────────────────────────────────────────────────── */
+
+.bip-checkbox-box {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-marker);
+  border: 2px solid var(--color-primary);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.bip-checkbox-box:hover {
+  border-color: var(--color-primary-hover);
+}
+
+.bip-checkbox-box--error {
+  border-color: var(--color-danger);
+}
+.bip-checkbox-box--error:hover {
+  border-color: var(--color-danger-hover);
+}
+
+.bip-checkbox-row:has(:focus-visible) .bip-checkbox-box {
+  box-shadow: var(--focus-ring);
+}
+.bip-checkbox-row:has(:focus-visible) .bip-checkbox-box--error {
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
+}
+
+.bip-checkbox-row:has(:checked) .bip-checkbox-box,
+.bip-checkbox-row:has(:indeterminate) .bip-checkbox-box {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.bip-checkbox-row:has(:checked) .bip-checkbox-box--error,
+.bip-checkbox-row:has(:indeterminate) .bip-checkbox-box--error {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.bip-checkbox-box--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bip-checkbox-box--sm {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.bip-checkbox-box--md {
+  width: 1rem;
+  height: 1rem;
+}
+.bip-checkbox-box--lg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ─── Native input (hidden, overlays box) ────────────────────────────────── */
+
+.bip-checkbox-native-input {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.bip-checkbox-native-input:disabled {
+  cursor: not-allowed;
+}
+
+/* ─── Icons ───────────────────────────────────────────────────────────────── */
+
+.bip-checkbox-check-icon,
+.bip-checkbox-dash-icon {
+  pointer-events: none;
+  color: var(--color-txt-on-primary);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.bip-checkbox-row:has(.bip-checkbox-box--error) .bip-checkbox-check-icon,
+.bip-checkbox-row:has(.bip-checkbox-box--error) .bip-checkbox-dash-icon {
+  color: var(--color-txt-on-danger);
+}
+
+.bip-checkbox-row:has(:checked) .bip-checkbox-check-icon {
+  opacity: 1;
+}
+.bip-checkbox-row:has(:indeterminate) .bip-checkbox-check-icon {
+  opacity: 0;
+}
+
+.bip-checkbox-dash-icon {
+  position: absolute;
+}
+.bip-checkbox-row:has(:indeterminate) .bip-checkbox-dash-icon {
+  opacity: 1;
+}
+
+.bip-checkbox-icon--sm {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.bip-checkbox-icon--md {
+  width: 1rem;
+  height: 1rem;
+}
+.bip-checkbox-icon--lg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ─── Label ───────────────────────────────────────────────────────────────── */
+
+.bip-checkbox-label {
+  user-select: none;
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-standard);
+  cursor: pointer;
+}
+
+.bip-checkbox-label--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-checkbox-label--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-checkbox-label--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+
+.bip-checkbox-label--normal {
+  color: var(--color-txt);
+}
+.bip-checkbox-label--error {
+  color: var(--color-danger);
+}
+.bip-checkbox-label--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bip-checkbox-required-mark {
+  margin-inline-start: var(--space-0-5);
+  color: var(--color-danger);
+}
+
+/* ─── Helper / Error message ─────────────────────────────────────────────── */
+
+.bip-checkbox-helper--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-checkbox-helper--lg {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+
+.bip-checkbox-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-checkbox-error-text {
+  color: var(--color-danger);
+}
+
+.bip-checkbox-indent--sm {
+  margin-inline-start: 1.375rem;
+}
+.bip-checkbox-indent--md {
+  margin-inline-start: var(--space-6);
+}
+.bip-checkbox-indent--lg {
+  margin-inline-start: var(--space-7);
+}

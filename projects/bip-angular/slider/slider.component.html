@@ -1,0 +1,39 @@
+@if (showFooter()) {
+  <div class="bip-slider-footer">
+    @if (label()) {
+      <label [for]="fieldId" [class]="'bip-slider-label' + (disabled() ? ' bip-slider-label--disabled' : '')">
+        {{ label() }}
+        @if (required()) {
+          <span aria-hidden="true" class="bip-slider-required-mark"> *</span>
+        }
+      </label>
+    }
+    @if (showValue()) {
+      <span class="bip-slider-value-label">{{ value() }}</span>
+    }
+  </div>
+}
+<input
+  [id]="fieldId"
+  type="range"
+  [class]="'bip-slider-track' + (error() ? ' bip-slider-track--error' : '')"
+  [min]="min()"
+  [max]="max()"
+  [step]="step()"
+  [value]="value()"
+  [disabled]="disabled()"
+  [required]="required()"
+  [attr.aria-invalid]="hasError() || null"
+  [attr.aria-describedby]="messageId()"
+  (input)="onInput($event)"
+  (blur)="onBlur()"
+/>
+@if (hasVisibleMessage()) {
+  <div class="bip-slider-footer">
+    @if (error() && errorMessage()) {
+      <span [id]="errorId" class="bip-slider-error-text" role="alert">{{ errorMessage() }}</span>
+    } @else {
+      <span [id]="errorId" class="bip-slider-helper-text">{{ helperText() }}</span>
+    }
+  </div>
+}

@@ -1,0 +1,211 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+:host.bip-select-wrapper--full-width {
+  width: 100%;
+}
+
+/* ─── Label ───────────────────────────────────────────────────────────────── */
+
+.bip-select-label {
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.bip-select-label--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-select-label--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-select-label--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+
+.bip-select-label--normal {
+  color: var(--color-txt);
+}
+.bip-select-label--focused {
+  color: var(--color-primary);
+}
+.bip-select-label--error {
+  color: var(--color-danger);
+}
+.bip-select-label--disabled {
+  opacity: 0.5;
+}
+
+.bip-select-required-mark {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-0-5);
+}
+
+/* ─── Container (for chevron) ─────────────────────────────────────────────── */
+
+.bip-select-container {
+  position: relative;
+}
+
+:host.bip-select-wrapper--full-width .bip-select-container {
+  width: 100%;
+}
+
+/* ─── Select base ─────────────────────────────────────────────────────────── */
+
+.bip-select {
+  appearance: none;
+  border-radius: var(--radius-field);
+  padding-inline-end: var(--space-8);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+  width: 100%;
+  cursor: pointer;
+}
+
+.bip-select:focus {
+  outline: none;
+}
+
+.bip-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-disabled);
+}
+
+/* ─── Sizes ───────────────────────────────────────────────────────────────── */
+
+.bip-select--sm {
+  padding: var(--space-control-y-sm) var(--space-8) var(--space-control-y-sm) var(--space-control-x-sm);
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-select--md {
+  padding: var(--space-control-y-md) var(--space-8) var(--space-control-y-md) var(--space-4);
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-select--lg {
+  padding: var(--space-control-y-lg) var(--space-8) var(--space-control-y-lg) var(--space-control-x-lg);
+  font-size: var(--text-lg);
+  line-height: 1.75rem;
+}
+
+/* ─── Variant: outlined ───────────────────────────────────────────────────── */
+
+.bip-select--outlined {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-field);
+}
+.bip-select--outlined:hover:not(:disabled) {
+  border-color: var(--color-primary);
+}
+.bip-select--outlined:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+.bip-select--outlined.bip-select--error {
+  border-color: var(--color-danger);
+}
+.bip-select--outlined.bip-select--error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+}
+
+/* ─── Variant: filled ─────────────────────────────────────────────────────── */
+
+.bip-select--filled {
+  border: none;
+  background-color: var(--color-secondary);
+}
+.bip-select--filled:hover:not(:disabled) {
+  background-color: var(--color-secondary-hover);
+}
+.bip-select--filled:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.bip-select--filled.bip-select--error {
+  background-color: var(--color-danger-light);
+}
+.bip-select--filled.bip-select--error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+}
+
+/* ─── Variant: bare ───────────────────────────────────────────────────────── */
+
+.bip-select--bare {
+  border: none;
+  border-bottom: 2px solid var(--color-primary);
+  background-color: transparent;
+  border-radius: var(--radius-none);
+}
+.bip-select--bare:hover:not(:disabled) {
+  border-bottom-color: var(--color-primary-hover);
+}
+.bip-select--bare:focus-visible {
+  box-shadow: none;
+  border-bottom-color: var(--color-primary-hover);
+}
+.bip-select--bare.bip-select--error {
+  border-bottom-color: var(--color-danger);
+}
+.bip-select--bare.bip-select--error:focus-visible {
+  box-shadow: none;
+  border-bottom-color: var(--color-danger);
+}
+
+/* ─── Chevron ─────────────────────────────────────────────────────────────── */
+
+.bip-select-chevron {
+  pointer-events: none;
+  position: absolute;
+  inset-inline-end: 0.625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.bip-select-chevron--normal {
+  color: var(--color-txt-secondary);
+}
+.bip-select-chevron--focused {
+  color: var(--color-primary);
+  transform: translateY(-50%) rotate(180deg);
+}
+.bip-select-chevron--error {
+  color: var(--color-danger);
+}
+.bip-select-chevron--disabled {
+  opacity: 0.5;
+}
+
+.bip-select-chevron-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ─── Helper / Error message ─────────────────────────────────────────────── */
+
+.bip-select-helper--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-select-helper--lg {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+
+.bip-select-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-select-error-text {
+  color: var(--color-danger);
+}

@@ -26,7 +26,18 @@
     "empty-state/**/*.ts",
     "card/**/*.ts",
     "stats-card/**/*.ts",
-    "alert/**/*.ts"
+    "alert/**/*.ts",
+    "button/**/*.ts",
+    "input/**/*.ts",
+    "textarea/**/*.ts",
+    "checkbox/**/*.ts",
+    "radio/**/*.ts",
+    "toggle/**/*.ts",
+    "select/**/*.ts",
+    "number-input/**/*.ts",
+    "search-input/**/*.ts",
+    "slider/**/*.ts",
+    "file-upload/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

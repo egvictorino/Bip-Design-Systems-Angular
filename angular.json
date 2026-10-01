@@ -48,7 +48,18 @@
               "../empty-state/**/*.spec.ts",
               "../card/**/*.spec.ts",
               "../stats-card/**/*.spec.ts",
-              "../alert/**/*.spec.ts"
+              "../alert/**/*.spec.ts",
+              "../button/**/*.spec.ts",
+              "../input/**/*.spec.ts",
+              "../textarea/**/*.spec.ts",
+              "../checkbox/**/*.spec.ts",
+              "../radio/**/*.spec.ts",
+              "../toggle/**/*.spec.ts",
+              "../select/**/*.spec.ts",
+              "../number-input/**/*.spec.ts",
+              "../search-input/**/*.spec.ts",
+              "../slider/**/*.spec.ts",
+              "../file-upload/**/*.spec.ts"
             ]
           }
         },
