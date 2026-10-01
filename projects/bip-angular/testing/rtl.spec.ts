@@ -15,6 +15,7 @@ const SRC_DIR = resolve(__dirname, '..');
 const PHYSICAL_BY_DESIGN_ALLOWLIST = new Set<string>([
   'drawer-panel/drawer-panel.component.css',
   'toast/toast-region.component.css',
+  'tooltip/tooltip-panel.component.css',
 ]);
 
 const PHYSICAL_PROP_RE =

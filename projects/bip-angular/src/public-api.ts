@@ -37,3 +37,4 @@ export * from '@bip-design-systems/angular/modal';
 export * from '@bip-design-systems/angular/confirm-dialog';
 export * from '@bip-design-systems/angular/drawer-panel';
 export * from '@bip-design-systems/angular/toast';
+export * from '@bip-design-systems/angular/tooltip';

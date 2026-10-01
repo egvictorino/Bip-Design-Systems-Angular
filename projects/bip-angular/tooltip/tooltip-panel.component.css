@@ -1,0 +1,92 @@
+.bip-tooltip {
+  display: inline-block;
+  pointer-events: none;
+  position: relative;
+  max-width: 20rem;
+  border-radius: var(--radius-surface);
+  --tooltip-bg: var(--color-surface-inverse);
+  --tooltip-color: var(--color-txt-on-inverse);
+  --tooltip-border: transparent;
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-color);
+  border: 1px solid var(--tooltip-border);
+  padding: var(--space-1-5) var(--space-2-5);
+  font-size: var(--text-xs);
+  line-height: 1rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity var(--duration-instant) var(--ease-in), transform var(--duration-instant) var(--ease-in);
+  white-space: normal;
+}
+
+.bip-tooltip--visible {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+
+.bip-tooltip-arrow {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  transform: rotate(45deg);
+  background-color: var(--tooltip-bg);
+}
+
+/* `position` es físico (ver tooltip.types.ts) — la ubicación de la flecha respecto al borde del
+   trigger se deja literal a propósito. */
+.bip-tooltip--top .bip-tooltip-arrow {
+  inset-inline-start: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  top: 100%;
+  margin-top: calc(var(--space-1) * -1);
+}
+
+.bip-tooltip--bottom .bip-tooltip-arrow {
+  inset-inline-start: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  bottom: 100%;
+  margin-bottom: calc(var(--space-1) * -1);
+}
+
+.bip-tooltip--left .bip-tooltip-arrow {
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  left: 100%;
+  margin-left: calc(var(--space-1) * -1);
+}
+
+.bip-tooltip--right .bip-tooltip-arrow {
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  right: 100%;
+  margin-right: calc(var(--space-1) * -1);
+}
+
+.bip-tooltip--light {
+  --tooltip-bg: var(--color-surface-1);
+  --tooltip-color: var(--color-txt);
+  --tooltip-border: var(--color-edge);
+}
+
+.bip-tooltip--info {
+  --tooltip-bg: var(--color-info-light);
+  --tooltip-color: var(--color-info-text);
+}
+
+.bip-tooltip--success {
+  --tooltip-bg: var(--color-success-light);
+  --tooltip-color: var(--color-success-text);
+}
+
+.bip-tooltip--warning {
+  --tooltip-bg: var(--color-warning-light);
+  --tooltip-color: var(--color-warning-text);
+}
+
+.bip-tooltip--error {
+  --tooltip-bg: var(--color-danger-light);
+  --tooltip-color: var(--color-danger-text);
+}

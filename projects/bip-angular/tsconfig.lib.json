@@ -41,7 +41,8 @@
     "modal/**/*.ts",
     "confirm-dialog/**/*.ts",
     "drawer-panel/**/*.ts",
-    "toast/**/*.ts"
+    "toast/**/*.ts",
+    "tooltip/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

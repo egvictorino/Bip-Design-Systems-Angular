@@ -63,7 +63,8 @@
               "../modal/**/*.spec.ts",
               "../confirm-dialog/**/*.spec.ts",
               "../drawer-panel/**/*.spec.ts",
-              "../toast/**/*.spec.ts"
+              "../toast/**/*.spec.ts",
+              "../tooltip/**/*.spec.ts"
             ]
           }
         },
