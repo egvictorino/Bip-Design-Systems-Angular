@@ -18,7 +18,7 @@ import {
   untracked,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
-import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
+import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BipFormControlBase, BipIdGenerator, BipOverlay, injectBipLocale } from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
@@ -110,7 +110,6 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
-  private readonly cdkOverlay = inject(Overlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
   private panelElement: HTMLElement | null = null;
@@ -355,7 +354,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
     if (this.overlayRef) return;
     const overlayRef = this.bipOverlay.create(
       {
-        positionStrategy: this.cdkOverlay
+        positionStrategy: this.bipOverlay
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
@@ -364,7 +363,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
           ])
           .withPush(true)
           .withFlexibleDimensions(false),
-        scrollStrategy: this.cdkOverlay.scrollStrategies.reposition(),
+        scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         minWidth: this.triggerRef.nativeElement.offsetWidth,
         hasBackdrop: false,
       },

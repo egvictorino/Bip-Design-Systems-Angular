@@ -22,7 +22,6 @@ const VARIANT_CLASS: Record<BipNavbarVariant, string> = {
  */
 @Component({
   selector: 'bip-navbar',
-  standalone: true,
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

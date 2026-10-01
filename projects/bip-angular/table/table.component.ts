@@ -10,7 +10,6 @@ import { BIP_TABLE_CONTEXT, type BipTableContext } from './table-context';
  */
 @Component({
   selector: 'bip-table',
-  standalone: true,
   template: `
     <table class="bip-table">
       @if (caption()) {

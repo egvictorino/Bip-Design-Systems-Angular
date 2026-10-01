@@ -10,7 +10,7 @@ import {
   numberAttribute,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Overlay, type ConnectedPosition, type OverlayRef } from '@angular/cdk/overlay';
+import { type ConnectedPosition, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { BipIdGenerator, BipOverlay } from '@bip-design-systems/angular/core';
 import { BipTooltipPanel } from './tooltip-panel.component';
@@ -36,7 +36,6 @@ const GAP_PX = 8;
  */
 @Directive({
   selector: '[bipTooltip]',
-  standalone: true,
   exportAs: 'bipTooltip',
   host: {
     '[attr.aria-describedby]': 'tooltipId',
@@ -58,7 +57,6 @@ export class BipTooltip implements OnDestroy {
 
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly bipOverlay = inject(BipOverlay);
-  private readonly cdkOverlay = inject(Overlay);
   private readonly injector = inject(Injector);
   private readonly document = inject(DOCUMENT);
 
@@ -115,7 +113,7 @@ export class BipTooltip implements OnDestroy {
     const overlayRef = this.bipOverlay.create(
       {
         positionStrategy: this.buildPositionStrategy(),
-        scrollStrategy: this.cdkOverlay.scrollStrategies.reposition(),
+        scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         hasBackdrop: false,
         // Fuerza semántica física en el eje principal cuando position es left/right — 'start'
         // siempre es la izquierda real, sin importar la Directionality del árbol (OverlayConfig.direction
@@ -161,7 +159,7 @@ export class BipTooltip implements OnDestroy {
   }
 
   private buildPositionStrategy() {
-    return this.cdkOverlay
+    return this.bipOverlay
       .position()
       .flexibleConnectedTo(this.elementRef)
       .withPositions([this.computeConnectedPosition()])

@@ -13,7 +13,6 @@ import { navigateSidebarItems } from './sidebar-navigation';
  */
 @Component({
   selector: 'bip-sidebar-submenu',
-  standalone: true,
   imports: [BipTooltip],
   templateUrl: './sidebar-submenu.component.html',
   styleUrl: './sidebar-submenu.component.css',

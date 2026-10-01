@@ -16,7 +16,7 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
+import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   BipOverlay,
@@ -267,7 +267,6 @@ export class BipCalendar implements OnDestroy {
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
-  private readonly cdkOverlay = inject(Overlay);
   private readonly injector = inject(Injector);
   private readonly document = inject(DOCUMENT);
   private rangeOverlayRef: OverlayRef | null = null;
@@ -278,12 +277,12 @@ export class BipCalendar implements OnDestroy {
     this.rangeOverlayRef?.dispose();
     const overlayRef = this.bipOverlay.create(
       {
-        positionStrategy: this.cdkOverlay
+        positionStrategy: this.bipOverlay
           .position()
           .flexibleConnectedTo(anchor)
           .withPositions([{ originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' }])
           .withPush(true),
-        scrollStrategy: this.cdkOverlay.scrollStrategies.reposition(),
+        scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         hasBackdrop: false,
       },
       this.injector

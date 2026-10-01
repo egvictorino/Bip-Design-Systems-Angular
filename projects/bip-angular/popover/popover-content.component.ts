@@ -12,7 +12,7 @@ import {
   untracked,
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
-import { Overlay, type ConnectedPosition, type OverlayRef } from '@angular/cdk/overlay';
+import { type ConnectedPosition, type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BipOverlay } from '@bip-design-systems/angular/core';
 import { BIP_POPOVER_CONTEXT } from './popover-context';
@@ -39,7 +39,6 @@ const PLACEMENT_POSITION: Record<BipPopoverPlacement, ConnectedPosition> = {
  */
 @Component({
   selector: 'bip-popover-content',
-  standalone: true,
   imports: [A11yModule],
   templateUrl: './popover-content.component.html',
   styleUrl: './popover-content.component.css',
@@ -61,7 +60,6 @@ export class BipPopoverContent implements OnDestroy {
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
-  private readonly cdkOverlay = inject(Overlay);
   private readonly injector = inject(Injector);
 
   private overlayRef: OverlayRef | null = null;
@@ -90,12 +88,12 @@ export class BipPopoverContent implements OnDestroy {
 
     const overlayRef = this.bipOverlay.create(
       {
-        positionStrategy: this.cdkOverlay
+        positionStrategy: this.bipOverlay
           .position()
           .flexibleConnectedTo(triggerElementRef)
           .withPositions([PLACEMENT_POSITION[this.placement()]])
           .withPush(true),
-        scrollStrategy: this.cdkOverlay.scrollStrategies.reposition(),
+        scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         hasBackdrop: false,
       },
       this.injector

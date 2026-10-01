@@ -13,7 +13,6 @@ export type BipTabsOrientation = 'horizontal' | 'vertical';
  */
 @Component({
   selector: 'bip-tabs',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './tabs.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

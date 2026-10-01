@@ -17,7 +17,6 @@ function toSet(value: string | readonly string[]): Set<string> {
  */
 @Component({
   selector: 'bip-accordion',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './accordion.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

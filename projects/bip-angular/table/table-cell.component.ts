@@ -5,7 +5,6 @@ import type { BipTableAlign } from './table.types';
 /** Mejora un `<td>` nativo. */
 @Component({
   selector: 'td[bipTableCell]',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './table-cell.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

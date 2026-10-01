@@ -21,7 +21,6 @@ export interface BipBreadcrumbItem {
  */
 @Component({
   selector: 'bip-breadcrumb',
-  standalone: true,
   imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './breadcrumb.component.html',
   styleUrl: './breadcrumb.component.css',

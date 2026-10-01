@@ -25,7 +25,6 @@ const CONFIRM_BTN_CLASS: Record<BipConfirmDialogVariant, string> = {
  */
 @Component({
   selector: 'bip-confirm-dialog',
-  standalone: true,
   imports: [BipButton, BipModal, BipModalHeader, BipModalBody, BipModalFooter],
   templateUrl: './confirm-dialog.component.html',
   styleUrl: './confirm-dialog.component.css',

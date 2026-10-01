@@ -8,7 +8,6 @@ import { BipSidebarGroupLabel } from './sidebar-group-label.component';
  */
 @Component({
   selector: 'bip-sidebar-group',
-  standalone: true,
   imports: [BipSidebarGroupLabel],
   template: `
     @if (label()) {

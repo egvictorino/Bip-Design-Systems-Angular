@@ -10,7 +10,6 @@ const ALIGN_CLASS: Record<BipModalFooterAlign, string> = {
 
 @Component({
   selector: 'bip-modal-footer',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './modal-footer.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

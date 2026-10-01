@@ -17,7 +17,6 @@ import { BIP_NAVBAR_CONTEXT } from './navbar-context';
  */
 @Component({
   selector: 'bip-navbar-item',
-  standalone: true,
   imports: [RouterLink, NgTemplateOutlet],
   templateUrl: './navbar-item.component.html',
   styleUrl: './navbar-item.component.css',

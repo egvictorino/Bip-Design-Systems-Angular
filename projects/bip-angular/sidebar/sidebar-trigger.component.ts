@@ -5,7 +5,6 @@ import { BIP_SIDEBAR_CONTEXT } from './sidebar-context';
 /** Mejora un `<button>` nativo — alterna `collapsed` en el `<bip-sidebar>` ancestro. */
 @Component({
   selector: 'button[bipSidebarTrigger]',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './sidebar-trigger.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

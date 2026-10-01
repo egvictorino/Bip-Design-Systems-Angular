@@ -49,7 +49,6 @@ const SIZE_CLASS: Record<BipModalSize, string> = {
  */
 @Component({
   selector: 'bip-modal',
-  standalone: true,
   imports: [A11yModule, BipModalHeader],
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.css',

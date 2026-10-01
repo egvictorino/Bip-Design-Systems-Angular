@@ -11,7 +11,6 @@ import { BIP_NAVBAR_CONTEXT } from './navbar-context';
  */
 @Component({
   selector: 'bip-navbar-brand',
-  standalone: true,
   imports: [NgTemplateOutlet],
   template: `
     @if (href()) {

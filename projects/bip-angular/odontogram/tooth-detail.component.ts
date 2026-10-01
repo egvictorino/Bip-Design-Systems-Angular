@@ -49,7 +49,6 @@ interface OverlayPosition {
  */
 @Component({
   selector: 'bip-tooth-detail',
-  standalone: true,
   imports: [BipToothSvg, BipNotePopover, BipImagePopover],
   templateUrl: './tooth-detail.component.html',
   styleUrl: './tooth-detail.component.css',

@@ -52,7 +52,6 @@ import type {
  */
 @Component({
   selector: 'bip-data-table',
-  standalone: true,
   imports: [
     NgTemplateOutlet,
     BipTable,

@@ -8,7 +8,6 @@ import { BIP_ACCORDION_ITEM_CONTEXT } from './accordion-context';
  */
 @Component({
   selector: 'button[bipAccordionTrigger]',
-  standalone: true,
   template: `
     <ng-content />
     <span class="bip-accordion-chevron" [class.bip-accordion-chevron--open]="context.isOpen()" aria-hidden="true"></span>

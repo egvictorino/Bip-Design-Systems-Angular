@@ -3,7 +3,6 @@ import { BipIdGenerator } from '@bip-design-systems/angular/core';
 
 @Component({
   selector: 'bip-dropdown-group',
-  standalone: true,
   template: `
     <div class="bip-dropdown-group-label" [id]="labelId">{{ label() }}</div>
     <ng-content />

@@ -4,7 +4,6 @@ import { BIP_DROPDOWN_CONTEXT } from './dropdown-context';
 /** Mejora cualquier elemento nativo (`<button bipDropdownTrigger>`) — sin wrapper, Angular no tiene `cloneElement`. */
 @Directive({
   selector: '[bipDropdownTrigger]',
-  standalone: true,
   host: {
     '[id]': 'context.triggerId',
     '[attr.aria-haspopup]': '"true"',

@@ -35,7 +35,6 @@ const PROGRESS_CLASS: Record<BipToastVariant, string> = {
 /** Un toast individual — reusa `<bip-alert>` para el contenido, igual que la referencia React. */
 @Component({
   selector: 'bip-toast-item',
-  standalone: true,
   imports: [BipAlert],
   templateUrl: './toast-item.component.html',
   styleUrl: './toast-item.component.css',

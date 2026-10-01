@@ -8,7 +8,6 @@ import { BIP_TABLE_CONTEXT, BIP_TABLE_IN_HEAD } from './table-context';
  */
 @Component({
   selector: 'thead[bipTableHead]',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './table-head.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

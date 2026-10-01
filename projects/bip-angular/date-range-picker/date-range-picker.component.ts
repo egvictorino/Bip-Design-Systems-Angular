@@ -17,7 +17,7 @@ import {
   untracked,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
-import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
+import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   BipCalendarGrid,
@@ -90,7 +90,6 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
-  private readonly cdkOverlay = inject(Overlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
 
@@ -232,7 +231,7 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
     if (this.overlayRef) return;
     const overlayRef = this.bipOverlay.create(
       {
-        positionStrategy: this.cdkOverlay
+        positionStrategy: this.bipOverlay
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
@@ -240,7 +239,7 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
             { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
           ])
           .withPush(true),
-        scrollStrategy: this.cdkOverlay.scrollStrategies.reposition(),
+        scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         hasBackdrop: false,
       },
       this.injector

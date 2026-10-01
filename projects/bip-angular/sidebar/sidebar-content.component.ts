@@ -9,7 +9,6 @@ import { BIP_SIDEBAR_CONTEXT } from './sidebar-context';
  */
 @Component({
   selector: 'bip-sidebar-content',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './sidebar-content.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -35,7 +35,6 @@ interface BipOverlayPosition {
  */
 @Component({
   selector: 'bip-image-popover',
-  standalone: true,
   imports: [A11yModule, BipVisuallyHidden],
   templateUrl: './image-popover.component.html',
   styleUrl: './image-popover.component.css',

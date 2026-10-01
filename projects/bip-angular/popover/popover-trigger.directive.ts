@@ -4,7 +4,6 @@ import { BIP_POPOVER_CONTEXT } from './popover-context';
 /** Mejora cualquier elemento nativo (`<button bipPopoverTrigger>`, igual que `bipButton`) en vez de envolverlo — Angular no tiene `cloneElement`. */
 @Directive({
   selector: '[bipPopoverTrigger]',
-  standalone: true,
   host: {
     '[id]': 'context.triggerId',
     '[attr.aria-haspopup]': '"dialog"',

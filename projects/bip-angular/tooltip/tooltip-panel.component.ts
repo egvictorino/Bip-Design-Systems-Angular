@@ -25,7 +25,6 @@ const VARIANT_CLASS: Record<BipTooltipVariant, string> = {
  */
 @Component({
   selector: 'bip-tooltip-panel',
-  standalone: true,
   template: `
     <span
       [id]="tooltipId()"

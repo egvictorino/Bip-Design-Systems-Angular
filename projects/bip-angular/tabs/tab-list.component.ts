@@ -29,7 +29,6 @@ import { BipTab } from './tab.component';
  */
 @Component({
   selector: 'bip-tab-list',
-  standalone: true,
   template: `
     <ng-content />
     @if (context.animated() && context.orientation() === 'horizontal') {

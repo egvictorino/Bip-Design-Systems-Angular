@@ -15,7 +15,6 @@ const ARIA_SORT: Record<Exclude<BipTableSortDirection, null> | 'none', 'ascendin
  */
 @Component({
   selector: 'th[bipTableHeader]',
-  standalone: true,
   template: `
     <span [class.bip-table-header-sortable-inner]="sortable()">
       <ng-content />

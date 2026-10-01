@@ -28,7 +28,6 @@ const POSITION_CLASS: Record<BipToastPosition, string> = {
  */
 @Component({
   selector: 'bip-toast-region',
-  standalone: true,
   imports: [BipToastItem],
   templateUrl: './toast-region.component.html',
   styleUrl: './toast-region.component.css',

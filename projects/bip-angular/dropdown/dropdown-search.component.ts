@@ -8,7 +8,6 @@ import { injectBipLocale } from '@bip-design-systems/angular/core';
  */
 @Component({
   selector: 'bip-dropdown-search',
-  standalone: true,
   template: `
     <input
       type="text"

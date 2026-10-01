@@ -52,7 +52,6 @@ const PLACEMENT_CLASS: Record<BipDrawerPanelPlacement, string> = {
  */
 @Component({
   selector: 'bip-drawer-panel',
-  standalone: true,
   imports: [A11yModule],
   templateUrl: './drawer-panel.component.html',
   styleUrl: './drawer-panel.component.css',
