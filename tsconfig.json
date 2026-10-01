@@ -45,7 +45,8 @@
       "@bip-design-systems/angular/pagination": ["./projects/bip-angular/pagination/index.ts"],
       "@bip-design-systems/angular/tabs": ["./projects/bip-angular/tabs/index.ts"],
       "@bip-design-systems/angular/accordion": ["./projects/bip-angular/accordion/index.ts"],
-      "@bip-design-systems/angular/stepper": ["./projects/bip-angular/stepper/index.ts"]
+      "@bip-design-systems/angular/stepper": ["./projects/bip-angular/stepper/index.ts"],
+      "@bip-design-systems/angular/navbar": ["./projects/bip-angular/navbar/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

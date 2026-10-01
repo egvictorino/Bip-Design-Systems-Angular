@@ -50,7 +50,8 @@
     "pagination/**/*.ts",
     "tabs/**/*.ts",
     "accordion/**/*.ts",
-    "stepper/**/*.ts"
+    "stepper/**/*.ts",
+    "navbar/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
