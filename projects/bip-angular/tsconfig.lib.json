@@ -53,7 +53,8 @@
     "stepper/**/*.ts",
     "navbar/**/*.ts",
     "sidebar/**/*.ts",
-    "multi-select/**/*.ts"
+    "multi-select/**/*.ts",
+    "date-picker/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

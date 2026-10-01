@@ -1,0 +1,89 @@
+@if (label()) {
+  <label [for]="fieldId" class="bip-date-picker-label">
+    {{ label() }}
+    @if (required()) {
+      <span aria-hidden="true" class="bip-date-picker-required-mark"> *</span>
+    }
+  </label>
+}
+
+<div class="bip-date-picker-trigger-wrapper">
+  <button
+    #triggerRef
+    type="button"
+    [id]="fieldId"
+    [class]="'bip-date-picker-trigger ' + triggerClass()"
+    [disabled]="disabled()"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-describedby]="messageId()"
+    [attr.aria-invalid]="hasError() || null"
+    [attr.aria-busy]="loading() || null"
+    (click)="toggle()"
+    (blur)="onBlur()"
+  >
+    @if (value()) {
+      <span class="bip-date-picker-value">{{ displayValue() }}</span>
+    } @else {
+      <span class="bip-date-picker-placeholder">{{ placeholder() || locale().datePicker.placeholder }}</span>
+    }
+    @if (loading()) {
+      <span class="bip-date-picker-spinner" aria-hidden="true"></span>
+    } @else if (value() && !disabled()) {
+      <span
+        class="bip-date-picker-clear"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="locale().datePicker.clear"
+        (click)="onClear($event)"
+        (keydown.enter)="onClear($event)"
+        (keydown.space)="onClear($event)"
+      >
+        ×
+      </span>
+    } @else {
+      <span class="bip-date-picker-calendar-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="currentColor">
+          <path
+            d="M4.5 1a.5.5 0 01.5.5V2h6v-.5a.5.5 0 011 0V2h.5A1.5 1.5 0 0114 3.5v9A1.5 1.5 0 0112.5 14h-9A1.5 1.5 0 012 12.5v-9A1.5 1.5 0 013.5 2H4v-.5a.5.5 0 01.5-.5zM3 5v7.5a.5.5 0 00.5.5h9a.5.5 0 00.5-.5V5H3z"
+          />
+        </svg>
+      </span>
+    }
+  </button>
+</div>
+
+@if (error() && errorMessage()) {
+  <span [id]="errorId" class="bip-date-picker-message bip-date-picker-error-text" role="alert">
+    {{ errorMessage() }}
+  </span>
+} @else if (helperText()) {
+  <span [id]="errorId" class="bip-date-picker-message bip-date-picker-helper-text">
+    {{ helperText() }}
+  </span>
+}
+
+<ng-template #panelTemplate>
+  <div
+    class="bip-date-picker-panel"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-label]="locale().datePicker.calendar"
+    (keydown.escape)="onEscape($event)"
+  >
+    <bip-calendar-grid
+      mode="single"
+      [(viewDate)]="viewDate"
+      [min]="min()"
+      [max]="max()"
+      [disabledDates]="disabledDates()"
+      [selected]="value()"
+      [strings]="gridStrings()"
+      [localeTag]="locale().locale"
+      [todayLabel]="locale().datePicker.today"
+      (daySelected)="onDaySelected($event)"
+      (todaySelected)="onTodaySelected()"
+    />
+  </div>
+</ng-template>

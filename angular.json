@@ -75,7 +75,8 @@
               "../stepper/**/*.spec.ts",
               "../navbar/**/*.spec.ts",
               "../sidebar/**/*.spec.ts",
-              "../multi-select/**/*.spec.ts"
+              "../multi-select/**/*.spec.ts",
+              "../date-picker/**/*.spec.ts"
             ]
           }
         },
