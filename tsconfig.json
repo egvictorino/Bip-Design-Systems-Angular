@@ -40,7 +40,8 @@
       "@bip-design-systems/angular/tooltip": ["./projects/bip-angular/tooltip/index.ts"],
       "@bip-design-systems/angular/popover": ["./projects/bip-angular/popover/index.ts"],
       "@bip-design-systems/angular/dropdown": ["./projects/bip-angular/dropdown/index.ts"],
-      "@bip-design-systems/angular/timeline": ["./projects/bip-angular/timeline/index.ts"]
+      "@bip-design-systems/angular/timeline": ["./projects/bip-angular/timeline/index.ts"],
+      "@bip-design-systems/angular/breadcrumb": ["./projects/bip-angular/breadcrumb/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

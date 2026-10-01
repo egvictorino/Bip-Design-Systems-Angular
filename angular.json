@@ -67,7 +67,8 @@
               "../tooltip/**/*.spec.ts",
               "../popover/**/*.spec.ts",
               "../dropdown/**/*.spec.ts",
-              "../timeline/**/*.spec.ts"
+              "../timeline/**/*.spec.ts",
+              "../breadcrumb/**/*.spec.ts"
             ]
           }
         },

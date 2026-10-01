@@ -45,7 +45,8 @@
     "tooltip/**/*.ts",
     "popover/**/*.ts",
     "dropdown/**/*.ts",
-    "timeline/**/*.ts"
+    "timeline/**/*.ts",
+    "breadcrumb/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
