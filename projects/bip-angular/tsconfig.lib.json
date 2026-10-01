@@ -59,7 +59,8 @@
     "time-picker/**/*.ts",
     "calendar/**/*.ts",
     "table/**/*.ts",
-    "data-table/**/*.ts"
+    "data-table/**/*.ts",
+    "odontogram/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

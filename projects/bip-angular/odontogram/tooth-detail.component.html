@@ -1,0 +1,142 @@
+<div class="bip-tooth-detail" data-testid="tooth-detail-panel">
+  <div class="bip-tooth-detail-header">
+    <span class="bip-tooth-detail-title">
+      {{ locale().odontogram.tooth(toothNumber()) }}
+      @if (toothName()) {
+        <span class="bip-tooth-detail-subtitle"> — {{ toothName() }}</span>
+      }
+    </span>
+    <button
+      type="button"
+      (click)="closed.emit()"
+      [attr.aria-label]="locale().odontogram.closeDetail"
+      class="bip-tooth-detail-close"
+    >
+      ✕
+    </button>
+  </div>
+
+  <div class="bip-tooth-detail-body">
+    <div class="bip-tooth-detail-left">
+      <bip-tooth-svg
+        [toothNumber]="toothNumber()"
+        [arch]="arch()"
+        [data]="data()"
+        size="xl"
+        [interactive]="!disabled()"
+        (surfaceClick)="handleSurfaceClick($event)"
+      />
+      <span class="bip-tooth-detail-tooth-label">{{ toothNumber() }}</span>
+    </div>
+
+    <div class="bip-tooth-detail-right">
+      @if (!disabled()) {
+        <div
+          class="bip-tooth-detail-toolbar"
+          role="group"
+          [attr.aria-label]="locale().odontogram.conditions"
+        >
+          @for (c of conditionEntries(); track c.condition) {
+            <button
+              type="button"
+              class="bip-tooth-detail-condition-btn"
+              [class.bip-tooth-detail-condition-btn--active]="activeTool() === c.condition"
+              [attr.aria-pressed]="activeTool() === c.condition"
+              (click)="activeTool.set(c.condition)"
+            >
+              {{ c.label }}
+            </button>
+          }
+        </div>
+      }
+
+      @if (disabled() && data().condition) {
+        <span class="bip-tooth-detail-condition-badge">{{
+          locale().odontogram.conditionLabels[data().condition!]
+        }}</span>
+      }
+
+      <div class="bip-tooth-detail-divider" aria-hidden="true"></div>
+
+      <div class="bip-tooth-detail-actions">
+        <button
+          #noteTriggerBtn
+          type="button"
+          class="bip-tooth-detail-action"
+          [class.bip-tooth-detail-action--active]="hasNote()"
+          [attr.aria-label]="locale().odontogram.noteWithState(toothNumber(), hasNote())"
+          (click)="handleNoteOpen($event)"
+        >
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="bip-tooth-detail-action-icon"
+          >
+            <path d="M13 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z" />
+            <path d="M5 6h6M5 9h6M5 12h3" />
+          </svg>
+          {{ locale().odontogram.noteLabel }}
+          @if (hasNote()) {
+            <span aria-hidden="true" class="bip-tooth-detail-action-dot"></span>
+          }
+        </button>
+
+        <button
+          #imageTriggerBtn
+          type="button"
+          class="bip-tooth-detail-action"
+          [class.bip-tooth-detail-action--active]="imageCount() > 0"
+          [attr.aria-label]="locale().odontogram.imagesWithCount(toothNumber(), imageCount())"
+          (click)="handleImageOpen($event)"
+        >
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="bip-tooth-detail-action-icon"
+          >
+            <path
+              d="M1 5.5A1.5 1.5 0 0 1 2.5 4h.535l.707-1.414A1 1 0 0 1 4.638 2h6.724a1 1 0 0 1 .896.553L13 4h.5A1.5 1.5 0 0 1 15 5.5v7A1.5 1.5 0 0 1 13.5 14h-11A1.5 1.5 0 0 1 1 12.5v-7Z"
+            />
+            <circle cx="8" cy="9" r="2.5" />
+          </svg>
+          {{ locale().odontogram.imagesLabel(imageCount()) }}
+          @if (imageCount() > 0) {
+            <span aria-hidden="true" class="bip-tooth-detail-action-dot"></span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noteOverlayTemplate>
+  <bip-note-popover
+    [toothNumber]="toothNumber()"
+    [initialNote]="data().notes ?? ''"
+    [editable]="!disabled()"
+    [position]="notePosition()!"
+    (closed)="handleNoteClose()"
+    (save)="handleNoteSave($event)"
+  />
+</ng-template>
+
+<ng-template #imageOverlayTemplate>
+  <bip-image-popover
+    [toothNumber]="toothNumber()"
+    [initialImages]="data().images ?? []"
+    [editable]="!disabled()"
+    [position]="imagePosition()!"
+    (closed)="handleImageClose()"
+    (save)="handleImageSave($event)"
+  />
+</ng-template>

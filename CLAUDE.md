@@ -309,7 +309,7 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 - [x] Bloque 7 — Navegación y disclosure (8)
 - [x] Bloque 8 — Selección avanzada y fechas (5)
 - [x] Bloque 9 — Datos (2)
-- [ ] Bloque 10 — Odontogram
+- [x] Bloque 10 — Odontogram
 - [ ] Bloque 11 — Calidad end-to-end
 - [ ] Bloque 12 — CI/CD, versionado y publicación
 

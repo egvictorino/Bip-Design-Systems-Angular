@@ -1,0 +1,96 @@
+.bip-note-popover-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+}
+
+.bip-note-popover {
+  position: fixed;
+  z-index: var(--z-modal);
+  width: 16rem;
+  background-color: var(--color-surface-1);
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-surface);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.bip-note-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bip-note-popover-title {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-txt);
+}
+
+.bip-note-popover-close {
+  color: var(--color-txt-secondary);
+  border-radius: var(--radius-marker);
+  background: none;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.bip-note-popover-close:hover {
+  color: var(--color-txt);
+}
+
+.bip-note-popover-close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--color-edge-focus);
+}
+
+.bip-note-popover-textarea {
+  width: 100%;
+  resize: none;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-edge);
+  font-size: var(--text-sm);
+  color: var(--color-txt);
+  padding: var(--space-2);
+  outline: none;
+  font-family: inherit;
+}
+
+.bip-note-popover-textarea:focus-visible {
+  border-color: var(--color-edge-focus);
+  box-shadow: 0 0 0 1px var(--color-edge-focus);
+}
+
+.bip-note-popover-textarea--readonly {
+  background-color: var(--color-field-readonly);
+  cursor: default;
+}
+
+.bip-note-popover-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bip-note-popover-save {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-control);
+  background-color: var(--color-primary);
+  color: var(--color-txt-on-primary);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.bip-note-popover-save:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.bip-note-popover-save:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--color-primary);
+}

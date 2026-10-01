@@ -81,7 +81,8 @@
               "../time-picker/**/*.spec.ts",
               "../calendar/**/*.spec.ts",
           "../table/**/*.spec.ts",
-          "../data-table/**/*.spec.ts"
+          "../data-table/**/*.spec.ts",
+          "../odontogram/**/*.spec.ts"
             ]
           }
         },

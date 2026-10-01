@@ -10,6 +10,24 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Odontogram (Bloque 10, bloque completo): `BipOdontogram` (cuadrícula de odontograma FDI,
+  permanente de 32 piezas 11-48 o primaria de 20 piezas 51-85 vía `dentition`; `[(value)]` como
+  `model()` de Angular — a diferencia de la referencia React, que exigía además un `onChange`
+  no-nulo para decidir interactividad, gating sin sentido con un `model()` siempre
+  bidireccional; la interactividad depende solo de `disabled()`), `BipToothSvg` (SVG de las 5
+  superficies de un diente — bucal/lingual/mesial/distal/oclusal —, usado sin interacción en la
+  cuadrícula principal y de forma interactiva, en tamaño xl, dentro del panel de detalle;
+  marcador en X para piezas ausentes), `BipToothDetail` (panel con toolbar de las 9 condiciones
+  —sano/caries/restauración/corona/ausente/implante/fractura/endodoncia/extracción
+  planeada—, badge de solo lectura cuando `disabled`, y acciones de nota/imágenes),
+  `BipNotePopover`/`BipImagePopover` (auto-contenidos: backdrop propio + diálogo con
+  `cdkTrapFocus`, montados/desmontados por `BipToothDetail` vía `BipOverlay`, igual que el resto
+  de overlays de la librería; galería de imágenes con miniaturas, vista previa y alta vía
+  `<input type="file">` oculto con `<bip-visually-hidden>`). Textos/ARIA del dominio dental
+  (nombres anatómicos FDI, condiciones, superficies, tipos de imagen) ya vivían en `BipLocale`
+  desde el Bloque 3 (preparados junto con los tipos `ToothCondition`/`ToothSurface`/
+  `ToothImageType` en `core/types`); este bloque solo los consume.
+
 - Datos (Bloque 9): 2 componentes. `BipTable` + subpartes (`BipTableHead`, `BipTableBody`,
   `BipTableRow`, `BipTableHeader`, `BipTableCell`, `BipTableEmpty`), todas mejorando elementos
   nativos de tabla (`thead[bipTableHead]`, `tr[bipTableRow]`, `th[bipTableHeader]`,

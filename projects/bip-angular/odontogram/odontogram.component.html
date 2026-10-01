@@ -1,0 +1,85 @@
+<ng-template #cellContent let-n="n" let-arch="arch">
+  @if (arch === 'lower') {
+    <div class="bip-odontogram-number-row bip-odontogram-number-row--lower">
+      <span class="bip-odontogram-number" [class]="numberSizeClass()">{{ n }}</span>
+    </div>
+  }
+  <bip-tooth-svg
+    [toothNumber]="n"
+    [arch]="arch"
+    [data]="toothData(n)"
+    [size]="size()"
+    [interactive]="false"
+  />
+  @if (arch === 'upper') {
+    <div class="bip-odontogram-number-row bip-odontogram-number-row--upper">
+      <span class="bip-odontogram-number" [class]="numberSizeClass()">{{ n }}</span>
+    </div>
+  }
+</ng-template>
+
+<ng-template #tooth let-n="n" let-arch="arch">
+  @if (interactive()) {
+    <button
+      type="button"
+      class="bip-odontogram-tooth-cell bip-odontogram-tooth-cell--button"
+      [class.bip-odontogram-tooth-cell--selected]="selectedTooth() === n"
+      [attr.aria-label]="toothSelectLabel(n)"
+      [attr.aria-pressed]="selectedTooth() === n"
+      (click)="handleToothSelect(n)"
+    >
+      <ng-container *ngTemplateOutlet="cellContent; context: { n, arch }" />
+    </button>
+  } @else {
+    <div class="bip-odontogram-tooth-cell">
+      <ng-container *ngTemplateOutlet="cellContent; context: { n, arch }" />
+    </div>
+  }
+</ng-template>
+
+@if (label()) {
+  <span [id]="labelId" class="bip-odontogram-label">{{ label() }}</span>
+}
+
+<div class="bip-odontogram-chart">
+  <div class="bip-odontogram-arch">
+    <div class="bip-odontogram-arch-section">
+      @for (n of upperRight(); track n) {
+        <ng-container *ngTemplateOutlet="tooth; context: { n, arch: 'upper' }" />
+      }
+    </div>
+    <div class="bip-odontogram-arch-divider" aria-hidden="true"></div>
+    <div class="bip-odontogram-arch-section">
+      @for (n of upperLeft(); track n) {
+        <ng-container *ngTemplateOutlet="tooth; context: { n, arch: 'upper' }" />
+      }
+    </div>
+  </div>
+
+  <div class="bip-odontogram-midline" aria-hidden="true"></div>
+
+  <div class="bip-odontogram-arch">
+    <div class="bip-odontogram-arch-section">
+      @for (n of lowerRight(); track n) {
+        <ng-container *ngTemplateOutlet="tooth; context: { n, arch: 'lower' }" />
+      }
+    </div>
+    <div class="bip-odontogram-arch-divider" aria-hidden="true"></div>
+    <div class="bip-odontogram-arch-section">
+      @for (n of lowerLeft(); track n) {
+        <ng-container *ngTemplateOutlet="tooth; context: { n, arch: 'lower' }" />
+      }
+    </div>
+  </div>
+</div>
+
+@if (selectedTooth() !== null) {
+  <bip-tooth-detail
+    [toothNumber]="selectedTooth()!"
+    [arch]="selectedToothArch()!"
+    [data]="selectedToothData()"
+    [disabled]="!interactive()"
+    (dataChange)="handleToothDataChange($event)"
+    (closed)="handleDetailClose()"
+  />
+}
