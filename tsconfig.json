@@ -52,7 +52,9 @@
       "@bip-design-systems/angular/date-picker": ["./projects/bip-angular/date-picker/index.ts"],
       "@bip-design-systems/angular/date-range-picker": ["./projects/bip-angular/date-range-picker/index.ts"],
       "@bip-design-systems/angular/time-picker": ["./projects/bip-angular/time-picker/index.ts"],
-      "@bip-design-systems/angular/calendar": ["./projects/bip-angular/calendar/index.ts"]
+      "@bip-design-systems/angular/calendar": ["./projects/bip-angular/calendar/index.ts"],
+      "@bip-design-systems/angular/table": ["./projects/bip-angular/table/index.ts"],
+      "@bip-design-systems/angular/data-table": ["./projects/bip-angular/data-table/index.ts"]
     },
     "strict": true,
     "noUnusedLocals": true,

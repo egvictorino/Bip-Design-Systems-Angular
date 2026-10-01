@@ -1,0 +1,9 @@
+.bip-table-thead {
+  background-color: var(--color-surface-3);
+}
+
+.bip-table-thead--sticky {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-base);
+}

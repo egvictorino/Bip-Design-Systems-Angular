@@ -79,7 +79,9 @@
               "../date-picker/**/*.spec.ts",
               "../date-range-picker/**/*.spec.ts",
               "../time-picker/**/*.spec.ts",
-              "../calendar/**/*.spec.ts"
+              "../calendar/**/*.spec.ts",
+          "../table/**/*.spec.ts",
+          "../data-table/**/*.spec.ts"
             ]
           }
         },

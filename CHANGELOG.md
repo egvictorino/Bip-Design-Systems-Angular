@@ -10,6 +10,26 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Datos (Bloque 9): 2 componentes. `BipTable` + subpartes (`BipTableHead`, `BipTableBody`,
+  `BipTableRow`, `BipTableHeader`, `BipTableCell`, `BipTableEmpty`), todas mejorando elementos
+  nativos de tabla (`thead[bipTableHead]`, `tr[bipTableRow]`, `th[bipTableHeader]`,
+  `td[bipTableCell]`, `tr[bipTableEmpty]`) en vez de envolverlos, para conservar la semántica de
+  tabla intacta; contexto compartido vía `BIP_TABLE_CONTEXT` (striped/compact/stickyHeader) +
+  un token aparte `BIP_TABLE_IN_HEAD` para que las filas sepan si están dentro de `<thead>` (sin
+  `aria-selected` ni hover/zebra ahí). `align` usa las palabras clave lógicas de `text-align`
+  (`start`/`center`/`end`) en vez de `left`/`right` de la referencia React. `BipDataTable`
+  (búsqueda, ordenamiento, selección con conteo y acciones masivas, visibilidad de columnas,
+  resumen de resultados anunciado vía `aria-live`, paginación, modo `serverSide`); columnas
+  definidas con `<ng-template bipCell="key">`/`<ng-template bipHeader="key">` proyectados en vez
+  del `render`/`header` por función de la referencia React. Añadido `ariaLabel` a `BipCheckbox`
+  (Bloque 5) para los checkboxes de selección de `BipDataTable`, que no tienen label visible.
+  **Fix de accesibilidad en `BipTableHeader`:** el binding de host `'(click)': 'sortable() &&
+  sort.emit()'` evaluaba a `false` en encabezados no ordenables, y Angular interpreta que un
+  listener de evento que evalúa a `false` pide `preventDefault()` — cancelando silenciosamente
+  el toggle nativo de cualquier checkbox/control interactivo proyectado dentro (como el
+  checkbox de "seleccionar todo" de `BipDataTable`). Reemplazado por un método que no retorna
+  nada.
+
 - Selección avanzada y fechas (Bloque 8): 5 componentes. `BipMultiSelect` (combobox
   multiselección con búsqueda, chips con overflow configurable vía `maxVisibleChips`,
   agrupación por `group`, "Seleccionar todo"/"Seleccionar visibles" según haya búsqueda activa;

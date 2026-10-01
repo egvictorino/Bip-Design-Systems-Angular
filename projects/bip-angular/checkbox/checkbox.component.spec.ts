@@ -146,4 +146,15 @@ describe('BipCheckbox', () => {
     await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
     expect(screen.getByRole('checkbox')).toBeDisabled();
   });
+
+  it('ariaLabel expone un nombre accesible cuando no hay label visible', async () => {
+    @Component({
+      imports: [BipCheckbox],
+      template: `<bip-checkbox [ariaLabel]="'Seleccionar fila 1'" />`,
+    })
+    class AriaLabelHost {}
+
+    await render(AriaLabelHost);
+    expect(screen.getByRole('checkbox', { name: 'Seleccionar fila 1' })).toBeInTheDocument();
+  });
 });
