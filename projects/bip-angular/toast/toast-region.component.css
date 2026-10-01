@@ -1,0 +1,53 @@
+.bip-toast-region {
+  position: fixed;
+  z-index: var(--z-toast);
+  pointer-events: none;
+}
+
+/* `position` es un prop físico explícito, igual que DrawerPanel `placement` — topLeft pide la
+   esquina física superior-izquierda sin importar `dir`. left/right + translateX literales a
+   propósito en todo este bloque. */
+.bip-toast-region--top-left {
+  top: var(--space-4);
+  left: var(--space-4);
+}
+
+.bip-toast-region--top-center {
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bip-toast-region--top-right {
+  top: var(--space-4);
+  right: var(--space-4);
+}
+
+.bip-toast-region--bottom-left {
+  bottom: var(--space-4);
+  left: var(--space-4);
+}
+
+.bip-toast-region--bottom-center {
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bip-toast-region--bottom-right {
+  bottom: var(--space-4);
+  right: var(--space-4);
+}
+
+.bip-toast-stack {
+  position: relative;
+  width: 20rem;
+  pointer-events: none;
+  transition: height var(--duration-slow) var(--ease-out);
+}
+
+.bip-toast-wrapper {
+  position: absolute;
+  width: 100%;
+  transition: transform var(--duration-slow) var(--ease-out), opacity var(--duration-slow) var(--ease-out);
+}

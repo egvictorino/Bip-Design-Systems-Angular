@@ -6,7 +6,7 @@ import { BipDrawerPanelFooter, BipDrawerPanelHeaderActions } from './drawer-pane
 
 @Component({
   selector: 'bip-drawer-panel-demo',
-  imports: [BipDrawerPanel, BipDrawerPanelFooter, BipDrawerPanelHeaderActions],
+  imports: [BipDrawerPanel, BipDrawerPanelFooter],
   template: `
     <button type="button" style="padding: 8px 16px" (click)="open.set(true)">Abrir panel</button>
     <bip-drawer-panel

@@ -40,7 +40,8 @@
     "file-upload/**/*.ts",
     "modal/**/*.ts",
     "confirm-dialog/**/*.ts",
-    "drawer-panel/**/*.ts"
+    "drawer-panel/**/*.ts",
+    "toast/**/*.ts"
   ],
   "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
