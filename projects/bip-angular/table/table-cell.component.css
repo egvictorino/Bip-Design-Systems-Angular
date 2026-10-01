@@ -1,0 +1,23 @@
+.bip-table-cell {
+  color: var(--color-txt);
+}
+
+.bip-table-cell--normal {
+  padding: var(--space-3) var(--space-4);
+}
+
+.bip-table-cell--compact {
+  padding: var(--space-2) var(--space-3);
+}
+
+.bip-table-align-start {
+  text-align: start;
+}
+
+.bip-table-align-center {
+  text-align: center;
+}
+
+.bip-table-align-end {
+  text-align: end;
+}

@@ -9,6 +9,7 @@
         [checked]="value()"
         [disabled]="resolvedDisabled()"
         [required]="required()"
+        [attr.aria-label]="ariaLabel() || null"
         [attr.aria-invalid]="hasError() || null"
         [attr.aria-describedby]="messageId()"
         (change)="onInputChange($event)"

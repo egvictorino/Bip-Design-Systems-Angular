@@ -66,6 +66,12 @@ export class BipCheckbox extends BipFormControlBase implements ControlValueAcces
 
   readonly size = ngInput<BipSize | undefined>(undefined);
   readonly label = ngInput<string>('');
+  /**
+   * Nombre accesible para cuando no hay `label` visible (p. ej. el checkbox de "seleccionar
+   * todo"/"seleccionar fila" de `BipDataTable`) — la referencia React resuelve esto pasando
+   * `aria-label` directo al `<input>` nativo, que aquí vive anidado bajo un box visual.
+   */
+  readonly ariaLabel = ngInput<string | undefined>(undefined);
   readonly helperText = ngInput<string>('');
   readonly error = ngInput<boolean | undefined>(undefined, { transform: booleanAttribute });
   readonly errorMessage = ngInput<string>('');

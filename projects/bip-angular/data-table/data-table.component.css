@@ -1,0 +1,68 @@
+.bip-data-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bip-data-table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.bip-data-table-search-wrapper {
+  flex: 1;
+}
+
+.bip-data-table-col-visibility-wrapper {
+  position: relative;
+}
+
+.bip-data-table-col-panel {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 100%;
+  z-index: var(--z-dropdown);
+  margin-top: var(--space-1);
+  display: flex;
+  min-width: 160px;
+  flex-direction: column;
+  gap: var(--space-1);
+  border-radius: var(--radius-surface);
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-surface-1);
+  padding: var(--space-2);
+  box-shadow: var(--shadow-md);
+}
+
+.bip-data-table-bulk-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-surface);
+  border: 1px solid var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 5%, transparent);
+  padding: var(--space-2) var(--space-3);
+}
+
+.bip-data-table-bulk-count {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-txt);
+}
+
+.bip-data-table-bulk-actions {
+  margin-inline-start: auto;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.bip-data-table-empty-cell {
+  padding-top: var(--space-0);
+  padding-bottom: var(--space-0);
+}
+
+.bip-data-table-pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
