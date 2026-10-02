@@ -1,0 +1,104 @@
+:host {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+}
+
+.bip-odontogram-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-txt);
+}
+
+.bip-odontogram-chart {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-container);
+  padding: var(--space-2);
+  background-color: var(--color-surface-1);
+  overflow-x: auto;
+}
+
+.bip-odontogram-arch {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.bip-odontogram-arch-section {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-0-5);
+}
+
+.bip-odontogram-arch-divider {
+  width: 1px;
+  align-self: stretch;
+  background-color: var(--color-edge);
+  margin: var(--space-0) var(--space-1-5);
+}
+
+.bip-odontogram-midline {
+  height: 0.75rem;
+  border-bottom: 1px solid var(--color-edge);
+  margin-bottom: var(--space-1);
+}
+
+.bip-odontogram-tooth-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bip-odontogram-tooth-cell--button {
+  background: none;
+  border: none;
+  padding: var(--space-0-5);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+}
+
+.bip-odontogram-tooth-cell--button:hover {
+  background-color: var(--color-surface-2);
+}
+
+.bip-odontogram-tooth-cell--button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-edge-focus);
+}
+
+.bip-odontogram-tooth-cell--selected {
+  box-shadow: 0 0 0 2px var(--color-primary);
+  border-radius: var(--radius-control);
+}
+
+.bip-odontogram-number-row--upper {
+  display: flex;
+  align-items: center;
+  margin-top: var(--space-0-5);
+}
+
+.bip-odontogram-number-row--lower {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-0-5);
+}
+
+.bip-odontogram-number {
+  font-family: var(--font-mono);
+  line-height: 1;
+  color: var(--color-txt-secondary);
+}
+
+.bip-odontogram-number--sm {
+  font-size: 7px;
+}
+
+.bip-odontogram-number--md {
+  font-size: 9px;
+}
+
+.bip-odontogram-number--lg {
+  font-size: 10px;
+}

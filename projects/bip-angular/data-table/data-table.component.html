@@ -1,0 +1,148 @@
+<bip-visually-hidden aria-live="polite" aria-atomic="true">
+  @if (!loading()) {
+    {{ locale().dataTable.resultsSummary(paginatedData().length, sortedData().length) }}
+  }
+</bip-visually-hidden>
+
+@if (searchable() || columnVisibility()) {
+  <div class="bip-data-table-toolbar">
+    @if (searchable()) {
+      <div class="bip-data-table-search-wrapper">
+        <bip-search-input
+          [value]="searchQuery()"
+          (valueChange)="onSearchChange($event)"
+          (cleared)="onSearchChange('')"
+          [label]="searchPlaceholder() ?? locale().dataTable.searchPlaceholder"
+        />
+      </div>
+    }
+    @if (columnVisibility()) {
+      <div class="bip-data-table-col-visibility-wrapper" bipClickOutside [enabled]="colPanelOpen()" (bipClickOutside)="colPanelOpen.set(false)">
+        <button
+          type="button"
+          bipButton
+          variant="secondary"
+          size="sm"
+          [attr.aria-expanded]="colPanelOpen()"
+          [attr.aria-controls]="colPanelId"
+          (click)="colPanelOpen.set(!colPanelOpen())"
+        >
+          {{ locale().dataTable.columnVisibilityToggle }}
+        </button>
+        @if (colPanelOpen()) {
+          <div [id]="colPanelId" role="dialog" [attr.aria-label]="locale().dataTable.columnVisibility" class="bip-data-table-col-panel">
+            @for (col of columns(); track col.key) {
+              <bip-checkbox
+                [label]="col.header"
+                size="sm"
+                [value]="effectiveVisibleColumnKeys().has(col.key)"
+                (valueChange)="toggleColumnVisibility(col.key)"
+              />
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (selectable() && selectedRows().length > 0) {
+  <div class="bip-data-table-bulk-bar">
+    <span class="bip-data-table-bulk-count">{{ locale().dataTable.selectedCount(selectedRows().length) }}</span>
+    <div class="bip-data-table-bulk-actions">
+      @for (action of bulkActions() ?? []; track action.label) {
+        <button type="button" bipButton size="sm" [variant]="action.variant ?? 'secondary'" (click)="action.onClick(selectedRows())">
+          {{ action.label }}
+        </button>
+      }
+      <button type="button" bipButton size="sm" variant="secondary" (click)="clearSelection()">
+        {{ locale().dataTable.clearSelection }}
+      </button>
+    </div>
+  </div>
+}
+
+<bip-table [striped]="striped()" [compact]="compact()">
+  <thead bipTableHead>
+    <tr bipTableRow>
+      @if (selectable()) {
+        <th bipTableHeader style="width: 2.5rem">
+          <bip-checkbox
+            [value]="allPageSelected()"
+            [indeterminate]="somePageSelected()"
+            (valueChange)="toggleHeaderCheckbox()"
+            [ariaLabel]="locale().dataTable.selectAllRows"
+          />
+        </th>
+      }
+      @for (col of activeColumns(); track col.key) {
+        <th
+          bipTableHeader
+          [sortable]="!!col.sortable"
+          [sortDirection]="getSortDirection(col.key)"
+          (sort)="handleSort(col.key)"
+          [align]="col.align ?? 'start'"
+          [style.width]="col.width ?? null"
+        >
+          @let headerTpl = headerTemplateFor(col.key);
+          @if (headerTpl) {
+            <ng-container [ngTemplateOutlet]="headerTpl" />
+          } @else {
+            {{ col.header }}
+          }
+        </th>
+      }
+    </tr>
+  </thead>
+  <tbody bipTableBody>
+    @if (loading()) {
+      @for (i of skeletonRows(); track i) {
+        <tr bipTableRow>
+          @if (selectable()) {
+            <td bipTableCell><bip-skeleton variant="text" /></td>
+          }
+          @for (col of activeColumns(); track col.key) {
+            <td bipTableCell><bip-skeleton variant="text" /></td>
+          }
+        </tr>
+      }
+    } @else if (paginatedData().length === 0) {
+      <tr bipTableRow>
+        <td bipTableCell [attr.colspan]="colSpan()" align="center" class="bip-data-table-empty-cell">
+          <bip-empty-state [title]="emptyMessage() ?? locale().dataTable.emptyMessage" size="sm" />
+        </td>
+      </tr>
+    } @else {
+      @for (row of paginatedData(); track $index; let rowIndex = $index) {
+        <tr bipTableRow [selected]="selectable() && rowIsSelected(row, rowIndex)" [clickable]="rowsClickable()" (click)="handleRowClick(row)">
+          @if (selectable()) {
+            <td bipTableCell>
+              <bip-checkbox
+                [value]="rowIsSelected(row, rowIndex)"
+                (valueChange)="toggleRowSelection(row, rowIndex)"
+                [ariaLabel]="locale().dataTable.selectRow(rowIndex + 1)"
+                (click)="$event.stopPropagation()"
+              />
+            </td>
+          }
+          @for (col of activeColumns(); track col.key) {
+            <td bipTableCell [align]="col.align ?? 'start'">
+              @let cellTpl = cellTemplateFor(col.key);
+              @if (cellTpl) {
+                <ng-container [ngTemplateOutlet]="cellTpl" [ngTemplateOutletContext]="cellContext(col, row, rowIndex)" />
+              } @else {
+                {{ cellValue(col, row) }}
+              }
+            </td>
+          }
+        </tr>
+      }
+    }
+  </tbody>
+</bip-table>
+
+@if (!loading() && totalPages() > 1) {
+  <div class="bip-data-table-pagination-wrapper">
+    <bip-pagination [page]="currentPage()" [totalPages]="totalPages()" (pageChange)="onPageChange($event)" />
+  </div>
+}

@@ -1,0 +1,20 @@
+<span class="bip-timeline-item-marker" aria-hidden="true">
+  <span class="bip-timeline-item-dot">
+    <ng-content select="[bipTimelineItemIcon]" />
+  </span>
+  <span class="bip-timeline-item-connector"></span>
+</span>
+<div class="bip-timeline-item-content">
+  <div class="bip-timeline-item-header">
+    @if (date()) {
+      <time class="bip-timeline-item-date">{{ date() }}</time>
+    }
+    <p class="bip-timeline-item-title">{{ title() }}</p>
+  </div>
+  @if (description()) {
+    <p class="bip-timeline-item-description">{{ description() }}</p>
+  }
+  <div class="bip-timeline-item-extra">
+    <ng-content />
+  </div>
+</div>

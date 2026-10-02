@@ -1,0 +1,57 @@
+<ng-template #portalTemplate>
+  <div class="bip-drawer-panel-overlay">
+    <button
+      type="button"
+      aria-hidden="true"
+      tabindex="-1"
+      class="bip-drawer-panel-backdrop"
+      [class.bip-drawer-panel-backdrop--visible]="visible()"
+      (click)="onBackdropClick()"
+    ></button>
+
+    <div
+      class="bip-drawer-panel"
+      [class]="[sizeClass[size()], placementClass[placement()]]"
+      [class.bip-drawer-panel--visible]="visible()"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="title()"
+      tabindex="-1"
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
+    >
+      @if (title()) {
+        <div class="bip-drawer-panel-header">
+          <h2 class="bip-drawer-panel-title">{{ title() }}</h2>
+          @if (headerActionsContent()) {
+            <div class="bip-drawer-panel-header-actions">
+              <ng-content select="[bipDrawerPanelHeaderActions]" />
+            </div>
+          }
+          <button
+            type="button"
+            class="bip-drawer-panel-close-btn"
+            [attr.aria-label]="locale().drawerPanel.close"
+            (click)="requestClose()"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" class="bip-drawer-panel-close-icon" aria-hidden="true">
+              <path
+                d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+              />
+            </svg>
+          </button>
+        </div>
+      }
+
+      <div class="bip-drawer-panel-content">
+        <ng-content />
+      </div>
+
+      @if (footerContent()) {
+        <div class="bip-drawer-panel-footer">
+          <ng-content select="[bipDrawerPanelFooter]" />
+        </div>
+      }
+    </div>
+  </div>
+</ng-template>

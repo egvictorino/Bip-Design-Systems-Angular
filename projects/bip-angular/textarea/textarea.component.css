@@ -1,0 +1,206 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+:host.bip-textarea-wrapper--full-width {
+  width: 100%;
+}
+
+:host.bip-textarea-wrapper--full-width .bip-textarea {
+  width: 100%;
+}
+
+/* ─── Label ───────────────────────────────────────────────────────────────── */
+
+.bip-textarea-label {
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.bip-textarea-label--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-textarea-label--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-textarea-label--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+
+.bip-textarea-label--normal {
+  color: var(--color-txt-utility);
+}
+.bip-textarea-label--focused {
+  color: var(--color-txt);
+}
+.bip-textarea-label--error {
+  color: var(--color-danger);
+}
+.bip-textarea-label--disabled {
+  opacity: 0.5;
+}
+
+.bip-textarea-required-mark {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-0-5);
+}
+
+/* ─── Textarea base ───────────────────────────────────────────────────────── */
+
+.bip-textarea {
+  border-radius: var(--radius-field);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+  cursor: text;
+  font-family: inherit;
+}
+
+.bip-textarea:focus {
+  outline: none;
+}
+
+.bip-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-disabled);
+}
+
+.bip-textarea:read-only {
+  background-color: var(--color-field-readonly);
+}
+
+/* ─── Sizes ───────────────────────────────────────────────────────────────── */
+
+.bip-textarea--sm {
+  padding: var(--space-control-y-sm) var(--space-control-x-sm);
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-textarea--md {
+  padding: var(--space-control-y-md) var(--space-control-x-md);
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-textarea--lg {
+  padding: var(--space-control-y-lg) var(--space-control-x-lg);
+  font-size: var(--text-lg);
+  line-height: 1.75rem;
+}
+
+/* ─── Resize ──────────────────────────────────────────────────────────────── */
+
+.bip-textarea--resize-none {
+  resize: none;
+}
+.bip-textarea--resize-vertical {
+  resize: vertical;
+}
+.bip-textarea--resize-horizontal {
+  resize: horizontal;
+}
+.bip-textarea--resize-both {
+  resize: both;
+}
+.bip-textarea--auto-grow {
+  overflow-y: hidden;
+  resize: none;
+}
+
+/* ─── Variant: outlined ───────────────────────────────────────────────────── */
+
+.bip-textarea--outlined {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-field);
+}
+.bip-textarea--outlined:hover:not(:disabled) {
+  border-color: var(--color-edge-hover);
+}
+.bip-textarea--outlined:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.bip-textarea--outlined.bip-textarea--error {
+  border-color: var(--color-danger);
+}
+.bip-textarea--outlined.bip-textarea--error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+}
+
+/* ─── Variant: filled ─────────────────────────────────────────────────────── */
+
+.bip-textarea--filled {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-secondary);
+}
+.bip-textarea--filled:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.bip-textarea--filled.bip-textarea--error {
+  background-color: var(--color-danger-light);
+  border-color: transparent;
+}
+.bip-textarea--filled.bip-textarea--error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+}
+
+/* ─── Variant: bare ───────────────────────────────────────────────────────── */
+
+.bip-textarea--bare {
+  border: none;
+  border-bottom: 2px solid var(--color-primary);
+  background-color: transparent;
+  border-radius: var(--radius-none);
+}
+.bip-textarea--bare:hover:not(:disabled) {
+  border-bottom-color: var(--color-primary-hover);
+}
+.bip-textarea--bare:focus-visible {
+  box-shadow: none;
+  border-bottom-color: var(--color-primary-hover);
+}
+.bip-textarea--bare.bip-textarea--error {
+  border-bottom-color: var(--color-danger);
+}
+.bip-textarea--bare.bip-textarea--error:focus-visible {
+  box-shadow: none;
+}
+
+/* ─── Helper / Error / Counter ────────────────────────────────────────────── */
+
+.bip-textarea-helper--sm,
+.bip-textarea-helper--md {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-textarea-helper--lg {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+
+.bip-textarea-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-textarea-error-text {
+  color: var(--color-danger);
+}
+
+.bip-textarea-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.bip-textarea-counter {
+  color: var(--color-txt-secondary);
+  white-space: nowrap;
+}
+.bip-textarea-counter--limit {
+  color: var(--color-danger);
+}

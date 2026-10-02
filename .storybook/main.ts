@@ -1,0 +1,12 @@
+import type { StorybookConfig } from '@storybook/angular-vite';
+
+const config: StorybookConfig = {
+  stories: [
+    '../projects/bip-angular/**/*.mdx',
+    '../projects/bip-angular/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
+  addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
+  framework: '@storybook/angular-vite',
+};
+
+export default config;

@@ -1,0 +1,302 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+:host.bip-number-input-wrapper--full-width {
+  width: 100%;
+}
+
+/* ─── Label ───────────────────────────────────────────────────────────────── */
+
+.bip-number-input-label {
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.bip-number-input-label--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-number-input-label--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-number-input-label--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+
+.bip-number-input-label--normal {
+  color: var(--color-txt-utility);
+}
+.bip-number-input-label--focused {
+  color: var(--color-txt);
+}
+.bip-number-input-label--error {
+  color: var(--color-danger);
+}
+.bip-number-input-label--disabled {
+  opacity: 0.5;
+}
+
+.bip-number-input-required-mark {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-0-5);
+}
+
+/* ─── Container ───────────────────────────────────────────────────────────── */
+
+.bip-number-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+:host.bip-number-input-wrapper--full-width .bip-number-input-container {
+  width: 100%;
+}
+
+/* ─── Input base ──────────────────────────────────────────────────────────── */
+
+.bip-number-input {
+  width: 100%;
+  text-align: center;
+  border-radius: var(--radius-field);
+  cursor: text;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.bip-number-input:focus {
+  outline: none;
+}
+
+.bip-number-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-disabled);
+}
+
+.bip-number-input:read-only {
+  background-color: var(--color-field-readonly);
+}
+
+/* ─── Sizes (padding extra para los botones stepper) ─────────────────────── */
+
+.bip-number-input--sm {
+  padding: var(--space-1-5) var(--space-8);
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-number-input--md {
+  padding: var(--space-2-5) var(--space-10);
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-number-input--lg {
+  padding: var(--space-3) var(--space-12);
+  font-size: var(--text-lg);
+  line-height: 1.75rem;
+}
+
+/* ─── Variants ────────────────────────────────────────────────────────────── */
+
+.bip-number-input--outlined {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-field);
+}
+.bip-number-input--outlined:hover:not(:disabled) {
+  border-color: var(--color-edge-hover);
+}
+.bip-number-input--outlined:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.bip-number-input--outlined-error {
+  border: 1px solid var(--color-danger);
+  background-color: var(--color-field);
+}
+.bip-number-input--outlined-error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
+}
+
+.bip-number-input--filled {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-secondary);
+}
+.bip-number-input--filled:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.bip-number-input--filled-error {
+  background-color: var(--color-danger-light);
+  border: 1px solid transparent;
+}
+.bip-number-input--filled-error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
+}
+
+.bip-number-input--bare {
+  border: none;
+  border-bottom: 2px solid var(--color-primary);
+  background-color: transparent;
+  border-radius: var(--radius-none);
+}
+.bip-number-input--bare:hover:not(:disabled) {
+  border-bottom-color: var(--color-primary-hover);
+}
+.bip-number-input--bare:focus-visible {
+  box-shadow: none;
+  border-bottom-color: var(--color-primary-hover);
+}
+
+.bip-number-input--bare-error {
+  border: none;
+  border-bottom: 2px solid var(--color-danger);
+  background-color: transparent;
+  border-radius: var(--radius-none);
+}
+.bip-number-input--bare-error:focus-visible {
+  box-shadow: none;
+}
+
+/* ─── Stepper buttons ─────────────────────────────────────────────────────── */
+
+.bip-number-input-step-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-txt-secondary);
+  transition: color var(--duration-fast) var(--ease-standard);
+  padding: var(--space-0);
+  border-radius: var(--radius-control);
+}
+
+.bip-number-input-step-btn:hover:not(:disabled) {
+  color: var(--color-txt);
+}
+
+.bip-number-input-step-btn:focus {
+  outline: none;
+}
+.bip-number-input-step-btn:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.bip-number-input-step-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.bip-number-input-step-btn--left {
+  inset-inline-start: 0;
+}
+.bip-number-input-step-btn--right {
+  inset-inline-end: 0;
+}
+
+.bip-number-input-step-btn--sm {
+  padding: var(--space-0) var(--space-2);
+}
+.bip-number-input-step-btn--md {
+  padding: var(--space-0) var(--space-2-5);
+}
+.bip-number-input-step-btn--lg {
+  padding: var(--space-0) var(--space-3);
+}
+
+.bip-number-input-step-icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* ─── Prefix / Suffix adornments ─────────────────────────────────────────── */
+
+.bip-number-input-adornment {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-txt-secondary);
+  pointer-events: none;
+  font-size: 0.875em;
+  white-space: nowrap;
+}
+
+.bip-number-input-adornment--left {
+  padding-inline-end: var(--space-1);
+}
+.bip-number-input-adornment--right {
+  padding-inline-start: var(--space-1);
+}
+
+.bip-number-input-prefix--sm {
+  inset-inline-start: 2rem;
+}
+.bip-number-input-prefix--md {
+  inset-inline-start: 2.25rem;
+}
+.bip-number-input-prefix--lg {
+  inset-inline-start: 2.5rem;
+}
+
+.bip-number-input-suffix--sm {
+  inset-inline-end: 2rem;
+}
+.bip-number-input-suffix--md {
+  inset-inline-end: 2.25rem;
+}
+.bip-number-input-suffix--lg {
+  inset-inline-end: 2.5rem;
+}
+
+.bip-number-input--prefix-sm {
+  padding-inline-start: var(--space-16);
+}
+.bip-number-input--prefix-md {
+  padding-inline-start: var(--space-18);
+}
+.bip-number-input--prefix-lg {
+  padding-inline-start: var(--space-22);
+}
+
+.bip-number-input--suffix-sm {
+  padding-inline-end: var(--space-16);
+}
+.bip-number-input--suffix-md {
+  padding-inline-end: var(--space-18);
+}
+.bip-number-input--suffix-lg {
+  padding-inline-end: var(--space-22);
+}
+
+/* ─── Helper / Error message ─────────────────────────────────────────────── */
+
+.bip-number-input-helper--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-number-input-helper--lg {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+
+.bip-number-input-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-number-input-error-text {
+  color: var(--color-danger);
+}

@@ -1,0 +1,94 @@
+/* ─── Size ───────────────────────────────────────────────────────────────── */
+
+.bip-text--size-3xs {
+  font-size: var(--text-3xs);
+}
+.bip-text--size-2xs {
+  font-size: var(--text-2xs);
+}
+.bip-text--size-xs {
+  font-size: var(--text-xs);
+}
+.bip-text--size-sm {
+  font-size: var(--text-sm);
+}
+.bip-text--size-base {
+  font-size: var(--text-base);
+}
+.bip-text--size-lg {
+  font-size: var(--text-lg);
+}
+.bip-text--size-xl {
+  font-size: var(--text-xl);
+}
+.bip-text--size-2xl {
+  font-size: var(--text-2xl);
+}
+
+/* ─── Weight ─────────────────────────────────────────────────────────────── */
+
+.bip-text--weight-normal {
+  font-weight: var(--font-normal);
+}
+.bip-text--weight-medium {
+  font-weight: var(--font-medium);
+}
+.bip-text--weight-semibold {
+  font-weight: var(--font-semibold);
+}
+.bip-text--weight-bold {
+  font-weight: var(--font-bold);
+}
+
+/* ─── Color ──────────────────────────────────────────────────────────────── */
+
+.bip-text--color-default {
+  color: var(--color-txt);
+}
+.bip-text--color-secondary {
+  color: var(--color-txt-secondary);
+}
+.bip-text--color-utility {
+  color: var(--color-txt-utility);
+}
+.bip-text--color-disabled {
+  color: var(--color-txt-disabled);
+}
+.bip-text--color-important {
+  color: var(--color-txt-important);
+}
+.bip-text--color-danger {
+  color: var(--color-danger-text);
+}
+.bip-text--color-success {
+  color: var(--color-success-text);
+}
+.bip-text--color-warning {
+  color: var(--color-warning-text);
+}
+.bip-text--color-info {
+  color: var(--color-info-text);
+}
+.bip-text--color-link {
+  color: var(--color-link);
+}
+
+/* ─── Align ──────────────────────────────────────────────────────────────── */
+
+.bip-text--align-start {
+  text-align: start;
+}
+.bip-text--align-center {
+  text-align: center;
+}
+.bip-text--align-end {
+  text-align: end;
+}
+
+/* ─── Truncate ───────────────────────────────────────────────────────────── */
+
+.bip-text--truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

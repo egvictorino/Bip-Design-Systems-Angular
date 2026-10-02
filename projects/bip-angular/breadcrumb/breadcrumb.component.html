@@ -1,0 +1,39 @@
+<nav class="bip-breadcrumb-nav" [attr.aria-label]="resolvedAriaLabel()">
+  <ol class="bip-breadcrumb-list">
+    @for (item of items(); track item.label + '-' + $index; let last = $last) {
+      <li class="bip-breadcrumb-item">
+        @if (last) {
+          <span class="bip-breadcrumb-current" aria-current="page">{{ item.label }}</span>
+        } @else if (item.routerLink) {
+          <a
+            class="bip-breadcrumb-link"
+            [routerLink]="item.routerLink"
+            [queryParams]="item.queryParams"
+          >
+            {{ item.label }}
+          </a>
+        } @else if (item.href) {
+          <a class="bip-breadcrumb-link" [href]="item.href">{{ item.label }}</a>
+        } @else {
+          <span class="bip-breadcrumb-text">{{ item.label }}</span>
+        }
+
+        @if (!last) {
+          <span class="bip-breadcrumb-separator" aria-hidden="true">
+            <ng-container *ngTemplateOutlet="separatorTemplate() ?? defaultSeparator" />
+          </span>
+        }
+      </li>
+    }
+  </ol>
+</nav>
+
+<ng-template #defaultSeparator>
+  <svg viewBox="0 0 20 20" fill="currentColor" width="1em" height="1em" class="bip-breadcrumb-chevron">
+    <path
+      fill-rule="evenodd"
+      d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+      clip-rule="evenodd"
+    />
+  </svg>
+</ng-template>

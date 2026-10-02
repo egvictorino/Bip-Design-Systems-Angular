@@ -1,0 +1,96 @@
+:host {
+  display: flex;
+}
+
+:host(.bip-stack--row) {
+  flex-direction: row;
+}
+
+:host(.bip-stack--column) {
+  flex-direction: column;
+}
+
+:host(.bip-stack--wrap) {
+  flex-wrap: wrap;
+}
+
+/* ─── Gap — subconjunto curado de --space-* para uso en layout ─────────────── */
+
+:host(.bip-stack--gap-0) {
+  gap: var(--space-0);
+}
+:host(.bip-stack--gap-0-5) {
+  gap: var(--space-0-5);
+}
+:host(.bip-stack--gap-1) {
+  gap: var(--space-1);
+}
+:host(.bip-stack--gap-1-5) {
+  gap: var(--space-1-5);
+}
+:host(.bip-stack--gap-2) {
+  gap: var(--space-2);
+}
+:host(.bip-stack--gap-3) {
+  gap: var(--space-3);
+}
+:host(.bip-stack--gap-4) {
+  gap: var(--space-4);
+}
+:host(.bip-stack--gap-5) {
+  gap: var(--space-5);
+}
+:host(.bip-stack--gap-6) {
+  gap: var(--space-6);
+}
+:host(.bip-stack--gap-8) {
+  gap: var(--space-8);
+}
+:host(.bip-stack--gap-10) {
+  gap: var(--space-10);
+}
+:host(.bip-stack--gap-12) {
+  gap: var(--space-12);
+}
+:host(.bip-stack--gap-16) {
+  gap: var(--space-16);
+}
+
+/* ─── Align (cross-axis) ─────────────────────────────────────────────────── */
+
+:host(.bip-stack--align-start) {
+  align-items: flex-start;
+}
+:host(.bip-stack--align-center) {
+  align-items: center;
+}
+:host(.bip-stack--align-end) {
+  align-items: flex-end;
+}
+:host(.bip-stack--align-stretch) {
+  align-items: stretch;
+}
+:host(.bip-stack--align-baseline) {
+  align-items: baseline;
+}
+
+/* ─── Justify (main-axis) ────────────────────────────────────────────────── */
+
+:host(.bip-stack--justify-start) {
+  justify-content: flex-start;
+}
+:host(.bip-stack--justify-center) {
+  justify-content: center;
+}
+:host(.bip-stack--justify-end) {
+  justify-content: flex-end;
+}
+:host(.bip-stack--justify-between) {
+  justify-content: space-between;
+}
+:host(.bip-stack--justify-around) {
+  justify-content: space-around;
+}
+:host(.bip-stack--justify-evenly) {
+  justify-content: space-evenly;
+}

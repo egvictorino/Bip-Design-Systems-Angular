@@ -1,0 +1,58 @@
+.bip-tooth-svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.bip-tooth-surface {
+  stroke: var(--color-edge-medium);
+  outline: none;
+}
+
+.bip-tooth-surface--interactive {
+  cursor: pointer;
+}
+
+.bip-tooth-surface--interactive:hover,
+.bip-tooth-surface--interactive:focus-visible {
+  opacity: 0.7;
+}
+
+.bip-tooth-fill-healthy {
+  fill: var(--color-surface-1);
+}
+
+.bip-tooth-fill-caries {
+  fill: var(--color-danger);
+}
+
+.bip-tooth-fill-restoration {
+  fill: var(--color-info);
+}
+
+.bip-tooth-fill-crown {
+  fill: var(--color-warning);
+}
+
+.bip-tooth-fill-missing {
+  fill: var(--color-surface-4);
+}
+
+.bip-tooth-fill-implant {
+  fill: var(--color-unique);
+}
+
+.bip-tooth-fill-fracture {
+  fill: var(--color-edge-warning);
+}
+
+.bip-tooth-fill-root-canal {
+  fill: var(--color-success);
+}
+
+.bip-tooth-fill-extraction-planned {
+  fill: var(--color-danger-muted);
+}
+
+.bip-tooth-missing-x {
+  stroke: var(--color-edge-heavy);
+}

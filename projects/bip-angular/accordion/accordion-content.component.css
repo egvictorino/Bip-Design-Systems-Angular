@@ -1,0 +1,19 @@
+:host {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-normal) var(--ease-standard);
+}
+
+:host(.bip-accordion-content--open) {
+  grid-template-rows: 1fr;
+}
+
+.bip-accordion-content-inner {
+  overflow: hidden;
+  min-height: 0;
+  padding-inline: var(--space-4);
+}
+
+:host(.bip-accordion-content--open) .bip-accordion-content-inner {
+  padding-block-end: var(--space-4);
+}

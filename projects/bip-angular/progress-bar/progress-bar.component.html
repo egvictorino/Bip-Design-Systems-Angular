@@ -1,0 +1,31 @@
+@if (showHeader()) {
+  <div class="bip-progress-header">
+    @if (label()) {
+      <span class="bip-progress-label">{{ label() }}</span>
+    }
+    @if (showValue() && !indeterminate()) {
+      <span class="bip-progress-value-text">{{ clampedValue() }}%</span>
+    }
+  </div>
+}
+<div
+  [id]="effectiveId()"
+  role="progressbar"
+  [attr.aria-valuenow]="ariaValueNow()"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-valuetext]="ariaValueText()"
+  [attr.aria-busy]="ariaBusy()"
+  [attr.aria-describedby]="descriptionId()"
+  [class]="trackClasses()"
+>
+  @if (indeterminate()) {
+    <div [class]="indeterminateClasses()" aria-hidden="true"></div>
+  } @else {
+    <div [class]="fillClasses()" [style.width.%]="clampedValue()" aria-hidden="true"></div>
+  }
+</div>
+@if (helperText()) {
+  <span [id]="descriptionId()" class="bip-progress-helper-text">{{ helperText() }}</span>
+}

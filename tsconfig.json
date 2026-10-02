@@ -1,0 +1,89 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "paths": {
+      "bip-angular": ["./dist/bip-angular"],
+      "@bip-design-systems/angular/core": ["./projects/bip-angular/core/src/public-api.ts"],
+      "@bip-design-systems/angular/container": ["./projects/bip-angular/container/index.ts"],
+      "@bip-design-systems/angular/stack": ["./projects/bip-angular/stack/index.ts"],
+      "@bip-design-systems/angular/grid": ["./projects/bip-angular/grid/index.ts"],
+      "@bip-design-systems/angular/divider": ["./projects/bip-angular/divider/index.ts"],
+      "@bip-design-systems/angular/text": ["./projects/bip-angular/text/index.ts"],
+      "@bip-design-systems/angular/heading": ["./projects/bip-angular/heading/index.ts"],
+      "@bip-design-systems/angular/link": ["./projects/bip-angular/link/index.ts"],
+      "@bip-design-systems/angular/spinner": ["./projects/bip-angular/spinner/index.ts"],
+      "@bip-design-systems/angular/skeleton": ["./projects/bip-angular/skeleton/index.ts"],
+      "@bip-design-systems/angular/badge": ["./projects/bip-angular/badge/index.ts"],
+      "@bip-design-systems/angular/avatar": ["./projects/bip-angular/avatar/index.ts"],
+      "@bip-design-systems/angular/progress-bar": ["./projects/bip-angular/progress-bar/index.ts"],
+      "@bip-design-systems/angular/empty-state": ["./projects/bip-angular/empty-state/index.ts"],
+      "@bip-design-systems/angular/card": ["./projects/bip-angular/card/index.ts"],
+      "@bip-design-systems/angular/stats-card": ["./projects/bip-angular/stats-card/index.ts"],
+      "@bip-design-systems/angular/alert": ["./projects/bip-angular/alert/index.ts"],
+      "@bip-design-systems/angular/button": ["./projects/bip-angular/button/index.ts"],
+      "@bip-design-systems/angular/input": ["./projects/bip-angular/input/index.ts"],
+      "@bip-design-systems/angular/textarea": ["./projects/bip-angular/textarea/index.ts"],
+      "@bip-design-systems/angular/checkbox": ["./projects/bip-angular/checkbox/index.ts"],
+      "@bip-design-systems/angular/radio": ["./projects/bip-angular/radio/index.ts"],
+      "@bip-design-systems/angular/toggle": ["./projects/bip-angular/toggle/index.ts"],
+      "@bip-design-systems/angular/select": ["./projects/bip-angular/select/index.ts"],
+      "@bip-design-systems/angular/number-input": ["./projects/bip-angular/number-input/index.ts"],
+      "@bip-design-systems/angular/search-input": ["./projects/bip-angular/search-input/index.ts"],
+      "@bip-design-systems/angular/slider": ["./projects/bip-angular/slider/index.ts"],
+      "@bip-design-systems/angular/file-upload": ["./projects/bip-angular/file-upload/index.ts"],
+      "@bip-design-systems/angular/modal": ["./projects/bip-angular/modal/index.ts"],
+      "@bip-design-systems/angular/confirm-dialog": ["./projects/bip-angular/confirm-dialog/index.ts"],
+      "@bip-design-systems/angular/drawer-panel": ["./projects/bip-angular/drawer-panel/index.ts"],
+      "@bip-design-systems/angular/toast": ["./projects/bip-angular/toast/index.ts"],
+      "@bip-design-systems/angular/tooltip": ["./projects/bip-angular/tooltip/index.ts"],
+      "@bip-design-systems/angular/popover": ["./projects/bip-angular/popover/index.ts"],
+      "@bip-design-systems/angular/dropdown": ["./projects/bip-angular/dropdown/index.ts"],
+      "@bip-design-systems/angular/timeline": ["./projects/bip-angular/timeline/index.ts"],
+      "@bip-design-systems/angular/breadcrumb": ["./projects/bip-angular/breadcrumb/index.ts"],
+      "@bip-design-systems/angular/pagination": ["./projects/bip-angular/pagination/index.ts"],
+      "@bip-design-systems/angular/tabs": ["./projects/bip-angular/tabs/index.ts"],
+      "@bip-design-systems/angular/accordion": ["./projects/bip-angular/accordion/index.ts"],
+      "@bip-design-systems/angular/stepper": ["./projects/bip-angular/stepper/index.ts"],
+      "@bip-design-systems/angular/navbar": ["./projects/bip-angular/navbar/index.ts"],
+      "@bip-design-systems/angular/sidebar": ["./projects/bip-angular/sidebar/index.ts"],
+      "@bip-design-systems/angular/multi-select": ["./projects/bip-angular/multi-select/index.ts"],
+      "@bip-design-systems/angular/date-picker": ["./projects/bip-angular/date-picker/index.ts"],
+      "@bip-design-systems/angular/date-range-picker": ["./projects/bip-angular/date-range-picker/index.ts"],
+      "@bip-design-systems/angular/time-picker": ["./projects/bip-angular/time-picker/index.ts"],
+      "@bip-design-systems/angular/calendar": ["./projects/bip-angular/calendar/index.ts"],
+      "@bip-design-systems/angular/table": ["./projects/bip-angular/table/index.ts"],
+      "@bip-design-systems/angular/data-table": ["./projects/bip-angular/data-table/index.ts"],
+      "@bip-design-systems/angular/odontogram": ["./projects/bip-angular/odontogram/index.ts"]
+    },
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve"
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/bip-angular/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/bip-angular/tsconfig.spec.json"
+    }
+  ]
+}

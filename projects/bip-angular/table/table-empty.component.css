@@ -1,0 +1,12 @@
+.bip-table-cell-empty {
+  color: var(--color-txt-secondary);
+  text-align: center;
+}
+
+.bip-table-cell--normal {
+  padding: var(--space-3) var(--space-4);
+}
+
+.bip-table-cell--compact {
+  padding: var(--space-2) var(--space-3);
+}

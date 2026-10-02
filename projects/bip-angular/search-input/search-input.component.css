@@ -1,0 +1,272 @@
+@keyframes bip-search-input-spin {
+  from {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+:host.bip-search-input-wrapper--full-width {
+  width: 100%;
+}
+
+/* ─── Label ───────────────────────────────────────────────────────────────── */
+
+.bip-search-input-label {
+  font-weight: 500;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.bip-search-input-label--sm {
+  font-size: var(--text-xs);
+}
+.bip-search-input-label--md {
+  font-size: var(--text-sm);
+}
+.bip-search-input-label--lg {
+  font-size: var(--text-base);
+}
+
+.bip-search-input-label--normal {
+  color: var(--color-txt-utility);
+}
+.bip-search-input-label--focused {
+  color: var(--color-txt);
+}
+.bip-search-input-label--error {
+  color: var(--color-danger);
+}
+.bip-search-input-label--disabled {
+  opacity: 0.5;
+}
+
+.bip-search-input-required-mark {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-0-5);
+}
+
+/* ─── Container ───────────────────────────────────────────────────────────── */
+
+.bip-search-input-container {
+  position: relative;
+}
+
+:host.bip-search-input-wrapper--full-width .bip-search-input-container {
+  width: 100%;
+}
+
+/* ─── Search icon ─────────────────────────────────────────────────────────── */
+
+.bip-search-input-search-icon {
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bip-search-input-search-icon--normal {
+  color: var(--color-txt-secondary);
+}
+.bip-search-input-search-icon--error {
+  color: var(--color-danger);
+}
+.bip-search-input-search-icon--disabled {
+  opacity: 0.5;
+}
+.bip-search-input-search-icon--spinning {
+  animation: bip-search-input-spin var(--duration-slow) linear infinite;
+}
+
+.bip-search-input-search-icon--sm {
+  inset-inline-start: 0.625rem;
+}
+.bip-search-input-search-icon--md {
+  inset-inline-start: var(--space-3);
+}
+.bip-search-input-search-icon--lg {
+  inset-inline-start: 0.875rem;
+}
+
+.bip-search-input-icon--sm {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.bip-search-input-icon--md {
+  width: 1rem;
+  height: 1rem;
+}
+.bip-search-input-icon--lg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.bip-search-input-spinner-track {
+  opacity: 0.25;
+}
+.bip-search-input-spinner-fill {
+  opacity: 0.75;
+}
+
+/* ─── Input ───────────────────────────────────────────────────────────────── */
+
+.bip-search-input {
+  width: 100%;
+  border-radius: var(--radius-field);
+  cursor: text;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.bip-search-input:focus {
+  outline: none;
+}
+
+.bip-search-input:disabled {
+  background-color: var(--color-disabled);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bip-search-input:read-only {
+  background-color: var(--color-field-readonly);
+}
+
+.bip-search-input--sm {
+  padding-inline: var(--space-8);
+  padding-block: var(--space-1-5);
+  font-size: var(--text-xs);
+}
+.bip-search-input--md {
+  padding-inline: var(--space-9);
+  padding-block: var(--space-2-5);
+  font-size: var(--text-sm);
+}
+.bip-search-input--lg {
+  padding-inline: var(--space-10);
+  padding-block: var(--space-3);
+  font-size: var(--text-lg);
+}
+
+/* ─── Variants ────────────────────────────────────────────────────────────── */
+
+.bip-search-input--outlined {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-field);
+}
+.bip-search-input--outlined:hover:not(:disabled) {
+  border-color: var(--color-edge-hover);
+}
+.bip-search-input--outlined:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.bip-search-input--outlined-error {
+  border: 1px solid var(--color-danger);
+  background-color: var(--color-field);
+}
+.bip-search-input--outlined-error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
+}
+
+.bip-search-input--filled {
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-secondary);
+}
+.bip-search-input--filled:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.bip-search-input--filled-error {
+  border: 1px solid var(--color-danger);
+  background-color: var(--color-danger-light);
+}
+.bip-search-input--filled-error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
+}
+
+.bip-search-input--bare {
+  border: none;
+  border-bottom: 2px solid var(--color-primary);
+  background-color: transparent;
+  border-radius: var(--radius-none);
+}
+.bip-search-input--bare:hover:not(:disabled) {
+  border-bottom-color: var(--color-primary-hover);
+}
+.bip-search-input--bare:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.bip-search-input--bare-error {
+  border: none;
+  border-bottom: 2px solid var(--color-danger);
+  background-color: transparent;
+  border-radius: var(--radius-none);
+}
+.bip-search-input--bare-error:focus-visible {
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
+}
+
+/* ─── Clear button ────────────────────────────────────────────────────────── */
+
+.bip-search-input-clear-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-txt-secondary);
+  transition: color var(--duration-fast) var(--ease-standard);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-0);
+}
+
+.bip-search-input-clear-btn:hover {
+  color: var(--color-txt);
+}
+
+.bip-search-input-clear-btn:focus {
+  outline: none;
+}
+.bip-search-input-clear-btn:focus-visible {
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-control);
+}
+
+.bip-search-input-clear-btn--sm {
+  inset-inline-end: 0.625rem;
+}
+.bip-search-input-clear-btn--md {
+  inset-inline-end: var(--space-3);
+}
+.bip-search-input-clear-btn--lg {
+  inset-inline-end: 0.875rem;
+}
+
+/* ─── Helper / Error message ─────────────────────────────────────────────── */
+
+.bip-search-input-helper--sm {
+  font-size: var(--text-xs);
+}
+.bip-search-input-helper--lg {
+  font-size: var(--text-sm);
+}
+
+.bip-search-input-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-search-input-error-text {
+  color: var(--color-danger);
+}

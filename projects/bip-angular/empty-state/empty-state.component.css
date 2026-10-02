@@ -1,0 +1,101 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ─── Tamaños (gap + padding del wrapper) ────────────────────────────────── */
+
+.bip-empty-state--sm {
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-4);
+}
+.bip-empty-state--md {
+  gap: var(--space-3);
+  padding: var(--space-12) var(--space-6);
+}
+.bip-empty-state--lg {
+  gap: var(--space-4);
+  padding: var(--space-16) var(--space-8);
+}
+
+/* ─── Icon box ───────────────────────────────────────────────────────────── */
+
+.bip-empty-state-icon-box {
+  color: var(--color-txt-secondary);
+}
+
+.bip-empty-state-icon-box--sm {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.bip-empty-state-icon-box--md {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.bip-empty-state-icon-box--lg {
+  width: 5rem;
+  height: 5rem;
+}
+
+.bip-empty-state-icon-full {
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Tipografía ─────────────────────────────────────────────────────────── */
+
+.bip-empty-state-title {
+  color: var(--color-txt);
+  font-weight: var(--font-semibold);
+  margin: var(--space-0);
+}
+
+.bip-empty-state-title--sm {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-empty-state-title--md {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+.bip-empty-state-title--lg {
+  font-size: var(--text-lg);
+  line-height: 1.75rem;
+}
+
+.bip-empty-state-description {
+  color: var(--color-txt-secondary);
+  max-width: 20rem;
+  margin: var(--space-0);
+}
+
+.bip-empty-state-description--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-empty-state-description--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-empty-state-description--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+
+/* ─── Acción (slot [bipEmptyStateAction]) ───────────────────────────────────
+   ::ng-deep: el elemento proyectado vive en el árbol de encapsulación del consumidor, no en
+   el de bip-empty-state — se estiliza por su propio atributo marcador, sin wrapper extra, así
+   no hay un <div> vacío cuando no se proyecta ninguna acción. */
+
+:host(.bip-empty-state--sm) ::ng-deep [bipEmptyStateAction] {
+  margin-top: var(--space-2);
+}
+:host(.bip-empty-state--md) ::ng-deep [bipEmptyStateAction] {
+  margin-top: var(--space-3);
+}
+:host(.bip-empty-state--lg) ::ng-deep [bipEmptyStateAction] {
+  margin-top: var(--space-4);
+}

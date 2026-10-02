@@ -1,0 +1,78 @@
+:host {
+  display: flex;
+  align-items: center;
+}
+
+/*
+ * ::ng-deep: los <bip-avatar> proyectados vía <ng-content> viven en el árbol de encapsulación
+ * del consumidor, no en el de <bip-avatar-group> — sin ::ng-deep esta regla nunca los
+ * alcanzaría. La clase `.bip-avatar-group-item` la añade BipAvatarGroup imperativamente
+ * (Renderer2, ver avatar-group.component.ts) a cada hijo proyectado.
+ */
+:host ::ng-deep .bip-avatar-group-item {
+  box-shadow: 0 0 0 2px var(--color-surface-1);
+  border-radius: var(--radius-pill);
+}
+
+.bip-avatar-group-overflow {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-inline-start: calc(var(--space-2) * -1);
+}
+
+.bip-avatar-group-overflow-inner {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-3);
+  color: var(--color-txt-secondary);
+  box-shadow: 0 0 0 2px var(--color-surface-1);
+  font-weight: var(--font-semibold);
+}
+
+/* ─── Tamaños (duplicados de avatar.component.css — Emulated encapsulation no los comparte) ── */
+
+.bip-avatar--xs {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.bip-avatar--sm {
+  width: 2rem;
+  height: 2rem;
+}
+.bip-avatar--md {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.bip-avatar--lg {
+  width: 3rem;
+  height: 3rem;
+}
+.bip-avatar--xl {
+  width: 4rem;
+  height: 4rem;
+}
+
+.bip-avatar-text--xs {
+  font-size: var(--text-3xs);
+}
+.bip-avatar-text--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-avatar-text--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-avatar-text--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+.bip-avatar-text--xl {
+  font-size: var(--text-xl);
+  line-height: 1.75rem;
+}

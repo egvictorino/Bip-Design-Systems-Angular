@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+:host(.bip-timeline--horizontal) {
+  flex-direction: row;
+  overflow-x: auto;
+}

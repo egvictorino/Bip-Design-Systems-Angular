@@ -1,0 +1,169 @@
+@if (label()) {
+  <label [for]="fieldId" [id]="labelId" class="bip-multi-select-label">
+    {{ label() }}
+    @if (required()) {
+      <span aria-hidden="true" class="bip-multi-select-required-mark"> *</span>
+    }
+  </label>
+}
+
+<div
+  #triggerRef
+  [id]="fieldId"
+  [class]="'bip-multi-select-trigger ' + triggerClass()"
+  role="combobox"
+  [attr.tabindex]="disabled() ? -1 : 0"
+  [attr.aria-expanded]="isOpen()"
+  aria-haspopup="listbox"
+  [attr.aria-controls]="listboxId"
+  [attr.aria-invalid]="hasError() || null"
+  [attr.aria-required]="required() || null"
+  [attr.aria-describedby]="messageId()"
+  [attr.aria-disabled]="disabled() || null"
+  [attr.aria-labelledby]="label() ? labelId : null"
+  (click)="onTriggerClick()"
+  (keydown)="onTriggerKeydown($event)"
+  (focus)="onFocus()"
+  (blur)="onBlur()"
+>
+  <div class="bip-multi-select-chips">
+    @if (selectedOptions().length === 0) {
+      <span class="bip-multi-select-placeholder">{{ placeholder() || locale().multiSelect.placeholder }}</span>
+    }
+    @for (option of visibleChips(); track option.value) {
+      <span [class]="'bip-multi-select-chip ' + chipClass()">
+        {{ option.label }}
+        @if (!disabled()) {
+          <button
+            type="button"
+            class="bip-multi-select-chip-remove"
+            [attr.aria-label]="locale().multiSelect.remove(option.label)"
+            (click)="removeOption(option.value, $event)"
+          >
+            ×
+          </button>
+        }
+      </span>
+    }
+    @if (hiddenChipsCount() > 0) {
+      <span
+        [class]="'bip-multi-select-chip bip-multi-select-chip--overflow ' + chipClass()"
+        [attr.aria-label]="locale().multiSelect.overflow(hiddenChipsCount())"
+      >
+        {{ locale().multiSelect.overflowChip(hiddenChipsCount()) }}
+      </span>
+    }
+  </div>
+  <div class="bip-multi-select-trigger-right">
+    @if (selectedOptions().length > 0 && !disabled()) {
+      <button
+        type="button"
+        class="bip-multi-select-clear-all"
+        [attr.aria-label]="locale().multiSelect.removeAll"
+        (click)="clearAll($event)"
+      >
+        ×
+      </button>
+    }
+    <span class="bip-multi-select-chevron" [class.bip-multi-select-chevron--open]="isOpen()" aria-hidden="true">
+      <svg viewBox="0 0 16 16" fill="currentColor" class="bip-multi-select-chevron-icon">
+        <path
+          fill-rule="evenodd"
+          d="M4.22 6.22a.75.75 0 011.06 0L8 8.94l2.72-2.72a.75.75 0 111.06 1.06l-3.25 3.25a.75.75 0 01-1.06 0L4.22 7.28a.75.75 0 010-1.06z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+
+@if (error() && errorMessage()) {
+  <span [id]="errorId" class="bip-multi-select-message bip-multi-select-error-text" role="alert">
+    {{ errorMessage() }}
+  </span>
+} @else if (helperText()) {
+  <span [id]="errorId" class="bip-multi-select-message bip-multi-select-helper-text">
+    {{ helperText() }}
+  </span>
+}
+
+<ng-template #panelTemplate>
+  <div class="bip-multi-select-panel" tabindex="-1" (keydown.escape)="onPanelEscape($event)">
+    <div class="bip-multi-select-search-wrapper">
+      <input
+        #searchInputRef
+        type="text"
+        class="bip-multi-select-search-input"
+        [attr.aria-label]="locale().multiSelect.search"
+        [attr.aria-controls]="listboxId"
+        aria-autocomplete="list"
+        [placeholder]="searchPlaceholder() || locale().multiSelect.searchPlaceholder"
+        [value]="query()"
+        (input)="onSearchInput($any($event.target).value)"
+        (keydown)="onSearchKeydown($event)"
+      />
+    </div>
+
+    @if (loading()) {
+      <div class="bip-multi-select-loading" aria-live="polite" [attr.aria-label]="locale().multiSelect.loading">
+        <span class="bip-multi-select-spinner" aria-hidden="true"></span>
+        {{ locale().multiSelect.loadingText }}
+      </div>
+    } @else {
+      <ul
+        [id]="listboxId"
+        class="bip-multi-select-listbox"
+        role="listbox"
+        tabindex="-1"
+        aria-multiselectable="true"
+        [attr.aria-label]="locale().multiSelect.options"
+        (keydown)="onListboxKeydown($event)"
+      >
+        @if (showSelectAll() && filteredOptions().length > 0) {
+          <li
+            class="bip-multi-select-option bip-multi-select-option--select-all"
+            role="option"
+            data-bip-option
+            tabindex="0"
+            [attr.aria-selected]="allFilteredSelected()"
+            (click)="handleSelectAll()"
+            (keydown)="onSelectAllKeydown($event)"
+          >
+            <span class="bip-multi-select-option-checkbox" [class.bip-multi-select-option-checkbox--selected]="allFilteredSelected()" aria-hidden="true"></span>
+            {{ selectAllLabel() }}
+          </li>
+        }
+        @if (filteredOptions().length === 0) {
+          <li class="bip-multi-select-no-results" role="presentation">{{ locale().multiSelect.noResults }}</li>
+        }
+        @for (group of groupedOptions(); track group.name) {
+          @if (group.name) {
+            <li class="bip-multi-select-group-header" role="presentation">{{ group.name }}</li>
+          }
+          @for (option of group.options; track option.value) {
+            <li
+              class="bip-multi-select-option"
+              [class.bip-multi-select-option--disabled]="option.disabled"
+              role="option"
+              [attr.data-bip-option]="option.disabled ? null : ''"
+              [attr.data-bip-disabled]="option.disabled ? '' : null"
+              [tabindex]="option.disabled ? -1 : 0"
+              [attr.aria-selected]="isSelected(option.value)"
+              [attr.aria-disabled]="option.disabled || null"
+              (click)="toggleOption(option)"
+              (keydown)="onOptionKeydown($event, option)"
+            >
+              <span
+                class="bip-multi-select-option-checkbox"
+                [class.bip-multi-select-option-checkbox--selected]="isSelected(option.value)"
+                [class.bip-multi-select-option-checkbox--disabled]="option.disabled"
+                aria-hidden="true"
+              ></span>
+              {{ option.label }}
+            </li>
+          }
+        }
+      </ul>
+    }
+  </div>
+</ng-template>

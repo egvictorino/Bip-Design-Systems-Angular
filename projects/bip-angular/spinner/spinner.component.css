@@ -1,0 +1,91 @@
+@keyframes bip-spinner-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bip-spinner-svg {
+  animation: bip-spinner-spin 1s linear infinite;
+}
+
+/* ─── Tamaños ────────────────────────────────────────────────────────────── */
+
+.bip-spinner-svg--xs {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+.bip-spinner-svg--sm {
+  width: 1rem;
+  height: 1rem;
+}
+.bip-spinner-svg--md {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.bip-spinner-svg--lg {
+  width: 2rem;
+  height: 2rem;
+}
+.bip-spinner-svg--xl {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* ─── Variantes ──────────────────────────────────────────────────────────── */
+
+.bip-spinner-svg--primary {
+  color: var(--color-primary);
+}
+.bip-spinner-svg--secondary {
+  color: var(--color-secondary);
+}
+.bip-spinner-svg--inverse {
+  color: var(--color-txt-white);
+}
+.bip-spinner-svg--danger {
+  color: var(--color-danger);
+}
+.bip-spinner-svg--success {
+  color: var(--color-success);
+}
+.bip-spinner-svg--info {
+  color: var(--color-info);
+}
+
+/* ─── Velocidad ──────────────────────────────────────────────────────────── */
+
+.bip-spinner-svg--slow {
+  animation-duration: 2s;
+}
+.bip-spinner-svg--normal {
+  animation-duration: 1s;
+}
+.bip-spinner-svg--fast {
+  animation-duration: 0.5s;
+}
+
+/* ─── Opacidad de los paths ──────────────────────────────────────────────── */
+
+.bip-spinner-track {
+  opacity: 0.25;
+}
+.bip-spinner-fill {
+  opacity: 0.75;
+}
+
+/* ─── Accesibilidad ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .bip-spinner-svg {
+    animation: none;
+  }
+}

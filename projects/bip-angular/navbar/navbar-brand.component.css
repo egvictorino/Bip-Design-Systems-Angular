@@ -1,0 +1,9 @@
+.bip-navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-txt);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
