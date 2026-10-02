@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+:host(.bip-accordion-item--bordered) {
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-container);
+}
+:host(.bip-accordion-item--bordered) + :host(.bip-accordion-item--bordered) {
+  margin-block-start: var(--space-2);
+}
+
+:host(.bip-accordion-item--default) {
+  border-block-end: 1px solid var(--color-edge);
+}
+:host(.bip-accordion-item--default):last-child {
+  border-block-end: none;
+}

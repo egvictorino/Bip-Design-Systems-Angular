@@ -1,0 +1,37 @@
+<div class="bip-toggle-wrapper">
+  <div class="bip-toggle-row">
+    <div [class]="trackClass()">
+      <input
+        [id]="fieldId"
+        type="checkbox"
+        role="switch"
+        class="bip-toggle-native-input"
+        [checked]="value()"
+        [disabled]="disabled()"
+        [required]="required()"
+        [attr.aria-invalid]="hasError() || null"
+        [attr.aria-describedby]="messageId()"
+        (change)="onInputChange($event)"
+        (blur)="onBlur()"
+      />
+      <span [class]="thumbClass()" aria-hidden="true"></span>
+    </div>
+    @if (label()) {
+      <label [for]="fieldId" [class]="'bip-toggle-label ' + labelClass()">
+        {{ label() }}
+        @if (required()) {
+          <span aria-hidden="true" class="bip-toggle-required-mark"> *</span>
+        }
+      </label>
+    }
+  </div>
+  @if (error() && errorMessage()) {
+    <span [id]="errorId" [class]="'bip-toggle-message bip-toggle-error-text ' + helperClass()" role="alert">
+      {{ errorMessage() }}
+    </span>
+  } @else if (helperText()) {
+    <span [id]="errorId" [class]="'bip-toggle-message bip-toggle-helper-text ' + helperClass()">
+      {{ helperText() }}
+    </span>
+  }
+</div>

@@ -1,0 +1,62 @@
+<div class="bip-sidebar-item-wrapper">
+  @if (routerLink()) {
+    <a
+      class="bip-sidebar-item"
+      data-sidebar-item
+      [routerLink]="routerLink()"
+      [queryParams]="queryParams()"
+      [class.bip-sidebar-item--active]="active()"
+      [attr.aria-current]="active() ? 'page' : null"
+      [attr.aria-label]="accessibleLabel()"
+      [bipTooltip]="label()"
+      bipTooltipPosition="right"
+      (click)="onClick($event)"
+      (keydown)="onKeydown($event)"
+    >
+      <ng-container [ngTemplateOutlet]="content" />
+    </a>
+  } @else if (href()) {
+    <a
+      class="bip-sidebar-item"
+      data-sidebar-item
+      [href]="disabled() ? null : href()"
+      [class.bip-sidebar-item--active]="active()"
+      [attr.aria-current]="active() ? 'page' : null"
+      [attr.aria-disabled]="disabled() ? 'true' : null"
+      [attr.tabindex]="disabled() ? -1 : null"
+      [attr.aria-label]="accessibleLabel()"
+      [bipTooltip]="label()"
+      bipTooltipPosition="right"
+      (click)="onClick($event)"
+      (keydown)="onKeydown($event)"
+    >
+      <ng-container [ngTemplateOutlet]="content" />
+    </a>
+  } @else {
+    <button
+      type="button"
+      class="bip-sidebar-item"
+      data-sidebar-item
+      [disabled]="disabled()"
+      [class.bip-sidebar-item--active]="active()"
+      [attr.aria-current]="active() ? 'page' : null"
+      [attr.aria-label]="accessibleLabel()"
+      [bipTooltip]="label()"
+      bipTooltipPosition="right"
+      (click)="onClick($event)"
+      (keydown)="onKeydown($event)"
+    >
+      <ng-container [ngTemplateOutlet]="content" />
+    </button>
+  }
+</div>
+
+<ng-template #content>
+  <ng-content select="[bipSidebarItemIcon]" />
+  @if (!context.isCollapsed()) {
+    <span class="bip-sidebar-item-label">{{ label() }}</span>
+    @if (badge() !== undefined) {
+      <span class="bip-sidebar-item-badge" aria-hidden="true">{{ badge() }}</span>
+    }
+  }
+</ng-template>

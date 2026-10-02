@@ -1,0 +1,10 @@
+/**
+ * display: contents — el wrapper no debe agregar una caja al layout, es un drop-in
+ * transparente (ver comentario en theme-provider.component.ts). Los atributos
+ * data-theme/data-color-scheme/data-density/dir y las CSS vars resueltas se aplican en
+ * este mismo host (BIP_THEME_HOST_BINDINGS), así que siguen surtiendo efecto en los
+ * descendientes aunque el host no genere caja propia.
+ */
+:host {
+  display: contents;
+}

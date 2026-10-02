@@ -1,0 +1,29 @@
+<div [class]="iconBoxClasses()" aria-hidden="true">
+  <ng-content select="[bipEmptyStateIcon]">
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      class="bip-empty-state-icon-full"
+      aria-hidden="true"
+    >
+      <rect x="6" y="10" width="36" height="28" rx="3" stroke="currentColor" stroke-width="2.5" />
+      <path d="M6 22h36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+      <path d="M17 22v16M31 22v16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+      <path
+        d="M16 10V8a2 2 0 012-2h12a2 2 0 012 2v2"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      />
+    </svg>
+  </ng-content>
+</div>
+
+<p [class]="titleClasses()">{{ title() }}</p>
+
+@if (description()) {
+  <p [class]="descriptionClasses()">{{ description() }}</p>
+}
+
+<ng-content select="[bipEmptyStateAction]" />

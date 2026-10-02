@@ -1,0 +1,187 @@
+:host {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.bip-avatar-inner {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bip-avatar-inner--initials {
+  color: var(--color-txt-white);
+}
+
+.bip-avatar-inner--icon {
+  background-color: var(--color-surface-3);
+  color: var(--color-txt-secondary);
+}
+
+/* ─── Formas ─────────────────────────────────────────────────────────────── */
+
+.bip-avatar--circle {
+  border-radius: var(--radius-pill);
+}
+.bip-avatar--square {
+  border-radius: var(--radius-control);
+}
+
+/* ─── Tamaños ────────────────────────────────────────────────────────────── */
+
+.bip-avatar--xs {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.bip-avatar--sm {
+  width: 2rem;
+  height: 2rem;
+}
+.bip-avatar--md {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.bip-avatar--lg {
+  width: 3rem;
+  height: 3rem;
+}
+.bip-avatar--xl {
+  width: 4rem;
+  height: 4rem;
+}
+
+/* ─── Tamaños de texto ───────────────────────────────────────────────────── */
+
+.bip-avatar-text--xs {
+  font-size: var(--text-3xs);
+}
+.bip-avatar-text--sm {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+}
+.bip-avatar-text--md {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+.bip-avatar-text--lg {
+  font-size: var(--text-base);
+  line-height: 1.5rem;
+}
+.bip-avatar-text--xl {
+  font-size: var(--text-xl);
+  line-height: 1.75rem;
+}
+
+.bip-avatar-initials-text {
+  user-select: none;
+  font-weight: var(--font-semibold);
+  line-height: 1;
+}
+
+.bip-avatar-person-icon {
+  height: 60%;
+  width: 60%;
+}
+
+.bip-avatar-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* ─── Badge de estado ────────────────────────────────────────────────────── */
+
+.bip-avatar-status {
+  position: absolute;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 2px var(--color-surface-1);
+}
+
+.bip-avatar-status--xs {
+  width: 0.5rem;
+  height: 0.5rem;
+  bottom: -0.125rem;
+  inset-inline-end: -0.125rem;
+}
+.bip-avatar-status--sm {
+  width: 0.625rem;
+  height: 0.625rem;
+  bottom: -0.125rem;
+  inset-inline-end: -0.125rem;
+}
+.bip-avatar-status--md {
+  width: 0.75rem;
+  height: 0.75rem;
+  bottom: 0;
+  inset-inline-end: 0;
+}
+.bip-avatar-status--lg {
+  width: 0.875rem;
+  height: 0.875rem;
+  bottom: 0;
+  inset-inline-end: 0;
+}
+.bip-avatar-status--xl {
+  width: 1rem;
+  height: 1rem;
+  bottom: 0.125rem;
+  inset-inline-end: 0.125rem;
+}
+
+.bip-avatar-status--online {
+  background-color: var(--color-success);
+}
+.bip-avatar-status--offline {
+  background-color: var(--color-txt-disabled);
+}
+.bip-avatar-status--away {
+  background-color: var(--color-warning);
+}
+.bip-avatar-status--busy {
+  background-color: var(--color-danger);
+}
+
+/* ─── Colores de fondo de iniciales ──────────────────────────────────────── */
+
+.bip-avatar-bg--primary {
+  background-color: var(--color-primary);
+}
+.bip-avatar-bg--secondary {
+  background-color: var(--color-secondary);
+}
+.bip-avatar-bg--danger {
+  background-color: var(--color-danger);
+}
+.bip-avatar-bg--success-text {
+  background-color: var(--color-success-text);
+}
+.bip-avatar-bg--warning-text {
+  background-color: var(--color-warning-text);
+}
+.bip-avatar-bg--info-text {
+  background-color: var(--color-info-text);
+}
+.bip-avatar-bg--slate {
+  background-color: var(--color-txt-utility);
+}
+.bip-avatar-bg--violet {
+  background-color: var(--color-unique);
+}
+
+/* Contraste automático sobre las variantes cuyo fondo es una semilla de marca overrideable
+   (colorPrimary/colorDanger/colorUnique) — ver BipThemeContext `tokens` y tokens.css §
+   contraste automático. Las variantes *-text (success/warning/info) ya usan tokens oscurecidos
+   y slate/secondary no son semillas de relleno de marca, así que mantienen el blanco fijo. */
+.bip-avatar-bg--primary.bip-avatar-inner--initials {
+  color: var(--color-txt-on-primary);
+}
+.bip-avatar-bg--danger.bip-avatar-inner--initials {
+  color: var(--color-txt-on-danger);
+}
+.bip-avatar-bg--violet.bip-avatar-inner--initials {
+  color: var(--color-txt-on-unique);
+}

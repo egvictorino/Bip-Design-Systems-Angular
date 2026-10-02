@@ -1,0 +1,25 @@
+<div role="region" [attr.aria-label]="locale().toast.region" class="bip-toast-region" [class]="positionClass()">
+  @if (items().length > 0) {
+    <div
+      class="bip-toast-stack"
+      [style.height.px]="containerHeight()"
+      (mouseenter)="onMouseEnter()"
+      (mouseleave)="onMouseLeave()"
+    >
+      @for (item of items(); track item.id; let idx = $index) {
+        <div class="bip-toast-wrapper" [style]="wrapperStyle(idx)">
+          <bip-toast-item
+            [variant]="item.variant ?? 'info'"
+            [title]="item.title"
+            [message]="item.message"
+            [duration]="item.duration ?? 5000"
+            [exiting]="item.exiting"
+            [position]="toastService.position()"
+            (dismissed)="onItemDismissed(item.id)"
+            (heightChange)="onHeightChange(item.id, $event)"
+          />
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,28 @@
+<button
+  #triggerBtn
+  type="button"
+  role="menuitem"
+  aria-haspopup="menu"
+  [attr.aria-expanded]="isOpen()"
+  [attr.aria-controls]="isOpen() ? submenuId : null"
+  [disabled]="disabled()"
+  (click)="toggle()"
+  (keydown)="onTriggerKeydown($event)"
+  class="bip-dropdown-item bip-dropdown-submenu-trigger"
+>
+  <span class="bip-dropdown-submenu-label">{{ label() }}</span>
+  <span class="bip-dropdown-submenu-arrow" aria-hidden="true">›</span>
+</button>
+
+@if (isOpen()) {
+  <div
+    [id]="submenuId"
+    role="menu"
+    tabindex="-1"
+    [attr.aria-label]="label()"
+    class="bip-dropdown-menu bip-dropdown-submenu-panel"
+    (keydown)="onSubmenuKeydown($event)"
+  >
+    <ng-content />
+  </div>
+}

@@ -1,0 +1,12 @@
+<ng-content />
+@if (overflowCount() > 0) {
+  <div [class]="'bip-avatar-group-overflow ' + sizeContainerClass()">
+    <div
+      [class]="'bip-avatar-group-overflow-inner ' + sizeTextClass()"
+      role="img"
+      [attr.aria-label]="overflowLabel()"
+    >
+      <span aria-hidden="true">+{{ overflowCount() }}</span>
+    </div>
+  </div>
+}

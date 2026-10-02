@@ -1,0 +1,248 @@
+<div class="bip-calendar-header">
+  <div class="bip-calendar-header-nav">
+    <button
+      type="button"
+      class="bip-calendar-nav-btn"
+      [attr.aria-label]="locale().calendar.prevPeriod"
+      [disabled]="disabled()"
+      (click)="goPrev()"
+    >
+      ‹
+    </button>
+    <button type="button" class="bip-calendar-today-btn" [disabled]="disabled()" (click)="goToday()">
+      {{ locale().calendar.today }}
+    </button>
+    <button
+      type="button"
+      class="bip-calendar-nav-btn"
+      [attr.aria-label]="locale().calendar.nextPeriod"
+      [disabled]="disabled()"
+      (click)="goNext()"
+    >
+      ›
+    </button>
+    <span class="bip-calendar-title">{{ title() }}</span>
+  </div>
+  <div class="bip-calendar-view-switcher">
+    @for (v of views; track v) {
+      <button
+        type="button"
+        class="bip-calendar-view-btn"
+        [class.bip-calendar-view-btn--active]="view() === v"
+        [attr.aria-pressed]="view() === v"
+        [disabled]="disabled()"
+        (click)="setView(v)"
+      >
+        {{ locale().calendar.views[v] }}
+      </button>
+    }
+  </div>
+</div>
+
+@switch (view()) {
+  @case ('month') {
+    <div class="bip-calendar-month-day-headers">
+      @for (name of locale().calendar.dayNames; track name) {
+        <span class="bip-calendar-month-day-header">{{ name }}</span>
+      }
+    </div>
+    <div #monthGridRef class="bip-calendar-month-grid" role="grid" [attr.aria-label]="locale().calendar.monthLabel(title())">
+      @for (week of [0, 1, 2, 3, 4, 5]; track week) {
+        <div class="bip-calendar-month-row" role="row">
+          @for (cell of monthDays().slice(week * 7, week * 7 + 7); track cell.key) {
+            <div
+              class="bip-calendar-month-cell"
+              role="gridcell"
+              tabindex="0"
+              [class.bip-calendar-month-cell--other-month]="!cell.inCurrentMonth"
+              [class.bip-calendar-month-cell--today]="isToday(cell.date)"
+              [class.bip-calendar-month-cell--in-range]="isInRange(cell.date)"
+              (mousedown)="onCellMouseDown(cell.date, $event)"
+              (mouseenter)="onCellMouseEnter(cell.date)"
+              (keydown)="onDayCellKeydown($event, cell.date)"
+            >
+              <span
+                class="bip-calendar-month-cell-date"
+                [class.bip-calendar-month-cell-date--today]="isToday(cell.date)"
+                [class.bip-calendar-month-cell-date--other-month]="!cell.inCurrentMonth"
+              >
+                {{ cell.date.getDate() }}
+              </span>
+              @for (event of eventsForDay(cell.date).slice(0, 3); track event.id) {
+                <div
+                  class="bip-calendar-event-chip"
+                  [class]="!event.color ? statusClass[event.status] : ''"
+                  [style.background-color]="event.color || null"
+                  role="button"
+                  tabindex="0"
+                  [attr.aria-label]="eventAriaLabel(event)"
+                  (click)="onEventBlockClick(event, $event)"
+                  (keydown)="onEventBlockKeydown(event, $event)"
+                >
+                  {{ event.title }}
+                </div>
+              }
+              @if (eventsForDay(cell.date).length > 3) {
+                <button
+                  type="button"
+                  class="bip-calendar-overflow-btn"
+                  (click)="onOverflowClick(cell.date)"
+                >
+                  {{ locale().calendar.overflowCount(eventsForDay(cell.date).length - 3) }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+  @case ('week') {
+    <ng-container
+      [ngTemplateOutlet]="timeGridTemplate"
+      [ngTemplateOutletContext]="{ $implicit: timeGridDays() }"
+    />
+  }
+  @case ('day') {
+    <ng-container
+      [ngTemplateOutlet]="timeGridTemplate"
+      [ngTemplateOutletContext]="{ $implicit: timeGridDays() }"
+    />
+  }
+  @case ('agenda') {
+    <div class="bip-calendar-agenda">
+      <div class="bip-calendar-agenda-filters">
+        @for (status of statuses; track status) {
+          <button
+            type="button"
+            class="bip-calendar-agenda-filter-btn"
+            [class]="statusClass[status]"
+            [class.bip-calendar-agenda-filter-btn--inactive]="!activeStatuses().has(status)"
+            role="checkbox"
+            [attr.aria-checked]="activeStatuses().has(status)"
+            (click)="toggleStatus(status)"
+          >
+            {{ locale().calendar.statusLabels[status] }}
+          </button>
+        }
+      </div>
+      @if (agendaEmptyMessage()) {
+        <p class="bip-calendar-agenda-empty">{{ agendaEmptyMessage() }}</p>
+      } @else {
+        <div class="bip-calendar-agenda-list">
+          @for (group of agendaGroups(); track group.day.getTime()) {
+            <div class="bip-calendar-agenda-group">
+              <h3 class="bip-calendar-agenda-day-title">
+                {{ agendaDayLabel(group.day) }}
+                @if (isToday(group.day)) {
+                  <span class="bip-calendar-agenda-today-badge">{{ locale().calendar.today }}</span>
+                }
+              </h3>
+              <div class="bip-calendar-agenda-events">
+                @for (event of group.events; track event.id) {
+                  <div
+                    class="bip-calendar-agenda-event"
+                    [class.bip-calendar-agenda-event--cancelled]="event.status === 'cancelled'"
+                    role="button"
+                    tabindex="0"
+                    [attr.aria-label]="eventAriaLabel(event)"
+                    (click)="onEventBlockClick(event, $event)"
+                    (keydown)="onEventBlockKeydown(event, $event)"
+                  >
+                    <span class="bip-calendar-agenda-event-color" [class]="statusClass[event.status]" [style.background-color]="event.color || null"></span>
+                    <div class="bip-calendar-agenda-event-content">
+                      <span class="bip-calendar-agenda-event-title">{{ event.title }}</span>
+                      <span class="bip-calendar-agenda-event-time">{{ eventTimeRange(event) }}</span>
+                      @if (event.patientName) {
+                        <span class="bip-calendar-agenda-event-subtext">{{ event.patientName }}</span>
+                      }
+                      @if (resourceName(event.doctorId); as doctor) {
+                        <span class="bip-calendar-agenda-event-subtext">{{ doctor }}</span>
+                      }
+                      @if (event.notes) {
+                        <p class="bip-calendar-agenda-event-notes">{{ event.notes }}</p>
+                      }
+                    </div>
+                    <span class="bip-calendar-agenda-status-badge" [class]="statusClass[event.status]">
+                      {{ locale().calendar.statusLabels[event.status] }}
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+}
+
+<ng-template #timeGridTemplate let-days>
+  <div class="bip-calendar-time-grid">
+    <div class="bip-calendar-time-labels" [style.height.px]="gridHeight()">
+      @for (hour of hourLabels(); track hour) {
+        <div class="bip-calendar-time-label" [style.height.px]="hourHeight">{{ hour }}:00</div>
+      }
+    </div>
+    <div class="bip-calendar-time-columns">
+      @for (day of days; track day.getTime()) {
+        <div class="bip-calendar-time-column-group">
+          <div class="bip-calendar-time-column-header" [class.bip-calendar-time-column-header--today]="isToday(day)">
+            {{ columnHeaderLabel(day) }}
+          </div>
+          <div class="bip-calendar-time-column-body" [style.height.px]="gridHeight()">
+            @for (resource of resources().length ? resources() : [undefined]; track resource?.id ?? 'all') {
+              <div
+                class="bip-calendar-time-column"
+                role="presentation"
+                (click)="onSlotClick(day, $event)"
+              >
+                @for (hour of hourLabels(); track hour) {
+                  <div class="bip-calendar-time-grid-line" [style.height.px]="hourHeight"></div>
+                }
+                @for (event of eventsForColumn(day, resource?.id); track event.id) {
+                  <div
+                    class="bip-calendar-event-block"
+                    [class]="!event.color ? statusClass[event.status] : ''"
+                    [style.background-color]="event.color || null"
+                    [style.top.px]="eventTop(event)"
+                    [style.height.px]="eventHeight(event)"
+                    role="button"
+                    tabindex="0"
+                    [attr.aria-label]="eventAriaLabel(event)"
+                    (click)="onEventBlockClick(event, $event)"
+                    (keydown)="onEventBlockKeydown(event, $event)"
+                  >
+                    <span class="bip-calendar-event-block-title">{{ event.title }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #rangePopoverTemplate>
+  <div class="bip-calendar-range-overlay" aria-hidden="true" (click)="cancelRange()"></div>
+  <div
+    class="bip-calendar-range-popover"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-label]="locale().calendar.selectedDateRange"
+    (keydown.escape)="onRangePopoverEscape($event)"
+  >
+    <div class="bip-calendar-range-popover-header">
+      <span>{{ locale().calendar.selectedDateRange }}</span>
+      <button type="button" class="bip-calendar-range-popover-close" [attr.aria-label]="locale().calendar.close" (click)="cancelRange()">
+        ×
+      </button>
+    </div>
+    <button type="button" class="bip-calendar-range-popover-confirm" (click)="confirmRange()">
+      {{ locale().calendar.createEvent }}
+    </button>
+  </div>
+</ng-template>

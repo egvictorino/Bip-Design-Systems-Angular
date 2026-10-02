@@ -1,0 +1,15 @@
+<div class="bip-toast-card">
+  <bip-alert [variant]="variant()" [title]="title()" [closable]="true" (closed)="onAlertClosed()">
+    {{ message() }}
+  </bip-alert>
+
+  @if (showProgress()) {
+    <div class="bip-toast-progress-track">
+      <div
+        class="bip-toast-progress-bar"
+        [class]="progressBarClass()"
+        [style.width.%]="progress()"
+      ></div>
+    </div>
+  }
+</div>

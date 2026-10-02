@@ -1,0 +1,60 @@
+.bip-breadcrumb-nav {
+  display: block;
+}
+
+.bip-breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1-5);
+  margin: var(--space-0);
+  padding: var(--space-0);
+  list-style: none;
+}
+
+.bip-breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+
+.bip-breadcrumb-link {
+  color: var(--color-txt-secondary);
+  text-decoration: none;
+}
+.bip-breadcrumb-link:hover {
+  color: var(--color-txt);
+  text-decoration: underline;
+}
+.bip-breadcrumb-link:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-field);
+}
+
+.bip-breadcrumb-text {
+  color: var(--color-txt-secondary);
+}
+
+.bip-breadcrumb-current {
+  color: var(--color-txt);
+  font-weight: 500;
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bip-breadcrumb-separator {
+  display: inline-flex;
+  color: var(--color-txt-secondary);
+}
+
+/* El chevron por defecto apunta hacia el final de lectura en LTR — en RTL debe mirar hacia el
+   otro lado, por eso se mira con --rtl-x en vez de depender de una propiedad lógica (un ícono
+   no tiene "inicio/fin" propio, solo su propia geometría). */
+.bip-breadcrumb-chevron {
+  transform: scaleX(var(--rtl-x));
+}

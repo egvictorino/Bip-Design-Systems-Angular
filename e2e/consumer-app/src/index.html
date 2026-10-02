@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <title>BipUI consumer smoke test</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      Salida literal de getThemeInitScript({ defaultTheme: 'square', defaultColorScheme:
+      'light' }) (core/src/theme/theme-init-script.ts) — anti-FOUC: estampa data-theme/
+      data-color-scheme en <html> ANTES de pintar, igual que documenta el README de consumo.
+      No se importa en runtime porque index.html es HTML estático servido tal cual, no pasa
+      por el bundler — se pega el string generado, como haría cualquier consumidor real.
+    -->
+    <script>
+      (function () {
+        try {
+          var d = document.documentElement;
+          var t = 'square';
+          var c = 'light';
+          if (c === 'system') {
+            c =
+              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          }
+          d.setAttribute('data-theme', t);
+          d.setAttribute('data-color-scheme', c);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

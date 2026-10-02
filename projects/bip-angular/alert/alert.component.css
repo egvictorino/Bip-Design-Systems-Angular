@@ -1,0 +1,141 @@
+:host {
+  display: flex;
+  gap: var(--space-3);
+  border-radius: var(--radius-surface);
+  border-inline-start: 4px solid;
+  padding: var(--space-4);
+}
+
+/* ─── Variantes ──────────────────────────────────────────────────────────── */
+
+.bip-alert--info {
+  background-color: var(--color-info-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.bip-alert--success {
+  background-color: var(--color-success-light);
+  border-color: var(--color-success);
+  color: var(--color-success-text);
+}
+
+.bip-alert--warning {
+  background-color: var(--color-warning-light);
+  border-color: var(--color-warning);
+  color: var(--color-warning-text);
+}
+
+.bip-alert--danger {
+  background-color: var(--color-danger-light);
+  border-color: var(--color-danger);
+  color: var(--color-danger-text);
+}
+
+/* ─── Icono ──────────────────────────────────────────────────────────────── */
+
+.bip-alert-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* ─── Contenido ──────────────────────────────────────────────────────────── */
+
+.bip-alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.bip-alert-title {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+  font-weight: var(--font-semibold);
+  margin: var(--space-0);
+}
+
+.bip-alert-body {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+}
+
+.bip-alert-body--with-title {
+  margin-top: var(--space-1);
+}
+
+/* Color de title/body según variant */
+:host(.bip-alert--info) .bip-alert-title,
+:host(.bip-alert--info) .bip-alert-body {
+  color: var(--color-info-text);
+}
+:host(.bip-alert--success) .bip-alert-title,
+:host(.bip-alert--success) .bip-alert-body {
+  color: var(--color-success-text);
+}
+:host(.bip-alert--warning) .bip-alert-title,
+:host(.bip-alert--warning) .bip-alert-body {
+  color: var(--color-warning-text);
+}
+:host(.bip-alert--danger) .bip-alert-title,
+:host(.bip-alert--danger) .bip-alert-body {
+  color: var(--color-danger-text);
+}
+
+/* ─── Botón cerrar ───────────────────────────────────────────────────────── */
+
+.bip-alert-close-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+  border-radius: var(--radius-control);
+  padding: var(--space-0-5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+  line-height: 0;
+}
+
+.bip-alert-close-btn:focus {
+  outline: none;
+}
+.bip-alert-close-btn:focus-visible {
+  --focus-ring-color: currentColor;
+  box-shadow: var(--focus-ring);
+}
+
+.bip-alert-close-btn--info {
+  color: var(--color-primary);
+}
+.bip-alert-close-btn--info:hover {
+  background-color: var(--color-info-subtle);
+  color: var(--color-primary);
+}
+
+.bip-alert-close-btn--success {
+  color: var(--color-success);
+}
+.bip-alert-close-btn--success:hover {
+  background-color: var(--color-success-subtle);
+  color: var(--color-success);
+}
+
+.bip-alert-close-btn--warning {
+  color: var(--color-warning);
+}
+.bip-alert-close-btn--warning:hover {
+  background-color: var(--color-warning-subtle);
+  color: var(--color-warning);
+}
+
+.bip-alert-close-btn--danger {
+  color: var(--color-danger);
+}
+.bip-alert-close-btn--danger:hover {
+  background-color: var(--color-danger-subtle);
+  color: var(--color-danger);
+}
+
+.bip-alert-close-icon {
+  width: 1rem;
+  height: 1rem;
+}

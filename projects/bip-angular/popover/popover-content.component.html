@@ -1,0 +1,13 @@
+<ng-template #portalTemplate>
+  <div
+    class="bip-popover-content"
+    [id]="context.contentId"
+    role="dialog"
+    [attr.aria-labelledby]="context.triggerId"
+    tabindex="-1"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+  >
+    <ng-content />
+  </div>
+</ng-template>

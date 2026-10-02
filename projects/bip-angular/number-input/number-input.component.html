@@ -1,0 +1,87 @@
+@if (label()) {
+  <label [for]="fieldId" [class]="'bip-number-input-label ' + labelClass()">
+    {{ label() }}
+    @if (required()) {
+      <span aria-hidden="true" class="bip-number-input-required-mark"> *</span>
+    }
+  </label>
+}
+<div class="bip-number-input-container">
+  <button
+    type="button"
+    class="bip-number-input-step-btn bip-number-input-step-btn--left"
+    [class]="stepBtnClass()"
+    [attr.aria-label]="locale().numberInput.decrement"
+    [disabled]="isDecrementDisabled()"
+    tabindex="-1"
+    (click)="decrement()"
+  >
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="bip-number-input-step-icon">
+      <path
+        fill-rule="evenodd"
+        d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10z"
+        clip-rule="evenodd"
+      />
+    </svg>
+  </button>
+
+  @if (prefix()) {
+    <span [class]="'bip-number-input-adornment bip-number-input-adornment--left ' + prefixClass()" aria-hidden="true">
+      {{ prefix() }}
+    </span>
+  }
+
+  <input
+    [id]="fieldId"
+    type="text"
+    inputmode="numeric"
+    role="spinbutton"
+    [class]="'bip-number-input ' + inputClass()"
+    [disabled]="disabled()"
+    [readOnly]="readonly()"
+    [required]="required()"
+    [value]="rawValue()"
+    [attr.aria-invalid]="hasError() || null"
+    [attr.aria-describedby]="messageId()"
+    [attr.aria-valuenow]="value()"
+    [attr.aria-valuemin]="min() ?? null"
+    [attr.aria-valuemax]="max() ?? null"
+    (input)="onInput($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    (keydown)="onKeyDown($event)"
+  />
+
+  @if (suffix()) {
+    <span [class]="'bip-number-input-adornment bip-number-input-adornment--right ' + suffixClass()" aria-hidden="true">
+      {{ suffix() }}
+    </span>
+  }
+
+  <button
+    type="button"
+    class="bip-number-input-step-btn bip-number-input-step-btn--right"
+    [class]="stepBtnClass()"
+    [attr.aria-label]="locale().numberInput.increment"
+    [disabled]="isIncrementDisabled()"
+    tabindex="-1"
+    (click)="increment()"
+  >
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="bip-number-input-step-icon">
+      <path
+        fill-rule="evenodd"
+        d="M10 4a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 10 4z"
+        clip-rule="evenodd"
+      />
+    </svg>
+  </button>
+</div>
+@if (error() && errorMessage()) {
+  <span [id]="errorId" [class]="'bip-number-input-message bip-number-input-error-text ' + helperClass()" role="alert">
+    {{ errorMessage() }}
+  </span>
+} @else if (helperText()) {
+  <span [id]="errorId" [class]="'bip-number-input-message bip-number-input-helper-text ' + helperClass()">
+    {{ helperText() }}
+  </span>
+}

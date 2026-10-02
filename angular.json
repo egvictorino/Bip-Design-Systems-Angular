@@ -1,0 +1,106 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "pnpm"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "bip-angular": {
+      "projectType": "library",
+      "root": "projects/bip-angular",
+      "sourceRoot": "projects/bip-angular/src",
+      "prefix": "bip",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/bip-angular/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/bip-angular/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/bip-angular/tsconfig.spec.json",
+            "setupFiles": ["projects/bip-angular/src/test-setup.ts"],
+            "include": [
+              "**/*.spec.ts",
+              "../core/src/**/*.spec.ts",
+              "../testing/**/*.spec.ts",
+              "../container/**/*.spec.ts",
+              "../stack/**/*.spec.ts",
+              "../grid/**/*.spec.ts",
+              "../text/**/*.spec.ts",
+              "../heading/**/*.spec.ts",
+              "../divider/**/*.spec.ts",
+              "../link/**/*.spec.ts",
+              "../spinner/**/*.spec.ts",
+              "../skeleton/**/*.spec.ts",
+              "../badge/**/*.spec.ts",
+              "../avatar/**/*.spec.ts",
+              "../progress-bar/**/*.spec.ts",
+              "../empty-state/**/*.spec.ts",
+              "../card/**/*.spec.ts",
+              "../stats-card/**/*.spec.ts",
+              "../alert/**/*.spec.ts",
+              "../button/**/*.spec.ts",
+              "../input/**/*.spec.ts",
+              "../textarea/**/*.spec.ts",
+              "../checkbox/**/*.spec.ts",
+              "../radio/**/*.spec.ts",
+              "../toggle/**/*.spec.ts",
+              "../select/**/*.spec.ts",
+              "../number-input/**/*.spec.ts",
+              "../search-input/**/*.spec.ts",
+              "../slider/**/*.spec.ts",
+              "../file-upload/**/*.spec.ts",
+              "../modal/**/*.spec.ts",
+              "../confirm-dialog/**/*.spec.ts",
+              "../drawer-panel/**/*.spec.ts",
+              "../toast/**/*.spec.ts",
+              "../tooltip/**/*.spec.ts",
+              "../popover/**/*.spec.ts",
+              "../dropdown/**/*.spec.ts",
+              "../timeline/**/*.spec.ts",
+              "../breadcrumb/**/*.spec.ts",
+              "../pagination/**/*.spec.ts",
+              "../tabs/**/*.spec.ts",
+              "../accordion/**/*.spec.ts",
+              "../stepper/**/*.spec.ts",
+              "../navbar/**/*.spec.ts",
+              "../sidebar/**/*.spec.ts",
+              "../multi-select/**/*.spec.ts",
+              "../date-picker/**/*.spec.ts",
+              "../date-range-picker/**/*.spec.ts",
+              "../time-picker/**/*.spec.ts",
+              "../calendar/**/*.spec.ts",
+          "../table/**/*.spec.ts",
+          "../data-table/**/*.spec.ts",
+          "../odontogram/**/*.spec.ts"
+            ]
+          }
+        },
+        "storybook": {
+          "builder": "@storybook/angular-vite:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular-vite:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "outputDir": "storybook-static"
+          }
+        }
+      }
+    }
+  }
+}

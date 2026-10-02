@@ -1,0 +1,32 @@
+:host {
+  color: var(--color-txt);
+  margin: var(--space-0);
+  line-height: var(--leading-tight);
+}
+
+:host(.bip-heading--size-xs) {
+  font-size: var(--text-sm);
+}
+:host(.bip-heading--size-sm) {
+  font-size: var(--text-base);
+}
+:host(.bip-heading--size-md) {
+  font-size: var(--text-lg);
+}
+:host(.bip-heading--size-lg) {
+  font-size: var(--text-xl);
+}
+:host(.bip-heading--size-xl) {
+  font-size: var(--text-2xl);
+}
+/* --text-2xl es el mayor token disponible en primitives.css — xl y 2xl comparten valor. */
+:host(.bip-heading--size-2xl) {
+  font-size: var(--text-2xl);
+}
+
+:host(.bip-heading--weight-semibold) {
+  font-weight: var(--font-semibold);
+}
+:host(.bip-heading--weight-bold) {
+  font-weight: var(--font-bold);
+}

@@ -1,0 +1,9 @@
+# Instalado/generado por scripts/e2e-consumer.sh en cada corrida — el tarball (vendor/) y el
+# lockfile de esta app independiente nunca se commitean (pnpm-workspace.yaml con
+# `packages: []` ya la saca del lockfile del repo raíz).
+vendor/
+node_modules/
+dist/
+.angular/
+pnpm-lock.yaml
+*.log

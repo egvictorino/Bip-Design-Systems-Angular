@@ -1,0 +1,36 @@
+<div class="bip-radio-wrapper">
+  <div class="bip-radio-row">
+    <div [class]="ringClass()">
+      <input
+        [id]="fieldId"
+        type="radio"
+        class="bip-radio-native-input"
+        [name]="group!.name"
+        [value]="value()"
+        [checked]="checked()"
+        [disabled]="resolvedDisabled()"
+        [required]="required()"
+        [attr.aria-describedby]="hasVisibleMessage() ? errorId : null"
+        (change)="onChange()"
+      />
+      <div [class]="dotClass()"></div>
+    </div>
+    @if (label()) {
+      <label [for]="fieldId" [class]="'bip-radio-label ' + labelClass()">
+        {{ label() }}
+        @if (required()) {
+          <span aria-hidden="true" class="bip-radio-required-mark">*</span>
+        }
+      </label>
+    }
+  </div>
+  @if (resolvedError() && errorMessage()) {
+    <span [id]="errorId" [class]="'bip-radio-message bip-radio-error-text ' + helperClass()" role="alert">
+      {{ errorMessage() }}
+    </span>
+  } @else if (helperText()) {
+    <span [id]="errorId" [class]="'bip-radio-message bip-radio-helper-text ' + helperClass()">
+      {{ helperText() }}
+    </span>
+  }
+</div>

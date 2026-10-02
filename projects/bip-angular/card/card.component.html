@@ -1,0 +1,8 @@
+@if (loading()) {
+  <div class="bip-card-loading-container" aria-busy="true" [attr.aria-label]="loadingLabel()">
+    <bip-skeleton variant="text" class="bip-card-skeleton-short" />
+    <bip-skeleton variant="text" [lines]="3" />
+  </div>
+} @else {
+  <ng-content />
+}

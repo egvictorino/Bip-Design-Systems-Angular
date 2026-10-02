@@ -1,0 +1,123 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+:host(.bip-timeline-item--horizontal) {
+  flex-direction: column;
+  min-width: 12rem;
+}
+
+:host:last-child .bip-timeline-item-connector {
+  display: none;
+}
+
+/* ─── Marcador (punto + conector) ───────────────────────────────────────────── */
+
+.bip-timeline-item-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+:host(.bip-timeline-item--horizontal) .bip-timeline-item-marker {
+  flex-direction: row;
+  width: 100%;
+}
+
+.bip-timeline-item-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-circle);
+  background-color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.bip-timeline-item-dot:empty {
+  padding: var(--space-0);
+}
+
+.bip-timeline-item-connector {
+  width: 2px;
+  flex: 1;
+  min-height: var(--space-6);
+  background-color: var(--color-edge);
+  margin-block: var(--space-1);
+}
+
+:host(.bip-timeline-item--horizontal) .bip-timeline-item-connector {
+  width: auto;
+  height: 2px;
+  min-width: var(--space-6);
+  margin-block: var(--space-0);
+  margin-inline: var(--space-1);
+}
+
+/* ─── Variantes (color del punto) ────────────────────────────────────────────── */
+
+:host(.bip-timeline-item--success) .bip-timeline-item-dot {
+  background-color: var(--color-success);
+}
+:host(.bip-timeline-item--warning) .bip-timeline-item-dot {
+  background-color: var(--color-warning);
+}
+:host(.bip-timeline-item--danger) .bip-timeline-item-dot {
+  background-color: var(--color-danger);
+}
+
+/* ─── Tamaños (diámetro del punto) ──────────────────────────────────────────── */
+
+:host(.bip-timeline-item--sm) .bip-timeline-item-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+:host(.bip-timeline-item--lg) .bip-timeline-item-dot {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ─── Contenido ──────────────────────────────────────────────────────────────── */
+
+.bip-timeline-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-block-end: var(--space-6);
+}
+
+.bip-timeline-item-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+}
+
+.bip-timeline-item-date {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+  color: var(--color-txt-secondary);
+}
+
+.bip-timeline-item-title {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: var(--color-txt);
+  margin: var(--space-0);
+}
+
+.bip-timeline-item-description {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+  color: var(--color-txt-secondary);
+  margin: var(--space-0);
+}
+
+.bip-timeline-item-extra:empty {
+  display: none;
+}

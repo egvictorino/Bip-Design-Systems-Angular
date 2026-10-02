@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+:host(.bip-tabs--vertical) {
+  display: flex;
+  gap: var(--space-4);
+}

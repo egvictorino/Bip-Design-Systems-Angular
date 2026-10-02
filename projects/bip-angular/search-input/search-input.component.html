@@ -1,0 +1,66 @@
+@if (label()) {
+  <label [for]="fieldId" [class]="'bip-search-input-label ' + labelClass()">
+    {{ label() }}
+    @if (required()) {
+      <span aria-hidden="true" class="bip-search-input-required-mark"> *</span>
+    }
+  </label>
+}
+<div class="bip-search-input-container">
+  <span [class]="'bip-search-input-search-icon ' + searchIconClass()" aria-hidden="true">
+    @if (loading()) {
+      <svg viewBox="0 0 24 24" fill="none" [class]="iconClass()">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="bip-search-input-spinner-track" />
+        <path fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4z" class="bip-search-input-spinner-fill" />
+      </svg>
+    } @else {
+      <svg viewBox="0 0 20 20" fill="currentColor" [class]="iconClass()">
+        <path
+          fill-rule="evenodd"
+          d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11zM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    }
+  </span>
+
+  <input
+    [id]="fieldId"
+    type="search"
+    [class]="'bip-search-input ' + inputClass()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [value]="value()"
+    [attr.aria-invalid]="hasError() || null"
+    [attr.aria-describedby]="messageId()"
+    [attr.aria-busy]="loading() ? 'true' : null"
+    (input)="onInput($event)"
+    (keydown)="onKeyDown($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+  />
+
+  @if (showClear()) {
+    <button
+      type="button"
+      [attr.aria-label]="locale().searchInput.clear"
+      [class]="'bip-search-input-clear-btn ' + clearOffsetClass()"
+      (click)="onClear()"
+    >
+      <svg viewBox="0 0 20 20" fill="currentColor" [class]="iconClass()" aria-hidden="true">
+        <path
+          d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22z"
+        />
+      </svg>
+    </button>
+  }
+</div>
+@if (error() && errorMessage()) {
+  <span [id]="errorId" [class]="'bip-search-input-message bip-search-input-error-text ' + helperClass()" role="alert">
+    {{ errorMessage() }}
+  </span>
+} @else if (helperText()) {
+  <span [id]="errorId" [class]="'bip-search-input-message bip-search-input-helper-text ' + helperClass()">
+    {{ helperText() }}
+  </span>
+}

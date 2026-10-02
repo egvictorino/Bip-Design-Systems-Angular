@@ -1,0 +1,107 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+}
+
+:host.bip-slider-wrapper--full-width {
+  width: 100%;
+}
+
+.bip-slider-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-txt);
+}
+
+.bip-slider-label--disabled {
+  color: var(--color-txt-disabled);
+}
+
+.bip-slider-required-mark {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-0-5);
+}
+
+.bip-slider-track {
+  appearance: none;
+  width: 100%;
+  height: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--color-field);
+  outline: none;
+  cursor: pointer;
+}
+
+.bip-slider-track:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.bip-slider-track::-webkit-slider-thumb {
+  appearance: none;
+  width: var(--space-4);
+  height: var(--space-4);
+  border-radius: var(--radius-circle);
+  background: var(--color-primary);
+  border: none;
+  cursor: pointer;
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.bip-slider-track::-moz-range-thumb {
+  width: var(--space-4);
+  height: var(--space-4);
+  border-radius: var(--radius-circle);
+  background: var(--color-primary);
+  border: none;
+  cursor: pointer;
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.bip-slider-track:disabled::-webkit-slider-thumb {
+  background: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.bip-slider-track:disabled::-moz-range-thumb {
+  background: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.bip-slider-track--error::-webkit-slider-thumb {
+  background: var(--color-danger);
+}
+
+.bip-slider-track--error::-moz-range-thumb {
+  background: var(--color-danger);
+}
+
+.bip-slider-track:focus-visible::-webkit-slider-thumb {
+  box-shadow: var(--focus-ring);
+}
+
+.bip-slider-track:focus-visible::-moz-range-thumb {
+  box-shadow: var(--focus-ring);
+}
+
+.bip-slider-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.bip-slider-helper-text {
+  font-size: var(--text-xs);
+  color: var(--color-txt-secondary);
+}
+
+.bip-slider-error-text {
+  font-size: var(--text-xs);
+  color: var(--color-danger-text);
+}
+
+.bip-slider-value-label {
+  font-size: var(--text-xs);
+  color: var(--color-txt-secondary);
+}

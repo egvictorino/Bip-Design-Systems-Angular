@@ -1,0 +1,25 @@
+<ng-template #portalTemplate>
+  <div
+    class="bip-modal-backdrop"
+    [class.bip-modal-backdrop--open]="animating()"
+    role="presentation"
+    (mousedown)="onBackdropMouseDown($event)"
+  >
+    <div
+      class="bip-modal-dialog"
+      [class]="sizeClass[size()]"
+      [class.bip-modal-dialog--open]="animating()"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="titleId"
+      tabindex="-1"
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
+    >
+      @if (title()) {
+        <bip-modal-header>{{ title() }}</bip-modal-header>
+      }
+      <ng-content />
+    </div>
+  </div>
+</ng-template>

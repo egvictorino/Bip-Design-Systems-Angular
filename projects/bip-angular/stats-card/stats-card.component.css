@@ -1,0 +1,172 @@
+:host {
+  border-radius: var(--radius-container);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ─── Variantes ──────────────────────────────────────────────────────────── */
+
+.bip-stats-card--outlined {
+  background-color: var(--color-surface-1);
+  border: 1px solid var(--color-edge);
+  padding: var(--space-5);
+}
+
+.bip-stats-card--flat {
+  background-color: var(--color-surface-2);
+  border: none;
+  padding: var(--space-5);
+}
+
+.bip-stats-card--elevated {
+  background-color: var(--color-surface-1);
+  border: none;
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─── Tamaños ────────────────────────────────────────────────────────────── */
+
+.bip-stats-card--sm {
+  padding: var(--space-4);
+  gap: var(--space-2);
+}
+
+.bip-stats-card--lg {
+  padding: var(--space-6);
+  gap: var(--space-4);
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+
+.bip-stats-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.bip-stats-card-title {
+  font-size: var(--text-sm);
+  line-height: 1.25rem;
+  font-weight: var(--font-medium);
+  color: var(--color-txt-secondary);
+}
+
+.bip-stats-card-icon-slot {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-txt-secondary);
+}
+
+/* ─── Value row ──────────────────────────────────────────────────────────── */
+
+.bip-stats-card-value-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.bip-stats-card-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-txt);
+  line-height: 1;
+}
+
+.bip-stats-card--sm .bip-stats-card-value {
+  font-size: var(--text-lg);
+}
+
+.bip-stats-card--lg .bip-stats-card-value {
+  font-size: 2rem;
+}
+
+/* ─── Trend ──────────────────────────────────────────────────────────────── */
+
+.bip-stats-card-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-0-5);
+  font-size: var(--text-xs);
+  line-height: 1rem;
+  font-weight: var(--font-medium);
+  margin-bottom: var(--space-0-5);
+}
+
+/* --color-success (semilla) medía 2.28:1 como texto contra blanco — bajo AA. --color-danger
+   sí pasa en ambos esquemas (5.4:1 light, 6.1:1 dark) y se deja tal cual. */
+.bip-stats-card-trend--positive {
+  color: var(--color-success-text);
+}
+.bip-stats-card-trend--negative {
+  color: var(--color-danger);
+}
+.bip-stats-card-trend--neutral {
+  color: var(--color-txt-secondary);
+}
+
+.bip-stats-card-trend-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* ─── Description ────────────────────────────────────────────────────────── */
+
+.bip-stats-card-description {
+  font-size: var(--text-xs);
+  line-height: 1rem;
+  color: var(--color-txt-secondary);
+  margin: var(--space-0);
+}
+
+/* ─── Skeleton de carga ──────────────────────────────────────────────────── */
+
+@keyframes bip-stats-card-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.bip-stats-card-loading-bar {
+  display: block;
+  border-radius: var(--radius-control);
+  background-color: var(--color-edge);
+  animation: bip-stats-card-pulse 1.5s var(--ease-standard) infinite;
+}
+
+.bip-stats-card-loading-title {
+  width: 60%;
+  height: 0.875rem;
+}
+
+.bip-stats-card-loading-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--radius-control);
+}
+
+.bip-stats-card-loading-value {
+  width: 40%;
+  height: 1.5rem;
+}
+
+.bip-stats-card-loading-description {
+  width: 50%;
+  height: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bip-stats-card-loading-bar {
+    animation: none;
+  }
+}

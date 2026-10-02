@@ -1,0 +1,127 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+:host.bip-date-range-picker-wrapper--full-width {
+  width: 100%;
+}
+
+.bip-date-range-picker-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-txt);
+}
+.bip-date-range-picker-required-mark {
+  color: var(--color-danger);
+  margin-inline-start: var(--space-0-5);
+}
+
+.bip-date-range-picker-trigger-wrapper {
+  display: flex;
+}
+:host.bip-date-range-picker-wrapper--full-width .bip-date-range-picker-trigger-wrapper {
+  width: 100%;
+}
+
+.bip-date-range-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-field);
+  background-color: var(--color-field);
+  cursor: pointer;
+  color: var(--color-txt);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+.bip-date-range-picker-trigger:hover:not(:disabled) {
+  border-color: var(--color-primary);
+}
+.bip-date-range-picker-trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.bip-date-range-picker-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bip-date-range-picker-trigger--error {
+  border-color: var(--color-danger);
+}
+
+.bip-date-range-picker-trigger--sm {
+  padding: var(--space-control-y-sm) var(--space-control-x-sm);
+  font-size: var(--text-xs);
+}
+.bip-date-range-picker-trigger--md {
+  padding: var(--space-control-y-md) var(--space-4);
+  font-size: var(--text-sm);
+}
+.bip-date-range-picker-trigger--lg {
+  padding: var(--space-control-y-lg) var(--space-control-x-lg);
+  font-size: var(--text-base);
+}
+
+.bip-date-range-picker-value {
+  color: var(--color-txt);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bip-date-range-picker-placeholder {
+  color: var(--color-txt-secondary);
+}
+
+.bip-date-range-picker-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-txt-secondary);
+  cursor: pointer;
+  line-height: 1;
+  border-radius: var(--radius-control);
+  flex-shrink: 0;
+}
+.bip-date-range-picker-clear:hover {
+  color: var(--color-txt);
+}
+.bip-date-range-picker-clear:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.bip-date-range-picker-calendar-icon {
+  display: inline-flex;
+  color: var(--color-txt-secondary);
+  flex-shrink: 0;
+}
+.bip-date-range-picker-calendar-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.bip-date-range-picker-message {
+  font-size: var(--text-xs);
+}
+.bip-date-range-picker-helper-text {
+  color: var(--color-txt-secondary);
+}
+.bip-date-range-picker-error-text {
+  color: var(--color-danger);
+}
+
+.bip-date-range-picker-panel {
+  border-radius: var(--radius-container);
+  border: 1px solid var(--color-edge);
+  background-color: var(--color-surface-1);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-3);
+}
+.bip-date-range-picker-panel:focus-visible {
+  outline: none;
+}

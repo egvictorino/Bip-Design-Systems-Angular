@@ -1,0 +1,41 @@
+@if (label()) {
+  <label [for]="fieldId" [class]="'bip-textarea-label ' + labelClass()">
+    {{ label() }}
+    @if (required()) {
+      <span aria-hidden="true" class="bip-textarea-required-mark"> *</span>
+    }
+  </label>
+}
+<textarea
+  #textareaEl
+  [id]="fieldId"
+  [class]="'bip-textarea ' + textareaClass()"
+  [disabled]="disabled()"
+  [required]="required()"
+  [rows]="rows()"
+  [attr.maxlength]="maxLength() ?? null"
+  [value]="value()"
+  [attr.aria-invalid]="hasError() || null"
+  [attr.aria-describedby]="messageId()"
+  (input)="onInput($event)"
+  (focus)="onFocus()"
+  (blur)="onBlur()"
+></textarea>
+@if (showFooter()) {
+  <div class="bip-textarea-footer">
+    @if (error() && errorMessage()) {
+      <span [id]="errorId" [class]="'bip-textarea-message bip-textarea-error-text ' + helperClass()" role="alert">
+        {{ errorMessage() }}
+      </span>
+    } @else if (helperText()) {
+      <span [id]="errorId" [class]="'bip-textarea-message bip-textarea-helper-text ' + helperClass()">
+        {{ helperText() }}
+      </span>
+    } @else {
+      <span></span>
+    }
+    @if (showCounter()) {
+      <span [class]="counterClass() + ' ' + helperClass()">{{ charCount() }} / {{ maxLength() }}</span>
+    }
+  </div>
+}
