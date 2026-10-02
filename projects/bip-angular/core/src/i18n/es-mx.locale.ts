@@ -183,6 +183,11 @@ export const esMX: BipLocale = {
     noResults: 'Sin resultados',
   },
 
+  select: {
+    options: 'Opciones',
+    noResults: 'Sin resultados',
+  },
+
   navbar: {
     mainNav: 'Navegación principal',
     closeMenu: 'Cerrar menú',

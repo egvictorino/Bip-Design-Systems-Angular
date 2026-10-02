@@ -180,6 +180,11 @@ export const enUS: BipLocale = {
     noResults: 'No results',
   },
 
+  select: {
+    options: 'Options',
+    noResults: 'No results',
+  },
+
   navbar: {
     mainNav: 'Main navigation',
     closeMenu: 'Close menu',

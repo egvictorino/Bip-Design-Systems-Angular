@@ -20,7 +20,13 @@ import {
 import type { ControlValueAccessor } from '@angular/forms';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { BipFormControlBase, BipIdGenerator, BipOverlay, injectBipLocale } from '@bip-design-systems/angular/core';
+import {
+  BipFormControlBase,
+  BipIdGenerator,
+  BipOverlay,
+  injectBipLocale,
+  matchesSearch,
+} from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 
 export type BipMultiSelectVariant = 'outlined' | 'filled' | 'bare';
@@ -82,6 +88,8 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   readonly size = input<BipSize>('md');
   readonly label = input<string>('');
   readonly placeholder = input<string>('');
+  /** Muestra el buscador dentro del panel. Con `false` el panel abre directo en la lista de opciones. */
+  readonly search = input(true, { transform: booleanAttribute });
   readonly searchPlaceholder = input<string>('');
   readonly helperText = input<string>('');
   readonly error = input(false, { transform: booleanAttribute });
@@ -126,11 +134,10 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
 
   protected readonly filteredOptions = computed<BipMultiSelectOption[]>(() => {
     if (this.externalFilter()) return this.options();
-    const q = this.query().trim().toLowerCase();
-    if (!q) return this.options();
-    return this.options().filter(
-      (option) => option.label.toLowerCase().includes(q) || option.value.toLowerCase().includes(q)
-    );
+    const q = this.query();
+    if (!q.trim()) return this.options();
+    const locale = this.locale().locale;
+    return this.options().filter((option) => matchesSearch(option, q, locale));
   });
 
   protected readonly hasGroups = computed(() => this.options().some((option) => option.group !== undefined));
@@ -308,7 +315,8 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
       case 'Tab':
         if (event.shiftKey) {
           event.preventDefault();
-          this.searchInputRef?.nativeElement.focus();
+          if (this.search()) this.searchInputRef?.nativeElement.focus();
+          else this.closePanel(true);
         } else {
           this.closePanel();
         }
@@ -384,7 +392,10 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
       this.closePanel();
     });
     this.overlayRef = overlayRef;
-    queueMicrotask(() => this.searchInputRef?.nativeElement.focus());
+    queueMicrotask(() => {
+      if (this.search()) this.searchInputRef?.nativeElement.focus();
+      else this.focusableOptionElements()[0]?.focus();
+    });
   }
 
   private hidePanel(): void {
