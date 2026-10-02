@@ -150,7 +150,7 @@
  * Esquema oscuro — activado por [data-color-scheme='dark'].
  *
  * No es una inversión ciega: cada grupo sigue su propia regla semántica
- * (ver CLAUDE.md § Design tokens). --color-txt-white NO se sobreescribe
+ * (ver CLAUDE.md § Reglas de código). --color-txt-white NO se sobreescribe
  * aquí a propósito — es "texto sobre relleno de marca", correcto en
  * ambos esquemas. Doble selector para cubrir data-color-scheme tanto en
  * <html> (gana por especificidad, 0,2,0) como en el wrapper del

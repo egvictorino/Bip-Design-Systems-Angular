@@ -7,7 +7,7 @@ import { BRAND_PRESETS } from './brand-presets';
  * Decorator global de Storybook (ver .storybook/preview.ts) — envuelve cada story en
  * `<bip-theme-provider>` leyendo los globals del toolbar (theme/colorScheme/density/
  * dir/brand). No se publica con la librería (vive en foundations/, ver CLAUDE.md §
- * Estructura objetivo). `componentWrapperDecorator` (Storybook Angular) asigna estos
+ * Estructura). `componentWrapperDecorator` (Storybook Angular) asigna estos
  * `input()` vía `ComponentRef.setInput()` en cada cambio de story/globals.
  *
  * `<bip-theme-provider>` es `display: contents` (no pinta caja propia, ver

@@ -3,7 +3,7 @@ import type { BipTokenOverrides } from '../core/src/theme';
 /**
  * Presets de marca para el toolbar `brand` de Storybook (ver .storybook/preview.ts) — cada
  * uno es un `tokens` override que se pasa directo a `<bip-theme-provider [tokens]>`. No se
- * publica con la librería (vive en foundations/, ver CLAUDE.md § Estructura objetivo).
+ * publica con la librería (vive en foundations/, ver CLAUDE.md § Estructura).
  */
 export interface BipBrandPreset {
   label: string;
