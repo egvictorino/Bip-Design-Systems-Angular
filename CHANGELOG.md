@@ -8,6 +8,8 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-02
+
 ### Added
 
 - CI/CD y publicación (Bloque 12): workflows `dev.yml`, `qa.yml`, `production.yml` (publica en
