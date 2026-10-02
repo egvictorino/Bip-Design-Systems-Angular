@@ -7,7 +7,7 @@
   }
 }
 
-.bip-button {
+:host {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
@@ -23,113 +23,113 @@
   text-decoration: none;
 }
 
-.bip-button:focus {
+:host:focus {
   outline: none;
 }
 
-.bip-button:focus-visible {
+:host:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }
 
-.bip-button:disabled,
-.bip-button[aria-disabled='true'] {
+:host:disabled,
+:host[aria-disabled='true'] {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-.bip-button[aria-disabled='true'] {
+:host[aria-disabled='true'] {
   pointer-events: none;
 }
 
-.bip-button--loading {
+:host(.bip-button--loading) {
   cursor: wait;
 }
 
-.bip-button--full-width {
+:host(.bip-button--full-width) {
   width: 100%;
   justify-content: center;
 }
 
 /* ─── Variants ────────────────────────────────────────────────────────────── */
 
-.bip-button--primary {
+:host(.bip-button--primary) {
   background-color: var(--color-primary);
   color: var(--color-txt-on-primary);
 }
-.bip-button--primary:hover:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--primary):hover:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-primary-hover);
 }
-.bip-button--primary:active:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--primary):active:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-primary-press);
 }
 
-.bip-button--secondary {
+:host(.bip-button--secondary) {
   background-color: var(--color-secondary);
   color: var(--color-txt);
 }
-.bip-button--secondary:hover:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--secondary):hover:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-secondary-hover);
 }
-.bip-button--secondary:active:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--secondary):active:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-secondary-press);
 }
-.bip-button--secondary:focus-visible {
+:host(.bip-button--secondary):focus-visible {
   --focus-ring-color: var(--color-secondary);
 }
 
-.bip-button--bare {
+:host(.bip-button--bare) {
   background-color: transparent;
   color: var(--color-primary);
   border: 1px solid var(--color-primary);
 }
-.bip-button--bare:hover:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--bare):hover:not(:disabled):not([aria-disabled='true']) {
   color: var(--color-primary-hover);
   border-color: var(--color-primary-hover);
 }
-.bip-button--bare:active:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--bare):active:not(:disabled):not([aria-disabled='true']) {
   color: var(--color-primary-press);
   border-color: var(--color-primary-press);
 }
 
-.bip-button--soul {
+:host(.bip-button--soul) {
   background-color: transparent;
   color: var(--color-primary);
 }
-.bip-button--soul:hover:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--soul):hover:not(:disabled):not([aria-disabled='true']) {
   color: var(--color-primary-hover);
 }
-.bip-button--soul:active:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--soul):active:not(:disabled):not([aria-disabled='true']) {
   color: var(--color-primary-press);
 }
 
-.bip-button--danger {
+:host(.bip-button--danger) {
   background-color: var(--color-danger);
   color: var(--color-txt-on-danger);
 }
-.bip-button--danger:hover:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--danger):hover:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-danger-hover);
 }
-.bip-button--danger:active:not(:disabled):not([aria-disabled='true']) {
+:host(.bip-button--danger):active:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-danger-press);
 }
-.bip-button--danger:focus-visible {
+:host(.bip-button--danger):focus-visible {
   --focus-ring-color: var(--color-danger);
 }
 
 /* ─── Sizes ───────────────────────────────────────────────────────────────── */
 
-.bip-button--sm {
+:host(.bip-button--sm) {
   padding: var(--space-control-y-sm) var(--space-control-x-sm);
   font-size: var(--text-xs);
   line-height: 1rem;
 }
-.bip-button--md {
+:host(.bip-button--md) {
   padding: var(--space-control-y-md) var(--space-control-x-md);
   font-size: var(--text-sm);
   line-height: 1.25rem;
 }
-.bip-button--lg {
+:host(.bip-button--lg) {
   padding: var(--space-control-y-lg) var(--space-control-x-lg);
   font-size: var(--text-lg);
   line-height: 1.75rem;

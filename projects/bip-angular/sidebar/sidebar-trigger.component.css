@@ -1,4 +1,4 @@
-.bip-sidebar-trigger {
+:host {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -11,11 +11,11 @@
   cursor: pointer;
 }
 
-.bip-sidebar-trigger:hover {
+:host:hover {
   background-color: var(--color-surface-2);
 }
 
-.bip-sidebar-trigger:focus-visible {
+:host:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }

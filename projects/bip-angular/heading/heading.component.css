@@ -1,32 +1,32 @@
-.bip-heading {
+:host {
   color: var(--color-txt);
   margin: var(--space-0);
   line-height: var(--leading-tight);
 }
 
-.bip-heading--size-xs {
+:host(.bip-heading--size-xs) {
   font-size: var(--text-sm);
 }
-.bip-heading--size-sm {
+:host(.bip-heading--size-sm) {
   font-size: var(--text-base);
 }
-.bip-heading--size-md {
+:host(.bip-heading--size-md) {
   font-size: var(--text-lg);
 }
-.bip-heading--size-lg {
+:host(.bip-heading--size-lg) {
   font-size: var(--text-xl);
 }
-.bip-heading--size-xl {
+:host(.bip-heading--size-xl) {
   font-size: var(--text-2xl);
 }
 /* --text-2xl es el mayor token disponible en primitives.css — xl y 2xl comparten valor. */
-.bip-heading--size-2xl {
+:host(.bip-heading--size-2xl) {
   font-size: var(--text-2xl);
 }
 
-.bip-heading--weight-semibold {
+:host(.bip-heading--weight-semibold) {
   font-weight: var(--font-semibold);
 }
-.bip-heading--weight-bold {
+:host(.bip-heading--weight-bold) {
   font-weight: var(--font-bold);
 }

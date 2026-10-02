@@ -1,4 +1,4 @@
-.bip-modal-body {
+:host {
   flex: 1 1 auto;
   overflow-y: auto;
   padding: var(--space-5) var(--space-6);

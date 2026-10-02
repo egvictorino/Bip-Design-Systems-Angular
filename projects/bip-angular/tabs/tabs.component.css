@@ -1,8 +1,8 @@
-.bip-tabs {
+:host {
   display: block;
 }
 
-.bip-tabs--vertical {
+:host(.bip-tabs--vertical) {
   display: flex;
   gap: var(--space-4);
 }

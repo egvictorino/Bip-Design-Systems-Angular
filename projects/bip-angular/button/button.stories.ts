@@ -12,6 +12,13 @@ const meta: Meta<BipButton> = {
   },
   render: (args) => ({
     props: args,
+    // `component:` por sí solo NO basta para un selector de atributo (`button[bipButton]`)
+    // combinado con un `render.template` manual — a diferencia de un selector de elemento,
+    // Storybook Angular no infiere qué directiva standalone aplica a un <button> plano acá.
+    // Sin este `moduleMetadata`, `bipButton` queda como un atributo inerte: el botón se ve
+    // sin estilos, con la apariencia nativa del navegador, sin ningún error en consola que
+    // lo delate (ver visual/component-matrix.spec.ts — así se detectó).
+    moduleMetadata: { imports: [BipButton] },
     template: `<button bipButton [variant]="variant" [size]="size" [loading]="loading" [fullWidth]="fullWidth" [disabled]="disabled">Guardar</button>`,
   }),
 };

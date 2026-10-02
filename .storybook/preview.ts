@@ -2,6 +2,12 @@ import type { Preview } from '@storybook/angular-vite';
 import { componentWrapperDecorator } from '@storybook/angular-vite';
 import { BRAND_PRESET_KEYS } from '../projects/bip-angular/foundations/brand-presets';
 import { BipStorybookThemeDecorator } from '../projects/bip-angular/foundations/theme-decorator.component';
+// Hoja de estilos global de la librería (tokens/primitives/themes/density/rtl/base, en ese
+// orden fijo — ver bip.css) — sin este import, ninguna `var(--color-*)`/`var(--space-*)`/
+// `var(--radius-*)` que usan los componentes y las demos de Foundations resuelve a nada:
+// cada story se renderiza sin estilos, sin romper ni avisar (una custom property no
+// resuelta no es un error de CSS, el navegador simplemente no aplica esa declaración).
+import '../projects/bip-angular/styles/bip.css';
 
 const preview: Preview = {
   parameters: {

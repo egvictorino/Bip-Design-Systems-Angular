@@ -1,4 +1,4 @@
-.bip-sidebar-group {
+:host {
   display: block;
   margin-block-end: var(--space-2);
 }

@@ -1,8 +1,8 @@
-.bip-tab-panel {
+:host {
   padding-block-start: var(--space-4);
 }
 
-.bip-tab-panel:focus-visible {
+:host:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }

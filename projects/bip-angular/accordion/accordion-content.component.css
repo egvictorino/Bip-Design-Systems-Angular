@@ -1,10 +1,10 @@
-.bip-accordion-content {
+:host {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows var(--duration-normal) var(--ease-standard);
 }
 
-.bip-accordion-content--open {
+:host(.bip-accordion-content--open) {
   grid-template-rows: 1fr;
 }
 
@@ -14,6 +14,6 @@
   padding-inline: var(--space-4);
 }
 
-.bip-accordion-content--open .bip-accordion-content-inner {
+:host(.bip-accordion-content--open) .bip-accordion-content-inner {
   padding-block-end: var(--space-4);
 }

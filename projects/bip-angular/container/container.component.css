@@ -1,26 +1,26 @@
-.bip-container {
+:host {
   width: 100%;
   margin-inline: auto;
   padding-inline: var(--space-4);
 }
 
 /* max-width en px de la escala BREAKPOINTS (core/utils/breakpoints.ts) */
-.bip-container--max-sm {
+:host(.bip-container--max-sm) {
   max-width: 640px;
 }
 
-.bip-container--max-md {
+:host(.bip-container--max-md) {
   max-width: 768px;
 }
 
-.bip-container--max-lg {
+:host(.bip-container--max-lg) {
   max-width: 1024px;
 }
 
-.bip-container--max-xl {
+:host(.bip-container--max-xl) {
   max-width: 1280px;
 }
 
-.bip-container--max-full {
+:host(.bip-container--max-full) {
   max-width: none;
 }

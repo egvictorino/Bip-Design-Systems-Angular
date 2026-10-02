@@ -1,4 +1,4 @@
-.bip-dropdown-submenu-container {
+:host {
   position: relative;
   display: block;
 }

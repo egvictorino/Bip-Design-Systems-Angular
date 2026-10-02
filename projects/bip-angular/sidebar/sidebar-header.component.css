@@ -1,4 +1,4 @@
-.bip-sidebar-header {
+:host {
   display: flex;
   align-items: center;
   padding: var(--space-4);

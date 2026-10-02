@@ -1,11 +1,11 @@
-.bip-toast-item {
+:host {
   display: block;
   will-change: transform;
   transition: opacity var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out);
   opacity: 0;
 }
 
-.bip-toast-item--in {
+:host(.bip-toast-item--in) {
   opacity: 1;
   transform: translate(0, 0);
   transition-duration: var(--duration-slow);
@@ -13,37 +13,37 @@
 
 /* `position` es físico a propósito, igual que en Toast.module.css de la referencia —
    topLeft pide la esquina física superior-izquierda sin importar `dir`. */
-.bip-toast-item--slide-out-top-left {
+:host(.bip-toast-item--slide-out-top-left) {
   opacity: 0;
   transform: translateX(-1.5rem);
   transition-duration: 250ms;
 }
 
-.bip-toast-item--slide-out-top-center {
+:host(.bip-toast-item--slide-out-top-center) {
   opacity: 0;
   transform: translateY(-0.5rem);
   transition-duration: 250ms;
 }
 
-.bip-toast-item--slide-out-top-right {
+:host(.bip-toast-item--slide-out-top-right) {
   opacity: 0;
   transform: translateX(1.5rem);
   transition-duration: 250ms;
 }
 
-.bip-toast-item--slide-out-bottom-left {
+:host(.bip-toast-item--slide-out-bottom-left) {
   opacity: 0;
   transform: translateX(-1.5rem);
   transition-duration: 250ms;
 }
 
-.bip-toast-item--slide-out-bottom-center {
+:host(.bip-toast-item--slide-out-bottom-center) {
   opacity: 0;
   transform: translateY(0.5rem);
   transition-duration: 250ms;
 }
 
-.bip-toast-item--slide-out-bottom-right {
+:host(.bip-toast-item--slide-out-bottom-right) {
   opacity: 0;
   transform: translateX(1.5rem);
   transition-duration: 250ms;
