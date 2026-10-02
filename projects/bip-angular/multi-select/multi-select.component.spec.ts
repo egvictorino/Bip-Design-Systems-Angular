@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { BipMultiSelect } from './multi-select.component';
 import type { BipMultiSelectOption } from './multi-select.component';
 
@@ -30,6 +30,7 @@ const GROUPED_OPTIONS: BipMultiSelectOption[] = [
       [maxVisibleChips]="maxVisibleChips"
       [showSelectAll]="showSelectAll"
       [loading]="loading"
+      [search]="search"
       [(value)]="value"
     />
   `,
@@ -44,6 +45,7 @@ class HostComponent {
   maxVisibleChips: number | undefined = undefined;
   showSelectAll = false;
   loading = false;
+  search = true;
   value: string[] = [];
 }
 
@@ -247,5 +249,35 @@ describe('BipMultiSelect', () => {
     host.control.disable();
     await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
     expect(screen.getByRole('combobox')).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('filtra ignorando acentos ("mexico" encuentra "México")', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('combobox'));
+    await user.type(screen.getByRole('textbox', { name: 'Buscar opciones' }), 'mexico');
+    expect(screen.getByRole('option', { name: 'México' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Estados Unidos' })).not.toBeInTheDocument();
+  });
+
+  describe('search=false', () => {
+    it('no renderiza el buscador y enfoca la primera opción al abrir', async () => {
+      await render(HostComponent, { componentProperties: { search: false } });
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+      await vi.waitFor(() => expect(screen.getByRole('option', { name: 'México' })).toHaveFocus());
+    });
+
+    it('Shift+Tab desde una opción cierra el panel y devuelve el foco al trigger', async () => {
+      await render(HostComponent, { componentProperties: { search: false } });
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await vi.waitFor(() => expect(screen.getByRole('option', { name: 'México' })).toHaveFocus());
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      expect(screen.getByRole('combobox')).toHaveFocus();
+    });
   });
 });

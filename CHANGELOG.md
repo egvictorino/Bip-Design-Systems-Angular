@@ -8,6 +8,21 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ## [Unreleased]
 
+### Added
+
+- `BipSelect`: input `search` (boolean, default `false`). Convierte el `<select>` nativo en un
+  combobox editable (patrón WAI-ARIA "editable combobox with list autocomplete"): se escribe en
+  el propio campo y las opciones y grupos se filtran en el panel (`BipOverlay`); ↓↑ Enter Escape,
+  `aria-activedescendant`, "Sin resultados" localizado, compatible con `[(value)]` y Forms. Sin
+  `search` el DOM y el comportamiento son idénticos a los anteriores.
+- `BipMultiSelect`: input `search` (boolean, default `true`) para ocultar el buscador del panel.
+- `core/utils`: `matchesSearch()` y `foldSearchText()` (búsqueda sin distinguir mayúsculas ni
+  acentos). Textos i18n `select.options` y `select.noResults` en `esMX` y `enUS`.
+
+### Changed
+
+- `BipMultiSelect`: el filtro del buscador ahora ignora acentos ("mexico" encuentra "México").
+
 ## [0.1.0] - 2026-10-02
 
 ### Added

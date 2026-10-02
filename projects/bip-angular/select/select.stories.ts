@@ -1,3 +1,5 @@
+import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { BipSelect } from './select.component';
 import type { BipSelectOption, BipSelectOptionGroup } from './select.component';
@@ -45,4 +47,39 @@ export const Grouped: Story = {
 
 export const FullWidth: Story = {
   args: { ...Default.args, fullWidth: true },
+};
+
+export const Searchable: Story = {
+  args: { label: 'País', placeholder: 'Escribe para buscar', search: true, options: OPTIONS },
+};
+
+export const SearchableGrouped: Story = {
+  args: { label: 'País', placeholder: 'Escribe para buscar', search: true, groups: GROUPS },
+};
+
+@Component({
+  selector: 'bip-select-search-reactive-forms-demo',
+  imports: [BipSelect, ReactiveFormsModule],
+  template: `
+    <bip-select
+      label="País"
+      placeholder="Escribe para buscar"
+      [search]="true"
+      [options]="options"
+      [formControl]="control"
+      [error]="control.invalid && control.touched"
+      errorMessage="Debes seleccionar un país"
+    />
+  `,
+})
+class SearchReactiveFormsDemo {
+  readonly options = OPTIONS;
+  readonly control = new FormControl('', { validators: Validators.required });
+}
+
+export const SearchableReactiveForms: Story = {
+  render: () => ({
+    moduleMetadata: { imports: [SearchReactiveFormsDemo] },
+    template: `<bip-select-search-reactive-forms-demo />`,
+  }),
 };

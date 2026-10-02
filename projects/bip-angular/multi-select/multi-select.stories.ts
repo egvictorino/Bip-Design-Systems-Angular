@@ -66,3 +66,7 @@ export const Loading: Story = {
 export const FullWidth: Story = {
   args: { ...Default.args, fullWidth: true },
 };
+
+export const WithoutSearch: Story = {
+  args: { ...Default.args, search: false },
+};

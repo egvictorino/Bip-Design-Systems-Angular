@@ -17,6 +17,7 @@ export {
   startOfDay,
 } from './date-helpers';
 export { validateRFC } from './rfc';
+export { foldSearchText, matchesSearch } from './search';
 export { BipCurrencyPipe } from './bip-currency.pipe';
 export { BipDatePipe } from './bip-date.pipe';
 export { bipRfcValidator } from './bip-rfc.validator';

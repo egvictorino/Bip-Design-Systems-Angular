@@ -3,6 +3,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { enUS, provideBipLocale } from '@bip-design-systems/angular/core';
 import { BipSelect } from './select.component';
 import type { BipSelectOption, BipSelectOptionGroup } from './select.component';
 
@@ -31,6 +32,7 @@ const GROUPS: BipSelectOptionGroup[] = [
       [options]="options"
       [groups]="groups"
       [required]="required"
+      [search]="search"
       [(value)]="value"
     />
   `,
@@ -46,7 +48,17 @@ class HostComponent {
   options: BipSelectOption[] = OPTIONS;
   groups: BipSelectOptionGroup[] = [];
   required = false;
+  search = false;
   value = '';
+}
+
+@Component({
+  imports: [BipSelect, ReactiveFormsModule],
+  template: `<bip-select [formControl]="control" label="País" [options]="options" [search]="true" />`,
+})
+class SearchReactiveFormHostComponent {
+  readonly control = new FormControl('', { validators: Validators.required });
+  readonly options = OPTIONS;
 }
 
 @Component({
@@ -154,5 +166,141 @@ describe('BipSelect', () => {
     host.control.disable();
     await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
     expect(screen.getByRole('combobox')).toBeDisabled();
+  });
+
+  describe('search', () => {
+    const search = (extra: Partial<HostComponent> = {}) => ({
+      componentProperties: { search: true, label: 'País', ...extra },
+    });
+
+    it('sin search renderiza el <select> nativo (sin listbox)', async () => {
+      await render(HostComponent);
+      expect(screen.getByRole('combobox').tagName).toBe('SELECT');
+    });
+
+    it('con search renderiza un <input> combobox asociado a su label', async () => {
+      await render(HostComponent, search());
+      const combobox = screen.getByRole('combobox', { name: 'País' });
+      expect(combobox.tagName).toBe('INPUT');
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).toHaveAttribute('aria-autocomplete', 'list');
+    });
+
+    it('abre el listbox al hacer click y marca aria-expanded', async () => {
+      await render(HostComponent, search());
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+      expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
+      expect(screen.getAllByRole('option')).toHaveLength(3);
+    });
+
+    it('filtra las opciones al escribir, ignorando acentos', async () => {
+      await render(HostComponent, search());
+      const user = userEvent.setup();
+      await user.type(screen.getByRole('combobox'), 'mexico');
+      expect(screen.getByRole('option', { name: 'México' })).toBeInTheDocument();
+      expect(screen.queryByRole('option', { name: 'Estados Unidos' })).not.toBeInTheDocument();
+    });
+
+    it('muestra "Sin resultados" cuando nada coincide', async () => {
+      await render(HostComponent, search());
+      const user = userEvent.setup();
+      await user.type(screen.getByRole('combobox'), 'zzz');
+      expect(screen.getByText('Sin resultados')).toBeInTheDocument();
+    });
+
+    it('usa los textos del locale activo', async () => {
+      await render(HostComponent, { ...search(), providers: [provideBipLocale(enUS)] });
+      const user = userEvent.setup();
+      await user.type(screen.getByRole('combobox'), 'zzz');
+      expect(screen.getByText('No results')).toBeInTheDocument();
+    });
+
+    it('filtra grupos y oculta los que quedan vacíos', async () => {
+      await render(HostComponent, search({ options: [], groups: GROUPS }));
+      const user = userEvent.setup();
+      await user.type(screen.getByRole('combobox'), 'espa');
+      expect(screen.getByRole('option', { name: 'España' })).toBeInTheDocument();
+      expect(screen.getByText('Europa')).toBeInTheDocument();
+      expect(screen.queryByText('América')).not.toBeInTheDocument();
+    });
+
+    it('selecciona con click, actualiza [(value)] y muestra el label elegido', async () => {
+      const { fixture } = await render(HostComponent, search());
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.click(screen.getByRole('option', { name: 'Estados Unidos' }));
+      expect(fixture.componentInstance.value).toBe('us');
+      expect(screen.getByRole('combobox')).toHaveValue('Estados Unidos');
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('no selecciona una opción deshabilitada', async () => {
+      const { fixture } = await render(HostComponent, search());
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.click(screen.getByRole('option', { name: 'Canadá' }));
+      expect(fixture.componentInstance.value).toBe('');
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+    });
+
+    it('↓ mueve la opción activa saltando las deshabilitadas y Enter la elige', async () => {
+      const { fixture } = await render(HostComponent, search());
+      const user = userEvent.setup();
+      const combobox = screen.getByRole('combobox');
+      await user.click(combobox);
+      const mx = screen.getByRole('option', { name: 'México' });
+      const us = screen.getByRole('option', { name: 'Estados Unidos' });
+      expect(combobox).toHaveAttribute('aria-activedescendant', mx.id);
+      await user.keyboard('{ArrowDown}');
+      expect(combobox).toHaveAttribute('aria-activedescendant', us.id);
+      await user.keyboard('{ArrowDown}'); // Canadá deshabilitada: se queda en el borde
+      expect(combobox).toHaveAttribute('aria-activedescendant', us.id);
+      await user.keyboard('{Enter}');
+      expect(fixture.componentInstance.value).toBe('us');
+      expect(combobox).toHaveFocus();
+    });
+
+    it('Escape cierra y descarta lo escrito, restaurando el label elegido', async () => {
+      await render(HostComponent, search({ value: 'mx' }));
+      const user = userEvent.setup();
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toHaveValue('México');
+      await user.clear(combobox);
+      await user.type(combobox, 'est');
+      await user.keyboard('{Escape}');
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      expect(combobox).toHaveValue('México');
+    });
+
+    it('conserva aria-invalid y aria-describedby con error', async () => {
+      await render(HostComponent, search({ error: true, errorMessage: 'Requerido' }));
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toHaveAttribute('aria-invalid', 'true');
+      expect(combobox).toHaveAccessibleDescription('Requerido');
+    });
+
+    it('FormControl: propaga el valor y marca touched solo al salir del campo', async () => {
+      const host = new SearchReactiveFormHostComponent();
+      await render(SearchReactiveFormHostComponent, { componentProperties: { control: host.control } });
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.click(screen.getByRole('option', { name: 'México' }));
+      expect(host.control.value).toBe('mx');
+      expect(host.control.touched).toBe(false);
+      await user.tab();
+      expect(host.control.touched).toBe(true);
+    });
+
+    it('FormControl: writeValue() refleja el valor y disabled deshabilita el input', async () => {
+      const host = new SearchReactiveFormHostComponent();
+      host.control.setValue('us');
+      host.control.disable();
+      await render(SearchReactiveFormHostComponent, { componentProperties: { control: host.control } });
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toHaveValue('Estados Unidos');
+      expect(combobox).toBeDisabled();
+    });
   });
 });

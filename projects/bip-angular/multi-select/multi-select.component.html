@@ -89,20 +89,22 @@
 
 <ng-template #panelTemplate>
   <div class="bip-multi-select-panel" tabindex="-1" (keydown.escape)="onPanelEscape($event)">
-    <div class="bip-multi-select-search-wrapper">
-      <input
-        #searchInputRef
-        type="text"
-        class="bip-multi-select-search-input"
-        [attr.aria-label]="locale().multiSelect.search"
-        [attr.aria-controls]="listboxId"
-        aria-autocomplete="list"
-        [placeholder]="searchPlaceholder() || locale().multiSelect.searchPlaceholder"
-        [value]="query()"
-        (input)="onSearchInput($any($event.target).value)"
-        (keydown)="onSearchKeydown($event)"
-      />
-    </div>
+    @if (search()) {
+      <div class="bip-multi-select-search-wrapper">
+        <input
+          #searchInputRef
+          type="text"
+          class="bip-multi-select-search-input"
+          [attr.aria-label]="locale().multiSelect.search"
+          [attr.aria-controls]="listboxId"
+          aria-autocomplete="list"
+          [placeholder]="searchPlaceholder() || locale().multiSelect.searchPlaceholder"
+          [value]="query()"
+          (input)="onSearchInput($any($event.target).value)"
+          (keydown)="onSearchKeydown($event)"
+        />
+      </div>
+    }
 
     @if (loading()) {
       <div class="bip-multi-select-loading" aria-live="polite" [attr.aria-label]="locale().multiSelect.loading">
