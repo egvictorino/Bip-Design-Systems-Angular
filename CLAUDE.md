@@ -39,7 +39,7 @@ dependencia:
 | Estilos            | CSS plano por componente (`styleUrl`), `ViewEncapsulation.Emulated` (equivalente a CSS Modules). Tokens vía CSS custom properties. **Sin Tailwind, sin SCSS**                                                                                                                                                                                                                                                                            |
 | Tests unitarios    | Vitest vía `@angular/build:unit-test` + `@testing-library/angular` + `@testing-library/user-event` + `@testing-library/jest-dom` + `axe-core` (vitest-axe o jest-axe)                                                                                                                                                                                                                                                                    |
 | Docs               | Storybook para Angular (`@storybook/angular`), CSF3                                                                                                                                                                                                                                                                                                                                                                                      |
-| Visual / a11y real | Playwright + `@axe-core/playwright`, **solo en Docker** (imagen `mcr.microsoft.com/playwright:vX-jammy` fijada a la versión de `@playwright/test`)                                                                                                                                                                                                                                                                                       |
+| Visual / a11y real | Playwright + `@axe-core/playwright`, **solo en Docker** (imagen `mcr.microsoft.com/playwright:vX-noble` fijada a la versión de `@playwright/test`; la imagen trae su propio Node, no el 22 LTS que este repo fija — `scripts/visual-docker.sh` instala un Node 22 propio dentro del contenedor, ver Bloque 11)                                                                                                                                                                                                                                                                                       |
 | Lint               | `angular-eslint` (prefijo `bip` obligatorio en selectores), ESLint flat config, Prettier                                                                                                                                                                                                                                                                                                                                                 |
 | Versionado         | Changesets + `CHANGELOG.md` curado a mano (Keep a Changelog)                                                                                                                                                                                                                                                                                                                                                                             |
 
@@ -244,32 +244,87 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 
 - **Terminado cuando:** cumple la DoD.
 
-### Bloque 11 — Calidad end-to-end
+### Bloque 11 — Calidad end-to-end ✅
 
-(La infraestructura se puede arrancar desde el Bloque 4 para ir agregando baselines; se **cierra** aquí.)
+Hallazgos completos y estado final en `docs/reviews/bloque-11.md`. Decisiones que divergieron
+del plan original o que vale la pena dejar escritas para quien toque esto después:
 
-- `visual/theme-matrix.spec.ts`: square/rounded × light/dark, brand custom, Foundations/Colors (timeout 15s en ese screenshot), Radius, SideBySide, PortalTheming, SystemColorScheme, SideBySide con `&globals=dir:rtl`. No screenshotear UncontrolledWithPersistence.
-- `visual/component-matrix.ts` (manifiesto único; storyIds sacados de `http://localhost:6006/index.json`, nunca calculados a mano) + `component-matrix.spec.ts` (screenshot de `#storybook-root`, + RTL para los marcados) con coverage guard.
-- `visual/a11y-browser.spec.ts`: mismo manifiesto, `AxeBuilder` con reglas default (incluye `color-contrast`) en light y dark.
-- `scripts/visual-docker.sh` + `pnpm test:visual:docker [--update-snapshots]`: imagen Playwright fijada a la versión exacta de `@playwright/test` (el script aborta si difieren), `--platform linux/amd64`, `node_modules` como volúmenes anónimos. Baselines **solo Linux** (`-chromium-linux.png`), nunca generar nativo en macOS.
-- `e2e/`: `scripts/e2e-consumer.sh` → build librería → `pnpm pack` (desde `dist/bip-angular`) → app Angular limpia en `e2e/consumer-app` (fuera del workspace, `pnpm-workspace.yaml` con `packages: []`) que instala el **tarball** → `ng build` → servir → Playwright verifica: background de `bipButton` = hex de `--color-primary`, `border-radius` distinto entre square/rounded, overlay hereda theme, sin errores de consola. Además un build **SSR** del consumer para verificar que nada toca `window` en servidor.
-- `publint`, `@arethetypeswrong/cli`, `size-limit` por entry point.
+- `visual/theme-matrix.spec.ts`: square/rounded × light/dark en una sola story
+  (`ColorSchemesMatrix`, nueva — `colorScheme` no se hereda entre `<bip-theme-provider>`
+  anidados, a diferencia de `density`/`dir`, así que `SideBySide` con el global del toolbar no
+  sirve para esto), brand custom, Foundations/Colors (timeout 15s), Radius, PortalTheming,
+  SystemColorScheme, SideBySide con `&globals=dir:rtl`. No screenshotear
+  UncontrolledWithPersistence.
+  - **Gotcha real:** `fullPage: true` oscilaba indefinidamente entre dos alturas exactas en
+    Foundations/Colors y Radius (nunca convergía, ni a 30s) — el propio mecanismo interno de
+    Playwright reajustando el viewport entre pasadas. Se evita con
+    `page.setViewportSize({ height: await page.evaluate(() => document.body.scrollHeight) })`
+    + screenshot sin `fullPage`, en vez de subir el timeout a ciegas.
+- `visual/component-matrix.ts` (manifiesto único; storyIds sacados de `storybook-static/index.json`
+  tras `pnpm build-storybook`, nunca calculados a mano) + `component-matrix.spec.ts` (screenshot
+  de `#storybook-root`, + RTL para los marcados) con coverage guard.
+- `visual/a11y-browser.spec.ts`: mismo manifiesto, `AxeBuilder` con reglas default (incluye
+  `color-contrast`) en light y dark.
+  - **Gotcha real:** el addon-a11y de Storybook inyecta su propia copia de axe-core en cada
+    iframe de preview (confirmado: `window.axe` existe ya al cargar `/iframe.html` directo, sin
+    manager) — choca con `@axe-core/playwright` ("Axe is already running"). `manual: true` en
+    `parameters.a11y` (`.storybook/preview.ts`) + borrar `window.axe` antes de cada `analyze()`
+    + un reintento acotado a ese error específico lo deja estable.
+- `.storybook/preview.ts` **debe** importar `styles/bip.css` — sin eso ninguna `var(--color-*)`
+  resuelve en ninguna story (se descubrió en este bloque que nunca se había importado desde el
+  Bloque 0; todas las stories de los Bloques 4-10 se habían visto sin estilos hasta ahora).
+- `webServer` de `playwright.visual.config.ts` sirve un Storybook **estático**
+  (`build-storybook` + `http-server`), no `storybook dev` — compilar Angular en modo dev bajo
+  emulación `linux/amd64` es lento y menos determinista que servir un build ya hecho.
+- `scripts/visual-docker.sh` + `pnpm test:visual:docker [--update-snapshots]`: imagen Playwright
+  fijada a la versión exacta de `@playwright/test` (el script aborta si difieren),
+  `--platform linux/amd64`, `node_modules` como volúmenes anónimos. La imagen trae su propio
+  Node (no el 22 LTS que este repo fija) — el script descarga e instala un Node 22 LTS propio
+  dentro del contenedor antes de `pnpm install`. Baselines **solo Linux** (`-chromium-linux.png`),
+  nunca generar nativo en macOS.
+- `e2e/`: `scripts/e2e-consumer.sh` → build librería → `pnpm pack` (desde `dist/bip-angular`) →
+  app Angular limpia en `e2e/consumer-app` (fuera del workspace, `pnpm-workspace.yaml` con
+  `packages: []`) que instala el **tarball** → `ng build` (SSR real, `RenderMode.Server`, no
+  Prerender) → servir con Express en `:4000` → Playwright verifica: background de `bipButton` =
+  hex de `--color-primary`, `border-radius` distinto entre square/rounded, overlay hereda theme,
+  SSR sirve el árbol completo (no solo el shell), sin errores de consola.
+  - **Gotcha real:** sin `security.allowedHosts` en el `angular.json` del consumer, la
+    protección SSRF de `@angular/ssr` rechaza el header `Host` y Angular cae en silencio a un
+    shell `<app-root></app-root>` vacío — sin error HTTP, solo un warning en el log del server.
+    `security.allowedHosts: ["*"]` lo resuelve (razonable para un smoke test local, no para un
+    deploy real).
+- Paquete publicado: `package.json#exports` necesita `"./styles/*": "./styles/*"` a mano (ng-packagr
+  no lo genera solo a partir de `ng-package.json#assets`) y `sideEffects: ["**/*.css"]` en vez de
+  `false`, para que un consumidor pueda `"styles": ["@bip-design-systems/angular/styles/bip.css"]`
+  en su `angular.json`. `pnpm lint:package` = `publint` + `attw --profile esm-only
+  --exclude-entrypoints "styles/*" --ignore-rules no-resolution internal-resolution-error
+  cjs-resolves-to-esm` (attw no sabe analizar un export wildcard a CSS como módulo JS/TS; node10 y
+  "require" no aplican a un paquete ESM-only a propósito). `pnpm size` = `size-limit` generado por
+  `scripts/generate-size-limit.cjs` (un entry por FESM + CSS, correr tras `pnpm build` cuando el
+  tamaño cambie a propósito).
 - Revisión de buenas prácticas de Angular y arquitectura limpia sobre toda la librería: uso
   consistente de signals/`OnPush`/standalone (sin regresiones a patrones pre-signal), límites
   claros entre `core` y los componentes (nada de imports cruzados entre secondary entries que no
   sea a través de `core`), ausencia de lógica duplicada que debería vivir en un helper compartido,
   nombres/selectores consistentes con la tabla de traducción React→Angular del CLAUDE.md, y
   cohesión de cada secondary entry (un componente no debería depender de detalles internos de
-  otro). Documentar hallazgos y corregir antes de cerrar el bloque.
-- Security review de la librería y su tooling (`/security-review` o equivalente): sanitización
-  en cualquier punto que inserte HTML/URLs dinámicos (p. ej. `href` en Breadcrumb/Navbar/Sidebar,
-  contenido de Tooltip/Popover/Toast), uso seguro de `DomSanitizer` si llega a introducirse,
-  revisión de dependencias (`pnpm audit`, `dependency-review.yml`), y que ningún script de
-  build/CI ejecute contenido no confiable. Documentar hallazgos y corregir antes de cerrar el
-  bloque.
+  otro). **Hallazgo mayor:** 44 componentes nunca aplicaban su propio CSS de host — bajo
+  `ViewEncapsulation.Emulated`, un selector plano (`.bip-x { }`) en el `*.component.css` de un
+  componente nunca matchea su propio elemento host (que lleva `_nghost-xxx`, no el
+  `_ngcontent-xxx` que Angular le pone a esos selectores) — hace falta `:host { }` /
+  `:host(.bip-x--variant) { }`. Nunca detectado antes porque Vitest/jsdom no aplica cascada CSS
+  real y Storybook nunca cargó `bip.css` (ver arriba) — la primera vez que algo de esta librería
+  se vio en un navegador real con estilos fue al construir `visual/`. Documentado y corregido.
+- Security review de la librería y su tooling: sanitización en cualquier punto que inserte
+  HTML/URLs dinámicos, uso seguro de `DomSanitizer`, revisión de dependencias (`pnpm audit`,
+  `dependency-review.yml`), y que ningún script de build/CI ejecute contenido no confiable.
+  Hallazgos reales corregidos: escape de `getThemeInitScript()` (permitía escapar de
+  `</script>`), `cssVars` sin sanitizar en un `[style]`, validación de tipo/tamaño de archivo en
+  `odontogram/ImagePopover`, inyección de script en `pr-validation.yml` vía `head_ref`
+  interpolado, 2 vulnerabilidades de `pnpm audit` (resueltas con `pnpm.overrides`).
 - **Terminado cuando:** `pnpm test:visual:docker` y `pnpm test:e2e` en verde, ya sin violaciones
   de contraste, y las revisiones de buenas prácticas Angular/arquitectura limpia y de seguridad
-  completas sin hallazgos abiertos.
+  completas sin hallazgos abiertos. ✅ Cumplido — ver `docs/reviews/bloque-11.md`.
 
 ### Bloque 12 — CI/CD, versionado y publicación
 
@@ -310,7 +365,7 @@ Sin estado complejo; validan el patrón base. (Orden sugerido = orden de la list
 - [x] Bloque 8 — Selección avanzada y fechas (5)
 - [x] Bloque 9 — Datos (2)
 - [x] Bloque 10 — Odontogram
-- [ ] Bloque 11 — Calidad end-to-end
+- [x] Bloque 11 — Calidad end-to-end
 - [ ] Bloque 12 — CI/CD, versionado y publicación
 
 ## Inventario completo de la referencia (checklist de paridad)
@@ -344,6 +399,8 @@ pnpm format / pnpm format:check
 pnpm storybook          # http://localhost:6006
 pnpm build-storybook
 pnpm changeset
-pnpm test:visual:docker [--update-snapshots]   # nunca test:visual nativo — llega en el Bloque 11
-pnpm test:e2e                                   # llega en el Bloque 11
+pnpm test:visual:docker [--update-snapshots]   # nunca test:visual nativo (Docker-only, ver Bloque 11)
+pnpm test:e2e                                   # build + pack + consumer-app + SSR + Playwright
+pnpm lint:package                               # publint + attw sobre dist/bip-angular (tras pnpm build)
+pnpm size                                       # size-limit — node scripts/generate-size-limit.cjs para regenerar límites
 ```
