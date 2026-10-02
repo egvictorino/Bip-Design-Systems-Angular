@@ -49,3 +49,13 @@ aquí llega a todas las apps que la usan. Revisa en este orden.
 
 `pnpm lint && pnpm typecheck && pnpm test && pnpm build` (+ `pnpm lint:package` si toca el
 paquete, `pnpm audit` si toca dependencias, `pnpm test:e2e` si toca SSR/exports).
+
+## 7. Mantener CLAUDE.md y AGENTS.md compactos
+
+Se cargan en cada sesión: cada línea cuesta tokens siempre.
+
+- Solo reglas vigentes y accionables, en una línea y sin explicar el porqué.
+- Sin duplicar entre archivos ni lo que un guard o el código ya hace cumplir.
+- Sin historial, bloques cerrados, hallazgos ni gotchas resueltos: eso va en `docs/`.
+- Listas en vez de tablas (Prettier las rellena de espacios).
+- Al agregar una regla, quita o fusiona una obsoleta. Metas: CLAUDE.md ≤ 12 KB, AGENTS.md ≤ 3.5 KB.
