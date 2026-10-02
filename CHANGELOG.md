@@ -18,10 +18,25 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 - `BipMultiSelect`: input `search` (boolean, default `true`) para ocultar el buscador del panel.
 - `core/utils`: `matchesSearch()` y `foldSearchText()` (búsqueda sin distinguir mayúsculas ni
   acentos). Textos i18n `select.options` y `select.noResults` en `esMX` y `enUS`.
+- `BipSelect`: búsqueda remota con `externalFilter` (no filtra internamente; el consumidor
+  reemplaza `options()`), salida `searchQuery` (emite lo escrito y `''` al cerrar) e input
+  `loading` (oculta las opciones, `aria-busy` en el campo y región `aria-live="polite"` con
+  "Cargando..."). La opción elegida conserva su label aunque ya no esté en `options()` (se recuerda
+  la última elegida; un valor inicial debe venir en la primera carga).
+- `BipSelect`: input `clearable` (default `false`, solo con `search`). Botón con `aria-label`
+  localizado, visible con valor y sin `disabled`; limpia a `''`, emite el cambio y devuelve el foco.
+  Escape con el panel cerrado también limpia.
+- `core/utils`: `firstEnabledIndex()` y `nextEnabledIndex()`. i18n `select.loading`,
+  `select.loadingText` y `select.clear` en `esMX` y `enUS`.
 
 ### Changed
 
 - `BipMultiSelect`: el filtro del buscador ahora ignora acentos ("mexico" encuentra "México").
+
+### Fixed
+
+- `BipSelect`: padding del campo con propiedades lógicas; en RTL el texto se montaba sobre el
+  chevron.
 
 ## [0.1.0] - 2026-10-02
 

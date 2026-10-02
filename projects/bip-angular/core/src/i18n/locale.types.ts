@@ -149,6 +149,9 @@ export interface BipLocale {
   select: {
     options: string;
     noResults: string;
+    loading: string;
+    loadingText: string;
+    clear: string;
   };
 
   navbar: {

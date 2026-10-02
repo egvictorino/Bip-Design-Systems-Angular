@@ -186,6 +186,9 @@ export const esMX: BipLocale = {
   select: {
     options: 'Opciones',
     noResults: 'Sin resultados',
+    loading: 'Cargando opciones',
+    loadingText: 'Cargando...',
+    clear: 'Limpiar selección',
   },
 
   navbar: {

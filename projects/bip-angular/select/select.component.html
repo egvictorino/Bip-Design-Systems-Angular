@@ -9,6 +9,7 @@
 <div #containerRef class="bip-select-container">
   @if (search()) {
     <input
+      #searchInputRef
       [id]="fieldId"
       type="text"
       role="combobox"
@@ -24,6 +25,7 @@
       [attr.aria-controls]="isOpen() ? listboxId : null"
       [attr.aria-activedescendant]="activeOptionId()"
       [attr.aria-invalid]="hasError() || null"
+      [attr.aria-busy]="loading() || null"
       [attr.aria-describedby]="messageId()"
       (input)="onSearchInput($any($event.target).value)"
       (click)="onSearchClick()"
@@ -70,6 +72,31 @@
       }
     </select>
   }
+  @if (showClear()) {
+    <button
+      type="button"
+      class="bip-select-clear"
+      tabindex="-1"
+      [attr.aria-label]="locale().select.clear"
+      (mousedown)="keepFocus($event)"
+      (click)="clear()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+  }
   <span
     [class]="chevronClass()"
     [class.bip-select-chevron--clickable]="search()"
@@ -108,49 +135,64 @@
       role="listbox"
       [attr.aria-label]="label() || locale().select.options"
     >
-      @for (entry of visible().loose; track entry.id) {
-        <button
-          type="button"
-          [id]="entry.id"
-          class="bip-select-option"
-          [class.bip-select-option--active]="entry.index === activeIndex()"
-          [class.bip-select-option--selected]="entry.option.value === value()"
-          [class.bip-select-option--disabled]="entry.disabled"
-          role="option"
-          tabindex="-1"
-          [attr.aria-selected]="entry.option.value === value()"
-          [attr.aria-disabled]="entry.disabled || null"
-          (click)="selectEntry(entry)"
-        >
-          {{ entry.option.label }}
-        </button>
-      }
-      @for (group of visible().groups; track group.id) {
-        <div role="group" [attr.aria-labelledby]="group.id">
-          <div [id]="group.id" class="bip-select-group-header" role="presentation">
-            {{ group.label }}
+      @if (!loading()) {
+        @for (entry of visible().loose; track entry.id) {
+          <button
+            type="button"
+            [id]="entry.id"
+            class="bip-select-option"
+            [class.bip-select-option--active]="entry.index === activeIndex()"
+            [class.bip-select-option--selected]="entry.option.value === value()"
+            [class.bip-select-option--disabled]="entry.disabled"
+            role="option"
+            tabindex="-1"
+            [attr.aria-selected]="entry.option.value === value()"
+            [attr.aria-disabled]="entry.disabled || null"
+            (click)="selectEntry(entry)"
+          >
+            {{ entry.option.label }}
+          </button>
+        }
+        @for (group of visible().groups; track group.id) {
+          <div role="group" [attr.aria-labelledby]="group.id">
+            <div [id]="group.id" class="bip-select-group-header" role="presentation">
+              {{ group.label }}
+            </div>
+            @for (entry of group.entries; track entry.id) {
+              <button
+                type="button"
+                [id]="entry.id"
+                class="bip-select-option"
+                [class.bip-select-option--active]="entry.index === activeIndex()"
+                [class.bip-select-option--selected]="entry.option.value === value()"
+                [class.bip-select-option--disabled]="entry.disabled"
+                role="option"
+                tabindex="-1"
+                [attr.aria-selected]="entry.option.value === value()"
+                [attr.aria-disabled]="entry.disabled || null"
+                (click)="selectEntry(entry)"
+              >
+                {{ entry.option.label }}
+              </button>
+            }
           </div>
-          @for (entry of group.entries; track entry.id) {
-            <button
-              type="button"
-              [id]="entry.id"
-              class="bip-select-option"
-              [class.bip-select-option--active]="entry.index === activeIndex()"
-              [class.bip-select-option--selected]="entry.option.value === value()"
-              [class.bip-select-option--disabled]="entry.disabled"
-              role="option"
-              tabindex="-1"
-              [attr.aria-selected]="entry.option.value === value()"
-              [attr.aria-disabled]="entry.disabled || null"
-              (click)="selectEntry(entry)"
-            >
-              {{ entry.option.label }}
-            </button>
-          }
-        </div>
+        }
+        @if (visible().entries.length === 0) {
+          <div class="bip-select-no-results" role="presentation">
+            {{ locale().select.noResults }}
+          </div>
+        }
       }
-      @if (visible().entries.length === 0) {
-        <div class="bip-select-no-results" role="presentation">{{ locale().select.noResults }}</div>
+    </div>
+    <div
+      class="bip-select-loading"
+      role="status"
+      aria-live="polite"
+      [attr.aria-label]="locale().select.loading"
+    >
+      @if (loading()) {
+        <span class="bip-select-spinner" aria-hidden="true"></span>
+        {{ locale().select.loadingText }}
       }
     </div>
   </div>
