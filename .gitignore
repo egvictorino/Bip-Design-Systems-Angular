@@ -42,6 +42,7 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 *.log
-.claude/
+.claude/*
+!.claude/agents/
 
 *storybook.log
