@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build bip-angular",
+    "build": "ng build bip-angular && node scripts/copy-license.cjs",
     "watch": "ng build bip-angular --watch --configuration development",
     "test": "ng test bip-angular",
     "test:watch": "ng test bip-angular --watch",

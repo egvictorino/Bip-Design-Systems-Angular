@@ -1,0 +1,51 @@
+name: Bug Report
+description: Reportar un error en @bip-design-systems/angular
+labels: ['bug']
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Versión
+      placeholder: 'ej. 0.1.0'
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Componente afectado
+      placeholder: 'ej. bip-modal, bipButton, core/theme'
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del bug
+      description: Qué esperabas que pasara y qué pasó en realidad.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Pasos para reproducir
+      description: Idealmente un enlace a un repro mínimo (StackBlitz) o un fragmento de código.
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Entorno
+      placeholder: |
+        - Angular: 21.2.0
+        - zone.js o zoneless: ...
+        - SSR: sí/no
+        - Navegador/Node: ...
+        - SO: ...
+    validations:
+      required: false

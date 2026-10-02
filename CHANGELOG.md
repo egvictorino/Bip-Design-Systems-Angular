@@ -10,6 +10,13 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- CI/CD y publicación (Bloque 12): workflows `dev.yml`, `qa.yml`, `production.yml` (publica en
+  npm con provenance desde `dist/bip-angular`, Storybook a GitHub Pages, GitHub Release con el
+  cuerpo extraído de este CHANGELOG), `codeql.yml` y `dependency-review.yml`;
+  `pr-validation.yml` suma `typecheck`, el job `visual-regression` (container Playwright) y
+  `security-audit` hacia `qa`. `CONTRIBUTING.md` (incluye el proceso de release),
+  `SECURITY.md`, `CODE_OF_CONDUCT.md`, `CODEOWNERS`, plantillas de PR e issues, README raíz y
+  README de consumo del paquete. Sin Dependabot, por decisión del dueño del repo.
 - Calidad end-to-end (Bloque 11, bloque completo): regresión visual real contra Docker
   (`visual/component-matrix.spec.ts` + `visual/theme-matrix.spec.ts`, 78 baselines Linux de las
   50 secondary entries en LTR y las 20 con geometría direccional también en RTL) y a11y en
@@ -27,6 +34,11 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Changed
 
+- `package.json` del paquete: `repository`, `homepage`, `bugs`, `keywords` y
+  `publishConfig.access: public` (`repository` es requisito de `npm publish --provenance`).
+  `pnpm build` copia el `LICENSE` a `dist/bip-angular` (`scripts/copy-license.cjs`: ng-packagr
+  no permite assets fuera de la raíz del proyecto).
+- `release/*` pasa a ser un origen válido hacia `dev` y queda exento de `changeset-check`.
 - `package.json#exports` agrega `"./styles/*": "./styles/*"` y `sideEffects` pasa de `false` a
   `["**/*.css"]` — sin esto, `"@bip-design-systems/angular/styles/bip.css"` en el `angular.json`
   de un consumidor (especificador de paquete, no ruta relativa a `node_modules`) no resolvía.
@@ -120,7 +132,7 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   del `render`/`header` por función de la referencia React. Añadido `ariaLabel` a `BipCheckbox`
   (Bloque 5) para los checkboxes de selección de `BipDataTable`, que no tienen label visible.
   **Fix de accesibilidad en `BipTableHeader`:** el binding de host `'(click)': 'sortable() &&
-  sort.emit()'` evaluaba a `false` en encabezados no ordenables, y Angular interpreta que un
+sort.emit()'` evaluaba a `false` en encabezados no ordenables, y Angular interpreta que un
   listener de evento que evalúa a `false` pide `preventDefault()` — cancelando silenciosamente
   el toggle nativo de cualquier checkbox/control interactivo proyectado dentro (como el
   checkbox de "seleccionar todo" de `BipDataTable`). Reemplazado por un método que no retorna
@@ -177,32 +189,32 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   `type="single"|"multiple"`, normalizado internamente a `Set<string>`; sin navegación por
   flechas entre encabezados, solo tabulación nativa; `BipAccordionContent` siempre en el DOM,
   abre/cierra con transición de `grid-template-rows` en vez de medir altura en JS). `BipStepper`
-  + `BipStepperStep` (totalmente controlado, `value` como `model.required()`; un `variant` de
-  estado explícito — danger/success/warning/loading — desplaza al indicador activo/completado
-  con prioridad loading>error>warning>success>completado>número; el paso activo es un `<div
-  aria-current="step">` no interactivo, los demás son `<button>` cuyas flechas saltan el valor
-  activo ±1 directamente, no es roving focus; fix de a11y: el marcador siempre lleva
-  `aria-label` para no quedar sin nombre accesible cuando muestra un icono en vez del número).
-  `BipNavbar` + `BipNavbarBrand`/`BipNavbarNav`/`BipNavbarItem`/`BipNavbarActions` (apertura del
-  panel móvil puramente interna, sin input/output, como React; a diferencia de la referencia,
-  que mantiene dos árboles de nav/actions duplicados por un efecto para alimentar un panel móvil
-  separado, aquí se proyecta una sola vez dentro de un panel cuyo layout cambia por CSS — barra
-  horizontal en desktop, dropdown vertical en mobile; `inert` solo se activa bajo el breakpoint
-  `md` y con el panel cerrado, decidido vía `BreakpointObserver`, nunca solo CSS; `BipNavbarItem`
-  decide `<a routerLink>`/`<a href>`/`<button>` según props, flechas ←→/Home/End navegan dentro
-  del mismo `<bip-navbar-nav>`). `BipSidebar` + `BipSidebarHeader`/`BipSidebarBrand`/
-  `BipSidebarContent`/`BipSidebarGroup`/`BipSidebarGroupLabel`/`BipSidebarItem`/
-  `BipSidebarSubMenu`/`BipSidebarFooter`/`BipSidebarTrigger` (ejes `open` drawer móvil y
-  `collapsed` riel de iconos independientes, ambos `model()`; drawer móvil con overlay +
-  `cdkTrapFocus` solo mientras `open` — mejora sobre React, que no atrapaba foco ahí — + Escape;
-  slide-in con `--rtl-x`; `BipSidebarContent` es un landmark de navegación propio, separado del
-  aside; `BipSidebarItem` recibe `label` como input explícito — Angular no puede leer texto
-  proyectado como string — que sirve de nombre accesible, tooltip y texto visible a la vez, con
-  `aria-label` que incluye el conteo del badge colapsado vía la nueva clave de locale
-  `sidebar.badgeCount()` (fix de un hardcodeo en español de la referencia React);
-  `BipSidebarSubMenu` colapsado muestra solo el ícono con tooltip, sin flyout, y se auto-cierra
-  si el sidebar colapsa; flechas ↑↓/Home/End navegan por todo el sidebar recortando en los
-  extremos — clamp, no wrap — fiel a `navigateSidebarItems()` de React).
+  - `BipStepperStep` (totalmente controlado, `value` como `model.required()`; un `variant` de
+    estado explícito — danger/success/warning/loading — desplaza al indicador activo/completado
+    con prioridad loading>error>warning>success>completado>número; el paso activo es un `<div
+aria-current="step">` no interactivo, los demás son `<button>` cuyas flechas saltan el valor
+    activo ±1 directamente, no es roving focus; fix de a11y: el marcador siempre lleva
+    `aria-label` para no quedar sin nombre accesible cuando muestra un icono en vez del número).
+    `BipNavbar` + `BipNavbarBrand`/`BipNavbarNav`/`BipNavbarItem`/`BipNavbarActions` (apertura del
+    panel móvil puramente interna, sin input/output, como React; a diferencia de la referencia,
+    que mantiene dos árboles de nav/actions duplicados por un efecto para alimentar un panel móvil
+    separado, aquí se proyecta una sola vez dentro de un panel cuyo layout cambia por CSS — barra
+    horizontal en desktop, dropdown vertical en mobile; `inert` solo se activa bajo el breakpoint
+    `md` y con el panel cerrado, decidido vía `BreakpointObserver`, nunca solo CSS; `BipNavbarItem`
+    decide `<a routerLink>`/`<a href>`/`<button>` según props, flechas ←→/Home/End navegan dentro
+    del mismo `<bip-navbar-nav>`). `BipSidebar` + `BipSidebarHeader`/`BipSidebarBrand`/
+    `BipSidebarContent`/`BipSidebarGroup`/`BipSidebarGroupLabel`/`BipSidebarItem`/
+    `BipSidebarSubMenu`/`BipSidebarFooter`/`BipSidebarTrigger` (ejes `open` drawer móvil y
+    `collapsed` riel de iconos independientes, ambos `model()`; drawer móvil con overlay +
+    `cdkTrapFocus` solo mientras `open` — mejora sobre React, que no atrapaba foco ahí — + Escape;
+    slide-in con `--rtl-x`; `BipSidebarContent` es un landmark de navegación propio, separado del
+    aside; `BipSidebarItem` recibe `label` como input explícito — Angular no puede leer texto
+    proyectado como string — que sirve de nombre accesible, tooltip y texto visible a la vez, con
+    `aria-label` que incluye el conteo del badge colapsado vía la nueva clave de locale
+    `sidebar.badgeCount()` (fix de un hardcodeo en español de la referencia React);
+    `BipSidebarSubMenu` colapsado muestra solo el ícono con tooltip, sin flyout, y se auto-cierra
+    si el sidebar colapsa; flechas ↑↓/Home/End navegan por todo el sidebar recortando en los
+    extremos — clamp, no wrap — fiel a `navigateSidebarItems()` de React).
 - Overlays y feedback (Bloque 6): 7 componentes, todos vía `BipOverlay` (nunca `Overlay`
   directo). `BipModal` + `BipModalHeader`/`BipModalBody`/`BipModalFooter` (primer componente
   de overlay real de la librería: `BipOverlay.create()` + `TemplatePortal`; `cdkTrapFocus` con
@@ -216,30 +228,30 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   propósito, en el allowlist de `rtl.spec.ts`; slots `[bipDrawerPanelHeaderActions]`/
   `[bipDrawerPanelFooter]` con directivas marcador sin comportamiento para que el componente
   sepa vía `contentChild()` si hay algo proyectado). `BipToast` (servicio `providedIn: 'root'`
-  + `provideBipToast({ max, position })` opcional — sin `<ToastProvider>` envolviendo el árbol;
-  overlay creado perezosamente en el primer `show()`; reusa `<bip-alert>` por toast; puerto
-  completo de la lógica de stacking de React — colapsado con peek de los de atrás, hover
-  expande todo verticalmente; barra de progreso solo si `duration > 0`, `duration: 0` es
-  persistente). `[bipTooltip]` (directiva de atributo, no un wrapper — Angular no tiene
-  `cloneElement`; posiciona vía `FlexibleConnectedPositionStrategy` del CDK en vez del CSS
-  absoluto de la referencia, por la regla de Bloque 2; `position` físico fuerza
-  `OverlayConfig.direction: 'ltr'` para left/right, `align` lógico sigue la `Directionality`
-  real; sin modo controlado `open`/`onOpenChange` de React — un `model()` no distingue
-  "enlazado" de "en su default"). `BipPopover` + `BipPopoverTrigger`/`BipPopoverContent`
-  (compound component — contexto vía token `BIP_POPOVER_CONTEXT`; `BipPopoverContent`
-  posiciona vía `BipOverlay` anclada al elemento que registró el trigger; cierra con Escape o
-  `overlayRef.outsidePointerEvents()`, ignorando clics en el propio trigger). `BipDropdown` +
-  `BipDropdownTrigger`/`BipDropdownMenu`/`BipDropdownItem`/`BipDropdownItemCheckbox`/
-  `BipDropdownDivider`/`BipDropdownGroup`/`BipDropdownSearch`/`BipDropdownSubmenu` (patrón
-  WAI-ARIA Menu Button; navegación de teclado con `FocusKeyManager` del CDK — ↑↓ con wrap,
-  Home/End, se saltan los items disabled — en vez del recorrido manual de `querySelector` de
-  React; Escape cierra y devuelve el foco al trigger, Tab cierra sin bloquear el avance
-  natural del foco. `BipDropdownSubmenu` se registra como un item más del menú padre vía un
-  token `BIP_DROPDOWN_MENU_SCOPE` — necesario porque `contentChildren(..., { descendants:
-  true })` también encuentra los items anidados dentro de su propio panel, y sin ese filtro
-  el `FocusKeyManager` del menú raíz navegaría por ellos aunque el submenú esté cerrado;
-  `ArrowRight` en el trigger abre y enfoca el primer item anidado, `ArrowLeft`/`Escape` dentro
-  del panel cierran solo el submenú — no todo el dropdown — y devuelven el foco al trigger).
+  - `provideBipToast({ max, position })` opcional — sin `<ToastProvider>` envolviendo el árbol;
+    overlay creado perezosamente en el primer `show()`; reusa `<bip-alert>` por toast; puerto
+    completo de la lógica de stacking de React — colapsado con peek de los de atrás, hover
+    expande todo verticalmente; barra de progreso solo si `duration > 0`, `duration: 0` es
+    persistente). `[bipTooltip]` (directiva de atributo, no un wrapper — Angular no tiene
+    `cloneElement`; posiciona vía `FlexibleConnectedPositionStrategy` del CDK en vez del CSS
+    absoluto de la referencia, por la regla de Bloque 2; `position` físico fuerza
+    `OverlayConfig.direction: 'ltr'` para left/right, `align` lógico sigue la `Directionality`
+    real; sin modo controlado `open`/`onOpenChange` de React — un `model()` no distingue
+    "enlazado" de "en su default"). `BipPopover` + `BipPopoverTrigger`/`BipPopoverContent`
+    (compound component — contexto vía token `BIP_POPOVER_CONTEXT`; `BipPopoverContent`
+    posiciona vía `BipOverlay` anclada al elemento que registró el trigger; cierra con Escape o
+    `overlayRef.outsidePointerEvents()`, ignorando clics en el propio trigger). `BipDropdown` +
+    `BipDropdownTrigger`/`BipDropdownMenu`/`BipDropdownItem`/`BipDropdownItemCheckbox`/
+    `BipDropdownDivider`/`BipDropdownGroup`/`BipDropdownSearch`/`BipDropdownSubmenu` (patrón
+    WAI-ARIA Menu Button; navegación de teclado con `FocusKeyManager` del CDK — ↑↓ con wrap,
+    Home/End, se saltan los items disabled — en vez del recorrido manual de `querySelector` de
+    React; Escape cierra y devuelve el foco al trigger, Tab cierra sin bloquear el avance
+    natural del foco. `BipDropdownSubmenu` se registra como un item más del menú padre vía un
+    token `BIP_DROPDOWN_MENU_SCOPE` — necesario porque `contentChildren(..., { descendants:
+true })` también encuentra los items anidados dentro de su propio panel, y sin ese filtro
+    el `FocusKeyManager` del menú raíz navegaría por ellos aunque el submenú esté cerrado;
+    `ArrowRight` en el trigger abre y enfoca el primer item anidado, `ArrowLeft`/`Escape` dentro
+    del panel cierran solo el submenú — no todo el dropdown — y devuelven el foco al trigger).
 - Formularios básicos (Bloque 5): 13 componentes, todos con `ControlValueAccessor` (probados
   con `FormControl`, `ngModel` y `[(value)]`). `BipButton` (`button[bipButton], a[bipButton]`,
   variantes primary/secondary/bare/soul/danger, tamaños, `loading` con spinner+`aria-busy`,
