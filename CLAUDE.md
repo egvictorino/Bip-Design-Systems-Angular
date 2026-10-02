@@ -357,7 +357,13 @@ cjs-resolves-to-esm` (attw no sabe analizar un export wildcard a CSS como módul
   proyecto, así que `pnpm build` copia `LICENSE` con `scripts/copy-license.cjs`. Storybook de
   dev/qa se sube como artifact (Pages es único por repo, lo usa `production.yml`). Primera
   release prevista: `0.1.0`.
-- **Terminado cuando:** una release de prueba `0.x` se publica en npm desde `main` y Storybook queda en Pages.
+- **Gotchas reales del primer release (`0.1.0`, 2026-10-02):** `actions/setup-node` detecta
+  `packageManager: pnpm` y falla si el job no instala pnpm → `package-manager-cache: false` en
+  `publish-npm`. El token de npm debe ser **granular**, con *Bypass 2FA* y *Read and write*
+  sobre el scope `@bip-design-systems` (sin bypass: `EOTP`; sin scope: `404` en el `PUT`).
+  Tras publicar, el registro tarda unos minutos en servir el paquete (`npm view` da 404).
+  `dependency-review` exige habilitar el dependency graph en el repo.
+- **Terminado cuando:** una release de prueba `0.x` se publica en npm desde `main` y Storybook queda en Pages. ✅ Cumplido: `0.1.0` en npm con provenance, Storybook en Pages y GitHub Release `v0.1.0`.
 
 ---
 
@@ -375,7 +381,7 @@ cjs-resolves-to-esm` (attw no sabe analizar un export wildcard a CSS como módul
 - [x] Bloque 9 — Datos (2)
 - [x] Bloque 10 — Odontogram
 - [x] Bloque 11 — Calidad end-to-end
-- [ ] Bloque 12 — CI/CD, versionado y publicación
+- [x] Bloque 12 — CI/CD, versionado y publicación
 
 ## Inventario completo de la referencia (checklist de paridad)
 
