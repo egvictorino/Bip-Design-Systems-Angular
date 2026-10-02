@@ -19,7 +19,7 @@ import {
 @Directive({
   selector: '[bipClickOutside]',
 })
-export class BipClickOutsideDirective {
+export class BipClickOutside {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly document = inject(DOCUMENT);
 

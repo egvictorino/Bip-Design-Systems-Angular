@@ -10,7 +10,6 @@ import { BIP_MODAL_CONTEXT } from './modal-context';
  */
 @Component({
   selector: 'bip-modal-header',
-  standalone: true,
   template: `
     <h2 class="bip-modal-title" [id]="context.titleId">
       <ng-content />

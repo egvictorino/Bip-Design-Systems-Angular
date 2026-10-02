@@ -22,7 +22,6 @@ const SIZE_CLASS: Record<string, string> = {
  */
 @Component({
   selector: 'button[bipTab]',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './tab.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -4,7 +4,6 @@ import { BIP_SIDEBAR_CONTEXT } from './sidebar-context';
 /** No renderiza nada cuando el sidebar está colapsado — igual que `BipSidebarBrand`. */
 @Component({
   selector: 'bip-sidebar-group-label',
-  standalone: true,
   template: `
     @if (!context.isCollapsed()) {
       <p class="bip-sidebar-group-label"><ng-content /></p>

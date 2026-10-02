@@ -29,9 +29,9 @@ import { BipEmptyState } from '@bip-design-systems/angular/empty-state';
 import { BipSearchInput } from '@bip-design-systems/angular/search-input';
 import { BipCheckbox } from '@bip-design-systems/angular/checkbox';
 import { BipButton } from '@bip-design-systems/angular/button';
-import { BipClickOutsideDirective } from '@bip-design-systems/angular/core';
-import { BipDataTableCellDirective } from './data-table-cell.directive';
-import { BipDataTableHeaderDirective } from './data-table-header.directive';
+import { BipClickOutside } from '@bip-design-systems/angular/core';
+import { BipDataTableCell } from './data-table-cell.directive';
+import { BipDataTableHeader } from './data-table-header.directive';
 import type {
   BipDataTableBulkAction,
   BipDataTableCellContext,
@@ -52,7 +52,6 @@ import type {
  */
 @Component({
   selector: 'bip-data-table',
-  standalone: true,
   imports: [
     NgTemplateOutlet,
     BipTable,
@@ -67,7 +66,7 @@ import type {
     BipSearchInput,
     BipCheckbox,
     BipButton,
-    BipClickOutsideDirective,
+    BipClickOutside,
     BipVisuallyHidden,
   ],
   templateUrl: './data-table.component.html',
@@ -115,8 +114,8 @@ export class BipDataTable<T = Record<string, unknown>> {
   readonly sortChange = output<{ key: string | null; direction: BipDataTableSortDirection }>();
   readonly searched = output<string>();
 
-  protected readonly cellTemplates = contentChildren(BipDataTableCellDirective);
-  protected readonly headerTemplates = contentChildren(BipDataTableHeaderDirective);
+  protected readonly cellTemplates = contentChildren(BipDataTableCell);
+  protected readonly headerTemplates = contentChildren(BipDataTableHeader);
 
   private readonly sortKey = signal<string | null>(null);
   private readonly sortDirection = signal<BipDataTableSortDirection>(null);

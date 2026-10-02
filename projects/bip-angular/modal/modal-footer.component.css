@@ -1,4 +1,4 @@
-.bip-modal-footer {
+:host {
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -7,14 +7,14 @@
   padding: var(--space-4) var(--space-6);
 }
 
-.bip-modal-footer--left {
+:host(.bip-modal-footer--left) {
   justify-content: flex-start;
 }
 
-.bip-modal-footer--center {
+:host(.bip-modal-footer--center) {
   justify-content: center;
 }
 
-.bip-modal-footer--right {
+:host(.bip-modal-footer--right) {
   justify-content: flex-end;
 }

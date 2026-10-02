@@ -10,7 +10,6 @@ import { BIP_TABLE_CONTEXT } from './table-context';
  */
 @Component({
   selector: 'tr[bipTableEmpty]',
-  standalone: true,
   template: `
     <td [attr.colspan]="colSpan()" [class]="cellClasses()">
       <ng-content>{{ locale().table.emptyMessage }}</ng-content>

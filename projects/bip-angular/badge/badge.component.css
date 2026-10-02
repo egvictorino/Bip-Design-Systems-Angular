@@ -1,4 +1,4 @@
-.bip-badge {
+:host {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1-5);
@@ -8,46 +8,46 @@
 
 /* ─── Variantes ──────────────────────────────────────────────────────────── */
 
-.bip-badge--primary {
+:host(.bip-badge--primary) {
   background-color: var(--color-info-subtle);
   color: var(--color-primary-text);
 }
 
-.bip-badge--success {
+:host(.bip-badge--success) {
   background-color: var(--color-success-subtle);
   color: var(--color-success-text);
 }
 
-.bip-badge--warning {
+:host(.bip-badge--warning) {
   background-color: var(--color-warning-subtle);
   color: var(--color-warning-text);
 }
 
-.bip-badge--danger {
+:host(.bip-badge--danger) {
   background-color: var(--color-danger-subtle);
   color: var(--color-danger-text);
 }
 
-.bip-badge--neutral {
+:host(.bip-badge--neutral) {
   background-color: var(--color-surface-3);
   color: var(--color-txt-secondary);
 }
 
 /* ─── Tamaños ────────────────────────────────────────────────────────────── */
 
-.bip-badge--sm {
+:host(.bip-badge--sm) {
   padding: var(--space-0-5) var(--space-1-5);
   font-size: var(--text-xs);
   line-height: 1rem;
 }
 
-.bip-badge--md {
+:host(.bip-badge--md) {
   padding: var(--space-1) var(--space-2-5);
   font-size: var(--text-xs);
   line-height: 1rem;
 }
 
-.bip-badge--lg {
+:host(.bip-badge--lg) {
   padding: var(--space-1-5) var(--space-3);
   font-size: var(--text-sm);
   line-height: 1.25rem;

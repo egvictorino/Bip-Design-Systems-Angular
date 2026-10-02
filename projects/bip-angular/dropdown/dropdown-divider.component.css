@@ -1,4 +1,4 @@
-.bip-dropdown-divider {
+:host {
   display: block;
   margin: var(--space-1) var(--space-0);
   border: none;

@@ -1,4 +1,4 @@
-.bip-link {
+:host {
   color: var(--color-link);
   text-decoration-line: underline;
   text-underline-offset: var(--space-0-5);
@@ -6,33 +6,33 @@
   transition: color var(--duration-fast) var(--ease-standard);
 }
 
-.bip-link:hover {
+:host:hover {
   color: var(--color-link-hover);
 }
 
-.bip-link:active {
+:host:active {
   color: var(--color-link-press);
 }
 
-.bip-link:focus-visible {
+:host:focus-visible {
   outline: none;
   border-radius: var(--radius-marker);
   box-shadow: var(--focus-ring);
 }
 
-.bip-link--underline-hover {
+:host(.bip-link--underline-hover) {
   text-decoration-line: none;
 }
 
-.bip-link--underline-hover:hover {
+:host(.bip-link--underline-hover):hover {
   text-decoration-line: underline;
 }
 
-.bip-link--underline-none {
+:host(.bip-link--underline-none) {
   text-decoration-line: none;
 }
 
-.bip-link--disabled {
+:host(.bip-link--disabled) {
   color: var(--color-txt-disabled);
   cursor: not-allowed;
   text-decoration-line: none;

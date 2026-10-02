@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { injectBipLocale } from '@bip-design-systems/angular/core';
-import { BipToastItemComponent } from './toast-item.component';
+import { BipToastItem } from './toast-item.component';
 import { BipToast } from './toast.service';
 import type { BipToastPosition } from './toast.types';
 
@@ -28,8 +28,7 @@ const POSITION_CLASS: Record<BipToastPosition, string> = {
  */
 @Component({
   selector: 'bip-toast-region',
-  standalone: true,
-  imports: [BipToastItemComponent],
+  imports: [BipToastItem],
   templateUrl: './toast-region.component.html',
   styleUrl: './toast-region.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

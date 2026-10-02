@@ -1,16 +1,16 @@
-.bip-timeline-item {
+:host {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   gap: var(--space-4);
 }
 
-.bip-timeline-item--horizontal {
+:host(.bip-timeline-item--horizontal) {
   flex-direction: column;
   min-width: 12rem;
 }
 
-.bip-timeline-item:last-child .bip-timeline-item-connector {
+:host:last-child .bip-timeline-item-connector {
   display: none;
 }
 
@@ -23,7 +23,7 @@
   flex-shrink: 0;
 }
 
-.bip-timeline-item--horizontal .bip-timeline-item-marker {
+:host(.bip-timeline-item--horizontal) .bip-timeline-item-marker {
   flex-direction: row;
   width: 100%;
 }
@@ -51,7 +51,7 @@
   margin-block: var(--space-1);
 }
 
-.bip-timeline-item--horizontal .bip-timeline-item-connector {
+:host(.bip-timeline-item--horizontal) .bip-timeline-item-connector {
   width: auto;
   height: 2px;
   min-width: var(--space-6);
@@ -61,23 +61,23 @@
 
 /* ─── Variantes (color del punto) ────────────────────────────────────────────── */
 
-.bip-timeline-item--success .bip-timeline-item-dot {
+:host(.bip-timeline-item--success) .bip-timeline-item-dot {
   background-color: var(--color-success);
 }
-.bip-timeline-item--warning .bip-timeline-item-dot {
+:host(.bip-timeline-item--warning) .bip-timeline-item-dot {
   background-color: var(--color-warning);
 }
-.bip-timeline-item--danger .bip-timeline-item-dot {
+:host(.bip-timeline-item--danger) .bip-timeline-item-dot {
   background-color: var(--color-danger);
 }
 
 /* ─── Tamaños (diámetro del punto) ──────────────────────────────────────────── */
 
-.bip-timeline-item--sm .bip-timeline-item-dot {
+:host(.bip-timeline-item--sm) .bip-timeline-item-dot {
   width: 0.5rem;
   height: 0.5rem;
 }
-.bip-timeline-item--lg .bip-timeline-item-dot {
+:host(.bip-timeline-item--lg) .bip-timeline-item-dot {
   width: 1rem;
   height: 1rem;
 }

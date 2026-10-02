@@ -38,7 +38,6 @@ import { BIP_DROPDOWN_MENU_SCOPE } from './dropdown-menu-scope';
  */
 @Component({
   selector: 'bip-dropdown-submenu',
-  standalone: true,
   templateUrl: './dropdown-submenu.component.html',
   styleUrl: './dropdown-submenu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

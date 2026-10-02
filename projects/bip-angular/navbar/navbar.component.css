@@ -1,4 +1,4 @@
-.bip-navbar {
+:host {
   position: relative;
   display: flex;
   align-items: center;
@@ -9,11 +9,11 @@
   background-color: var(--color-surface-1);
 }
 
-.bip-navbar--elevated {
+:host(.bip-navbar--elevated) {
   box-shadow: var(--shadow-md, 0 2px 8px rgb(0 0 0 / 10%));
 }
 
-.bip-navbar--transparent {
+:host(.bip-navbar--transparent) {
   background-color: transparent;
 }
 

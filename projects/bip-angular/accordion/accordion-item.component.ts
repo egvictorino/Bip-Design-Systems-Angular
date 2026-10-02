@@ -14,7 +14,6 @@ const VARIANT_CLASS: Record<string, string> = {
  */
 @Component({
   selector: 'bip-accordion-item',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './accordion-item.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'bip-sidebar-header',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './sidebar-header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

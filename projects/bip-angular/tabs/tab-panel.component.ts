@@ -9,7 +9,6 @@ import { BIP_TABS_CONTEXT } from './tabs-context';
  */
 @Component({
   selector: 'bip-tab-panel',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './tab-panel.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

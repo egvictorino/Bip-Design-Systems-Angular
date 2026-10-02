@@ -18,7 +18,6 @@ type BipStepperStepIconState = 'loading' | 'error' | 'warning' | 'success' | 'nu
  */
 @Component({
   selector: 'bip-stepper-step',
-  standalone: true,
   imports: [NgTemplateOutlet],
   templateUrl: './stepper-step.component.html',
   styleUrl: './stepper-step.component.css',

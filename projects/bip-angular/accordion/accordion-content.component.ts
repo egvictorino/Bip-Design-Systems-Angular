@@ -8,7 +8,6 @@ import { BIP_ACCORDION_ITEM_CONTEXT } from './accordion-context';
  */
 @Component({
   selector: 'bip-accordion-content',
-  standalone: true,
   template: `
     <div class="bip-accordion-content-inner">
       <ng-content />

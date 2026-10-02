@@ -17,7 +17,6 @@ import { navigateSidebarItems } from './sidebar-navigation';
  */
 @Component({
   selector: 'bip-sidebar-item',
-  standalone: true,
   imports: [RouterLink, NgTemplateOutlet, BipTooltip],
   templateUrl: './sidebar-item.component.html',
   styleUrl: './sidebar-item.component.css',

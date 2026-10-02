@@ -12,7 +12,6 @@ import { BIP_POPOVER_CONTEXT, type BipPopoverContext } from './popover-context';
  */
 @Component({
   selector: 'bip-popover',
-  standalone: true,
   template: `<ng-content />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'bip-popover' },

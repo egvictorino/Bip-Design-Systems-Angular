@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   TemplateRef,
@@ -48,7 +49,6 @@ interface OverlayPosition {
  */
 @Component({
   selector: 'bip-tooth-detail',
-  standalone: true,
   imports: [BipToothSvg, BipNotePopover, BipImagePopover],
   templateUrl: './tooth-detail.component.html',
   styleUrl: './tooth-detail.component.css',
@@ -114,6 +114,14 @@ export class BipToothDetail {
         if (open) this.showImageOverlay();
         else this.hideImageOverlay();
       });
+    });
+
+    // Si el componente se destruye con un popover abierto, nadie más dispondría el overlay.
+    inject(DestroyRef).onDestroy(() => {
+      this.noteOverlayRef?.dispose();
+      this.noteOverlayRef = null;
+      this.imageOverlayRef?.dispose();
+      this.imageOverlayRef = null;
     });
   }
 

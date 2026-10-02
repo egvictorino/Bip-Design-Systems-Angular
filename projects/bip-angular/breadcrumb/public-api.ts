@@ -3,4 +3,4 @@
  */
 
 export { BipBreadcrumb, type BipBreadcrumbItem } from './breadcrumb.component';
-export { BipBreadcrumbSeparatorDirective } from './breadcrumb-separator.directive';
+export { BipBreadcrumbSeparator } from './breadcrumb-separator.directive';

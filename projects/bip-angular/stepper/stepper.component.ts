@@ -14,7 +14,6 @@ export type BipStepperOrientation = 'horizontal' | 'vertical';
  */
 @Component({
   selector: 'bip-stepper',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './stepper.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

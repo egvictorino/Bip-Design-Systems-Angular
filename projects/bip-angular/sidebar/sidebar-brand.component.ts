@@ -8,7 +8,6 @@ import { BIP_SIDEBAR_CONTEXT } from './sidebar-context';
  */
 @Component({
   selector: 'bip-sidebar-brand',
-  standalone: true,
   imports: [NgTemplateOutlet],
   template: `
     @if (!context.isCollapsed()) {

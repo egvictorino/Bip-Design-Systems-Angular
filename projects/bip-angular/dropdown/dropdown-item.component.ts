@@ -11,7 +11,6 @@ export type BipDropdownItemVariant = 'default' | 'danger';
  */
 @Component({
   selector: 'button[bipDropdownItem]',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './dropdown-item.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

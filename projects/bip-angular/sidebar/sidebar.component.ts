@@ -21,7 +21,6 @@ const VARIANT_CLASS: Record<BipSidebarVariant, string> = {
  */
 @Component({
   selector: 'bip-sidebar',
-  standalone: true,
   imports: [A11yModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',

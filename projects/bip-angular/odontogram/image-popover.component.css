@@ -239,6 +239,12 @@
   box-shadow: 0 0 0 1px var(--color-edge-focus);
 }
 
+.bip-image-popover-file-error {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-danger-text);
+}
+
 .bip-image-popover-add-actions {
   display: flex;
   gap: var(--space-2);

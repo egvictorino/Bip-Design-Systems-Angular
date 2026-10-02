@@ -97,6 +97,37 @@ export function resolveVarMap<T extends object>(
   return vars;
 }
 
+const CSS_CUSTOM_PROPERTY_RE = /^--[\w-]+$/;
+
+/**
+ * `cssVars` (el escape hatch de `<bip-theme-provider>`) termina en un `[style]` del host y
+ * en el pane de cualquier `BipOverlay` — a diferencia del resto de los *_VAR_MAP, aquí la
+ * CLAVE también es arbitraria (la define quien llama), no solo el valor. Angular no sanitiza
+ * bindings de `style`, así que una clave que no sea una custom property (`background-image`,
+ * `behavior`, etc.) terminaría aplicándose igual — si ese valor viniera de datos externos no
+ * confiables, eso habilita cosas como una petición saliente vía `url(...)`. Se descarta
+ * cualquier entrada cuya clave no sea una custom property (`--algo`), con `console.warn` en
+ * desarrollo para que el error de tipeo no quede en silencio.
+ */
+export function sanitizeCssVars(
+  cssVars: Record<string, string> | undefined,
+  devWarn = false
+): Record<string, string> {
+  if (!cssVars) return {};
+  const sanitized: Record<string, string> = {};
+  for (const [key, value] of Object.entries(cssVars)) {
+    if (CSS_CUSTOM_PROPERTY_RE.test(key)) {
+      sanitized[key] = value;
+    } else if (devWarn) {
+      console.warn(
+        `[BipTheme] cssVars ignora la clave "${key}": solo se aceptan custom properties ` +
+          `(--nombre), nunca propiedades CSS normales.`
+      );
+    }
+  }
+  return sanitized;
+}
+
 /** WCAG AA para texto normal (4.5:1). */
 const AA_CONTRAST_THRESHOLD = 4.5;
 
@@ -151,5 +182,5 @@ export function resolveTokenVars(
       warnIfLowContrast(typedKey, value, onTextHex, devMode);
     }
   }
-  return { ...vars, ...cssVars };
+  return { ...vars, ...sanitizeCssVars(cssVars, devMode) };
 }

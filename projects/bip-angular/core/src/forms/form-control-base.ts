@@ -1,4 +1,5 @@
-import { Directive, computed, inject, signal } from '@angular/core';
+import { DestroyRef, Directive, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
 import { BipIdGenerator } from '../a11y';
@@ -27,12 +28,12 @@ import { BipIdGenerator } from '../a11y';
  * ```
  */
 @Directive()
-export abstract class BipFormControlBase implements Pick<
-  ControlValueAccessor,
-  'registerOnTouched' | 'setDisabledState'
-> {
+export abstract class BipFormControlBase
+  implements Pick<ControlValueAccessor, 'registerOnTouched' | 'setDisabledState'>, OnInit
+{
   protected readonly ngControl = inject(NgControl, { optional: true, self: true });
   private readonly idGenerator = inject(BipIdGenerator);
+  private readonly formControlDestroyRef = inject(DestroyRef);
 
   private readonly _disabled = signal(false);
   private readonly _touched = signal(false);
@@ -54,12 +55,35 @@ export abstract class BipFormControlBase implements Pick<
    */
   protected readonly explicitError = signal<string | null>(null);
 
+  /**
+   * `control.invalid`/`control.touched` son propiedades mutables de `AbstractControl`, no
+   * signals — un `computed()` que solo las leyera nunca se recalcularía cuando el estado del
+   * control cambia sin que medie una señal propia (p. ej. `form.markAllAsTouched()` al enviar,
+   * o un validador asíncrono que resuelve). Este signal se incrementa en cada emisión de
+   * `control.events` (`StatusChangeEvent`/`TouchedChangeEvent`/...), forzando el recómputo de
+   * `hasError` para que lea el estado fresco del control.
+   *
+   * La suscripción se arma en `ngOnInit()`, no en un inicializador de campo: `ngControl` (la
+   * directiva, p. ej. `FormControlDirective`) ya existe en el constructor porque se resuelve
+   * por selector (`self: true`), pero su `.control` (el `@Input()` con el `FormControl` real)
+   * todavía no se ha asignado — los inputs de **todas** las directivas de un mismo host se
+   * fijan recién después de que todas terminan de construirse. Para `ngOnInit()` ya está.
+   */
+  private readonly controlEventsTick = signal(0);
+
   readonly hasError = computed<boolean>(() => {
     if (this.explicitError()) return true;
+    this.controlEventsTick();
     const control = this.ngControl?.control;
     if (!control) return false;
     return control.invalid === true && (control.touched || this._touched());
   });
+
+  ngOnInit(): void {
+    this.ngControl?.control?.events.pipe(takeUntilDestroyed(this.formControlDestroyRef)).subscribe(() => {
+      this.controlEventsTick.update((tick) => tick + 1);
+    });
+  }
 
   constructor() {
     if (this.ngControl) {

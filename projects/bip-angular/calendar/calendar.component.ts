@@ -1,4 +1,4 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,15 +16,17 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
+import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   BipOverlay,
   addDays,
   dateKey,
+  formatDate,
   getMondayOffset,
   injectBipLocale,
   isSameDay,
+  startOfDay,
 } from '@bip-design-systems/angular/core';
 import type { CalendarEventStatus, CalendarView } from '@bip-design-systems/angular/core';
 import type {
@@ -52,12 +54,6 @@ const STATUS_CLASS: Record<CalendarEventStatus, string> = {
   cancelled: 'bip-calendar-status-cancelled',
 };
 const VIEWS: CalendarView[] = ['month', 'week', 'day', 'agenda'];
-
-function startOfDay(date: Date): Date {
-  const result = new Date(date);
-  result.setHours(0, 0, 0, 0);
-  return result;
-}
 
 function startOfWeek(date: Date): Date {
   const offset = date.getDay() === 0 ? 6 : date.getDay() - 1;
@@ -124,16 +120,14 @@ export class BipCalendar implements OnDestroy {
     const date = this.date();
     const locale = this.locale().locale;
     if (view === 'agenda') return this.locale().calendar.upcomingEvents;
-    if (view === 'month') return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date);
+    if (view === 'month') return formatDate(date, { locale, month: 'long', year: 'numeric' });
     if (view === 'day') {
-      return new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(
-        date
-      );
+      return formatDate(date, { locale, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     }
     const start = startOfWeek(date);
     const end = addDays(start, 6);
-    const fmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' });
-    return `${fmt.format(start)} – ${fmt.format(end)}, ${date.getFullYear()}`;
+    const fmtOptions = { locale, day: 'numeric' as const, month: 'short' as const };
+    return `${formatDate(start, fmtOptions)} – ${formatDate(end, fmtOptions)}, ${date.getFullYear()}`;
   });
 
   protected setView(view: CalendarView): void {
@@ -232,7 +226,7 @@ export class BipCalendar implements OnDestroy {
     this.rangeAnchor.set(day);
     this.rangeHoverDate.set(day);
     this.selecting = true;
-    document.addEventListener('mouseup', this.boundMouseUp);
+    this.document.addEventListener('mouseup', this.boundMouseUp);
   }
 
   protected onCellMouseEnter(day: Date): void {
@@ -240,7 +234,7 @@ export class BipCalendar implements OnDestroy {
   }
 
   private finalizeRange(): void {
-    document.removeEventListener('mouseup', this.boundMouseUp);
+    this.document.removeEventListener('mouseup', this.boundMouseUp);
     if (!this.selecting) return;
     this.selecting = false;
     const anchor = this.rangeAnchor();
@@ -273,8 +267,8 @@ export class BipCalendar implements OnDestroy {
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
-  private readonly cdkOverlay = inject(Overlay);
   private readonly injector = inject(Injector);
+  private readonly document = inject(DOCUMENT);
   private rangeOverlayRef: OverlayRef | null = null;
 
   private showRangePopover(): void {
@@ -283,12 +277,12 @@ export class BipCalendar implements OnDestroy {
     this.rangeOverlayRef?.dispose();
     const overlayRef = this.bipOverlay.create(
       {
-        positionStrategy: this.cdkOverlay
+        positionStrategy: this.bipOverlay
           .position()
           .flexibleConnectedTo(anchor)
           .withPositions([{ originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' }])
           .withPush(true),
-        scrollStrategy: this.cdkOverlay.scrollStrategies.reposition(),
+        scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         hasBackdrop: false,
       },
       this.injector
@@ -309,7 +303,7 @@ export class BipCalendar implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    document.removeEventListener('mouseup', this.boundMouseUp);
+    this.document.removeEventListener('mouseup', this.boundMouseUp);
     this.rangeOverlayRef?.dispose();
   }
 
@@ -374,9 +368,7 @@ export class BipCalendar implements OnDestroy {
 
   protected eventAriaLabel(event: BipCalendarEvent): string {
     const statusLabel = this.locale().calendar.statusLabels[event.status];
-    const time = new Intl.DateTimeFormat(this.locale().locale, { hour: '2-digit', minute: '2-digit' }).format(
-      event.start
-    );
+    const time = formatDate(event.start, { locale: this.locale().locale, hour: '2-digit', minute: '2-digit' });
     return `${event.title}, ${time}, ${statusLabel}`;
   }
 
@@ -432,17 +424,16 @@ export class BipCalendar implements OnDestroy {
   }
 
   protected eventTimeRange(event: BipCalendarEvent): string {
-    const fmt = new Intl.DateTimeFormat(this.locale().locale, { hour: '2-digit', minute: '2-digit' });
-    return `${fmt.format(event.start)} – ${fmt.format(event.end)}`;
+    const locale = this.locale().locale;
+    const fmtOptions = { locale, hour: '2-digit' as const, minute: '2-digit' as const };
+    return `${formatDate(event.start, fmtOptions)} – ${formatDate(event.end, fmtOptions)}`;
   }
 
   protected agendaDayLabel(day: Date): string {
-    return new Intl.DateTimeFormat(this.locale().locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(
-      day
-    );
+    return formatDate(day, { locale: this.locale().locale, weekday: 'long', day: 'numeric', month: 'long' });
   }
 
   protected columnHeaderLabel(day: Date): string {
-    return new Intl.DateTimeFormat(this.locale().locale, { weekday: 'short', day: 'numeric' }).format(day);
+    return formatDate(day, { locale: this.locale().locale, weekday: 'short', day: 'numeric' });
   }
 }

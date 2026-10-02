@@ -1,10 +1,13 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  PLATFORM_ID,
   booleanAttribute,
   computed,
   effect,
+  inject,
   model,
   numberAttribute,
   signal,
@@ -79,6 +82,7 @@ export class BipTextarea extends BipFormControlBase implements ControlValueAcces
   readonly rows = ngInput(3, { transform: numberAttribute });
 
   protected readonly focused = signal(false);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   private onChange: (value: string) => void = () => {};
 
@@ -154,7 +158,7 @@ export class BipTextarea extends BipFormControlBase implements ControlValueAcces
   }
 
   private adjustHeight(): void {
-    if (!this.autoGrow()) return;
+    if (!this.autoGrow() || !this.isBrowser) return;
     const el = this.textareaRef()?.nativeElement;
     if (!el) return;
     el.style.height = 'auto';

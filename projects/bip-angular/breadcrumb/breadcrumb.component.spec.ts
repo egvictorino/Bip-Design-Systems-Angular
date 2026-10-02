@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { render, screen } from '@testing-library/angular';
 import { describe, expect, it } from 'vitest';
 import { BipBreadcrumb, type BipBreadcrumbItem } from './breadcrumb.component';
-import { BipBreadcrumbSeparatorDirective } from './breadcrumb-separator.directive';
+import { BipBreadcrumbSeparator } from './breadcrumb-separator.directive';
 
 @Component({
   imports: [BipBreadcrumb],
@@ -19,7 +19,7 @@ class HostComponent {
 }
 
 @Component({
-  imports: [BipBreadcrumb, BipBreadcrumbSeparatorDirective],
+  imports: [BipBreadcrumb, BipBreadcrumbSeparator],
   template: `
     <bip-breadcrumb [items]="items">
       <ng-template bipBreadcrumbSeparator>/</ng-template>

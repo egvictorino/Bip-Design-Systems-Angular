@@ -3,8 +3,8 @@ import { render, screen, fireEvent, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { BipDataTable } from './data-table.component';
-import { BipDataTableCellDirective } from './data-table-cell.directive';
-import { BipDataTableHeaderDirective } from './data-table-header.directive';
+import { BipDataTableCell } from './data-table-cell.directive';
+import { BipDataTableHeader } from './data-table-header.directive';
 import type { BipDataTableBulkAction, BipDataTableColumn } from './data-table.types';
 
 interface Row {
@@ -390,7 +390,7 @@ describe('BipDataTable', () => {
 
 describe('BipDataTable — templates de columna', () => {
   @Component({
-    imports: [BipDataTable, BipDataTableCellDirective, BipDataTableHeaderDirective],
+    imports: [BipDataTable, BipDataTableCell, BipDataTableHeader],
     template: `
       <bip-data-table [columns]="columns" [data]="data">
         <ng-template bipHeader="name">

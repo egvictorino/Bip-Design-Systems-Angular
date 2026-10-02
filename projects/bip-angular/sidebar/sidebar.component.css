@@ -1,4 +1,4 @@
-.bip-sidebar {
+:host {
   display: block;
 }
 
@@ -32,13 +32,13 @@
 
 /* ─── Variantes ───────────────────────────────────────────────────────────── */
 
-.bip-sidebar--dark .bip-sidebar-panel {
+:host(.bip-sidebar--dark) .bip-sidebar-panel {
   background-color: var(--color-surface-inverse);
   color: var(--color-txt-white);
   border-inline-end-color: transparent;
 }
 
-.bip-sidebar--primary .bip-sidebar-panel {
+:host(.bip-sidebar--primary) .bip-sidebar-panel {
   background-color: var(--color-primary);
   color: var(--color-txt-on-primary);
   border-inline-end-color: transparent;

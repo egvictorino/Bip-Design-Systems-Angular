@@ -4,7 +4,6 @@ import { BIP_TABLE_CONTEXT } from './table-context';
 /** Mejora un `<tbody>` nativo — solo aplica el borde superior que separa el cuerpo del encabezado. */
 @Component({
   selector: 'tbody[bipTableBody]',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './table-body.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -10,7 +10,6 @@ export type BipTimelineOrientation = 'vertical' | 'horizontal';
  */
 @Component({
   selector: 'bip-timeline',
-  standalone: true,
   template: `<ng-content />`,
   styleUrl: './timeline.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

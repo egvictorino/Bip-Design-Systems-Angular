@@ -4,16 +4,29 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# Token de solo lectura por defecto — ningún job de este workflow publica nada ni necesita
+# escribir en el repo. `pull_request` (no `pull_request_target`) ya corre con un token de
+# solo lectura y sin secrets para PRs de forks, pero fijarlo explícito documenta la intención
+# y cubre también el caso de un PR desde una rama del propio repo.
+permissions:
+  contents: read
+
 jobs:
   branch-check:
     name: Branch flow check
     runs-on: ubuntu-latest
     steps:
       - name: Check PR target branch
+        # TARGET/SOURCE se pasan vía `env`, nunca interpolados directo con ${{ }} dentro del
+        # script de `run` — un `head_ref` (el nombre de la rama del PR) es un valor que
+        # controla quien abre el PR; interpolado directo en el YAML, algo como
+        # `feature/$(curl ...)` es un nombre de rama válido para git y se ejecutaría como
+        # parte del script de shell generado. Como variable de entorno, el shell solo ve su
+        # valor como texto.
+        env:
+          TARGET: ${{ github.base_ref }}
+          SOURCE: ${{ github.head_ref }}
         run: |
-          TARGET="${{ github.base_ref }}"
-          SOURCE="${{ github.head_ref }}"
-
           echo "📋 PR: $SOURCE → $TARGET"
 
           if [[ "$TARGET" == "main" ]] && [[ "$SOURCE" != "qa" ]] && [[ "$SOURCE" != "hotfix/"* ]]; then
@@ -63,6 +76,12 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Lint del paquete publicado (exports/types/sideEffects)
+        run: pnpm lint:package
+
+      - name: Tamaño de bundle por entry point
+        run: pnpm size
+
   changeset-check:
     name: Changeset Check
     runs-on: ubuntu-latest
@@ -85,9 +104,26 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check for a changeset
+        # BASE_REF vía env por el mismo motivo que en branch-check — es un valor que viene
+        # del contexto del PR, nunca se interpola directo en el script.
+        #
+        # El filtro cubre todo projects/bip-angular/** salvo lo que no se publica (specs,
+        # stories, y las carpetas de Storybook/guards): a diferencia de core, un secondary
+        # entry point de componente (p. ej. modal/, button/) no tiene una subcarpeta `src/`
+        # propia — sus *.component.ts viven directo en la raíz del entry — así que el filtro
+        # original ('projects/bip-angular/**/src/**') solo alcanzaba a core/src y al
+        # src/public-api.ts raíz, dejando sin exigir changeset a los 50 componentes.
+        env:
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" -- 'projects/bip-angular/**/src/**' | grep -q .; then
-            pnpm exec changeset status --since="origin/${{ github.base_ref }}"
+          CHANGED=$(git diff --name-only "origin/$BASE_REF...HEAD" -- \
+            'projects/bip-angular/**' \
+            ':(exclude)projects/bip-angular/**/*.spec.ts' \
+            ':(exclude)projects/bip-angular/**/*.stories.ts' \
+            ':(exclude)projects/bip-angular/testing/**' \
+            ':(exclude)projects/bip-angular/foundations/**')
+          if [ -n "$CHANGED" ]; then
+            pnpm exec changeset status --since="origin/$BASE_REF"
           else
-            echo "No hay cambios bajo projects/bip-angular/**/src — no se requiere changeset."
+            echo "Sin cambios en código publicado bajo projects/bip-angular — no se requiere changeset."
           fi

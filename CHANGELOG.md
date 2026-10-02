@@ -10,6 +10,84 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- Calidad end-to-end (Bloque 11, bloque completo): regresión visual real contra Docker
+  (`visual/component-matrix.spec.ts` + `visual/theme-matrix.spec.ts`, 78 baselines Linux de las
+  50 secondary entries en LTR y las 20 con geometría direccional también en RTL) y a11y en
+  navegador real con axe-core y `color-contrast` activado (`visual/a11y-browser.spec.ts`, 100
+  combinaciones componente×esquema de color, 0 violaciones) — `pnpm test:visual:docker`. Smoke
+  test del tarball publicado con SSR real de un consumidor Angular independiente fuera del
+  workspace (`e2e/consumer-app`, `pnpm-workspace.yaml` con `packages: []` para instalar el
+  tarball empaquetado en vez de un link de workspace) — `pnpm test:e2e`. `publint` +
+  `@arethetypeswrong/cli` + `size-limit` por entry point — `pnpm lint:package` / `pnpm size`
+  (`scripts/generate-size-limit.cjs` genera los límites a partir de `dist/` real). Nuevos guards
+  en `testing/`: `entry-boundaries` (sin imports relativos cruzados entre secondary entries),
+  `no-direct-overlay` (`inject(Overlay)` del CDK solo permitido en `bip-overlay.service.ts`) y
+  `no-unsafe-sinks` (sin `innerHTML`/`bypassSecurityTrust*`/`eval`/`new Function`). Registro
+  completo de hallazgos de arquitectura y seguridad del bloque en `docs/reviews/bloque-11.md`.
+
+### Changed
+
+- `package.json#exports` agrega `"./styles/*": "./styles/*"` y `sideEffects` pasa de `false` a
+  `["**/*.css"]` — sin esto, `"@bip-design-systems/angular/styles/bip.css"` en el `angular.json`
+  de un consumidor (especificador de paquete, no ruta relativa a `node_modules`) no resolvía.
+- `BipOverlay` (`core/overlay`) reexpone `position()` y `scrollStrategies` del `Overlay` del CDK
+  — los 8 componentes que lo inyectaban solo para eso (Dropdown, Tooltip, Calendar, DatePicker,
+  DateRangePicker, TimePicker, MultiSelect, Popover) ya no importan `Overlay` directo.
+- Renombres sin alias de compatibilidad (librería en `0.0.0`, sin publicar aún):
+  `BipToastItemComponent` → `BipToastItem`, `BipThemeDirective` → `BipTheme`,
+  `BipClickOutsideDirective` → `BipClickOutside`, `BipBreadcrumbSeparatorDirective` →
+  `BipBreadcrumbSeparator`, `BipDataTableHeaderDirective` → `BipDataTableHeader`,
+  `BipDataTableCellDirective` → `BipDataTableCell` (tabla de traducción React→Angular de
+  CLAUDE.md: sin sufijo `Component`/`Directive`).
+- `formatFileSize()` se mueve de `file-upload` a `core/utils` (compartido también por
+  `odontogram/ImagePopover`, ver Fixed).
+
+### Fixed
+
+- **Estilos de componente nunca aplicados bajo `ViewEncapsulation.Emulated`** en 44 componentes
+  (Accordion, Badge, Button, Container, DataTable, Dropdown*, Grid, Heading, Link, Modal*,
+  Navbar*, Sidebar*, Spinner, Stack, Stepper*, Table*, Tabs*, Timeline*, Toast — lista completa
+  en `docs/reviews/bloque-11.md`): su CSS estilaba la clase que el componente aplica a su propio
+  elemento host con un selector plano (`.bip-x { }`), que Angular reescribe a
+  `.bip-x[_ngcontent-xxx]` — un atributo que solo llevan los elementos renderizados POR el
+  template del componente, nunca su host (que lleva `_nghost-xxx`). Esas reglas nunca aplicaron,
+  en ningún navegador, desde que se escribió cada componente. Corregido a `:host { }` /
+  `:host(.bip-x--variant) { }`.
+- `.storybook/preview.ts` nunca importó `styles/bip.css` — ninguna `var(--color-*)`/
+  `var(--space-*)`/`var(--radius-*)` resolvía en ninguna story, de ningún Bloque, hasta este
+  bloque.
+- 6 violaciones reales de accesibilidad detectadas por `visual/a11y-browser.spec.ts` contra
+  Chromium real: contraste insuficiente en los días de "otro mes" y en los chips de status de
+  Calendar y en una story de DataTable; nombre accesible faltante en el trigger de MultiSelect
+  (`<label for>` no asocia accesiblemente un `<div role="combobox">`); estructura `<ul>/<li>`
+  inválida en Navbar y Sidebar (el propio componente se interpone entre la lista y su wrapper).
+- `BipToastItem`: `inject(DestroyRef)` se capturaba dentro del callback de `afterNextRender`,
+  fuera de contexto de inyección (NG0203 en cualquier navegador con `ResizeObserver`; no
+  detectado antes porque jsdom no lo implementa).
+- SSR: Calendar usaba el `document` global en vez de `inject(DOCUMENT)` (crash en `ngOnDestroy`
+  en servidor); Modal/DrawerPanel creaban su overlay y llamaban `requestAnimationFrame` durante
+  SSR si `open` era `true` en el primer render.
+- Modal, DrawerPanel y `odontogram/ToothDetail` no llamaban `dispose()` en su `OverlayRef` si el
+  componente se destruía abierto.
+- `BipFormControlBase.hasError` no reaccionaba a cambios de validez/touched del control sin un
+  `blur` propio (p. ej. `form.markAllAsTouched()` al enviar un formulario).
+- `BipOverlay`: el `effect()` de sincronización de tema se destruía en el primer `detachments()`
+  en vez de en `dispose()`, rompiendo la sincronización si Modal/DrawerPanel reutilizaban el
+  mismo `OverlayRef` entre `show()`/`hide()`; las CSS vars que dejaban de estar presentes en el
+  tema no se removían del pane del overlay.
+- Seguridad: `getThemeInitScript()` permitía escapar de `</script>` e inyectar markup/script
+  arbitrario en el `<head>` (ahora escapa y valida los valores contra un allowlist); `cssVars`
+  (escape hatch de `<bip-theme-provider>`) aceptaba cualquier propiedad CSS, no solo custom
+  properties, en un `[style]` sin sanitizar; `odontogram/ImagePopover` leía cualquier archivo
+  elegido a un data URL sin validar tipo ni tamaño; `pr-validation.yml` interpolaba
+  `github.head_ref` directo en un script de `run` (inyección de script); 2 vulnerabilidades de
+  `pnpm audit` (`piscina`, `uuid`, transitivas del toolchain de build) resueltas con
+  `pnpm.overrides`.
+- Deduplicado `startOfDay`/`isSameDay`/`formatDate` entre Calendar, DatePicker, DateRangePicker
+  y el `calendar-grid` interno de `core` (vivían copiados en cada uno).
+
+### Added (bloques anteriores)
+
 - Odontogram (Bloque 10, bloque completo): `BipOdontogram` (cuadrícula de odontograma FDI,
   permanente de 32 piezas 11-48 o primaria de 20 piezas 51-85 vía `dentition`; `[(value)]` como
   `model()` de Angular — a diferencia de la referencia React, que exigía además un `onChange`

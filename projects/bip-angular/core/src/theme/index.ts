@@ -34,5 +34,5 @@ export { getThemeInitScript, THEME_RESET_STYLE } from './theme-init-script';
 export type { ThemeInitScriptOptions } from './theme-init-script';
 
 export { BipThemeProvider } from './theme-provider.component';
-export { BipThemeDirective } from './theme.directive';
+export { BipTheme } from './theme.directive';
 export { injectThemeControls } from './inject-theme-controls';

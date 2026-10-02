@@ -192,6 +192,8 @@ export interface BipLocale {
     cancel: string;
     add: string;
     addImage: string;
+    invalidImageType: string;
+    imageTooLarge: (maxSizeLabel: string) => string;
   };
 
   pagination: {

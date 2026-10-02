@@ -9,7 +9,6 @@ import { BIP_DROPDOWN_CONTEXT, type BipDropdownContext } from './dropdown-contex
  */
 @Component({
   selector: 'bip-dropdown',
-  standalone: true,
   template: `<ng-content />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'bip-dropdown' },

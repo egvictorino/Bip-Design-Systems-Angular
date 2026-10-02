@@ -1,5 +1,5 @@
 @if (label()) {
-  <label [for]="fieldId" class="bip-multi-select-label">
+  <label [for]="fieldId" [id]="labelId" class="bip-multi-select-label">
     {{ label() }}
     @if (required()) {
       <span aria-hidden="true" class="bip-multi-select-required-mark"> *</span>
@@ -20,6 +20,7 @@
   [attr.aria-required]="required() || null"
   [attr.aria-describedby]="messageId()"
   [attr.aria-disabled]="disabled() || null"
+  [attr.aria-labelledby]="label() ? labelId : null"
   (click)="onTriggerClick()"
   (keydown)="onTriggerKeydown($event)"
   (focus)="onFocus()"

@@ -15,4 +15,4 @@ import { BIP_THEME_HOST_BINDINGS, BIP_THEME_PROVIDERS, BipThemeHost } from './th
   providers: BIP_THEME_PROVIDERS,
   host: BIP_THEME_HOST_BINDINGS,
 })
-export class BipThemeDirective extends BipThemeHost {}
+export class BipTheme extends BipThemeHost {}

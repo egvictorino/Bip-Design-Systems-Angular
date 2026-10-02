@@ -18,7 +18,7 @@ import {
   untracked,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
-import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
+import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { BipFormControlBase, BipIdGenerator, BipOverlay, injectBipLocale } from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
@@ -110,13 +110,19 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
-  private readonly cdkOverlay = inject(Overlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
   private panelElement: HTMLElement | null = null;
 
   protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
   protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  /**
+   * `<label for>` no asocia accesiblemente un `<div role="combobox">` — ese comportamiento
+   * del navegador es solo para controles de formulario nativos. El trigger necesita
+   * `aria-labelledby` apuntando al `id` del propio `<label>` para tener nombre accesible
+   * (detectado por `visual/a11y-browser.spec.ts`: axe `aria-input-field-name`).
+   */
+  protected readonly labelId = `${this.fieldId}-label`;
 
   protected readonly filteredOptions = computed<BipMultiSelectOption[]>(() => {
     if (this.externalFilter()) return this.options();
@@ -355,7 +361,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
     if (this.overlayRef) return;
     const overlayRef = this.bipOverlay.create(
       {
-        positionStrategy: this.cdkOverlay
+        positionStrategy: this.bipOverlay
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
@@ -364,7 +370,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
           ])
           .withPush(true)
           .withFlexibleDimensions(false),
-        scrollStrategy: this.cdkOverlay.scrollStrategies.reposition(),
+        scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         minWidth: this.triggerRef.nativeElement.offsetWidth,
         hasBackdrop: false,
       },

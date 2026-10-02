@@ -10,7 +10,6 @@ import { getPageRange } from './pagination-range';
  */
 @Component({
   selector: 'bip-pagination',
-  standalone: true,
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

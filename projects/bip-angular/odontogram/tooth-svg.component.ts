@@ -20,7 +20,6 @@ import {
  */
 @Component({
   selector: 'bip-tooth-svg',
-  standalone: true,
   template: `
     <svg
       viewBox="0 0 100 100"

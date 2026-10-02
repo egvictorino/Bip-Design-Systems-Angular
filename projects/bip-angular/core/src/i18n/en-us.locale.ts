@@ -303,6 +303,8 @@ export const enUS: BipLocale = {
     cancel: 'Cancel',
     add: 'Add',
     addImage: 'Add image',
+    invalidImageType: 'Only image files are accepted.',
+    imageTooLarge: (maxSizeLabel) => `The image exceeds the maximum allowed size (${maxSizeLabel}).`,
   },
 
   pagination: {

@@ -1,8 +1,8 @@
-.bip-stepper {
+:host {
   display: flex;
   align-items: flex-start;
 }
 
-.bip-stepper--vertical {
+:host(.bip-stepper--vertical) {
   flex-direction: column;
 }

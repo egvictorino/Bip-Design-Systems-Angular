@@ -24,7 +24,6 @@ const SIZE_CLASS: Record<BipSize, string> = {
  */
 @Component({
   selector: 'bip-timeline-item',
-  standalone: true,
   templateUrl: './timeline-item.component.html',
   styleUrl: './timeline-item.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

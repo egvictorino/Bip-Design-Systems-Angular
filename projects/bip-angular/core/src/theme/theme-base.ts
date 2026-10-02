@@ -31,6 +31,7 @@ import {
   SPACING_VAR_MAP,
   resolveTokenVars,
   resolveVarMap,
+  sanitizeCssVars,
 } from './var-maps';
 import type {
   BipColorSchemePreference,
@@ -152,7 +153,7 @@ export abstract class BipThemeHost {
     ...resolveVarMap<BipFocusRingOverrides>(this.focusRing(), FOCUS_RING_VAR_MAP),
     ...resolveVarMap<BipMotionOverrides>(this.motion(), MOTION_VAR_MAP),
     ...resolveVarMap<BipSpacingOverrides>(this.spacing(), SPACING_VAR_MAP),
-    ...(this.cssVars() ?? {}),
+    ...sanitizeCssVars(this.cssVars(), isDevMode()),
   }));
 
   /** `style` a estampar en el host — usado por `BIP_THEME_HOST_BINDINGS['[style]']`. */

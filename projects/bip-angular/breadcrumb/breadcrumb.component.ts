@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, contentChild, input, Temp
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { injectBipLocale } from '@bip-design-systems/angular/core';
-import { BipBreadcrumbSeparatorDirective } from './breadcrumb-separator.directive';
+import { BipBreadcrumbSeparator } from './breadcrumb-separator.directive';
 
 export interface BipBreadcrumbItem {
   readonly label: string;
@@ -21,7 +21,6 @@ export interface BipBreadcrumbItem {
  */
 @Component({
   selector: 'bip-breadcrumb',
-  standalone: true,
   imports: [NgTemplateOutlet, RouterLink],
   templateUrl: './breadcrumb.component.html',
   styleUrl: './breadcrumb.component.css',
@@ -36,7 +35,7 @@ export class BipBreadcrumb {
 
   protected readonly resolvedAriaLabel = computed(() => this.ariaLabel() ?? this.locale().breadcrumb.nav);
 
-  protected readonly separatorTemplate = contentChild(BipBreadcrumbSeparatorDirective, {
+  protected readonly separatorTemplate = contentChild(BipBreadcrumbSeparator, {
     read: TemplateRef,
   });
 }

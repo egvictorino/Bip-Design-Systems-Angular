@@ -50,7 +50,6 @@ export type {
  */
 @Component({
   selector: 'bip-odontogram',
-  standalone: true,
   imports: [NgTemplateOutlet, BipToothSvg, BipToothDetail],
   templateUrl: './odontogram.component.html',
   styleUrl: './odontogram.component.css',

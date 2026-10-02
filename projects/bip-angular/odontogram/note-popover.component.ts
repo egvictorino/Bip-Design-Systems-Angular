@@ -25,7 +25,6 @@ interface BipOverlayPosition {
  */
 @Component({
   selector: 'bip-note-popover',
-  standalone: true,
   imports: [A11yModule],
   templateUrl: './note-popover.component.html',
   styleUrl: './note-popover.component.css',

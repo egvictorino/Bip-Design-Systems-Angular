@@ -8,4 +8,4 @@ import { Directive } from '@angular/core';
 @Directive({
   selector: 'ng-template[bipBreadcrumbSeparator]',
 })
-export class BipBreadcrumbSeparatorDirective {}
+export class BipBreadcrumbSeparator {}
