@@ -39,7 +39,7 @@ dependencia:
 | Estilos            | CSS plano por componente (`styleUrl`), `ViewEncapsulation.Emulated` (equivalente a CSS Modules). Tokens vía CSS custom properties. **Sin Tailwind, sin SCSS**                                                                                                                                                                                                                                                                            |
 | Tests unitarios    | Vitest vía `@angular/build:unit-test` + `@testing-library/angular` + `@testing-library/user-event` + `@testing-library/jest-dom` + `axe-core` (vitest-axe o jest-axe)                                                                                                                                                                                                                                                                    |
 | Docs               | Storybook para Angular (`@storybook/angular`), CSF3                                                                                                                                                                                                                                                                                                                                                                                      |
-| Visual / a11y real | Playwright + `@axe-core/playwright`, **solo en Docker** (imagen `mcr.microsoft.com/playwright:vX-noble` fijada a la versión de `@playwright/test`; la imagen trae su propio Node, no el 22 LTS que este repo fija — `scripts/visual-docker.sh` instala un Node 22 propio dentro del contenedor, ver Bloque 11)                                                                                                                                                                                                                                                                                       |
+| Visual / a11y real | Playwright + `@axe-core/playwright`, **solo en Docker** (imagen `mcr.microsoft.com/playwright:vX-noble` fijada a la versión de `@playwright/test`; la imagen trae su propio Node, no el 22 LTS que este repo fija — `scripts/visual-docker.sh` instala un Node 22 propio dentro del contenedor, ver Bloque 11)                                                                                                                           |
 | Lint               | `angular-eslint` (prefijo `bip` obligatorio en selectores), ESLint flat config, Prettier                                                                                                                                                                                                                                                                                                                                                 |
 | Versionado         | Changesets + `CHANGELOG.md` curado a mano (Keep a Changelog)                                                                                                                                                                                                                                                                                                                                                                             |
 
@@ -259,7 +259,7 @@ del plan original o que vale la pena dejar escritas para quien toque esto despu�
     Foundations/Colors y Radius (nunca convergía, ni a 30s) — el propio mecanismo interno de
     Playwright reajustando el viewport entre pasadas. Se evita con
     `page.setViewportSize({ height: await page.evaluate(() => document.body.scrollHeight) })`
-    + screenshot sin `fullPage`, en vez de subir el timeout a ciegas.
+    - screenshot sin `fullPage`, en vez de subir el timeout a ciegas.
 - `visual/component-matrix.ts` (manifiesto único; storyIds sacados de `storybook-static/index.json`
   tras `pnpm build-storybook`, nunca calculados a mano) + `component-matrix.spec.ts` (screenshot
   de `#storybook-root`, + RTL para los marcados) con coverage guard.
@@ -269,7 +269,7 @@ del plan original o que vale la pena dejar escritas para quien toque esto despu�
     iframe de preview (confirmado: `window.axe` existe ya al cargar `/iframe.html` directo, sin
     manager) — choca con `@axe-core/playwright` ("Axe is already running"). `manual: true` en
     `parameters.a11y` (`.storybook/preview.ts`) + borrar `window.axe` antes de cada `analyze()`
-    + un reintento acotado a ese error específico lo deja estable.
+    - un reintento acotado a ese error específico lo deja estable.
 - `.storybook/preview.ts` **debe** importar `styles/bip.css` — sin eso ninguna `var(--color-*)`
   resuelve en ninguna story (se descubrió en este bloque que nunca se había importado desde el
   Bloque 0; todas las stories de los Bloques 4-10 se habían visto sin estilos hasta ahora).
@@ -297,8 +297,8 @@ del plan original o que vale la pena dejar escritas para quien toque esto despu�
   no lo genera solo a partir de `ng-package.json#assets`) y `sideEffects: ["**/*.css"]` en vez de
   `false`, para que un consumidor pueda `"styles": ["@bip-design-systems/angular/styles/bip.css"]`
   en su `angular.json`. `pnpm lint:package` = `publint` + `attw --profile esm-only
-  --exclude-entrypoints "styles/*" --ignore-rules no-resolution internal-resolution-error
-  cjs-resolves-to-esm` (attw no sabe analizar un export wildcard a CSS como módulo JS/TS; node10 y
+--exclude-entrypoints "styles/*" --ignore-rules no-resolution internal-resolution-error
+cjs-resolves-to-esm` (attw no sabe analizar un export wildcard a CSS como módulo JS/TS; node10 y
   "require" no aplican a un paquete ESM-only a propósito). `pnpm size` = `size-limit` generado por
   `scripts/generate-size-limit.cjs` (un entry por FESM + CSS, correr tras `pnpm build` cuando el
   tamaño cambie a propósito).
@@ -348,6 +348,15 @@ del plan original o que vale la pena dejar escritas para quien toque esto despu�
 - Versiones: `0.x` mientras haya bloques pendientes; **`1.0.0`** cuando los Bloques 0–12 estén completos.
 - README de consumo: instalación, `bip.css` en `angular.json`, `provideBipTheme()`, `provideBipLocale()`, `getThemeInitScript` para SSR, ejemplos.
 - Secret `NPM_TOKEN` en GitHub; GitHub Pages habilitado.
+- **Decisiones de implementación:** `release/x.y.z → dev` es el único origen extra permitido hacia
+  `dev` y queda exento de `changeset-check` (consume los changesets). El job `visual-regression`
+  usa `container: mcr.microsoft.com/playwright:v<versión de @playwright/test>-noble` + `setup-node`
+  con `.nvmrc` (la imagen trae Node 24 y `engine-strict` lo rechaza); el tag se sube junto con
+  `scripts/visual-docker.sh`. `npm publish --provenance` exige `repository` en
+  `projects/bip-angular/package.json`. ng-packagr no permite `assets` fuera de la raíz del
+  proyecto, así que `pnpm build` copia `LICENSE` con `scripts/copy-license.cjs`. Storybook de
+  dev/qa se sube como artifact (Pages es único por repo, lo usa `production.yml`). Primera
+  release prevista: `0.1.0`.
 - **Terminado cuando:** una release de prueba `0.x` se publica en npm desde `main` y Storybook queda en Pages.
 
 ---

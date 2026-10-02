@@ -41,13 +41,23 @@ jobs:
             exit 1
           fi
 
-          if [[ "$TARGET" == "dev" ]] && [[ "$SOURCE" != "feature/"* ]] && [[ "$SOURCE" != "hotfix/"* ]] && [[ "$SOURCE" != "main" ]]; then
-            echo "❌ ERROR: Solo se puede mergear a 'dev' desde 'feature/*', 'hotfix/*' o 'main'"
-            echo "Debe ser: feature/* → dev  |  hotfix/* → dev  |  main → dev"
+          if [[ "$TARGET" == "dev" ]] && [[ "$SOURCE" != "feature/"* ]] && [[ "$SOURCE" != "release/"* ]] && [[ "$SOURCE" != "hotfix/"* ]] && [[ "$SOURCE" != "main" ]]; then
+            echo "❌ ERROR: Solo se puede mergear a 'dev' desde 'feature/*', 'release/*', 'hotfix/*' o 'main'"
+            echo "Debe ser: feature/* → dev  |  release/* → dev  |  hotfix/* → dev  |  main → dev"
             exit 1
           fi
 
           echo "✅ Flujo de branches correcto"
+
+      - name: Check PR title format
+        # El título es texto libre del autor del PR: vía env, nunca interpolado en el script.
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [[ ! "$PR_TITLE" =~ ^(feat|fix|docs|style|refactor|test|chore|hotfix)(\(.+\))?:\ .+ ]]; then
+            echo "⚠️ Recomendación: usa conventional commits"
+            echo "Ejemplo: feat(button): agregar variante outline"
+          fi
 
   build-and-test:
     name: Build & Test PR
@@ -61,7 +71,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '22'
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -69,6 +79,9 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
 
       - name: Test
         run: pnpm test
@@ -85,7 +98,8 @@ jobs:
   changeset-check:
     name: Changeset Check
     runs-on: ubuntu-latest
-    if: github.base_ref == 'dev'
+    # `release/*` consume los changesets a propósito (`changeset version`), así que no se exige uno.
+    if: github.base_ref == 'dev' && !startsWith(github.head_ref, 'release/')
     steps:
       - uses: actions/checkout@v5
         with:
@@ -97,7 +111,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: '22'
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -127,3 +141,65 @@ jobs:
           else
             echo "Sin cambios en código publicado bajo projects/bip-angular — no se requiere changeset."
           fi
+
+  security-audit:
+    name: Security Audit (PR → QA)
+    runs-on: ubuntu-latest
+    if: github.base_ref == 'qa'
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9.15.9
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run security audit
+        run: pnpm audit --audit-level=moderate
+        continue-on-error: true
+
+  visual-regression:
+    name: Visual Regression + a11y en navegador
+    runs-on: ubuntu-latest
+    # Misma imagen que scripts/visual-docker.sh usa en local: mismo Chromium y libc, cero
+    # deriva entre "pasa en mi máquina" y "pasa en CI". El tag DEBE coincidir con la versión
+    # de @playwright/test en package.json (se suben juntos, ver scripts/visual-docker.sh).
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      CI: 'true'
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9.15.9
+
+      # La imagen trae su propio Node (24.x), que `engine-strict=true` rechaza — se instala el
+      # Node 22 LTS fijado en .nvmrc, igual que hace scripts/visual-docker.sh.
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run visual regression + browser a11y
+        run: pnpm exec playwright test --config=playwright.visual.config.ts
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

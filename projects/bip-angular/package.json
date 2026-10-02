@@ -3,6 +3,25 @@
   "version": "0.0.0",
   "description": "BipUI design system components for Angular",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egvictorino/Bip-Design-Systems-Angular.git",
+    "directory": "projects/bip-angular"
+  },
+  "homepage": "https://egvictorino.github.io/Bip-Design-Systems-Angular/",
+  "bugs": {
+    "url": "https://github.com/egvictorino/Bip-Design-Systems-Angular/issues"
+  },
+  "keywords": [
+    "angular",
+    "design-system",
+    "ui-components",
+    "signals",
+    "standalone",
+    "a11y",
+    "rtl",
+    "theming"
+  ],
   "peerDependencies": {
     "@angular/common": "^21.2.0",
     "@angular/core": "^21.2.0",
@@ -18,5 +37,8 @@
   },
   "sideEffects": [
     "**/*.css"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
