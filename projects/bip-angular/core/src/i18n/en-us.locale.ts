@@ -183,6 +183,9 @@ export const enUS: BipLocale = {
   select: {
     options: 'Options',
     noResults: 'No results',
+    loading: 'Loading options',
+    loadingText: 'Loading...',
+    clear: 'Clear selection',
   },
 
   navbar: {

@@ -83,17 +83,20 @@
 /* ─── Sizes ───────────────────────────────────────────────────────────────── */
 
 .bip-select--sm {
-  padding: var(--space-control-y-sm) var(--space-8) var(--space-control-y-sm) var(--space-control-x-sm);
+  padding-block: var(--space-control-y-sm);
+  padding-inline: var(--space-control-x-sm) var(--space-8);
   font-size: var(--text-xs);
   line-height: 1rem;
 }
 .bip-select--md {
-  padding: var(--space-control-y-md) var(--space-8) var(--space-control-y-md) var(--space-4);
+  padding-block: var(--space-control-y-md);
+  padding-inline: var(--space-4) var(--space-8);
   font-size: var(--text-sm);
   line-height: 1.25rem;
 }
 .bip-select--lg {
-  padding: var(--space-control-y-lg) var(--space-8) var(--space-control-y-lg) var(--space-control-x-lg);
+  padding-block: var(--space-control-y-lg);
+  padding-inline: var(--space-control-x-lg) var(--space-8);
   font-size: var(--text-lg);
   line-height: 1.75rem;
 }
@@ -227,6 +230,37 @@
   cursor: pointer;
 }
 
+/* ─── Botón limpiar (clearable) ───────────────────────────────────────────── */
+
+.bip-select--with-clear {
+  padding-inline-end: var(--space-14);
+}
+
+.bip-select-clear {
+  position: absolute;
+  inset-inline-end: var(--space-8);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-0);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-txt-utility);
+  border-radius: var(--radius-marker);
+  line-height: 0;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.bip-select-clear:hover {
+  color: var(--color-txt);
+}
+.bip-select-clear:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 /* ─── Panel (overlay) ─────────────────────────────────────────────────────── */
 
 .bip-select-panel {
@@ -284,4 +318,34 @@
 .bip-select-option--disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.bip-select-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--color-txt-secondary);
+  font-size: var(--text-sm);
+}
+.bip-select-loading:not(:empty) {
+  padding: var(--space-4);
+}
+.bip-select-spinner {
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--radius-circle);
+  border: 2px solid var(--color-edge);
+  border-block-start-color: var(--color-primary);
+  animation: bip-select-spin var(--duration-slow) linear infinite;
+}
+@keyframes bip-select-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bip-select-spinner {
+    animation-duration: 0ms;
+  }
 }

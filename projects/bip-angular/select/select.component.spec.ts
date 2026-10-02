@@ -33,6 +33,10 @@ const GROUPS: BipSelectOptionGroup[] = [
       [groups]="groups"
       [required]="required"
       [search]="search"
+      [externalFilter]="externalFilter"
+      [loading]="loading"
+      [clearable]="clearable"
+      (searchQuery)="queries.push($event)"
       [(value)]="value"
     />
   `,
@@ -49,15 +53,39 @@ class HostComponent {
   groups: BipSelectOptionGroup[] = [];
   required = false;
   search = false;
+  externalFilter = false;
+  loading = false;
+  clearable = false;
+  queries: string[] = [];
   value = '';
 }
 
 @Component({
   imports: [BipSelect, ReactiveFormsModule],
-  template: `<bip-select [formControl]="control" label="País" [options]="options" [search]="true" />`,
+  template: `<bip-select
+    [formControl]="control"
+    label="País"
+    [options]="options"
+    [search]="true"
+  />`,
 })
 class SearchReactiveFormHostComponent {
   readonly control = new FormControl('', { validators: Validators.required });
+  readonly options = OPTIONS;
+}
+
+@Component({
+  imports: [BipSelect, ReactiveFormsModule],
+  template: `<bip-select
+    [formControl]="control"
+    label="País"
+    [options]="options"
+    [search]="true"
+    [clearable]="true"
+  />`,
+})
+class ClearableFormHostComponent {
+  readonly control = new FormControl('');
   readonly options = OPTIONS;
 }
 
@@ -113,7 +141,9 @@ describe('BipSelect', () => {
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Requerido');
   });
 
@@ -122,10 +152,13 @@ describe('BipSelect', () => {
     expect(screen.getByRole('combobox')).toHaveClass(`bip-select--${size}`);
   });
 
-  it.each(['outlined', 'filled', 'bare'] as const)('aplica la clase de la variante %s', async (variant) => {
-    await render(HostComponent, { componentProperties: { variant } });
-    expect(screen.getByRole('combobox')).toHaveClass(`bip-select--${variant}`);
-  });
+  it.each(['outlined', 'filled', 'bare'] as const)(
+    'aplica la clase de la variante %s',
+    async (variant) => {
+      await render(HostComponent, { componentProperties: { variant } });
+      expect(screen.getByRole('combobox')).toHaveClass(`bip-select--${variant}`);
+    }
+  );
 
   it('actualiza value con [(value)] al seleccionar una opción', async () => {
     const { fixture } = await render(HostComponent);
@@ -283,7 +316,9 @@ describe('BipSelect', () => {
 
     it('FormControl: propaga el valor y marca touched solo al salir del campo', async () => {
       const host = new SearchReactiveFormHostComponent();
-      await render(SearchReactiveFormHostComponent, { componentProperties: { control: host.control } });
+      await render(SearchReactiveFormHostComponent, {
+        componentProperties: { control: host.control },
+      });
       const user = userEvent.setup();
       await user.click(screen.getByRole('combobox'));
       await user.click(screen.getByRole('option', { name: 'México' }));
@@ -297,10 +332,133 @@ describe('BipSelect', () => {
       const host = new SearchReactiveFormHostComponent();
       host.control.setValue('us');
       host.control.disable();
-      await render(SearchReactiveFormHostComponent, { componentProperties: { control: host.control } });
+      await render(SearchReactiveFormHostComponent, {
+        componentProperties: { control: host.control },
+      });
       const combobox = screen.getByRole('combobox');
       expect(combobox).toHaveValue('Estados Unidos');
       expect(combobox).toBeDisabled();
+    });
+  });
+
+  describe('búsqueda remota (externalFilter / loading)', () => {
+    const remote = (extra: Partial<HostComponent> = {}) => ({
+      componentProperties: { search: true, externalFilter: true, label: 'País', ...extra },
+    });
+
+    it('no filtra internamente y emite searchQuery al escribir', async () => {
+      const { fixture } = await render(HostComponent, remote());
+      const user = userEvent.setup();
+      await user.type(screen.getByRole('combobox'), 'zzz');
+      expect(screen.getAllByRole('option')).toHaveLength(3);
+      expect(fixture.componentInstance.queries.at(-1)).toBe('zzz');
+    });
+
+    it('emite "" al cerrar el panel con texto escrito', async () => {
+      const { fixture } = await render(HostComponent, remote());
+      const user = userEvent.setup();
+      await user.type(screen.getByRole('combobox'), 'mex');
+      await user.keyboard('{Escape}');
+      expect(fixture.componentInstance.queries.at(-1)).toBe('');
+    });
+
+    it('la opción elegida conserva su label aunque salga de options()', async () => {
+      const { fixture } = await render(HostComponent, remote({ value: 'mx' }));
+      const user = userEvent.setup();
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toHaveValue('México');
+      await user.type(combobox, 'x');
+      fixture.componentInstance.options = [{ value: 'es', label: 'España' }];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      await user.keyboard('{Escape}');
+      expect(combobox).toHaveValue('México');
+    });
+
+    it('loading anuncia el estado, oculta opciones y marca aria-busy', async () => {
+      await render(HostComponent, remote({ loading: true }));
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      expect(screen.getByRole('status')).toHaveTextContent('Cargando...');
+      expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
+      expect(screen.queryAllByRole('option')).toHaveLength(0);
+      expect(screen.getByRole('combobox')).toHaveAttribute('aria-busy', 'true');
+    });
+
+    it('al llegar resultados nuevos la opción activa pasa a la primera habilitada', async () => {
+      const { fixture } = await render(HostComponent, remote());
+      const user = userEvent.setup();
+      await user.type(screen.getByRole('combobox'), 'e');
+      fixture.componentInstance.options = [
+        { value: 'es', label: 'España' },
+        { value: 'fr', label: 'Francia' },
+      ];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      await user.keyboard('{Enter}');
+      expect(fixture.componentInstance.value).toBe('es');
+    });
+  });
+
+  describe('clearable', () => {
+    const clearable = (extra: Partial<HostComponent> = {}) => ({
+      componentProperties: { search: true, clearable: true, label: 'País', value: 'mx', ...extra },
+    });
+
+    it('muestra el botón solo con valor, con search y sin disabled', async () => {
+      const { fixture } = await render(HostComponent, clearable());
+      expect(screen.getByRole('button', { name: 'Limpiar selección' })).toBeInTheDocument();
+      fixture.componentInstance.value = '';
+      fixture.detectChanges();
+      expect(screen.queryByRole('button', { name: 'Limpiar selección' })).toBeNull();
+    });
+
+    it('no aparece sin search ni con disabled', async () => {
+      await render(HostComponent, clearable({ search: false }));
+      expect(screen.queryByRole('button', { name: 'Limpiar selección' })).toBeNull();
+    });
+
+    it('no aparece si el campo está deshabilitado', async () => {
+      const host = new SearchReactiveFormHostComponent();
+      host.control.setValue('mx');
+      host.control.disable();
+      await render(SearchReactiveFormHostComponent, {
+        componentProperties: { control: host.control },
+      });
+      expect(screen.queryByRole('button', { name: 'Limpiar selección' })).toBeNull();
+    });
+
+    it('click limpia el valor y devuelve el foco al input', async () => {
+      const { fixture } = await render(HostComponent, clearable());
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('button', { name: 'Limpiar selección' }));
+      expect(fixture.componentInstance.value).toBe('');
+      expect(screen.getByRole('combobox')).toHaveValue('');
+      expect(screen.getByRole('combobox')).toHaveFocus();
+    });
+
+    it('propaga el valor vacío al FormControl', async () => {
+      const host = new ClearableFormHostComponent();
+      host.control.setValue('mx');
+      await render(ClearableFormHostComponent, { componentProperties: { control: host.control } });
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('button', { name: 'Limpiar selección' }));
+      expect(host.control.value).toBe('');
+    });
+
+    it('Escape con el panel cerrado limpia el valor; abierto solo cierra', async () => {
+      const { fixture } = await render(HostComponent, clearable());
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('{Escape}');
+      expect(fixture.componentInstance.value).toBe('mx');
+      await user.keyboard('{Escape}');
+      expect(fixture.componentInstance.value).toBe('');
+    });
+
+    it('usa el aria-label del locale activo', async () => {
+      await render(HostComponent, { ...clearable(), providers: [provideBipLocale(enUS)] });
+      expect(screen.getByRole('button', { name: 'Clear selection' })).toBeInTheDocument();
     });
   });
 });

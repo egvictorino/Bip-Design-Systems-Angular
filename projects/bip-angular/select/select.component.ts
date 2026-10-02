@@ -11,9 +11,12 @@ import {
   computed,
   effect,
   inject,
+  linkedSignal,
   model,
+  output,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
 import { type OverlayRef } from '@angular/cdk/overlay';
@@ -22,8 +25,10 @@ import {
   BipFormControlBase,
   BipIdGenerator,
   BipOverlay,
+  firstEnabledIndex,
   injectBipLocale,
   matchesSearch,
+  nextEnabledIndex,
 } from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 import { input as ngInput } from '@angular/core';
@@ -116,6 +121,20 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
   readonly groups = ngInput<BipSelectOptionGroup[]>([]);
   /** Convierte el campo en un combobox editable que filtra las opciones mientras se escribe. */
   readonly search = ngInput(false, { transform: booleanAttribute });
+  /**
+   * Búsqueda remota: no filtra internamente, el consumidor reemplaza `options()`/`groups()` a partir
+   * de `searchQuery`. La opción elegida sigue mostrando su label aunque ya no esté en las opciones
+   * filtradas: el componente recuerda la última opción elegida (una sola). Un valor inicial que
+   * nunca estuvo en `options()` no tiene label conocido: inclúyelo en la primera carga.
+   */
+  readonly externalFilter = ngInput(false, { transform: booleanAttribute });
+  /** Estado de carga de una búsqueda remota: oculta las opciones y lo anuncia (`aria-live`). */
+  readonly loading = ngInput(false, { transform: booleanAttribute });
+  /** Botón para limpiar el valor. Solo aplica con `search` (el `<select>` nativo no puede quedar vacío). */
+  readonly clearable = ngInput(false, { transform: booleanAttribute });
+
+  /** Texto escrito en cada cambio; `''` al cerrar el panel (para que el consumidor restaure la lista). */
+  readonly searchQuery = output<string>();
 
   protected readonly locale = injectBipLocale();
   protected readonly listboxId = inject(BipIdGenerator).next('bip-select-listbox');
@@ -123,12 +142,15 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
   protected readonly isOpen = signal(false);
   /** Texto que el usuario está escribiendo; `null` = no está escribiendo (el campo muestra la opción elegida). */
   protected readonly query = signal<string | null>(null);
-  protected readonly activeIndex = signal(-1);
+  /** Intención de la opción activa; `activeIndex` la corrige si ya no es válida (p. ej. llegan resultados remotos). */
+  private readonly activeRaw = signal(-1);
+  private lastQuery = '';
 
   @ViewChild('containerRef', { static: true })
   private readonly containerRef!: ElementRef<HTMLDivElement>;
   @ViewChild('panelTemplate', { static: true })
   private readonly panelTemplate!: TemplateRef<unknown>;
+  private readonly searchInputRef = viewChild<ElementRef<HTMLInputElement>>('searchInputRef');
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
@@ -163,6 +185,7 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
   protected readonly selectClass = computed(() => {
     const classes = [VARIANT_CLASS[this.variant()], SIZE_CLASS[this.size()]];
     if (this.error()) classes.push('bip-select--error');
+    if (this.showClear()) classes.push('bip-select--with-clear');
     return classes.join(' ');
   });
 
@@ -179,11 +202,25 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
     return classes.join(' ');
   });
 
-  protected readonly selectedLabel = computed(() => {
-    const current = this.value();
-    const all = [...this.options(), ...this.groups().flatMap((group) => group.options)];
-    return all.find((option) => option.value === current)?.label ?? '';
+  /** La opción elegida si está en las opciones actuales; si no, la última conocida con ese valor. */
+  private readonly selectedOption = linkedSignal<
+    { value: string; found: BipSelectOption | null },
+    BipSelectOption | null
+  >({
+    source: () => {
+      const value = this.value();
+      const all = [...this.options(), ...this.groups().flatMap((group) => group.options)];
+      return { value, found: all.find((option) => option.value === value) ?? null };
+    },
+    computation: (source, previous) =>
+      source.found ?? (previous?.value?.value === source.value ? previous.value : null),
   });
+
+  protected readonly selectedLabel = computed(() => this.selectedOption()?.label ?? '');
+
+  protected readonly showClear = computed(
+    () => this.search() && this.clearable() && this.value() !== '' && !this.disabled()
+  );
 
   /** Lo que muestra el `<input>`: lo escrito mientras se busca, la opción elegida el resto del tiempo. */
   protected readonly displayText = computed(() => this.query() ?? this.selectedLabel());
@@ -192,10 +229,11 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
   protected readonly visible = computed(() => {
     const q = this.query() ?? '';
     const locale = this.locale().locale;
+    const external = this.externalFilter();
     let index = 0;
     const toEntries = (list: BipSelectOption[], groupDisabled: boolean): BipSelectEntry[] =>
       list
-        .filter((option) => matchesSearch(option, q, locale))
+        .filter((option) => external || matchesSearch(option, q, locale))
         .map((option) => {
           const entry = {
             option,
@@ -215,6 +253,13 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
       }))
       .filter((group) => group.entries.length > 0);
     return { loose, groups, entries: [...loose, ...groups.flatMap((group) => group.entries)] };
+  });
+
+  protected readonly activeIndex = computed(() => {
+    if (this.loading()) return -1;
+    const entries = this.visible().entries;
+    const raw = this.activeRaw();
+    return entries[raw] && !entries[raw].disabled ? raw : firstEnabledIndex(entries);
   });
 
   protected readonly activeOptionId = computed(() =>
@@ -283,7 +328,8 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
   protected onSearchInput(value: string): void {
     this.query.set(value);
     this.isOpen.set(true);
-    this.activeIndex.set(this.firstEnabledIndex());
+    this.activeRaw.set(-1);
+    this.emitQuery(value);
   }
 
   protected onSearchKeydown(event: KeyboardEvent): void {
@@ -307,7 +353,14 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
         return;
       }
       case 'Escape':
-        if (!this.isOpen()) return;
+        if (!this.isOpen()) {
+          // Patrón WAI-ARIA combobox: con el popup oculto, Escape limpia el valor.
+          if (this.showClear()) {
+            event.preventDefault();
+            this.clear();
+          }
+          return;
+        }
         event.preventDefault();
         event.stopPropagation();
         this.closePanel();
@@ -322,9 +375,16 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
     this.closePanel();
   }
 
+  protected clear(): void {
+    this.value.set('');
+    this.onChange('');
+    this.closePanel();
+    this.searchInputRef()?.nativeElement.focus();
+  }
+
   protected openPanel(): void {
     if (this.disabled() || this.isOpen()) return;
-    this.activeIndex.set(this.selectedEntryIndex());
+    this.activeRaw.set(this.selectedEntryIndex());
     this.isOpen.set(true);
   }
 
@@ -332,7 +392,14 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
   protected closePanel(): void {
     this.isOpen.set(false);
     this.query.set(null);
-    this.activeIndex.set(-1);
+    this.activeRaw.set(-1);
+    this.emitQuery('');
+  }
+
+  private emitQuery(value: string): void {
+    if (value === this.lastQuery) return;
+    this.lastQuery = value;
+    this.searchQuery.emit(value);
   }
 
   /** Evita que un clic en el panel le quite el foco al `<input>` (y dispare blur/touched). */
@@ -340,26 +407,16 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
     event.preventDefault();
   }
 
-  private firstEnabledIndex(): number {
-    return this.visible().entries.findIndex((entry) => !entry.disabled);
-  }
-
   private selectedEntryIndex(): number {
     const current = this.value();
     const entries = this.visible().entries;
     const selected = entries.find((entry) => entry.option.value === current && !entry.disabled);
-    return selected ? selected.index : this.firstEnabledIndex();
+    return selected ? selected.index : firstEnabledIndex(entries);
   }
 
   /** Mueve la opción activa saltando las deshabilitadas; sin wrap (se queda en el borde). */
   private step(direction: 1 | -1): void {
-    const entries = this.visible().entries;
-    let i = this.activeIndex();
-    do {
-      i += direction;
-    } while (i >= 0 && i < entries.length && entries[i].disabled);
-    if (i < 0 || i >= entries.length) return;
-    this.activeIndex.set(i);
+    this.activeRaw.set(nextEnabledIndex(this.visible().entries, this.activeIndex(), direction));
   }
 
   private showPanel(): void {
