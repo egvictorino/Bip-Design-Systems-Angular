@@ -147,6 +147,46 @@ class ThemingSideBySideDemo {
   protected readonly boxStyle = themedBoxStyle();
 }
 
+/**
+ * A diferencia de `ThemingSideBySideDemo` (que solo compara el eje `theme`, ambas cajas en
+ * `colorScheme` por defecto), esta demo fija explícitamente `theme` y `colorScheme` en cada
+ * una de las 4 combinaciones — `colorScheme` no se hereda del provider padre (solo
+ * `density`/`dir` lo hacen, ver theme-base.ts), así que el único modo de mostrar dark de
+ * verdad es declararlo en cada `<bip-theme-provider>` hijo. Usada por
+ * `visual/theme-matrix.spec.ts` para la matriz 2×2 completa.
+ */
+@Component({
+  selector: 'bip-theming-color-schemes-matrix-demo',
+  template: `
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6);">
+      @for (cell of cells; track cell.theme + cell.colorScheme) {
+        <bip-theme-provider [theme]="cell.theme" [colorScheme]="cell.colorScheme">
+          <div [style]="boxStyle">
+            <strong>{{ cell.theme }} / {{ cell.colorScheme }}</strong>
+            <button
+              type="button"
+              style="background: var(--color-primary); color: var(--color-txt-on-primary); border: none; border-radius: var(--radius-control); padding: var(--space-control-y-md) var(--space-control-x-md);"
+            >
+              Botón
+            </button>
+          </div>
+        </bip-theme-provider>
+      }
+    </div>
+  `,
+  imports: [BipThemeProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ThemingColorSchemesMatrixDemo {
+  protected readonly boxStyle = themedBoxStyle();
+  protected readonly cells: Array<{ theme: 'square' | 'rounded'; colorScheme: 'light' | 'dark' }> = [
+    { theme: 'square', colorScheme: 'light' },
+    { theme: 'rounded', colorScheme: 'light' },
+    { theme: 'square', colorScheme: 'dark' },
+    { theme: 'rounded', colorScheme: 'dark' },
+  ];
+}
+
 @Component({
   selector: 'bip-theming-portal-opener',
   template: `
@@ -257,6 +297,13 @@ export const SideBySide: Story = {
   render: () => ({
     template: `<bip-theming-side-by-side-demo />`,
     moduleMetadata: { imports: [ThemingSideBySideDemo] },
+  }),
+};
+
+export const ColorSchemesMatrix: Story = {
+  render: () => ({
+    template: `<bip-theming-color-schemes-matrix-demo />`,
+    moduleMetadata: { imports: [ThemingColorSchemesMatrixDemo] },
   }),
 };
 
