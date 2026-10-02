@@ -1,0 +1,6 @@
+# `packages: []` saca esta app del workspace del repo raíz a propósito — sin esto, pnpm
+# resolvería @bip-design-systems/angular como un link simbólico al código fuente del
+# monorepo (projects/bip-angular), no como el tarball empaquetado. Ver scripts/e2e-consumer.sh
+# y CLAUDE.md § Bloque 11: el objetivo es verificar lo que se publica de verdad (exports,
+# sideEffects, qué termina dentro del tarball), no el árbol de fuentes.
+packages: []

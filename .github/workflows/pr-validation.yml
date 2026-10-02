@@ -76,6 +76,12 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Lint del paquete publicado (exports/types/sideEffects)
+        run: pnpm lint:package
+
+      - name: Tamaño de bundle por entry point
+        run: pnpm size
+
   changeset-check:
     name: Changeset Check
     runs-on: ubuntu-latest

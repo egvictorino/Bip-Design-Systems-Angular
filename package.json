@@ -9,13 +9,16 @@
     "test": "ng test bip-angular",
     "test:watch": "ng test bip-angular --watch",
     "lint": "eslint .",
-    "typecheck": "tsc -b tsconfig.json && tsc --noEmit -p visual/tsconfig.json",
+    "typecheck": "tsc -b tsconfig.json && tsc --noEmit -p visual/tsconfig.json && tsc --noEmit -p e2e/tsconfig.json",
     "storybook": "ng run bip-angular:storybook",
     "build-storybook": "ng run bip-angular:build-storybook",
     "changeset": "changeset",
     "format": "prettier --write \"**/*.{ts,html,js,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{ts,html,js,json,css,md}\"",
-    "test:visual:docker": "./scripts/visual-docker.sh"
+    "test:visual:docker": "./scripts/visual-docker.sh",
+    "test:e2e": "./scripts/e2e-consumer.sh",
+    "lint:package": "publint dist/bip-angular && attw --pack dist/bip-angular --profile esm-only --exclude-entrypoints \"styles/*\" --ignore-rules no-resolution internal-resolution-error cjs-resolves-to-esm",
+    "size": "size-limit"
   },
   "private": true,
   "packageManager": "pnpm@9.15.9",
