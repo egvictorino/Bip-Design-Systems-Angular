@@ -1,7 +1,7 @@
 /**
  * Reset base y utilidades globales — puerto de src/index.css (bip-design-system React),
  * separado en su propio archivo porque aquí cada hoja de styles/ vive en un fichero propio
- * (ver CLAUDE.md § Bloque 1). Importado último en bip.css: depende de --font-sans,
+ * (ver docs/plan-maestro.md § Bloque 1). Importado último en bip.css: depende de --font-sans,
  * --text-base, --leading-normal, --color-txt (primitives.css/tokens.css) y de
  * --duration-* (primitives.css) para el bloque prefers-reduced-motion.
  */
