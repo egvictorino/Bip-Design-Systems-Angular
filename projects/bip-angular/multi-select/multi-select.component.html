@@ -9,26 +9,29 @@
 
 <div
   #triggerRef
-  [id]="fieldId"
+  [attr.id]="inlineSearch() ? null : fieldId"
   [class]="'bip-multi-select-trigger ' + triggerClass()"
-  role="combobox"
-  [attr.tabindex]="disabled() ? -1 : 0"
-  [attr.aria-expanded]="isOpen()"
-  aria-haspopup="listbox"
-  [attr.aria-controls]="listboxId"
-  [attr.aria-invalid]="hasError() || null"
-  [attr.aria-required]="required() || null"
-  [attr.aria-describedby]="messageId()"
-  [attr.aria-disabled]="disabled() || null"
-  [attr.aria-labelledby]="label() ? labelId : null"
-  (click)="onTriggerClick()"
+  [attr.role]="inlineSearch() ? null : 'combobox'"
+  [attr.tabindex]="inlineSearch() ? null : disabled() ? -1 : 0"
+  [attr.aria-expanded]="inlineSearch() ? null : isOpen()"
+  [attr.aria-haspopup]="inlineSearch() ? null : 'listbox'"
+  [attr.aria-controls]="inlineSearch() ? null : listboxId"
+  [attr.aria-invalid]="inlineSearch() ? null : hasError() || null"
+  [attr.aria-required]="inlineSearch() ? null : required() || null"
+  [attr.aria-describedby]="inlineSearch() ? null : messageId()"
+  [attr.aria-disabled]="inlineSearch() ? null : disabled() || null"
+  [attr.aria-labelledby]="!inlineSearch() && label() ? labelId : null"
+  (mousedown)="onTriggerMousedown($event)"
+  (click)="onTriggerClick($event)"
   (keydown)="onTriggerKeydown($event)"
   (focus)="onFocus()"
   (blur)="onBlur()"
 >
   <div class="bip-multi-select-chips">
-    @if (selectedOptions().length === 0) {
-      <span class="bip-multi-select-placeholder">{{ placeholder() || locale().multiSelect.placeholder }}</span>
+    @if (selectedOptions().length === 0 && !inlineSearch()) {
+      <span class="bip-multi-select-placeholder">{{
+        placeholder() || locale().multiSelect.placeholder
+      }}</span>
     }
     @for (option of visibleChips(); track option.value) {
       <span [class]="'bip-multi-select-chip ' + chipClass()">
@@ -37,6 +40,7 @@
           <button
             type="button"
             class="bip-multi-select-chip-remove"
+            [attr.tabindex]="inlineSearch() ? -1 : null"
             [attr.aria-label]="locale().multiSelect.remove(option.label)"
             (click)="removeOption(option.value, $event)"
           >
@@ -53,19 +57,52 @@
         {{ locale().multiSelect.overflowChip(hiddenChipsCount()) }}
       </span>
     }
+    @if (inlineSearch()) {
+      <input
+        #inlineInputRef
+        type="text"
+        role="combobox"
+        autocomplete="off"
+        class="bip-multi-select-inline-input"
+        [id]="fieldId"
+        [disabled]="disabled()"
+        [required]="required()"
+        [placeholder]="
+          selectedOptions().length === 0 ? placeholder() || locale().multiSelect.placeholder : ''
+        "
+        [value]="query()"
+        [attr.aria-expanded]="isOpen()"
+        aria-haspopup="listbox"
+        aria-autocomplete="list"
+        [attr.aria-controls]="isOpen() && !loading() ? listboxId : null"
+        [attr.aria-activedescendant]="activeOptionId()"
+        [attr.aria-invalid]="hasError() || null"
+        [attr.aria-busy]="loading() || null"
+        [attr.aria-describedby]="messageId()"
+        (input)="onInlineInput($any($event.target).value)"
+        (keydown)="onInlineKeydown($event)"
+        (focus)="onFocus()"
+        (blur)="onInlineBlur()"
+      />
+    }
   </div>
   <div class="bip-multi-select-trigger-right">
     @if (selectedOptions().length > 0 && !disabled()) {
       <button
         type="button"
         class="bip-multi-select-clear-all"
+        [attr.tabindex]="inlineSearch() ? -1 : null"
         [attr.aria-label]="locale().multiSelect.removeAll"
         (click)="clearAll($event)"
       >
         ×
       </button>
     }
-    <span class="bip-multi-select-chevron" [class.bip-multi-select-chevron--open]="isOpen()" aria-hidden="true">
+    <span
+      class="bip-multi-select-chevron"
+      [class.bip-multi-select-chevron--open]="isOpen()"
+      aria-hidden="true"
+    >
       <svg viewBox="0 0 16 16" fill="currentColor" class="bip-multi-select-chevron-icon">
         <path
           fill-rule="evenodd"
@@ -88,8 +125,13 @@
 }
 
 <ng-template #panelTemplate>
-  <div class="bip-multi-select-panel" tabindex="-1" (keydown.escape)="onPanelEscape($event)">
-    @if (search()) {
+  <div
+    class="bip-multi-select-panel"
+    tabindex="-1"
+    (mousedown)="onPanelMousedown($event)"
+    (keydown.escape)="onPanelEscape($event)"
+  >
+    @if (search() && !inlineSearch()) {
       <div class="bip-multi-select-search-wrapper">
         <input
           #searchInputRef
@@ -106,12 +148,18 @@
       </div>
     }
 
-    @if (loading()) {
-      <div class="bip-multi-select-loading" aria-live="polite" [attr.aria-label]="locale().multiSelect.loading">
+    <div
+      class="bip-multi-select-loading"
+      role="status"
+      aria-live="polite"
+      [attr.aria-label]="locale().multiSelect.loading"
+    >
+      @if (loading()) {
         <span class="bip-multi-select-spinner" aria-hidden="true"></span>
         {{ locale().multiSelect.loadingText }}
-      </div>
-    } @else {
+      }
+    </div>
+    @if (!loading()) {
       <ul
         [id]="listboxId"
         class="bip-multi-select-listbox"
@@ -124,19 +172,29 @@
         @if (showSelectAll() && filteredOptions().length > 0) {
           <li
             class="bip-multi-select-option bip-multi-select-option--select-all"
+            [class.bip-multi-select-option--active]="
+              inlineSearch() && activeOptionId() === entries()[0].id
+            "
             role="option"
             data-bip-option
-            tabindex="0"
+            [attr.id]="inlineSearch() ? entries()[0].id : null"
+            [attr.tabindex]="inlineSearch() ? null : 0"
             [attr.aria-selected]="allFilteredSelected()"
             (click)="handleSelectAll()"
             (keydown)="onSelectAllKeydown($event)"
           >
-            <span class="bip-multi-select-option-checkbox" [class.bip-multi-select-option-checkbox--selected]="allFilteredSelected()" aria-hidden="true"></span>
+            <span
+              class="bip-multi-select-option-checkbox"
+              [class.bip-multi-select-option-checkbox--selected]="allFilteredSelected()"
+              aria-hidden="true"
+            ></span>
             {{ selectAllLabel() }}
           </li>
         }
         @if (filteredOptions().length === 0) {
-          <li class="bip-multi-select-no-results" role="presentation">{{ locale().multiSelect.noResults }}</li>
+          <li class="bip-multi-select-no-results" role="presentation">
+            {{ locale().multiSelect.noResults }}
+          </li>
         }
         @for (group of groupedOptions(); track group.name) {
           @if (group.name) {
@@ -146,10 +204,12 @@
             <li
               class="bip-multi-select-option"
               [class.bip-multi-select-option--disabled]="option.disabled"
+              [class.bip-multi-select-option--active]="isActive(option)"
+              [attr.id]="entryId(option)"
               role="option"
               [attr.data-bip-option]="option.disabled ? null : ''"
               [attr.data-bip-disabled]="option.disabled ? '' : null"
-              [tabindex]="option.disabled ? -1 : 0"
+              [attr.tabindex]="inlineSearch() ? null : option.disabled ? -1 : 0"
               [attr.aria-selected]="isSelected(option.value)"
               [attr.aria-disabled]="option.disabled || null"
               (click)="toggleOption(option)"

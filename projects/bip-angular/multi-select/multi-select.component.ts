@@ -12,10 +12,12 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   model,
   output,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
 import { type OverlayRef } from '@angular/cdk/overlay';
@@ -24,18 +26,30 @@ import {
   BipFormControlBase,
   BipIdGenerator,
   BipOverlay,
+  firstEnabledIndex,
   injectBipLocale,
   matchesSearch,
+  nextEnabledIndex,
 } from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 
 export type BipMultiSelectVariant = 'outlined' | 'filled' | 'bare';
+
+/** Dónde se escribe la búsqueda: en el panel (default) o junto a los chips, en el propio campo. */
+export type BipMultiSelectSearchPlacement = 'trigger' | 'panel';
 
 export interface BipMultiSelectOption {
   value: string;
   label: string;
   disabled?: boolean;
   group?: string;
+}
+
+/** Entrada navegable con `aria-activedescendant` (modo `searchPlacement="trigger"`): "seleccionar todo" u opción. */
+interface BipMultiSelectEntry {
+  option: BipMultiSelectOption | null;
+  disabled: boolean;
+  id: string;
 }
 
 interface BipMultiSelectGroup {
@@ -66,9 +80,11 @@ const GAP_PX = 4;
 
 /**
  * Combobox multiselección con búsqueda, chips y agrupación — puerto de MultiSelect (React).
- * El foco real se mueve entre los `<li role="option">` del panel (no `aria-activedescendant`,
- * igual que la referencia), vía `querySelectorAll` sobre el panel — ver
- * `testing/a11y.spec.ts` para el detalle de ARIA/teclado.
+ * Por defecto (`searchPlacement="panel"`) el foco real se mueve entre los `<li role="option">` del
+ * panel (no `aria-activedescendant`, igual que la referencia), vía `querySelectorAll` sobre el panel.
+ * Con `searchPlacement="trigger"` se escribe junto a los chips, en el propio campo ("tags input"):
+ * el foco real nunca sale del `<input role="combobox">` y la opción activa se anuncia con
+ * `aria-activedescendant` (como `BipSelect`). Ver `testing/a11y.spec.ts` para ARIA/teclado.
  */
 @Component({
   selector: 'bip-multi-select',
@@ -90,6 +106,11 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   readonly placeholder = input<string>('');
   /** Muestra el buscador dentro del panel. Con `false` el panel abre directo en la lista de opciones. */
   readonly search = input(true, { transform: booleanAttribute });
+  /**
+   * Con `search`: `'panel'` (default) deja el buscador dentro del panel; `'trigger'` permite escribir
+   * junto a los chips, en el propio campo (`placeholder` va en ese input; `searchPlaceholder` no aplica).
+   */
+  readonly searchPlacement = input<BipMultiSelectSearchPlacement>('panel');
   readonly searchPlaceholder = input<string>('');
   readonly helperText = input<string>('');
   readonly error = input(false, { transform: booleanAttribute });
@@ -109,12 +130,17 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   protected readonly focused = signal(false);
   protected readonly isOpen = signal(false);
   protected readonly query = signal('');
+  /** Intención de la opción activa (modo `trigger`); `activeIndex` la corrige si ya no es válida. */
+  private readonly activeRaw = signal(-1);
 
   private onChange: (value: string[]) => void = () => {};
 
-  @ViewChild('triggerRef', { static: true }) private readonly triggerRef!: ElementRef<HTMLDivElement>;
-  @ViewChild('panelTemplate', { static: true }) private readonly panelTemplate!: TemplateRef<unknown>;
+  @ViewChild('triggerRef', { static: true })
+  private readonly triggerRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('panelTemplate', { static: true })
+  private readonly panelTemplate!: TemplateRef<unknown>;
   @ViewChild('searchInputRef') private readonly searchInputRef?: ElementRef<HTMLInputElement>;
+  private readonly inlineInputRef = viewChild<ElementRef<HTMLInputElement>>('inlineInputRef');
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
@@ -122,8 +148,12 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   private overlayRef: OverlayRef | null = null;
   private panelElement: HTMLElement | null = null;
 
-  protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly hasVisibleMessage = computed(
+    () => (this.error() && !!this.errorMessage()) || !!this.helperText()
+  );
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
   /**
    * `<label for>` no asocia accesiblemente un `<div role="combobox">` — ese comportamiento
    * del navegador es solo para controles de formulario nativos. El trigger necesita
@@ -140,7 +170,9 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
     return this.options().filter((option) => matchesSearch(option, q, locale));
   });
 
-  protected readonly hasGroups = computed(() => this.options().some((option) => option.group !== undefined));
+  protected readonly hasGroups = computed(() =>
+    this.options().some((option) => option.group !== undefined)
+  );
 
   protected readonly groupedOptions = computed<BipMultiSelectGroup[]>(() => {
     if (!this.hasGroups()) return [{ name: '', options: this.filteredOptions() }];
@@ -160,13 +192,45 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
     return groups;
   });
 
-  protected readonly selectableFiltered = computed(() => this.filteredOptions().filter((o) => !o.disabled));
+  protected readonly selectableFiltered = computed(() =>
+    this.filteredOptions().filter((o) => !o.disabled)
+  );
   protected readonly allFilteredSelected = computed(() => {
     const selectable = this.selectableFiltered();
     return selectable.length > 0 && selectable.every((o) => this.value().includes(o.value));
   });
 
-  protected readonly selectedOptions = computed(() => this.options().filter((o) => this.value().includes(o.value)));
+  protected readonly inlineSearch = computed(
+    () => this.search() && this.searchPlacement() === 'trigger'
+  );
+
+  /**
+   * Opciones elegidas conocidas. Las que ya no están en `options()` (p. ej. `externalFilter`, donde el
+   * consumidor reemplaza la lista al buscar) se recuerdan para no perder su chip; un valor que nunca
+   * estuvo en `options()` no tiene label conocido y no se muestra.
+   */
+  private readonly knownSelected = linkedSignal<
+    { value: string[]; options: BipMultiSelectOption[] },
+    Map<string, BipMultiSelectOption>
+  >({
+    source: () => ({ value: this.value(), options: this.options() }),
+    computation: (source, previous) => {
+      const known = new Map<string, BipMultiSelectOption>();
+      for (const v of source.value) {
+        const option = source.options.find((o) => o.value === v) ?? previous?.value.get(v);
+        if (option) known.set(v, option);
+      }
+      return known;
+    },
+  });
+
+  protected readonly selectedOptions = computed(() => {
+    const selected = new Set(this.value());
+    const current = this.options().filter((o) => selected.has(o.value));
+    const present = new Set(current.map((o) => o.value));
+    const remembered = [...this.knownSelected().values()].filter((o) => !present.has(o.value));
+    return [...current, ...remembered];
+  });
   protected readonly visibleChips = computed(() => {
     const max = this.maxVisibleChips();
     const selected = this.selectedOptions();
@@ -184,6 +248,40 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
       : this.locale().multiSelect.selectAll
   );
 
+  /** Lista plana navegable del modo `trigger`: "seleccionar todo" (si aplica) y luego las opciones en orden visual. */
+  protected readonly entries = computed<BipMultiSelectEntry[]>(() => {
+    const list: BipMultiSelectEntry[] = [];
+    if (this.showSelectAll() && this.filteredOptions().length > 0) {
+      list.push({ option: null, disabled: false, id: `${this.listboxId}-all` });
+    }
+    for (const group of this.groupedOptions()) {
+      for (const option of group.options) {
+        list.push({
+          option,
+          disabled: !!option.disabled,
+          id: `${this.listboxId}-opt-${list.length}`,
+        });
+      }
+    }
+    return list;
+  });
+
+  private readonly entryIdByValue = computed(
+    () =>
+      new Map(this.entries().flatMap((e) => (e.option ? [[e.option.value, e.id] as const] : [])))
+  );
+
+  protected readonly activeIndex = computed(() => {
+    if (this.loading()) return -1;
+    const entries = this.entries();
+    const raw = this.activeRaw();
+    return entries[raw] && !entries[raw].disabled ? raw : firstEnabledIndex(entries);
+  });
+
+  protected readonly activeOptionId = computed(() =>
+    this.inlineSearch() && this.isOpen() ? (this.entries()[this.activeIndex()]?.id ?? null) : null
+  );
+
   constructor() {
     super();
     effect(() => {
@@ -194,6 +292,14 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
       untracked(() => {
         if (open) this.showPanel();
         else this.hidePanel();
+      });
+    });
+    effect(() => {
+      const id = this.activeOptionId();
+      if (!id) return;
+      untracked(() => {
+        // `scrollIntoView` no existe en jsdom.
+        this.panelElement?.querySelector(`#${id}`)?.scrollIntoView?.({ block: 'nearest' });
       });
     });
     effect(() => {
@@ -221,11 +327,32 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
     this.onChange(next);
   }
 
-  protected onTriggerClick(): void {
-    this.toggle();
+  protected onTriggerClick(event: MouseEvent): void {
+    if (!this.inlineSearch()) {
+      this.toggle();
+      return;
+    }
+    if (this.disabled()) return;
+    this.inlineInputRef()?.nativeElement.focus();
+    const onChevron =
+      event.target instanceof Element && !!event.target.closest('.bip-multi-select-chevron');
+    if (onChevron) this.toggle();
+    else this.openPanel();
+  }
+
+  /** En modo `trigger` el foco no debe salir del `<input>` al pulsar chips, botones o el marco. */
+  protected onTriggerMousedown(event: MouseEvent): void {
+    if (this.inlineSearch() && event.target !== this.inlineInputRef()?.nativeElement)
+      event.preventDefault();
+  }
+
+  /** En modo `trigger` el panel completo mantiene el foco en el `<input>`. */
+  protected onPanelMousedown(event: MouseEvent): void {
+    if (this.inlineSearch()) event.preventDefault();
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
+    if (this.inlineSearch()) return;
     if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
       event.preventDefault();
       this.openPanel();
@@ -245,6 +372,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   protected closePanel(refocusTrigger = false): void {
     this.isOpen.set(false);
     this.query.set('');
+    this.activeRaw.set(-1);
     if (refocusTrigger) this.triggerRef.nativeElement.focus();
   }
 
@@ -280,6 +408,67 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
 
   protected onSearchInput(value: string): void {
     this.query.set(value);
+  }
+
+  protected onInlineInput(value: string): void {
+    this.query.set(value);
+    this.activeRaw.set(-1);
+    this.openPanel();
+  }
+
+  protected onInlineBlur(): void {
+    this.closePanel();
+    this.onBlur();
+  }
+
+  protected onInlineKeydown(event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'ArrowDown':
+      case 'ArrowUp':
+        event.preventDefault();
+        if (!this.isOpen()) this.openPanel();
+        else
+          this.activeRaw.set(
+            nextEnabledIndex(this.entries(), this.activeIndex(), event.key === 'ArrowDown' ? 1 : -1)
+          );
+        return;
+      case 'Enter': {
+        if (!this.isOpen()) return;
+        // Evita que Enter envíe el <form> mientras el panel está abierto.
+        event.preventDefault();
+        const entry = this.entries()[this.activeIndex()];
+        if (!entry) return;
+        if (entry.option) this.toggleOption(entry.option);
+        else this.handleSelectAll();
+        // Multiselección: el panel sigue abierto; se limpia lo escrito y la opción activa se queda donde estaba.
+        this.query.set('');
+        this.activeRaw.set(this.entries().findIndex((e) => e.id === entry.id));
+        return;
+      }
+      case 'Escape':
+        if (!this.isOpen()) return;
+        event.preventDefault();
+        event.stopPropagation();
+        this.closePanel();
+        return;
+      case 'Backspace': {
+        if (this.query() !== '') return;
+        const last = this.visibleChips().at(-1);
+        if (!last || last.disabled) return;
+        event.preventDefault();
+        this.emitChange(this.value().filter((v) => v !== last.value));
+        return;
+      }
+    }
+  }
+
+  protected entryId(option: BipMultiSelectOption): string | null {
+    return this.inlineSearch() ? (this.entryIdByValue().get(option.value) ?? null) : null;
+  }
+
+  protected isActive(option: BipMultiSelectOption): boolean {
+    const id = this.activeOptionId();
+    return !!id && id === this.entryIdByValue().get(option.value);
   }
 
   protected onSearchKeydown(event: KeyboardEvent): void {
@@ -355,6 +544,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
     const classes = [VARIANT_CLASS[this.variant()], SIZE_CLASS[this.size()]];
     if (this.error()) classes.push('bip-multi-select--error');
     if (this.disabled()) classes.push('bip-multi-select--disabled');
+    if (this.inlineSearch()) classes.push('bip-multi-select--inline');
     return classes.join(' ');
   });
 
@@ -362,7 +552,9 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
 
   private focusableOptionElements(): HTMLElement[] {
     if (!this.panelElement) return [];
-    return Array.from(this.panelElement.querySelectorAll<HTMLElement>('[data-bip-option]:not([data-bip-disabled])'));
+    return Array.from(
+      this.panelElement.querySelectorAll<HTMLElement>('[data-bip-option]:not([data-bip-disabled])')
+    );
   }
 
   private showPanel(): void {
@@ -373,8 +565,20 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
-            { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-            { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
+            {
+              originX: 'start',
+              originY: 'bottom',
+              overlayX: 'start',
+              overlayY: 'top',
+              offsetY: GAP_PX,
+            },
+            {
+              originX: 'start',
+              originY: 'top',
+              overlayX: 'start',
+              overlayY: 'bottom',
+              offsetY: -GAP_PX,
+            },
           ])
           .withPush(true)
           .withFlexibleDimensions(false),
@@ -392,6 +596,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
       this.closePanel();
     });
     this.overlayRef = overlayRef;
+    if (this.inlineSearch()) return;
     queueMicrotask(() => {
       if (this.search()) this.searchInputRef?.nativeElement.focus();
       else this.focusableOptionElements()[0]?.focus();
