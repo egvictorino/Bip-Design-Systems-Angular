@@ -14,7 +14,9 @@ pnpm lint && pnpm typecheck
 ```
 
 El plan maestro, las reglas de código y la Definición de Terminado de un componente viven en
-[CLAUDE.md](CLAUDE.md).
+[CLAUDE.md](CLAUDE.md). Las reglas de revisión, arquitectura y seguridad viven en
+[AGENTS.md](AGENTS.md) y aplican a humanos y agentes (el subagente `bip-reviewer` en
+`.claude/agents/` las usa para revisar un diff).
 
 ## Flujo de ramas
 

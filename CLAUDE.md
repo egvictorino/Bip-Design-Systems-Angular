@@ -5,6 +5,8 @@ construye por bloques, en orden, y cada bloque tiene un criterio de terminado ex
 Al terminar un bloque, marca su casilla en § Estado de bloques y actualiza este archivo si
 alguna decisión cambió.
 
+Reglas obligatorias de revisión, refactor y seguridad: @AGENTS.md
+
 ## Qué es esto
 
 Design system BipUI reescrito **desde cero para Angular**. Existe una versión React
@@ -103,6 +105,8 @@ el equivalente al export `./*` del paquete React. El entry primario re-exporta t
 | `useBipLocale()`                                             | `injectBipLocale()` → `Signal<BipLocale>`                                                                                                                                                                             |
 
 ## Reglas de código (aplican a todos los bloques)
+
+Seguridad, arquitectura limpia y reglas de revisión/refactor: ver [AGENTS.md](AGENTS.md).
 
 - `strict: true`, `noUnusedLocals`, `noUnusedParameters`, `strictTemplates`, `strictInjectionParameters`.
 - Todos los componentes: standalone, OnPush, signals. Nada de `@Input()`/`@Output()` decorators ni `NgModule`.
