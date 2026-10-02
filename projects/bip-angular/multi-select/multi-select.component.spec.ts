@@ -31,6 +31,9 @@ const GROUPED_OPTIONS: BipMultiSelectOption[] = [
       [showSelectAll]="showSelectAll"
       [loading]="loading"
       [search]="search"
+      [searchPlacement]="searchPlacement"
+      [externalFilter]="externalFilter"
+      (searchQuery)="queries.push($event)"
       [(value)]="value"
     />
   `,
@@ -46,6 +49,9 @@ class HostComponent {
   showSelectAll = false;
   loading = false;
   search = true;
+  searchPlacement: 'trigger' | 'panel' = 'panel';
+  externalFilter = false;
+  queries: string[] = [];
   value: string[] = [];
 }
 
@@ -54,6 +60,20 @@ class HostComponent {
   template: `<bip-multi-select [formControl]="control" label="Países" [options]="options" />`,
 })
 class ReactiveFormHostComponent {
+  readonly control = new FormControl<string[]>([]);
+  readonly options = OPTIONS;
+}
+
+@Component({
+  imports: [BipMultiSelect, ReactiveFormsModule],
+  template: `<bip-multi-select
+    [formControl]="control"
+    label="Países"
+    [options]="options"
+    searchPlacement="trigger"
+  />`,
+})
+class InlineReactiveFormHostComponent {
   readonly control = new FormControl<string[]>([]);
   readonly options = OPTIONS;
 }
@@ -120,7 +140,9 @@ describe('BipMultiSelect', () => {
   });
 
   it('limpia todas las selecciones con el botón "Eliminar todas las selecciones"', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { value: ['mx', 'us'] } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { value: ['mx', 'us'] },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: 'Eliminar todas las selecciones' }));
     expect(fixture.componentInstance.value).toEqual([]);
@@ -149,7 +171,9 @@ describe('BipMultiSelect', () => {
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Requerido');
   });
 
@@ -201,7 +225,9 @@ describe('BipMultiSelect', () => {
   });
 
   it('selecciona todas las opciones no deshabilitadas al hacer click en "Seleccionar todo"', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { showSelectAll: true } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { showSelectAll: true },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('combobox'));
     await user.click(screen.getByRole('option', { name: /Seleccionar todo/ }));
@@ -209,7 +235,9 @@ describe('BipMultiSelect', () => {
   });
 
   it('muestra "+N más" cuando las selecciones exceden maxVisibleChips', async () => {
-    await render(HostComponent, { componentProperties: { value: ['mx', 'us'], maxVisibleChips: 1 } });
+    await render(HostComponent, {
+      componentProperties: { value: ['mx', 'us'], maxVisibleChips: 1 },
+    });
     expect(screen.getByText('+1 más')).toBeInTheDocument();
   });
 
@@ -223,7 +251,9 @@ describe('BipMultiSelect', () => {
 
   it('aplica la clase full-width al host', async () => {
     const { container } = await render(HostComponent, { componentProperties: { fullWidth: true } });
-    expect(container.querySelector('bip-multi-select')).toHaveClass('bip-multi-select-wrapper--full-width');
+    expect(container.querySelector('bip-multi-select')).toHaveClass(
+      'bip-multi-select-wrapper--full-width'
+    );
   });
 
   // ── ControlValueAccessor ────────────────────────────────────────────────────
@@ -278,6 +308,157 @@ describe('BipMultiSelect', () => {
       await user.keyboard('{Shift>}{Tab}{/Shift}');
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
       expect(screen.getByRole('combobox')).toHaveFocus();
+    });
+  });
+
+  describe('externalFilter', () => {
+    it('conserva los chips elegidos aunque salgan de options() (regresión)', async () => {
+      const { fixture } = await render(HostComponent, {
+        componentProperties: { externalFilter: true, value: ['mx'] },
+      });
+      expect(screen.getByText('México')).toBeInTheDocument();
+      fixture.componentInstance.options = [{ value: 'es', label: 'España' }];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(screen.getByText('México')).toBeInTheDocument();
+    });
+  });
+
+  describe('searchPlacement="trigger"', () => {
+    const inline = (extra: Partial<HostComponent> = {}) => ({
+      componentProperties: { searchPlacement: 'trigger' as const, label: 'Países', ...extra },
+    });
+
+    it('el combobox es un <input> asociado al label y el marco no tiene rol', async () => {
+      await render(HostComponent, inline());
+      const combobox = screen.getByRole('combobox', { name: 'Países' });
+      expect(combobox.tagName).toBe('INPUT');
+      expect(combobox).toHaveAttribute('aria-autocomplete', 'list');
+      expect(screen.getAllByRole('combobox')).toHaveLength(1);
+    });
+
+    it('no renderiza un buscador dentro del panel', async () => {
+      await render(HostComponent, inline());
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+      expect(document.querySelectorAll('input')).toHaveLength(1);
+    });
+
+    it('escribir junto a los chips abre y filtra', async () => {
+      const { fixture } = await render(HostComponent, inline({ value: ['us'] }));
+      const user = userEvent.setup();
+      await user.type(screen.getByRole('combobox'), 'mex');
+      expect(screen.getAllByRole('option')).toHaveLength(1);
+      expect(screen.getByRole('option', { name: 'México' })).toBeInTheDocument();
+      expect(fixture.componentInstance.queries.at(-1)).toBe('mex');
+    });
+
+    it('↓↑ mueven aria-activedescendant saltando deshabilitadas, y Enter alterna sin cerrar', async () => {
+      const { fixture } = await render(HostComponent, inline());
+      const user = userEvent.setup();
+      const combobox = screen.getByRole('combobox');
+      await user.click(combobox);
+      const [mx, us] = screen.getAllByRole('option');
+      expect(combobox).toHaveAttribute('aria-activedescendant', mx.id);
+      await user.keyboard('{ArrowDown}');
+      expect(combobox).toHaveAttribute('aria-activedescendant', us.id);
+      await user.keyboard('{ArrowDown}');
+      expect(combobox).toHaveAttribute('aria-activedescendant', us.id); // "Canadá" está deshabilitada
+      await user.keyboard('{Enter}');
+      expect(fixture.componentInstance.value).toEqual(['us']);
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+      expect(combobox).toHaveFocus();
+    });
+
+    it('Enter con "Seleccionar todo" activo selecciona las no deshabilitadas', async () => {
+      const { fixture } = await render(HostComponent, inline({ showSelectAll: true }));
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('{Enter}');
+      expect(fixture.componentInstance.value).toEqual(['mx', 'us']);
+    });
+
+    it('Backspace con el campo vacío quita el último chip; con texto, no', async () => {
+      const { fixture } = await render(HostComponent, inline({ value: ['mx', 'us'] }));
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('a{Backspace}');
+      expect(fixture.componentInstance.value).toEqual(['mx', 'us']);
+      await user.keyboard('{Backspace}');
+      expect(fixture.componentInstance.value).toEqual(['mx']);
+    });
+
+    it('Escape cierra y descarta lo escrito; Tab cierra sin elegir', async () => {
+      const { fixture } = await render(HostComponent, inline());
+      const user = userEvent.setup();
+      const combobox = screen.getByRole('combobox');
+      await user.type(combobox, 'mex');
+      await user.keyboard('{Escape}');
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      expect(combobox).toHaveValue('');
+      await user.click(combobox);
+      await user.tab();
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      expect(fixture.componentInstance.value).toEqual([]);
+    });
+
+    it('click en una opción alterna sin quitarle el foco al input', async () => {
+      const { fixture } = await render(HostComponent, inline());
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.click(screen.getByRole('option', { name: 'México' }));
+      expect(fixture.componentInstance.value).toEqual(['mx']);
+      expect(screen.getByRole('combobox')).toHaveFocus();
+    });
+
+    it('los botones de los chips no son tabulables (tabindex=-1)', async () => {
+      await render(HostComponent, inline({ value: ['mx'] }));
+      expect(screen.getByRole('button', { name: 'Eliminar México' })).toHaveAttribute(
+        'tabindex',
+        '-1'
+      );
+    });
+
+    it('placeholder solo mientras no hay chips', async () => {
+      const { fixture } = await render(HostComponent, inline({ placeholder: 'Elige' }));
+      expect(screen.getByRole('combobox')).toHaveAttribute('placeholder', 'Elige');
+      fixture.componentInstance.value = ['mx'];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(screen.getByRole('combobox')).toHaveAttribute('placeholder', '');
+    });
+
+    it('loading anuncia el estado (status polite) y oculta el listbox', async () => {
+      await render(HostComponent, inline({ loading: true }));
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      expect(screen.getByRole('status')).toHaveTextContent('Cargando...');
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      expect(screen.getByRole('combobox')).not.toHaveAttribute('aria-controls');
+    });
+
+    it('FormControl: propaga el valor y marca touched solo al salir del campo', async () => {
+      const host = new InlineReactiveFormHostComponent();
+      await render(InlineReactiveFormHostComponent, {
+        componentProperties: { control: host.control },
+      });
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('{Enter}');
+      expect(host.control.value).toEqual(['mx']);
+      expect(host.control.touched).toBe(false);
+      await user.tab();
+      expect(host.control.touched).toBe(true);
+    });
+
+    it('disabled deshabilita el input', async () => {
+      const host = new InlineReactiveFormHostComponent();
+      host.control.disable();
+      await render(InlineReactiveFormHostComponent, {
+        componentProperties: { control: host.control },
+      });
+      expect(screen.getByRole('combobox')).toBeDisabled();
     });
   });
 });

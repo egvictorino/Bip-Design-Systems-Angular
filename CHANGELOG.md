@@ -28,6 +28,11 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   Escape con el panel cerrado también limpia.
 - `core/utils`: `firstEnabledIndex()` y `nextEnabledIndex()`. i18n `select.loading`,
   `select.loadingText` y `select.clear` en `esMX` y `enUS`.
+- `BipMultiSelect`: input `searchPlacement` (`'panel'` | `'trigger'`, default `'panel'`: sin
+  cambios para quien ya lo usa). Con `'trigger'` el buscador es un `<input role="combobox">` junto
+  a los chips (patrón "tags input", `aria-activedescendant`, foco real siempre en el input):
+  ↓↑ Enter (alterna sin cerrar) Escape Tab, Backspace con el campo vacío quita el último chip;
+  "Seleccionar todo" es la primera entrada navegable.
 
 ### Changed
 
@@ -37,6 +42,10 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 - `BipSelect`: padding del campo con propiedades lógicas; en RTL el texto se montaba sobre el
   chevron.
+- `BipMultiSelect`: con `externalFilter` los chips elegidos ya no desaparecen cuando el consumidor
+  reemplaza `options()` (se recuerdan; un valor que nunca estuvo en `options()` sigue sin label).
+- `BipMultiSelect`: el estado de carga usa una región `role="status"` `aria-live="polite"` siempre
+  montada en el panel (antes se montaba junto con su texto y no se anunciaba de forma fiable).
 
 ## [0.1.0] - 2026-10-02
 

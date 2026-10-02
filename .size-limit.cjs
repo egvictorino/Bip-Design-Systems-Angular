@@ -29,7 +29,7 @@ module.exports = [
   { name: 'input', path: 'dist/bip-angular/fesm2022/bip-design-systems-angular-input.mjs', limit: '5 KB', gzip: true },
   { name: 'link', path: 'dist/bip-angular/fesm2022/bip-design-systems-angular-link.mjs', limit: '3 KB', gzip: true },
   { name: 'modal', path: 'dist/bip-angular/fesm2022/bip-design-systems-angular-modal.mjs', limit: '6 KB', gzip: true },
-  { name: 'multi-select', path: 'dist/bip-angular/fesm2022/bip-design-systems-angular-multi-select.mjs', limit: '9 KB', gzip: true },
+  { name: 'multi-select', path: 'dist/bip-angular/fesm2022/bip-design-systems-angular-multi-select.mjs', limit: '12 KB', gzip: true },
   { name: 'navbar', path: 'dist/bip-angular/fesm2022/bip-design-systems-angular-navbar.mjs', limit: '7 KB', gzip: true },
   { name: 'number-input', path: 'dist/bip-angular/fesm2022/bip-design-systems-angular-number-input.mjs', limit: '6 KB', gzip: true },
   { name: 'odontogram', path: 'dist/bip-angular/fesm2022/bip-design-systems-angular-odontogram.mjs', limit: '16 KB', gzip: true },
