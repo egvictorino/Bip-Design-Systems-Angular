@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
  */
 @Component({
   selector: 'bip-navbar-nav',
-  template: `<ul class="bip-navbar-nav-list"><ng-content /></ul>`,
+  template: `<div class="bip-navbar-nav-list" role="list"><ng-content /></div>`,
   styleUrl: './navbar-nav.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

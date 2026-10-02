@@ -1,5 +1,5 @@
 @if (context.isCollapsed()) {
-  <li class="bip-sidebar-submenu-wrapper">
+  <div class="bip-sidebar-submenu-wrapper">
     <button
       type="button"
       class="bip-sidebar-item"
@@ -10,9 +10,9 @@
     >
       <ng-content select="[bipSidebarSubMenuIcon]" />
     </button>
-  </li>
+  </div>
 } @else {
-  <li class="bip-sidebar-submenu-wrapper">
+  <div class="bip-sidebar-submenu-wrapper">
     <button
       type="button"
       class="bip-sidebar-item"
@@ -30,9 +30,9 @@
       <span class="bip-sidebar-submenu-chevron" [class.bip-sidebar-submenu-chevron--open]="isOpen()" aria-hidden="true"></span>
     </button>
     @if (isOpen()) {
-      <ul [id]="subMenuId" class="bip-sidebar-submenu-list">
+      <div [id]="subMenuId" class="bip-sidebar-submenu-list">
         <ng-content />
-      </ul>
+      </div>
     }
-  </li>
+  </div>
 }

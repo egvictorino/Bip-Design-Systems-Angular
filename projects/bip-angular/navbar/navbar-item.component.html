@@ -1,4 +1,4 @@
-<li class="bip-navbar-item-wrapper">
+<div class="bip-navbar-item-wrapper" role="listitem">
   @if (routerLink()) {
     <a
       class="bip-navbar-item"
@@ -43,7 +43,7 @@
       <ng-container [ngTemplateOutlet]="content" />
     </button>
   }
-</li>
+</div>
 
 <ng-template #content>
   <ng-content select="[bipNavbarItemIcon]" />

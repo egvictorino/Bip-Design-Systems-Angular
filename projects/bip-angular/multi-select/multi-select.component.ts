@@ -116,6 +116,13 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
 
   protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
   protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  /**
+   * `<label for>` no asocia accesiblemente un `<div role="combobox">` — ese comportamiento
+   * del navegador es solo para controles de formulario nativos. El trigger necesita
+   * `aria-labelledby` apuntando al `id` del propio `<label>` para tener nombre accesible
+   * (detectado por `visual/a11y-browser.spec.ts`: axe `aria-input-field-name`).
+   */
+  protected readonly labelId = `${this.fieldId}-label`;
 
   protected readonly filteredOptions = computed<BipMultiSelectOption[]>(() => {
     if (this.externalFilter()) return this.options();

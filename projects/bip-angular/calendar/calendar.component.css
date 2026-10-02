@@ -128,9 +128,15 @@
   outline: none;
   box-shadow: var(--focus-ring);
 }
-.bip-calendar-month-cell--other-month {
-  opacity: 0.45;
-}
+/*
+ * No `opacity` aquí a propósito: `opacity` en el contenedor compone en una capa aparte, así
+ * que el número de fecha dentro NUNCA puede "optar" por su propio valor de opacidad más
+ * alto para seguir siendo legible — con opacity: 0.45 el contraste real de
+ * --color-txt-secondary (ya verificado AA a opacidad 1) caía a ~2:1, por debajo del mínimo
+ * WCAG AA (4.5:1). La fecha "fuera de mes" se atenúa con un color propio en
+ * .bip-calendar-month-cell-date--other-month (ver abajo), que sigue pasando AA a opacidad
+ * plena — el borde se deja sin cambios: ya es sutil (`--color-edge`) y no es texto.
+ */
 .bip-calendar-month-cell--in-range {
   background-color: var(--color-secondary);
 }
@@ -149,6 +155,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+/* `--color-txt-utility` en vez de `--color-txt-secondary` — más claro para transmitir "fuera
+   del mes actual" sin caer bajo el mínimo WCAG AA (4.5:1) como pasaba con la opacidad
+   reducida que tenía antes el contenedor de la celda. */
+.bip-calendar-month-cell-date--other-month {
+  color: var(--color-txt-utility);
 }
 
 .bip-calendar-event-chip {
@@ -180,18 +192,31 @@
   box-shadow: var(--focus-ring);
 }
 
-/* Estados de color por status (cuando el evento no trae `color` propio). */
+/*
+ * Estados de color por status (cuando el evento no trae `color` propio). Cada fill usa su
+ * `--color-txt-on-*` pareja — nunca el `color: var(--color-txt-on-primary)` fijo (blanco) que
+ * hereda `.bip-calendar-event-chip`: --color-warning/--color-success son demasiado claros
+ * para texto blanco (ver el fix de a11y-browser — pending medía 1.91:1, bien por debajo del
+ * mínimo AA 4.5:1). `cancelled` no es un color de marca con pareja "on-*" propia en
+ * tokens.css — usa `--color-surface-4`/`--color-txt` (el par por defecto app-wide, ya
+ * verificado AA) en vez de `--color-txt-secondary` como fill, que en dark es demasiado claro
+ * para texto blanco.
+ */
 .bip-calendar-status-pending {
   background-color: var(--color-warning);
+  color: var(--color-txt-on-warning);
 }
 .bip-calendar-status-confirmed {
   background-color: var(--color-info);
+  color: var(--color-txt-on-info);
 }
 .bip-calendar-status-completed {
   background-color: var(--color-success);
+  color: var(--color-txt-on-success);
 }
 .bip-calendar-status-cancelled {
-  background-color: var(--color-txt-secondary);
+  background-color: var(--color-surface-4);
+  color: var(--color-txt);
 }
 
 /* ─── TimeGrid (semana/día) ───────────────────────────────────────────────── */

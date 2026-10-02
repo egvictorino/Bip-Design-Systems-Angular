@@ -19,6 +19,14 @@ const preview: Preview = {
     },
     a11y: {
       test: 'todo',
+      // El addon inyecta su propia instancia de axe-core en CADA iframe de preview y la
+      // corre automáticamente al renderizar cada story (confirmado: `window.axe` existe ya
+      // al cargar `/iframe.html?...` directo, sin manager) — eso choca con
+      // `visual/a11y-browser.spec.ts`, que inyecta y corre axe-core por su cuenta vía
+      // `@axe-core/playwright`: axe-core solo permite un `run()` en vuelo por página
+      // ("Axe is already running"). `manual: true` apaga esa corrida automática; el panel
+      // de accesibilidad de Storybook sigue disponible bajo demanda (botón "Run tests").
+      manual: true,
     },
   },
   // Globals de theming (Bloque 2) — el decorator de abajo envuelve cada story en

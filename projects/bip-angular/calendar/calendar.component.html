@@ -61,7 +61,11 @@
               (mouseenter)="onCellMouseEnter(cell.date)"
               (keydown)="onDayCellKeydown($event, cell.date)"
             >
-              <span class="bip-calendar-month-cell-date" [class.bip-calendar-month-cell-date--today]="isToday(cell.date)">
+              <span
+                class="bip-calendar-month-cell-date"
+                [class.bip-calendar-month-cell-date--today]="isToday(cell.date)"
+                [class.bip-calendar-month-cell-date--other-month]="!cell.inCurrentMonth"
+              >
                 {{ cell.date.getDate() }}
               </span>
               @for (event of eventsForDay(cell.date).slice(0, 3); track event.id) {

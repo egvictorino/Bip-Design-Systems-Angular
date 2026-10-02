@@ -25,6 +25,15 @@ if [ "$INSTALLED_VERSION" != "$PLAYWRIGHT_VERSION" ]; then
   exit 1
 fi
 
+# La imagen de Playwright trae el Node que era "latest" cuando se publicó la imagen
+# (v24.x en v1.63.0-noble), no el Node 22 LTS que este repo fija a propósito (ver CLAUDE.md
+# § Stack: "no actualizar a Angular 22+ sin decisión explícita" aplica también a la versión
+# de Node — el pin es deliberado, no un default a seguir). `engine-strict=true` (.npmrc)
+# hace que `pnpm install` directamente falle con Node 24, así que se instala un Node 22 LTS
+# propio dentro del contenedor y se antepone al PATH, en vez de relajar el pin del repo para
+# acomodar la imagen.
+NODE_PIN_VERSION="22.21.1"
+
 echo "▶ Corriendo regresión visual en ${IMAGE} (linux/amd64)…"
 
 docker run --rm \
@@ -37,6 +46,10 @@ docker run --rm \
   "$IMAGE" \
   bash -c "
     set -e
+    curl -fsSL https://nodejs.org/dist/v${NODE_PIN_VERSION}/node-v${NODE_PIN_VERSION}-linux-x64.tar.gz -o /tmp/node22.tar.gz
+    mkdir -p /opt/node22
+    tar -xzf /tmp/node22.tar.gz -C /opt/node22 --strip-components=1
+    export PATH=\"/opt/node22/bin:\$PATH\"
     corepack enable
     corepack prepare pnpm@9.15.9 --activate
     pnpm install --frozen-lockfile

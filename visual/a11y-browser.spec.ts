@@ -1,6 +1,40 @@
+import type { Page } from '@playwright/test';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { COMPONENT_MATRIX } from './component-matrix';
+
+/**
+ * El addon-a11y de Storybook (preview.ts, `manual: true`) inyecta su propia copia de
+ * axe-core en cada iframe para su panel bajo demanda, aunque no la corra sola — axe-core
+ * guarda estado global en `window.axe` y rechaza un segundo `run()` mientras uno sigue "en
+ * vuelo" ("Axe is already running"). Borrar `window.axe` antes de analizar (para que
+ * `@axe-core/playwright` inyecte su propia copia limpia) elimina la gran mayoría de los
+ * casos, pero no todos: si el addon re-inyecta la suya entre el borrado y el `analyze()`
+ * (una carrera de timing, no determinista — confirmado en Docker: ~8 de 100 corridas),
+ * sigue chocando. Un reintento acotado a ESTE mensaje de error específico (nunca a una
+ * violación real, que falla por `expect().toEqual([])`, no por una excepción de
+ * `analyze()`) hace la suite robusta sin esconder un hallazgo real de a11y.
+ */
+const AXE_ALREADY_RUNNING = 'Axe is already running';
+
+async function analyzeWithoutAddonAxe(page: Page, attempts = 3) {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    await page.evaluate(() => {
+      try {
+        delete (window as unknown as { axe?: unknown }).axe;
+      } catch {
+        /* noop */
+      }
+    });
+    try {
+      return await new AxeBuilder({ page }).include('#storybook-root').analyze();
+    } catch (error) {
+      const isAddonRace = error instanceof Error && error.message.includes(AXE_ALREADY_RUNNING);
+      if (!isAddonRace || attempt === attempts) throw error;
+    }
+  }
+  throw new Error('unreachable');
+}
 
 /**
  * `testing/a11y.spec.ts` (Vitest + jsdom + vitest-axe) corre con `color-contrast`
@@ -28,7 +62,7 @@ test.describe('a11y — axe en navegador real, color-contrast activado', () => {
         await page.goto(`/iframe.html?id=${storyId}&viewMode=story&globals=colorScheme:${colorScheme}`);
         await page.waitForLoadState('networkidle');
 
-        const results = await new AxeBuilder({ page }).include('#storybook-root').analyze();
+        const results = await analyzeWithoutAddonAxe(page);
 
         expect(
           results.violations,

@@ -47,7 +47,7 @@ const IMPORTS = [BipDataTable, BipDataTableCell, BipDataTableHeader];
     >
       <ng-template bipHeader="status">Estado actual</ng-template>
       <ng-template bipCell="status" let-row>
-        <span [style.color]="row['status'] === 'Activo' ? 'var(--color-success)' : 'var(--color-txt-secondary)'">
+        <span [style.color]="row['status'] === 'Activo' ? 'var(--color-success-text)' : 'var(--color-txt-secondary)'">
           {{ row['status'] }}
         </span>
       </ng-template>

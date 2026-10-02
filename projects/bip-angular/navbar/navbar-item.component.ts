@@ -9,7 +9,14 @@ import { BIP_NAVBAR_CONTEXT } from './navbar-context';
  * si no, o `<button>` si no hay ninguno. `active` es siempre explícito (el consumidor lo calcula
  * o usa `routerLinkActive` sobre el `routerLink`) — igual que la referencia React, que tampoco
  * tiene auto-detección de ruta activa. `data-navbar-item` identifica el elemento focusable real
- * (no el `<li>`) para la navegación por flechas y el enfoque inicial al abrir el panel móvil.
+ * (no el wrapper `role="listitem"`) para la navegación por flechas y el enfoque inicial al abrir
+ * el panel móvil. El wrapper es un `<div role="listitem">`, no un `<li>` real: axe exige que un
+ * `<ul>`/`[role=list]` contenga SOLO `<li>` como hijo directo, pero `<bip-navbar-item>` se
+ * interpone entre `<bip-navbar-nav>` (su `[role=list]`) y el wrapper — con tags nativos
+ * `<ul>`/`<li>` eso viola esa regla de axe aun con `display: contents` en el host (afecta el
+ * layout, no la validez de la estructura DOM que la regla revisa). `role="list"`/`role="listitem"`
+ * en vez de las etiquetas nativas evita el chequeo de validez HTML por completo, conservando la
+ * semántica de lista para lectores de pantalla.
  * El contenido proyectado (ícono + label) vive en un único `<ng-template>` reutilizado vía
  * `ngTemplateOutlet` en las tres ramas — `<ng-content>` solo puede proyectar cada nodo una vez,
  * así que repetirlo literalmente en cada rama del `@if/@else if/@else` dejaría vacías las que no
