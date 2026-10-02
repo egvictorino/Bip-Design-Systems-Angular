@@ -33,18 +33,31 @@ test.describe('theme matrix', () => {
   }) => {
     await page.goto('/iframe.html?id=foundations-colors--overview&viewMode=story');
     await page.waitForLoadState('networkidle');
-    // Cada swatch resuelve su valor vía getComputedStyle() en su propio efecto — con tantas
-    // instancias montando/actualizando por separado, el layout tarda más de los 5s por
-    // defecto en asentarse del todo (crece de forma acumulativa, no es un elemento puntual).
-    // Se sube el timeout del detector de estabilidad de Playwright en vez de adivinar el
-    // punto exacto del reflow.
-    await expect(page).toHaveScreenshot('foundations-colors.png', { fullPage: true, timeout: 15_000 });
+    // Cada swatch resuelve su valor vía getComputedStyle() en su propio efecto — con ~128
+    // instancias montando/actualizando por separado, el contenido deja de crecer a los pocos
+    // segundos (`document.body.scrollHeight` es estable tanto en local como en Docker a este
+    // punto). Lo que NO se estabiliza con ningún timeout es el propio `fullPage: true` de
+    // Playwright: en Docker, su mecanismo interno de redimensionar/recortar el viewport para
+    // una captura de página completa oscila entre dos alturas exactas de forma indefinida
+    // (visto en corridas reales: 6115px ↔ 6232px, nunca converge, ni a los 30s) — un patrón
+    // de ping-pong consistente con el propio `fullPage` reajustando el viewport entre pasadas
+    // de una forma que a su vez cambia cuántos swatches entran por fila (flex-wrap). Se evita
+    // ese mecanismo: se fija el viewport al alto real del contenido (ya estable) y se
+    // screenshotea ese viewport tal cual, sin `fullPage`.
+    const contentHeight = await page.evaluate(() => document.body.scrollHeight);
+    await page.setViewportSize({ width: 1280, height: contentHeight });
+    await expect(page).toHaveScreenshot('foundations-colors.png', { timeout: 15_000 });
   });
 
   test('Foundations/Radius — square y rounded en paralelo', async ({ page }) => {
     await page.goto('/iframe.html?id=foundations-radius--overview&viewMode=story');
     await page.waitForLoadState('networkidle');
-    await expect(page).toHaveScreenshot('foundations-radius.png', { fullPage: true });
+    // Mismo mecanismo de oscilación de `fullPage: true` que Foundations/Colors (ver ese test)
+    // — acá de menor magnitud (1px), pero con la misma firma: viewport fijado al alto real en
+    // vez de dejar que `fullPage` lo recalcule internamente en cada intento.
+    const contentHeight = await page.evaluate(() => document.body.scrollHeight);
+    await page.setViewportSize({ width: 1280, height: contentHeight });
+    await expect(page).toHaveScreenshot('foundations-radius.png');
   });
 
   test('PortalTheming — Modal vía BipOverlay/TemplatePortal hereda el tema del provider (no el de <html>)', async ({
