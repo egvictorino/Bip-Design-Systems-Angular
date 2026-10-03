@@ -77,6 +77,9 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   usa `--color-field` (y `--color-surface-3` en el resto de variantes, igual que la referencia).
 - `scripts/visual-docker.sh`: los argumentos del usuario ya no se re-parsean dentro de `bash -c`
   (un `-g "a|b"` rompía el comando).
+- `BipOdontogram`: el diente del panel de detalle es `role="group"` (antes `role="img"` con
+  superficies `role="button"` anidadas: `nested-interactive`, también en la referencia React). La
+  cuadrícula principal sigue con `role="img"`.
 
 ## [0.1.0] - 2026-10-02
 

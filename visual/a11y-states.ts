@@ -74,10 +74,6 @@ export const A11Y_STATES: A11yStateEntry[] = [
   {
     name: 'odontogram-tooth-detail',
     storyId: 'components-odontogram--with-data',
-    // Hallazgo previo y estructural: el <svg role="img"> del detalle contiene superficies
-    // role="button" (nested-interactive). Fuera del alcance de la auditoría de contraste;
-    // se omite solo esa regla para seguir auditando color-contrast en este estado.
-    disableRules: ['nested-interactive'],
     setup: async (page) => {
       await page.locator('button.bip-odontogram-tooth-cell--button[aria-label*="46"]').click();
       await settle(page);
