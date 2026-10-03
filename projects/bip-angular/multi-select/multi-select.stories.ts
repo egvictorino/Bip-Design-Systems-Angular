@@ -41,6 +41,20 @@ export const Preselected: Story = {
   args: { ...Default.args, value: ['mx', 'us'] },
 };
 
+export const Variants: Story = {
+  parameters: { layout: 'padded' },
+  render: () => ({
+    props: { options: OPTIONS, value: ['mx', 'us'] },
+    template: `
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 360px;">
+        <bip-multi-select variant="outlined" label="Outlined" [options]="options" [value]="value" />
+        <bip-multi-select variant="filled" label="Filled" [options]="options" [value]="value" />
+        <bip-multi-select variant="bare" label="Bare" [options]="options" [value]="value" />
+      </div>
+    `,
+  }),
+};
+
 export const Grouped: Story = {
   args: { label: 'Países', placeholder: 'Selecciona países', options: GROUPED_OPTIONS },
 };

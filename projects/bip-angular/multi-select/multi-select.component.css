@@ -96,10 +96,15 @@
   align-items: center;
   gap: var(--space-1);
   border-radius: var(--radius-pill);
-  background-color: var(--color-secondary);
+  background-color: var(--color-surface-3);
   color: var(--color-txt);
   font-size: var(--text-xs);
   padding: var(--space-0-5) var(--space-2);
+}
+/* En `filled` el campo ya es --color-secondary (≈ surface-3): el chip pasa a --color-field
+   (blanco en light, #1c1c1c en dark) para distinguirse del fondo. */
+.bip-multi-select--filled .bip-multi-select-chip {
+  background-color: var(--color-field);
 }
 .bip-multi-select-chip--overflow {
   background-color: transparent;

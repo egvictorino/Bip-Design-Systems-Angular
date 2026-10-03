@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
@@ -561,6 +563,31 @@ describe('BipMultiSelect', () => {
         componentProperties: { control: host.control },
       });
       expect(screen.getByRole('combobox')).toBeDisabled();
+    });
+  });
+
+  describe('variant="filled"', () => {
+    it('los chips se renderizan dentro del campo filled (precondición del contraste chip/campo)', async () => {
+      await render(BipMultiSelect, {
+        inputs: { options: OPTIONS, value: ['mx', 'us'], variant: 'filled', label: 'Países' },
+      });
+      const chips = document.querySelectorAll(
+        '.bip-multi-select-chip:not(.bip-multi-select-chip--overflow)'
+      );
+      expect(chips).toHaveLength(2);
+      chips.forEach((chip) => expect(chip.closest('.bip-multi-select--filled')).not.toBeNull());
+    });
+
+    it('el CSS distingue el chip del campo: surface-3 por defecto y --color-field en filled', () => {
+      const css = readFileSync(resolve(__dirname, 'multi-select.component.css'), 'utf-8');
+      const bg = (selector: string) =>
+        new RegExp(
+          `${selector.replace(/[.]/g, '\\.')}\\s*\\{[^}]*background-color:\\s*([^;]+);`
+        ).exec(css)?.[1];
+      expect(bg('.bip-multi-select-chip')).toBe('var(--color-surface-3)');
+      expect(bg('.bip-multi-select--filled .bip-multi-select-chip')).toBe('var(--color-field)');
+      // el campo filled sigue siendo --color-secondary: el chip nunca debe igualarlo
+      expect(bg('.bip-multi-select--filled')).toBe('var(--color-secondary)');
     });
   });
 });

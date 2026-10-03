@@ -57,6 +57,12 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
     storyId: 'components-multiselect--trigger-search',
     rtl: true,
   },
+  {
+    dir: 'multi-select',
+    shot: 'multi-select-variants',
+    storyId: 'components-multiselect--variants',
+    rtl: true,
+  },
   { dir: 'navbar', storyId: 'components-navbar--basic' },
   { dir: 'number-input', storyId: 'components-numberinput--default', rtl: true },
   { dir: 'odontogram', storyId: 'components-odontogram--default' },
