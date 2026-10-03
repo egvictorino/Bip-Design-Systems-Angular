@@ -80,6 +80,9 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 - `BipOdontogram`: el diente del panel de detalle es `role="group"` (antes `role="img"` con
   superficies `role="button"` anidadas: `nested-interactive`, también en la referencia React). La
   cuadrícula principal sigue con `role="img"`.
+- `BipButton` `bare`/`soul`: en dark, hover/press usaban `--color-primary-hover/press` (white 15%
+  sobre la semilla, 4.8:1) y quedaban más oscuros que el reposo (`--color-primary-text`, 5.2:1);
+  ahora usan los tokens nuevos `--color-primary-text-hover/-press` (6.4:1 y 7.8:1). En light no cambia.
 
 ## [0.1.0] - 2026-10-02
 
