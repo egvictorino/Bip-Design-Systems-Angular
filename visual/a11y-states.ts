@@ -68,6 +68,65 @@ export const A11Y_STATES: A11yStateEntry[] = [
   }),
   { name: 'calendar-week-today', storyId: 'components-calendar--week-view', frozenTime: true },
   {
+    // Arrastre sin soltar (soltar abre el popover): 29-dic..7-ene en el calendario congelado en
+    // 2026-01-15, así que el rango incluye fechas de otro mes sobre --color-secondary.
+    name: 'calendar-month-range-drag',
+    storyId: 'components-calendar--month-view',
+    frozenTime: true,
+    setup: async (page) => {
+      const cells = page.locator('.bip-calendar-month-cell');
+      await cells.nth(0).hover();
+      await page.mouse.down();
+      await cells.nth(9).hover();
+      await expect(cells.nth(0)).toHaveClass(/bip-calendar-month-cell--in-range/);
+      await expect(cells.nth(9)).toHaveClass(/bip-calendar-month-cell--in-range/);
+      await settle(page);
+    },
+  },
+  {
+    name: 'calendar-view-btn-active-hover',
+    storyId: 'components-calendar--month-view',
+    frozenTime: true,
+    setup: async (page) => {
+      await page.locator('.bip-calendar-view-btn--active').hover();
+      await settle(page);
+    },
+  },
+  {
+    name: 'calendar-agenda',
+    storyId: 'components-calendar--agenda-view',
+    frozenTime: true,
+    setup: async (page) => {
+      await expect(page.locator('.bip-calendar-agenda-event').first()).toBeVisible();
+      await settle(page);
+    },
+  },
+  {
+    name: 'calendar-agenda-filter-inactive',
+    storyId: 'components-calendar--agenda-view',
+    frozenTime: true,
+    setup: async (page) => {
+      await expect(page.locator('.bip-calendar-agenda-event').first()).toBeVisible();
+      const filter = page.getByRole('checkbox').first();
+      await filter.click();
+      await expect(filter).toHaveAttribute('aria-checked', 'false');
+      await settle(page);
+    },
+  },
+  {
+    // "Cancelada" es el filtro con menos diferencia entre activo e inactivo (surface-4 vs surface-3).
+    name: 'calendar-agenda-filter-cancelled-inactive',
+    storyId: 'components-calendar--agenda-view',
+    frozenTime: true,
+    setup: async (page) => {
+      await expect(page.locator('.bip-calendar-agenda-event').first()).toBeVisible();
+      const filter = page.getByRole('checkbox', { name: 'Cancelada' });
+      await filter.click();
+      await expect(filter).toHaveAttribute('aria-checked', 'false');
+      await settle(page);
+    },
+  },
+  {
     name: 'date-picker-open',
     storyId: 'components-datepicker--default',
     frozenTime: true,
