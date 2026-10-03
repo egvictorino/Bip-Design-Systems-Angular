@@ -146,7 +146,7 @@ describe('BipOdontogram — accesibilidad', () => {
     await render(HostComponent);
     const panel = await openDetailPanel(user, 11);
     const surfaces = within(panel)
-      .getByRole('img', { name: /Diente 11/ })
+      .getByRole('group', { name: /Diente 11/ })
       .querySelectorAll('[role="button"]');
     expect(surfaces.length).toBe(5);
   });
@@ -158,9 +158,22 @@ describe('BipOdontogram — accesibilidad', () => {
     });
     const panel = await openDetailPanel(user, 11);
     const occlusal = within(panel)
-      .getByRole('img', { name: /Diente 11/ })
+      .getByRole('group', { name: /Diente 11/ })
       .querySelector('[aria-label="Oclusal"]');
     expect(occlusal).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('el diente del panel es role="group" con sus 5 superficies button; la cuadrícula sigue siendo img (nested-interactive)', async () => {
+    const user = userEvent.setup();
+    await render(HostComponent);
+    const panel = await openDetailPanel(user, 11);
+    const group = within(panel).getByRole('group', { name: /Diente 11/ });
+    expect(group.tagName.toLowerCase()).toBe('svg');
+    ['Oclusal', 'Bucal', 'Lingual', 'Mesial', 'Distal'].forEach((name) =>
+      expect(within(group).getByRole('button', { name })).toBeInTheDocument()
+    );
+    expect(within(panel).queryByRole('img', { name: /Diente 11/ })).toBeNull();
+    expect(getToothSVG(11).closest('[data-testid="tooth-detail-panel"]')).toBeNull();
   });
 
   it('los botones de diente indican selección con aria-pressed', async () => {
@@ -193,7 +206,7 @@ describe('BipOdontogram — interactividad', () => {
     const { fixture } = await render(HostComponent);
     const panel = await openDetailPanel(user, 11);
     const occlusal = within(panel)
-      .getByRole('img', { name: /Diente 11/ })
+      .getByRole('group', { name: /Diente 11/ })
       .querySelector('[aria-label="Oclusal"]')!;
     await user.click(occlusal);
 
@@ -207,7 +220,7 @@ describe('BipOdontogram — interactividad', () => {
     const panel = await openDetailPanel(user, 16);
     await user.click(within(panel).getByRole('button', { name: 'Ausente' }));
     const anyPolygon = within(panel)
-      .getByRole('img', { name: /Diente 16/ })
+      .getByRole('group', { name: /Diente 16/ })
       .querySelector('polygon')!;
     await user.click(anyPolygon);
 
@@ -227,7 +240,7 @@ describe('BipOdontogram — interactividad', () => {
     const panel = await openDetailPanel(user, 11);
     await user.click(within(panel).getByRole('button', { name: 'Sano' }));
     const occlusal = within(panel)
-      .getByRole('img', { name: /Diente 11/ })
+      .getByRole('group', { name: /Diente 11/ })
       .querySelector('[aria-label="Oclusal"]')!;
     await user.click(occlusal);
 
@@ -241,7 +254,7 @@ describe('BipOdontogram — interactividad', () => {
     });
     const panel = await openDetailPanel(user, 11);
     const occlusal = within(panel)
-      .getByRole('img', { name: /Diente 11/ })
+      .getByRole('group', { name: /Diente 11/ })
       .querySelector('[aria-label="Oclusal"]')!;
     await user.click(occlusal);
 
@@ -313,9 +326,9 @@ describe('BipOdontogram — tamaño', () => {
     const user = userEvent.setup();
     await render(HostComponent);
     const panel = await openDetailPanel(user, 11);
-    const detailSvg = within(panel).getByRole('img', { name: /Diente 11/ });
+    const detailSvg = within(panel).getByRole('group', { name: /Diente 11/ });
     expect(detailSvg).toHaveAttribute('width', '120');
-    expect(screen.getAllByRole('img', { name: /Diente 11/ }).length).toBe(2);
+    expect(screen.getAllByRole('img', { name: /Diente 11/ }).length).toBe(1);
   });
 });
 
@@ -347,7 +360,7 @@ describe('BipOdontogram — dentición primaria', () => {
     });
     const panel = await openDetailPanel(user, 51);
     const occlusal = within(panel)
-      .getByRole('img', { name: /Diente 51/ })
+      .getByRole('group', { name: /Diente 51/ })
       .querySelector('[aria-label="Oclusal"]')!;
     await user.click(occlusal);
 
@@ -702,7 +715,7 @@ describe('BipOdontogram — teclado', () => {
     await render(HostComponent);
     const panel = await openDetailPanel(user, 11);
     const surfaces = within(panel)
-      .getByRole('img', { name: /Diente 11/ })
+      .getByRole('group', { name: /Diente 11/ })
       .querySelectorAll('[role="button"]');
     surfaces.forEach((s) => expect(s).toHaveAttribute('tabindex', '0'));
   });
@@ -722,7 +735,7 @@ describe('BipOdontogram — teclado', () => {
     const { fixture } = await render(HostComponent);
     const panel = await openDetailPanel(user, 11);
     const occlusal = within(panel)
-      .getByRole('img', { name: /Diente 11/ })
+      .getByRole('group', { name: /Diente 11/ })
       .querySelector('[aria-label="Oclusal"]') as HTMLElement;
     occlusal.focus();
     await user.keyboard('{Enter}');
@@ -737,7 +750,7 @@ describe('BipOdontogram — teclado', () => {
     const panel = await openDetailPanel(user, 21);
     await user.click(within(panel).getByRole('button', { name: 'Restauración' }));
     const mesial = within(panel)
-      .getByRole('img', { name: /Diente 21/ })
+      .getByRole('group', { name: /Diente 21/ })
       .querySelector('[aria-label="Mesial"]') as HTMLElement;
     mesial.focus();
     await user.keyboard(' ');

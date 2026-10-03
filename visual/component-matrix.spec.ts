@@ -24,7 +24,7 @@ const FROZEN_TIME = new Date('2026-01-15T09:00:00');
  * en `--duration-*` (ver primitives.css) y sin esto los shots son inestables entre corridas.
  */
 test.describe('component matrix — un screenshot por componente (LTR + subset RTL)', () => {
-  for (const { dir, storyId, shot = dir, rtl } of COMPONENT_MATRIX) {
+  for (const { dir, storyId, shot = dir, rtl, dark } of COMPONENT_MATRIX) {
     test(`${shot} — LTR`, async ({ page }) => {
       if (dir === 'calendar') await page.clock.setFixedTime(FROZEN_TIME);
       await page.goto(`/iframe.html?id=${storyId}&viewMode=story`);
@@ -33,6 +33,17 @@ test.describe('component matrix — un screenshot por componente (LTR + subset R
         animations: 'disabled',
       });
     });
+
+    if (dark) {
+      test(`${shot} — dark`, async ({ page }) => {
+        if (dir === 'calendar') await page.clock.setFixedTime(FROZEN_TIME);
+        await page.goto(`/iframe.html?id=${storyId}&viewMode=story&globals=colorScheme:dark`);
+        await page.waitForLoadState('networkidle');
+        await expect(page.locator('#storybook-root')).toHaveScreenshot(`${shot}-dark.png`, {
+          animations: 'disabled',
+        });
+      });
+    }
 
     if (rtl) {
       test(`${shot} — RTL`, async ({ page }) => {

@@ -10,7 +10,9 @@ const SRC_DIR = resolve(__dirname, '..');
  * oscuras, bajo el 4.5:1 de AA para texto. El texto debe usar `--color-primary-text`
  * (tokens.css lo aclara en dark). `color: var(--color-primary)` solo es válido donde el
  * elemento NO es texto (iconos SVG/glifos `aria-hidden`: umbral 3:1) — cada excepción va aquí
- * con su motivo. Un uso nuevo que sea texto real debe cambiar a `--color-primary-text`.
+ * con su motivo. Un uso nuevo que sea texto real debe cambiar a `--color-primary-text` (y su
+ * hover/press, a `--color-primary-text-hover|press`: `--color-primary-hover` en dark queda más
+ * oscuro que el reposo).
  */
 const ALLOWLIST: Record<string, string> = {
   'alert/alert.component.css :: .bip-alert--info':
@@ -26,7 +28,7 @@ const ALLOWLIST: Record<string, string> = {
   'table/table-header.component.css :: .bip-table-sort-icon--active': 'icono SVG de orden',
 };
 
-const PRIMARY_AS_TEXT = /(^|[;\s])color:\s*var\(--color-primary\)/;
+const PRIMARY_AS_TEXT = /(^|[;\s])color:\s*[^;]*var\(--color-primary(-hover|-press)?\b(?!-text)/;
 
 function findOffenders(css: string, relPath: string): string[] {
   const noComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
@@ -66,5 +68,24 @@ describe('--color-primary no se usa como color de texto', () => {
       'x/x.component.css :: .bip-x',
     ]);
     expect(findOffenders('.bip-x { color: var(--color-primary-text); }', 'x/x.css')).toEqual([]);
+    expect(findOffenders('.bip-x:hover { color: var(--color-primary-hover); }', 'x/x.css')).toEqual(
+      ['x/x.css :: .bip-x:hover']
+    );
+    expect(
+      findOffenders('.bip-x:active { color: var(--color-primary-press); }', 'x/x.css')
+    ).toEqual(['x/x.css :: .bip-x:active']);
+    expect(
+      findOffenders('.bip-x:hover { color: var(--color-primary-text-hover); }', 'x/x.css')
+    ).toEqual([]);
+    // con fallback o dentro de color-mix() también es la semilla usada como texto
+    expect(findOffenders('.bip-x { color: var(--color-primary, #000); }', 'x/x.css')).toEqual([
+      'x/x.css :: .bip-x',
+    ]);
+    expect(
+      findOffenders('.bip-x { color: color-mix(in srgb, var(--color-primary), white); }', 'x/x.css')
+    ).toEqual(['x/x.css :: .bip-x']);
+    expect(findOffenders('.bip-x { background-color: var(--color-primary); }', 'x/x.css')).toEqual(
+      []
+    );
   });
 });

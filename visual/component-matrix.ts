@@ -23,6 +23,8 @@ export interface ComponentMatrixEntry {
   /** Nombre del PNG y del test; por defecto `dir`. Obligatorio (y único) en los shots extra. */
   shot?: string;
   rtl?: true;
+  /** Agrega el shot `<shot>-dark` (`globals=colorScheme:dark`): para lo que solo falla en dark. */
+  dark?: true;
 }
 
 export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
@@ -33,6 +35,12 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
   { dir: 'breadcrumb', storyId: 'components-breadcrumb--basic', rtl: true },
   { dir: 'button', storyId: 'components-button--default' },
   { dir: 'calendar', storyId: 'components-calendar--month-view', rtl: true },
+  {
+    dir: 'calendar',
+    shot: 'calendar-week-view',
+    storyId: 'components-calendar--week-view',
+    dark: true,
+  },
   { dir: 'card', storyId: 'components-card--simple' },
   { dir: 'checkbox', storyId: 'components-checkbox--default' },
   { dir: 'confirm-dialog', storyId: 'components-confirmdialog--danger' },
@@ -62,6 +70,7 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
     shot: 'multi-select-variants',
     storyId: 'components-multiselect--variants',
     rtl: true,
+    dark: true,
   },
   { dir: 'navbar', storyId: 'components-navbar--basic' },
   { dir: 'number-input', storyId: 'components-numberinput--default', rtl: true },

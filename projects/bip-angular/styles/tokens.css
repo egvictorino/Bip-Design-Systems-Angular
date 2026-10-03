@@ -43,6 +43,10 @@
      contra blanco); en dark no (3.3:1 contra superficies oscuras derivadas) — de ahí el
      mix hacia white, mismo patrón que --color-danger-text/--color-info-text. */
   --color-primary-text: var(--color-primary);
+  /* Hover/press de --color-primary-text (Button bare/soul): en light replican los derivados
+     de relleno, que ya oscurecen sobre fondo claro. */
+  --color-primary-text-hover: var(--color-primary-hover);
+  --color-primary-text-press: var(--color-primary-press);
   --color-secondary-hover: color-mix(in srgb, var(--color-secondary), black 12%);
   --color-secondary-press: color-mix(in srgb, var(--color-secondary), black 35%);
   --color-danger-hover: color-mix(in srgb, var(--color-danger), black 25%);
@@ -177,6 +181,11 @@
      oscuras derivadas (selected/subtle/field) — bajo AA. white 20% da >=4.7:1 contra
      esas mismas superficies (ver comentario del bloque light). */
   --color-primary-text: color-mix(in srgb, var(--color-primary), white 20%);
+  /* Parten de --color-primary-text (no de la semilla): hover/press de texto deben quedar MÁS
+     claros que el reposo en dark (white 15%/30% sobre la semilla dejaba el hover en 4.8:1,
+     por debajo del reposo de 5.2:1). Sobre --color-field: 5.2 -> 6.4 -> 7.8:1. */
+  --color-primary-text-hover: color-mix(in srgb, var(--color-primary-text), white 15%);
+  --color-primary-text-press: color-mix(in srgb, var(--color-primary-text), white 30%);
   --color-secondary-hover: color-mix(in srgb, var(--color-secondary), white 18%);
   --color-secondary-press: color-mix(in srgb, var(--color-secondary), white 32%);
   --color-danger-hover: color-mix(in srgb, var(--color-danger), white 15%);

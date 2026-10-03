@@ -32,14 +32,29 @@ const settle = async (page: Page) => {
 };
 
 export const A11Y_STATES: A11yStateEntry[] = [
-  {
-    name: 'button-bare-soul-hover',
-    storyId: 'components-button--all-variants',
-    setup: async (page) => {
-      await page.getByRole('button', { name: 'Bare' }).hover();
-      await settle(page);
-    },
-  },
+  ...(['bare', 'soul'] as const).flatMap((variant) => {
+    const label = variant === 'bare' ? 'Bare' : 'Soul';
+    return [
+      {
+        name: `button-${variant}-hover`,
+        storyId: 'components-button--all-variants',
+        setup: async (page: Page) => {
+          await page.getByRole('button', { name: label }).hover();
+          await settle(page);
+        },
+      },
+      {
+        // :active solo dura mientras el botón del mouse sigue presionado.
+        name: `button-${variant}-active`,
+        storyId: 'components-button--all-variants',
+        setup: async (page: Page) => {
+          await page.getByRole('button', { name: label }).hover();
+          await page.mouse.down();
+          await settle(page);
+        },
+      },
+    ];
+  }),
   { name: 'calendar-week-today', storyId: 'components-calendar--week-view', frozenTime: true },
   {
     name: 'date-picker-open',
@@ -74,10 +89,6 @@ export const A11Y_STATES: A11yStateEntry[] = [
   {
     name: 'odontogram-tooth-detail',
     storyId: 'components-odontogram--with-data',
-    // Hallazgo previo y estructural: el <svg role="img"> del detalle contiene superficies
-    // role="button" (nested-interactive). Fuera del alcance de la auditoría de contraste;
-    // se omite solo esa regla para seguir auditando color-contrast en este estado.
-    disableRules: ['nested-interactive'],
     setup: async (page) => {
       await page.locator('button.bip-odontogram-tooth-cell--button[aria-label*="46"]').click();
       await settle(page);

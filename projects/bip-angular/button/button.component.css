@@ -84,12 +84,12 @@
   border: 1px solid var(--color-primary);
 }
 :host(.bip-button--bare):hover:not(:disabled):not([aria-disabled='true']) {
-  color: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
+  color: var(--color-primary-text-hover);
+  border-color: var(--color-primary-text-hover);
 }
 :host(.bip-button--bare):active:not(:disabled):not([aria-disabled='true']) {
-  color: var(--color-primary-press);
-  border-color: var(--color-primary-press);
+  color: var(--color-primary-text-press);
+  border-color: var(--color-primary-text-press);
 }
 
 :host(.bip-button--soul) {
@@ -97,10 +97,10 @@
   color: var(--color-primary-text);
 }
 :host(.bip-button--soul):hover:not(:disabled):not([aria-disabled='true']) {
-  color: var(--color-primary-hover);
+  color: var(--color-primary-text-hover);
 }
 :host(.bip-button--soul):active:not(:disabled):not([aria-disabled='true']) {
-  color: var(--color-primary-press);
+  color: var(--color-primary-text-press);
 }
 
 :host(.bip-button--danger) {

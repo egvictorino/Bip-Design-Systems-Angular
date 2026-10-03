@@ -17,6 +17,9 @@ import {
  * superficies como polígonos y emite `surfaceClick` cuando corresponde. Usado dos veces: sin
  * interacción en la cuadrícula principal de `<bip-odontogram>` (tamaño sm/md/lg) y de forma
  * interactiva en `<bip-tooth-detail>` (tamaño xl=120px).
+ *
+ * Diverge de React: el `<svg>` es `role="img"` solo en modo no interactivo; si hay superficies
+ * `role="button"` es `role="group"` (un `img` tiene hijos presentacionales: nested-interactive).
  */
 @Component({
   selector: 'bip-tooth-svg',
@@ -25,7 +28,7 @@ import {
       viewBox="0 0 100 100"
       [attr.width]="toothSize()"
       [attr.height]="toothSize()"
-      role="img"
+      [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="toothLabel()"
       class="bip-tooth-svg"
     >
