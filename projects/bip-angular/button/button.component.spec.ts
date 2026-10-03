@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { Component } from '@angular/core';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -155,5 +157,27 @@ describe('BipButton', () => {
     const event = new MouseEvent('click', { bubbles: true, cancelable: true });
     link.dispatchEvent(event);
     expect(event.defaultPrevented).toBe(true);
+  });
+});
+
+describe('BipButton — hover/press de bare y soul (contraste dark)', () => {
+  // jsdom no aplica la cascada: se verifica la fuente. El contraste real lo audita axe en Docker
+  // (visual/a11y-states.ts: button-bare|soul-hover|active, light y dark).
+  const css = readFileSync(resolve(__dirname, 'button.component.css'), 'utf-8');
+  const rule = (selector: string) =>
+    css.split('}').find((block) => block.split('{')[0]!.trim() === selector) ?? '';
+
+  it.each([
+    ['bare', 'hover', '--color-primary-text-hover'],
+    ['bare', 'active', '--color-primary-text-press'],
+    ['soul', 'hover', '--color-primary-text-hover'],
+    ['soul', 'active', '--color-primary-text-press'],
+  ] as const)('%s :%s usa %s para el color', (variant, state, token) => {
+    const body = rule(
+      `:host(.bip-button--${variant}):${state}:not(:disabled):not([aria-disabled='true'])`
+    );
+    expect(body).toContain(`color: var(${token})`);
+    if (variant === 'bare') expect(body).toContain(`border-color: var(${token})`);
+    expect(body).not.toMatch(/var\(--color-primary-(hover|press)\)/);
   });
 });

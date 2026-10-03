@@ -28,7 +28,7 @@ const ALLOWLIST: Record<string, string> = {
   'table/table-header.component.css :: .bip-table-sort-icon--active': 'icono SVG de orden',
 };
 
-const PRIMARY_AS_TEXT = /(^|[;\s])color:\s*var\(--color-primary(-hover|-press)?\)/;
+const PRIMARY_AS_TEXT = /(^|[;\s])color:\s*[^;]*var\(--color-primary(-hover|-press)?\b(?!-text)/;
 
 function findOffenders(css: string, relPath: string): string[] {
   const noComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
@@ -77,5 +77,15 @@ describe('--color-primary no se usa como color de texto', () => {
     expect(
       findOffenders('.bip-x:hover { color: var(--color-primary-text-hover); }', 'x/x.css')
     ).toEqual([]);
+    // con fallback o dentro de color-mix() también es la semilla usada como texto
+    expect(findOffenders('.bip-x { color: var(--color-primary, #000); }', 'x/x.css')).toEqual([
+      'x/x.css :: .bip-x',
+    ]);
+    expect(
+      findOffenders('.bip-x { color: color-mix(in srgb, var(--color-primary), white); }', 'x/x.css')
+    ).toEqual(['x/x.css :: .bip-x']);
+    expect(findOffenders('.bip-x { background-color: var(--color-primary); }', 'x/x.css')).toEqual(
+      []
+    );
   });
 });
