@@ -21,6 +21,7 @@ import {
   monthIndex,
   startOfDay,
 } from '../utils';
+import { isoDateKey } from '../utils/date-helpers';
 
 export type BipCalendarGridMode = 'single' | 'range';
 export type BipCalendarGridView = 'days' | 'months' | 'years';
@@ -51,6 +52,7 @@ export interface BipCalendarGridStrings {
 interface BipCalendarDayCell {
   date: Date;
   inCurrentMonth: boolean;
+  /** `YYYY-MM-DD` (ISO): `data-date` del botón y clave de `track`/foco. */
   key: string;
 }
 
@@ -144,9 +146,17 @@ export class BipCalendarGrid {
     const cells: BipCalendarDayCell[] = [];
     for (let i = 0; i < totalCells; i++) {
       const date = new Date(year, month, i - offset + 1);
-      cells.push({ date, inCurrentMonth: date.getMonth() === month, key: dateKey(date) });
+      cells.push({ date, inCurrentMonth: date.getMonth() === month, key: isoDateKey(date) });
     }
     return cells;
+  });
+
+  /** Semanas de 7 celdas; solo las necesarias (4–6), nunca una fila `role="row"` sin gridcells. */
+  protected readonly weeks = computed<BipCalendarDayCell[][]>(() => {
+    const cells = this.days();
+    const weeks: BipCalendarDayCell[][] = [];
+    for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+    return weeks;
   });
 
   protected readonly canGoPrevMonth = computed(() => {
@@ -176,7 +186,7 @@ export class BipCalendarGrid {
   });
 
   protected readonly todayDisabled = computed(() => this.isDayDisabled(this.today));
-  protected readonly focusedDateKey = computed(() => dateKey(this.focusedDate()));
+  protected readonly focusedDateKey = computed(() => isoDateKey(this.focusedDate()));
 
   private readonly dayLabelFormatter = computed(
     () =>
@@ -212,7 +222,7 @@ export class BipCalendarGrid {
       if (view !== 'days') return;
       queueMicrotask(() => {
         const el = this.elementRef.nativeElement.querySelector<HTMLButtonElement>(
-          `[data-date="${dateKey(date)}"]`
+          `[data-date="${isoDateKey(date)}"]`
         );
         el?.focus({ preventScroll: true });
       });

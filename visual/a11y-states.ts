@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { expect } from '@playwright/test';
 
 /**
  * Stories/estados donde `visual/a11y-browser.spec.ts` debe correr axe además de la story
@@ -29,6 +30,16 @@ export interface A11yStateEntry {
 const settle = async (page: Page) => {
   // eslint-disable-next-line playwright/no-wait-for-timeout -- ver el comentario de arriba
   await page.waitForTimeout(300);
+};
+
+/**
+ * El panel del calendario vive en el overlay del CDK y se monta tras el clic. Con 300 ms fijos
+ * en una máquina lenta (Docker emulado ~3x) axe medía ANTES de que existiera: falso verde que
+ * en CI (nativo) se convertía en rojo. Se espera a que el diálogo y sus días estén en el DOM.
+ */
+const waitForCalendarPanel = async (page: Page) => {
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.locator('.bip-calendar-grid-day').first()).toBeVisible();
 };
 
 export const A11Y_STATES: A11yStateEntry[] = [
@@ -62,6 +73,7 @@ export const A11Y_STATES: A11yStateEntry[] = [
     frozenTime: true,
     setup: async (page) => {
       await page.locator('.bip-date-picker-trigger').click();
+      await waitForCalendarPanel(page);
       await settle(page);
     },
   },
@@ -74,6 +86,7 @@ export const A11Y_STATES: A11yStateEntry[] = [
         .getByRole('button', { name: /seleccion|rango|fecha/i })
         .first()
         .click();
+      await waitForCalendarPanel(page);
       await settle(page);
     },
   },
