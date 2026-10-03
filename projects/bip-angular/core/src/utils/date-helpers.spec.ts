@@ -4,6 +4,7 @@ import {
   dateKey,
   getDaysInMonth,
   getMondayOffset,
+  isoDateKey,
   isSameDay,
   monthIndex,
 } from './date-helpers';
@@ -78,5 +79,16 @@ describe('dateKey', () => {
 
   it('produce la misma clave para fechas con distinta hora', () => {
     expect(dateKey(new Date(2026, 5, 15, 3))).toBe(dateKey(new Date(2026, 5, 15, 21)));
+  });
+});
+
+describe('isoDateKey', () => {
+  it('genera "YYYY-MM-DD" con mes base 1 y padding (31-dic no es "2025-11-31")', () => {
+    expect(isoDateKey(new Date(2025, 11, 31))).toBe('2025-12-31');
+    expect(isoDateKey(new Date(2026, 0, 5))).toBe('2026-01-05');
+  });
+
+  it('produce la misma clave para fechas con distinta hora', () => {
+    expect(isoDateKey(new Date(2026, 5, 15, 3))).toBe(isoDateKey(new Date(2026, 5, 15, 21)));
   });
 });

@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { Component } from '@angular/core';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -122,5 +124,89 @@ describe('BipCalendarGrid', () => {
   it('renderiza el botón "Hoy" cuando se provee todayLabel', async () => {
     await render(HostComponent, { componentProperties: { todayLabel: 'Hoy' } });
     expect(screen.getByRole('button', { name: 'Hoy' })).toBeInTheDocument();
+  });
+});
+
+describe('BipCalendarGrid — regresión a11y (axe en navegador, date-picker-open)', () => {
+  const rowsOf = () =>
+    screen
+      .getAllByRole('row')
+      .filter((row) => !row.classList.contains('bip-calendar-grid-row--header'));
+
+  it.each([
+    ['enero 2026', new Date(2026, 0, 1), 5],
+    ['febrero 2027', new Date(2027, 1, 1), 4],
+    ['agosto 2026', new Date(2026, 7, 1), 6],
+  ])(
+    '%s renderiza solo las semanas necesarias, todas con 7 gridcells',
+    async (_name, viewDate, weeks) => {
+      await render(HostComponent, { componentProperties: { viewDate } });
+      const rows = rowsOf();
+      expect(rows).toHaveLength(weeks);
+      for (const row of rows) {
+        expect(row.querySelectorAll('[role="gridcell"]')).toHaveLength(7);
+      }
+    }
+  );
+
+  it('data-date es ISO con mes base 1 (31-dic-2025 visible en enero 2026)', async () => {
+    await render(HostComponent, { componentProperties: { viewDate: new Date(2026, 0, 1) } });
+    const dates = Array.from(document.querySelectorAll('[data-date]')).map((el) =>
+      el.getAttribute('data-date')
+    );
+    expect(dates).toContain('2025-12-31');
+    expect(dates).toContain('2026-01-01');
+    expect(dates).not.toContain('2025-11-31');
+    for (const date of dates) expect(date).toMatch(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
+  });
+
+  it('el foco entre meses sigue encontrando el botón por su data-date ISO', async () => {
+    await render(HostComponent, { componentProperties: { viewDate: new Date(2026, 0, 1) } });
+    const user = userEvent.setup();
+    const first = document.querySelector<HTMLButtonElement>('[data-date="2026-01-01"]')!;
+    first.focus();
+    await user.keyboard('{ArrowLeft}');
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(document.activeElement).toBe(document.querySelector('[data-date="2025-12-31"]'));
+  });
+});
+
+/**
+ * jsdom no aplica la cascada, así que el contraste real lo mide axe en navegador
+ * (visual/a11y-browser.spec.ts). Aquí se fijan las decisiones de CSS que lo garantizan.
+ */
+describe('calendar-grid.component.css — días de otro mes', () => {
+  const css = readFileSync(resolve(__dirname, 'calendar-grid.component.css'), 'utf-8').replace(
+    /\/\*[\s\S]*?\*\//g,
+    ''
+  );
+  const bodyOf = (selector: string): string => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const match = css.match(new RegExp(`(?:^|})\\s*${escaped}\\s*{([^}]*)}`));
+    if (!match) throw new Error(`No se encontró el selector ${selector}`);
+    return match[1];
+  };
+
+  it('usa --color-txt-utility sin opacity (opacity bajaba el contraste a 2.2:1)', () => {
+    const body = bodyOf('.bip-calendar-grid-day--other-month');
+    expect(body).toContain('color: var(--color-txt-utility)');
+    expect(body).not.toMatch(/opacity/);
+  });
+
+  it('sube a --color-txt-secondary sobre --color-secondary (en rango / hover)', () => {
+    expect(css).toMatch(
+      /\.bip-calendar-grid-cell--in-range \.bip-calendar-grid-day--other-month,\s*\.bip-calendar-grid-day--other-month:hover:not\(:disabled\)\s*{\s*color: var\(--color-txt-secondary\)/
+    );
+  });
+
+  it('el hover del seleccionado/actual conserva el relleno de marca (no cae a --color-secondary)', () => {
+    expect(bodyOf('.bip-calendar-grid-day--selected:hover:not(:disabled)')).toContain(
+      'background-color: var(--color-primary-hover)'
+    );
+    expect(
+      bodyOf(
+        '.bip-calendar-grid-month-btn--current:hover:not(:disabled),\n.bip-calendar-grid-year-btn--current:hover:not(:disabled)'
+      )
+    ).toContain('background-color: var(--color-primary-hover)');
   });
 });

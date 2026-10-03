@@ -118,9 +118,18 @@
   outline: none;
   box-shadow: var(--focus-ring);
 }
+/*
+ * Sin `opacity` a propósito: compone en una capa aparte y dejaba el texto en 2.2:1 (light) /
+ * 2.7:1 (dark), bajo el 4.5:1 de AA. `--color-txt-utility` atenúa por color y mide 5.1:1 (light)
+ * / 5.4:1 (dark) sobre el panel (--color-surface-1). Sobre --color-secondary (día en rango u
+ * hover) utility solo da 4.1:1, así que ahí sube a --color-txt-secondary (5.4 / 5.7:1).
+ */
 .bip-calendar-grid-day--other-month {
+  color: var(--color-txt-utility);
+}
+.bip-calendar-grid-cell--in-range .bip-calendar-grid-day--other-month,
+.bip-calendar-grid-day--other-month:hover:not(:disabled) {
   color: var(--color-txt-secondary);
-  opacity: 0.5;
 }
 .bip-calendar-grid-day--today {
   font-weight: 700;
@@ -130,7 +139,7 @@
   background-color: var(--color-primary);
   color: var(--color-txt-on-primary);
 }
-.bip-calendar-grid-day--selected:hover {
+.bip-calendar-grid-day--selected:hover:not(:disabled) {
   background-color: var(--color-primary-hover);
 }
 .bip-calendar-grid-day:disabled {
@@ -168,6 +177,10 @@
 .bip-calendar-grid-year-btn--current {
   background-color: var(--color-primary);
   color: var(--color-txt-on-primary);
+}
+.bip-calendar-grid-month-btn--current:hover:not(:disabled),
+.bip-calendar-grid-year-btn--current:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
 }
 .bip-calendar-grid-month-btn:disabled,
 .bip-calendar-grid-year-btn:disabled {

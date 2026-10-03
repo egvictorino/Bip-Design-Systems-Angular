@@ -41,9 +41,9 @@
           <span class="bip-calendar-grid-column-header" role="columnheader">{{ label }}</span>
         }
       </div>
-      @for (week of [0, 1, 2, 3, 4, 5]; track week) {
+      @for (week of weeks(); track week[0].key) {
         <div class="bip-calendar-grid-row" role="row">
-          @for (cell of days().slice(week * 7, week * 7 + 7); track cell.key) {
+          @for (cell of week; track cell.key) {
             <div
               class="bip-calendar-grid-cell"
               role="gridcell"

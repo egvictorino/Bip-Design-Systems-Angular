@@ -46,6 +46,17 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipDatePicker` y `BipDateRangePicker` (cuadrícula compartida): los días de otro mes medían
+  2.2:1 (light) y 2.7:1 (dark) por usar `opacity: 0.5`; ahora usan `--color-txt-utility` sin
+  opacidad (5.1 / 5.4:1), y `--color-txt-secondary` sobre `--color-secondary` (día en rango u
+  hover, 5.4 / 5.7:1). El día/mes/año seleccionado conserva `--color-primary-hover` al pasar el
+  ratón (antes caía a `--color-secondary` con texto blanco). La cuadrícula ya no renderiza filas
+  `role="row"` sin gridcells (siempre pintaba 6 semanas aunque el mes tuviera 4 o 5; axe:
+  `aria-required-children`), y `data-date` pasa a ISO `YYYY-MM-DD` (antes el 31-dic-2025 salía
+  como `2025-11-31`).
+- `visual/a11y-states.ts`: los estados `date-picker-open`/`date-range-picker-open` esperan a que
+  el diálogo y sus días estén en el DOM antes de correr axe; en una máquina lenta (Docker
+  emulado) axe medía antes de que existiera el panel y el check pasaba en local y fallaba en CI.
 - `BipSelect`: padding del campo con propiedades lógicas; en RTL el texto se montaba sobre el
   chevron.
 - `BipMultiSelect`: con `externalFilter` los chips elegidos ya no desaparecen cuando el consumidor

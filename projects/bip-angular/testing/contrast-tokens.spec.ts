@@ -98,5 +98,25 @@ describe('styles/tokens.css — contraste WCAG AA de tokens reales (no solo la f
         `--color-txt(${txt}) vs --color-surface-1(${surface}) = ${ratio.toFixed(2)}:1, mínimo ${AA_CONTRAST_THRESHOLD}:1`
       ).toBeGreaterThanOrEqual(AA_CONTRAST_THRESHOLD);
     });
+
+    /**
+     * Texto atenuado de calendar-grid: días de otro mes (--color-txt-utility sobre el panel) y
+     * sobre --color-secondary en rango/hover (--color-txt-secondary).
+     */
+    it.each([
+      ['color-txt-utility', 'color-surface-1'],
+      ['color-txt-secondary', 'color-secondary'],
+    ])('--%s alcanza 4.5:1 contra --%s', (fgVar, bgVar) => {
+      const fg = values.get(fgVar);
+      const bg = values.get(bgVar);
+      expect(fg).toBeDefined();
+      expect(bg).toBeDefined();
+
+      const ratio = contrastRatio(fg!, bg!);
+      expect(
+        ratio,
+        `--${fgVar}(${fg}) vs --${bgVar}(${bg}) = ${ratio.toFixed(2)}:1, mínimo ${AA_CONTRAST_THRESHOLD}:1`
+      ).toBeGreaterThanOrEqual(AA_CONTRAST_THRESHOLD);
+    });
   });
 });
