@@ -118,5 +118,28 @@ describe('styles/tokens.css — contraste WCAG AA de tokens reales (no solo la f
         `--${fgVar}(${fg}) vs --${bgVar}(${bg}) = ${ratio.toFixed(2)}:1, mínimo ${AA_CONTRAST_THRESHOLD}:1`
       ).toBeGreaterThanOrEqual(AA_CONTRAST_THRESHOLD);
     });
+
+    /**
+     * Texto atenuado de calendar (vista mes y agenda): días de otro mes sobre el fondo de la
+     * story/app (--color-surface-2) y en rango (--color-secondary), texto del filtro inactivo
+     * (--color-surface-3) y del evento cancelado (--color-surface-4: relleno del badge/filtro `cancelled`; el fondo del mes es el de la story/app, se asume surface-2).
+     */
+    it.each([
+      ['color-txt-utility', 'color-surface-2'],
+      ['color-txt-secondary', 'color-surface-2'],
+      ['color-txt-secondary', 'color-surface-3'],
+      ['color-txt', 'color-surface-4'],
+    ])('--%s alcanza 4.5:1 contra --%s (calendar)', (fgVar, bgVar) => {
+      const fg = values.get(fgVar);
+      const bg = values.get(bgVar);
+      expect(fg).toBeDefined();
+      expect(bg).toBeDefined();
+
+      const ratio = contrastRatio(fg!, bg!);
+      expect(
+        ratio,
+        `--${fgVar}(${fg}) vs --${bgVar}(${bg}) = ${ratio.toFixed(2)}:1, mínimo ${AA_CONTRAST_THRESHOLD}:1`
+      ).toBeGreaterThanOrEqual(AA_CONTRAST_THRESHOLD);
+    });
   });
 });

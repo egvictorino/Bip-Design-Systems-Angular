@@ -46,6 +46,14 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipCalendar`: contraste AA (4.5:1) en los textos atenuados. Fechas de otro mes dentro de un
+  rango: `--color-txt-secondary` sobre `--color-secondary` (4.1 → 5.4:1 light, 4.2 → 5.7:1 dark); el
+  día de hoy en otro mes conserva su blanco sobre `--color-primary` (1.6 → 8.2:1 light). Agenda:
+  filtros y badges de estado conservan su `--color-txt-on-*` (pending 1.9 → 9.2:1, completed
+  2.3 → 7.7:1 en light), el filtro inactivo (con contorno) y el evento cancelado ya no usan `opacity` (el título cancelado se tacha). El hover
+  de los botones de vista ya no pisa al activo (1.2:1 en light).
+- `BipDatePicker`/`BipDateRangePicker`: el hover de un día seleccionado de otro mes conserva
+  `--color-txt-on-primary` (con `--color-txt-secondary` medía 2.5:1 en light).
 - `BipDatePicker` y `BipDateRangePicker` (cuadrícula compartida): los días de otro mes medían
   2.2:1 (light) y 2.7:1 (dark) por usar `opacity: 0.5`; ahora usan `--color-txt-utility` sin
   opacidad (5.1 / 5.4:1), y `--color-txt-secondary` sobre `--color-secondary` (día en rango u

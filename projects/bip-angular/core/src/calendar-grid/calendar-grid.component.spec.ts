@@ -195,7 +195,7 @@ describe('calendar-grid.component.css — días de otro mes', () => {
 
   it('sube a --color-txt-secondary sobre --color-secondary (en rango / hover)', () => {
     expect(css).toMatch(
-      /\.bip-calendar-grid-cell--in-range \.bip-calendar-grid-day--other-month,\s*\.bip-calendar-grid-day--other-month:hover:not\(:disabled\)\s*{\s*color: var\(--color-txt-secondary\)/
+      /\.bip-calendar-grid-cell--in-range \.bip-calendar-grid-day--other-month,\s*\.bip-calendar-grid-day--other-month:hover:not\(:disabled\):not\(\.bip-calendar-grid-day--selected\)\s*{\s*color: var\(--color-txt-secondary\)/
     );
   });
 

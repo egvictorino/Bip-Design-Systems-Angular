@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { Component } from '@angular/core';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
@@ -229,5 +231,68 @@ describe('BipCalendar', () => {
       await user.click(screen.getByRole('checkbox', { name: label }));
     }
     expect(screen.getByText('No hay eventos con los filtros seleccionados')).toBeInTheDocument();
+  });
+});
+
+/**
+ * jsdom no aplica la cascada, así que el contraste real lo mide axe en navegador
+ * (visual/a11y-browser.spec.ts, estados `calendar-*`). Aquí se fijan las decisiones de CSS que lo
+ * garantizan.
+ */
+describe('calendar.component.css — contraste AA', () => {
+  const css = readFileSync(resolve(__dirname, 'calendar.component.css'), 'utf-8').replace(
+    /\/\*[\s\S]*?\*\//g,
+    ''
+  );
+  const bodyOf = (selector: string): string => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+    const match = css.match(new RegExp(`(?:^|})\\s*${escaped}\\s*{([^}]*)}`));
+    if (!match) throw new Error(`No se encontró el selector ${selector}`);
+    return match[1];
+  };
+
+  it('días de otro mes: --color-txt-utility sin opacity y sin pisar al día de hoy', () => {
+    const body = bodyOf(
+      '.bip-calendar-month-cell-date--other-month:not(.bip-calendar-month-cell-date--today)'
+    );
+    expect(body).toContain('color: var(--color-txt-utility)');
+    expect(body).not.toMatch(/opacity/);
+  });
+
+  it('días de otro mes en rango: sube a --color-txt-secondary sobre --color-secondary', () => {
+    expect(
+      bodyOf(
+        '.bip-calendar-month-cell--in-range .bip-calendar-month-cell-date--other-month:not(.bip-calendar-month-cell-date--today)'
+      )
+    ).toContain('color: var(--color-txt-secondary)');
+  });
+
+  it('el hover de los botones de vista excluye el activo (texto blanco sobre --color-primary)', () => {
+    expect(
+      bodyOf('.bip-calendar-view-btn:hover:not(:disabled):not(.bip-calendar-view-btn--active)')
+    ).toContain('background-color: var(--color-secondary)');
+    expect(css).not.toMatch(/\.bip-calendar-view-btn:hover:not\(:disabled\)\s*{/);
+  });
+
+  it.each(['.bip-calendar-agenda-filter-btn', '.bip-calendar-agenda-status-badge'])(
+    '%s: el color por defecto va en :where() para no pisar el par --color-txt-on-* del estado',
+    (selector) => {
+      expect(bodyOf(`:where(${selector})`)).toContain('color: var(--color-txt-on-primary)');
+      expect(bodyOf(selector)).not.toMatch(/(^|[\s;])color:/);
+    }
+  );
+
+  it('filtro inactivo de agenda: superficie neutra + texto secundario, sin opacity', () => {
+    const body = bodyOf('.bip-calendar-agenda-filter-btn.bip-calendar-agenda-filter-btn--inactive');
+    expect(body).toContain('background-color: var(--color-surface-3)');
+    expect(body).toContain('color: var(--color-txt-secondary)');
+    expect(css).not.toMatch(/filter-btn--inactive\s*{[^}]*opacity/);
+  });
+
+  it('evento cancelado de agenda: tachado y texto secundario, sin opacity en la tarjeta', () => {
+    expect(
+      bodyOf('.bip-calendar-agenda-event--cancelled .bip-calendar-agenda-event-title')
+    ).toContain('text-decoration: line-through');
+    expect(css).not.toMatch(/agenda-event--cancelled\s*{/);
   });
 });

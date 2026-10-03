@@ -128,7 +128,7 @@
   color: var(--color-txt-utility);
 }
 .bip-calendar-grid-cell--in-range .bip-calendar-grid-day--other-month,
-.bip-calendar-grid-day--other-month:hover:not(:disabled) {
+.bip-calendar-grid-day--other-month:hover:not(:disabled):not(.bip-calendar-grid-day--selected) {
   color: var(--color-txt-secondary);
 }
 .bip-calendar-grid-day--today {
