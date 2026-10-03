@@ -57,7 +57,9 @@ describe('BipProgressBar', () => {
   });
 
   it('aria-valuetext usa valueText cuando se provee y no es indeterminate', async () => {
-    await render(BipProgressBar, { componentInputs: { value: 75, valueText: '75 de 100 archivos' } });
+    await render(BipProgressBar, {
+      componentInputs: { value: 75, valueText: '75 de 100 archivos' },
+    });
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuetext', '75 de 100 archivos');
   });
 });

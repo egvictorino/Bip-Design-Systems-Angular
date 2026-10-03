@@ -179,12 +179,13 @@ class ThemingSideBySideDemo {
 })
 class ThemingColorSchemesMatrixDemo {
   protected readonly boxStyle = themedBoxStyle();
-  protected readonly cells: Array<{ theme: 'square' | 'rounded'; colorScheme: 'light' | 'dark' }> = [
-    { theme: 'square', colorScheme: 'light' },
-    { theme: 'rounded', colorScheme: 'light' },
-    { theme: 'square', colorScheme: 'dark' },
-    { theme: 'rounded', colorScheme: 'dark' },
-  ];
+  protected readonly cells: Array<{ theme: 'square' | 'rounded'; colorScheme: 'light' | 'dark' }> =
+    [
+      { theme: 'square', colorScheme: 'light' },
+      { theme: 'rounded', colorScheme: 'light' },
+      { theme: 'square', colorScheme: 'dark' },
+      { theme: 'rounded', colorScheme: 'dark' },
+    ];
 }
 
 @Component({

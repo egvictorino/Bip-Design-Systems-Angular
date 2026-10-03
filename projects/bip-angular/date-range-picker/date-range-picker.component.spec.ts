@@ -51,7 +51,9 @@ describe('BipDateRangePicker', () => {
   });
 
   it('muestra solo "from" con puntos suspensivos cuando falta "to"', async () => {
-    await render(HostComponent, { componentProperties: { value: { from: new Date(2026, 5, 10), to: null } } });
+    await render(HostComponent, {
+      componentProperties: { value: { from: new Date(2026, 5, 10), to: null } },
+    });
     expect(screen.getByText('10/06/2026 – ...')).toBeInTheDocument();
   });
 
@@ -151,17 +153,25 @@ describe('BipDateRangePicker', () => {
 
   it('activa aria-invalid cuando error=true', async () => {
     await render(HostComponent, { componentProperties: { error: true } });
-    expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Rango requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Rango requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Rango requerido');
   });
 
   it('deshabilita "Mes anterior" al llegar al mes mínimo', async () => {
     await render(HostComponent, {
-      componentProperties: { value: { from: new Date(2026, 5, 15), to: null }, min: new Date(2026, 5, 10) },
+      componentProperties: {
+        value: { from: new Date(2026, 5, 15), to: null },
+        min: new Date(2026, 5, 10),
+      },
     });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /15\/06\/2026/ }));
@@ -181,7 +191,9 @@ describe('BipDateRangePicker', () => {
   });
 
   it('ArrowRight mueve el foco al día siguiente dentro de la grilla', async () => {
-    await render(HostComponent, { componentProperties: { value: { from: new Date(2026, 5, 1), to: null } } });
+    await render(HostComponent, {
+      componentProperties: { value: { from: new Date(2026, 5, 1), to: null } },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /01\/06\/2026/ }));
     screen.getByRole('button', { name: /^lunes, 1 de junio de 2026$/ }).focus();

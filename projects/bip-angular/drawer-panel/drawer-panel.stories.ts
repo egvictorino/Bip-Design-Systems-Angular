@@ -17,7 +17,12 @@ import { BipDrawerPanelFooter, BipDrawerPanelHeaderActions } from './drawer-pane
       [closeOnBackdrop]="closeOnBackdrop"
     >
       <p>Contenido del panel lateral. Puede incluir cualquier markup.</p>
-      <button type="button" bipDrawerPanelFooter style="padding: 8px 16px" (click)="open.set(false)">
+      <button
+        type="button"
+        bipDrawerPanelFooter
+        style="padding: 8px 16px"
+        (click)="open.set(false)"
+      >
         Cerrar
       </button>
     </bip-drawer-panel>

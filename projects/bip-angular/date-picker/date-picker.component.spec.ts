@@ -81,7 +81,9 @@ describe('BipDatePicker', () => {
   });
 
   it('selecciona un día y cierra el calendario', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { value: new Date(2026, 5, 1) } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { value: new Date(2026, 5, 1) },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /01\/06\/2026/ }));
     await user.click(screen.getByRole('button', { name: /^lunes, 15 de junio de 2026$/ }));
@@ -99,7 +101,9 @@ describe('BipDatePicker', () => {
   });
 
   it('renderiza un botón de limpiar cuando hay valor y lo vacía al hacer click', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { value: new Date(2026, 5, 1) } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { value: new Date(2026, 5, 1) },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: 'Limpiar fecha' }));
     expect(fixture.componentInstance.value).toBeNull();
@@ -112,11 +116,16 @@ describe('BipDatePicker', () => {
 
   it('activa aria-invalid cuando error=true', async () => {
     await render(HostComponent, { componentProperties: { error: true } });
-    expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Fecha requerida' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Fecha requerida' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Fecha requerida');
   });
 
@@ -147,7 +156,9 @@ describe('BipDatePicker', () => {
 
   it('aplica la clase full-width al host', async () => {
     const { container } = await render(HostComponent, { componentProperties: { fullWidth: true } });
-    expect(container.querySelector('bip-date-picker')).toHaveClass('bip-date-picker-wrapper--full-width');
+    expect(container.querySelector('bip-date-picker')).toHaveClass(
+      'bip-date-picker-wrapper--full-width'
+    );
   });
 
   // ── ControlValueAccessor ────────────────────────────────────────────────────

@@ -17,7 +17,7 @@
       [class]="triggerClass()"
       [disabled]="disabled()"
       [attr.aria-describedby]="messageId()"
-      [attr.aria-invalid]="(hasError() || !textValid()) || null"
+      [attr.aria-invalid]="hasError() || !textValid() || null"
       [placeholder]="placeholder() || locale().timePicker.placeholder"
       [value]="textValue()"
       (input)="onTextChange($any($event.target).value)"
@@ -50,14 +50,18 @@
       @if (displayValue()) {
         <span class="bip-time-picker-value">{{ displayValue() }}</span>
       } @else {
-        <span class="bip-time-picker-placeholder">{{ placeholder() || locale().timePicker.placeholder }}</span>
+        <span class="bip-time-picker-placeholder">{{
+          placeholder() || locale().timePicker.placeholder
+        }}</span>
       }
       <span class="bip-time-picker-clock-icon" aria-hidden="true">🕐</span>
     </button>
   }
 </div>
 
-<span role="status" aria-live="polite" aria-atomic="true" class="bip-time-picker-sr-only">{{ announcement() }}</span>
+<span role="status" aria-live="polite" aria-atomic="true" class="bip-time-picker-sr-only">{{
+  announcement()
+}}</span>
 
 @if (error() && errorMessage()) {
   <span [id]="errorId" class="bip-time-picker-message bip-time-picker-error-text" role="alert">
@@ -87,7 +91,11 @@
           role="listbox"
           tabindex="0"
           [attr.aria-label]="locale().timePicker.hours"
-          [attr.aria-activedescendant]="focusedHourIdx() !== null ? hoursListId + '-opt-' + hoursOptions()[focusedHourIdx()!] : null"
+          [attr.aria-activedescendant]="
+            focusedHourIdx() !== null
+              ? hoursListId + '-opt-' + hoursOptions()[focusedHourIdx()!]
+              : null
+          "
           (keydown)="onHourColumnKeydown($event)"
         >
           @for (hourOption of hoursOptions(); track hourOption; let idx = $index) {
@@ -118,7 +126,11 @@
           role="listbox"
           tabindex="0"
           [attr.aria-label]="locale().timePicker.minutes"
-          [attr.aria-activedescendant]="focusedMinuteIdx() !== null ? minutesListId + '-opt-' + minutesOptions()[focusedMinuteIdx()!] : null"
+          [attr.aria-activedescendant]="
+            focusedMinuteIdx() !== null
+              ? minutesListId + '-opt-' + minutesOptions()[focusedMinuteIdx()!]
+              : null
+          "
           (keydown)="onMinuteColumnKeydown($event)"
         >
           @for (minuteOption of minutesOptions(); track minuteOption; let idx = $index) {
@@ -144,7 +156,12 @@
       @if (hourCycle() === '12') {
         <div class="bip-time-picker-column bip-time-picker-column--period">
           <div class="bip-time-picker-column-header">{{ locale().timePicker.amPm }}</div>
-          <div [id]="periodListId" class="bip-time-picker-column-list" role="listbox" [attr.aria-label]="locale().timePicker.amPm">
+          <div
+            [id]="periodListId"
+            class="bip-time-picker-column-list"
+            role="listbox"
+            [attr.aria-label]="locale().timePicker.amPm"
+          >
             @for (period of periods; track period) {
               <button
                 type="button"
@@ -163,7 +180,9 @@
     </div>
 
     <div class="bip-time-picker-now-section">
-      <button type="button" class="bip-time-picker-now-btn" (click)="onNow()">{{ locale().timePicker.now }}</button>
+      <button type="button" class="bip-time-picker-now-btn" (click)="onNow()">
+        {{ locale().timePicker.now }}
+      </button>
     </div>
   </div>
 </ng-template>

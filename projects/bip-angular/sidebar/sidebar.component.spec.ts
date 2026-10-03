@@ -25,7 +25,12 @@ import { BipSidebarTrigger } from './sidebar-trigger.component';
     BipSidebarTrigger,
   ],
   template: `
-    <bip-sidebar [open]="open" [collapsed]="collapsed" [variant]="variant" (openChange)="onOpenChange($event)">
+    <bip-sidebar
+      [open]="open"
+      [collapsed]="collapsed"
+      [variant]="variant"
+      (openChange)="onOpenChange($event)"
+    >
       <bip-sidebar-header>
         <bip-sidebar-brand href="/">Bip</bip-sidebar-brand>
         <button type="button" bipSidebarTrigger>Toggle</button>
@@ -56,7 +61,9 @@ class HostComponent {
 describe('BipSidebar', () => {
   it('role="navigation" con aria-label localizado (nav)', async () => {
     await render(HostComponent);
-    expect(screen.getAllByRole('navigation', { name: 'Navegación lateral' })[0]).toBeInTheDocument();
+    expect(
+      screen.getAllByRole('navigation', { name: 'Navegación lateral' })[0]
+    ).toBeInTheDocument();
   });
 
   it('BipSidebarContent es un landmark de navegación independiente (navLandmark)', async () => {
@@ -106,7 +113,9 @@ describe('BipSidebar', () => {
     await render(HostComponent);
     const trigger = screen.getByRole('button', { name: 'Colapsar sidebar' });
     await userEvent.click(trigger);
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Expandir sidebar' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Expandir sidebar' })).toBeInTheDocument()
+    );
   });
 
   it('aplica la clase de variante correspondiente', async () => {
@@ -171,10 +180,14 @@ describe('BipSidebar', () => {
       await render(HostComponent);
       const trigger = screen.getByRole('button', { name: 'Configuración' });
       await userEvent.click(trigger);
-      await waitFor(() => expect(screen.getByRole('link', { name: 'General' })).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByRole('link', { name: 'General' })).toBeInTheDocument()
+      );
 
       await userEvent.click(trigger);
-      await waitFor(() => expect(screen.queryByRole('link', { name: 'General' })).not.toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.queryByRole('link', { name: 'General' })).not.toBeInTheDocument()
+      );
     });
 
     it('defaultOpen la muestra abierta desde el inicio', async () => {
@@ -194,7 +207,9 @@ describe('BipSidebar', () => {
       await render(HostComponent, { componentProperties: { submenuDefaultOpen: true } });
       const general = screen.getByRole('link', { name: 'General' });
       fireEvent.keyDown(general, { key: 'Escape' });
-      await waitFor(() => expect(screen.getByRole('button', { name: 'Configuración' })).toHaveFocus());
+      await waitFor(() =>
+        expect(screen.getByRole('button', { name: 'Configuración' })).toHaveFocus()
+      );
     });
   });
 
@@ -205,6 +220,8 @@ describe('BipSidebar', () => {
     })
     class OrphanHost {}
 
-    await expect(render(OrphanHost)).rejects.toThrow('<bip-sidebar-item> debe usarse dentro de <bip-sidebar>');
+    await expect(render(OrphanHost)).rejects.toThrow(
+      '<bip-sidebar-item> debe usarse dentro de <bip-sidebar>'
+    );
   });
 });

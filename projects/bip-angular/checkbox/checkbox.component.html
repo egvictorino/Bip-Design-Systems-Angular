@@ -15,12 +15,22 @@
         (change)="onInputChange($event)"
         (blur)="onBlur()"
       />
-      <svg [class]="'bip-checkbox-check-icon ' + iconClass()" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <svg
+        [class]="'bip-checkbox-check-icon ' + iconClass()"
+        viewBox="0 0 16 16"
+        fill="currentColor"
+        aria-hidden="true"
+      >
         <path
           d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"
         />
       </svg>
-      <svg [class]="'bip-checkbox-dash-icon ' + iconClass()" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <svg
+        [class]="'bip-checkbox-dash-icon ' + iconClass()"
+        viewBox="0 0 16 16"
+        fill="currentColor"
+        aria-hidden="true"
+      >
         <path d="M3 8a1 1 0 011-1h8a1 1 0 110 2H4a1 1 0 01-1-1z" />
       </svg>
     </div>
@@ -34,7 +44,11 @@
     }
   </div>
   @if (resolvedError() && errorMessage()) {
-    <span [id]="errorId" [class]="'bip-checkbox-message bip-checkbox-error-text ' + helperClass()" role="alert">
+    <span
+      [id]="errorId"
+      [class]="'bip-checkbox-message bip-checkbox-error-text ' + helperClass()"
+      role="alert"
+    >
       {{ errorMessage() }}
     </span>
   } @else if (helperText()) {

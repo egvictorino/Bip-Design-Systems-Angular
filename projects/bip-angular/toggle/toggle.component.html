@@ -26,7 +26,11 @@
     }
   </div>
   @if (error() && errorMessage()) {
-    <span [id]="errorId" [class]="'bip-toggle-message bip-toggle-error-text ' + helperClass()" role="alert">
+    <span
+      [id]="errorId"
+      [class]="'bip-toggle-message bip-toggle-error-text ' + helperClass()"
+      role="alert"
+    >
       {{ errorMessage() }}
     </span>
   } @else if (helperText()) {

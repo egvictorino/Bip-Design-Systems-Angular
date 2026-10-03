@@ -16,7 +16,9 @@ export default meta;
 type Story = StoryObj<BipProgressBar>;
 
 export const Default: Story = { args: { value: 60 } };
-export const WithLabelAndValue: Story = { args: { value: 60, label: 'Subiendo...', showValue: true } };
+export const WithLabelAndValue: Story = {
+  args: { value: 60, label: 'Subiendo...', showValue: true },
+};
 export const Indeterminate: Story = { args: { indeterminate: true, label: 'Cargando...' } };
 export const Striped: Story = { args: { value: 60, striped: true, animated: true } };
 export const WithHelperText: Story = {

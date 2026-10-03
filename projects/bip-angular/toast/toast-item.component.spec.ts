@@ -26,9 +26,7 @@ describe('BipToastItem — ResizeObserver', () => {
   });
 
   it('no lanza NG0203 al observar el tamaño del toast', async () => {
-    await expect(
-      render(BipToastItem, { inputs: { message: 'Hola' } })
-    ).resolves.toBeDefined();
+    await expect(render(BipToastItem, { inputs: { message: 'Hola' } })).resolves.toBeDefined();
   });
 
   it('desconecta el observer al destruirse sin lanzar', async () => {

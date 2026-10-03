@@ -122,7 +122,13 @@ export class BipCalendar implements OnDestroy {
     if (view === 'agenda') return this.locale().calendar.upcomingEvents;
     if (view === 'month') return formatDate(date, { locale, month: 'long', year: 'numeric' });
     if (view === 'day') {
-      return formatDate(date, { locale, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      return formatDate(date, {
+        locale,
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
     }
     const start = startOfWeek(date);
     const end = addDays(start, 6);
@@ -280,7 +286,9 @@ export class BipCalendar implements OnDestroy {
         positionStrategy: this.bipOverlay
           .position()
           .flexibleConnectedTo(anchor)
-          .withPositions([{ originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' }])
+          .withPositions([
+            { originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' },
+          ])
           .withPush(true),
         scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         hasBackdrop: false,
@@ -324,10 +332,14 @@ export class BipCalendar implements OnDestroy {
     return Array.from({ length: Math.max(0, end - start) }, (_, i) => start + i);
   });
 
-  protected readonly gridHeight = computed(() => ((this.maxMinutes() - this.minMinutes()) / 60) * this.hourHeight);
+  protected readonly gridHeight = computed(
+    () => ((this.maxMinutes() - this.minMinutes()) / 60) * this.hourHeight
+  );
 
   protected eventsForColumn(day: Date, doctorId: string | undefined): BipCalendarEvent[] {
-    return this.events().filter((e) => isSameDay(e.start, day) && (!doctorId || e.doctorId === doctorId));
+    return this.events().filter(
+      (e) => isSameDay(e.start, day) && (!doctorId || e.doctorId === doctorId)
+    );
   }
 
   protected eventTop(event: BipCalendarEvent): number {
@@ -368,7 +380,11 @@ export class BipCalendar implements OnDestroy {
 
   protected eventAriaLabel(event: BipCalendarEvent): string {
     const statusLabel = this.locale().calendar.statusLabels[event.status];
-    const time = formatDate(event.start, { locale: this.locale().locale, hour: '2-digit', minute: '2-digit' });
+    const time = formatDate(event.start, {
+      locale: this.locale().locale,
+      hour: '2-digit',
+      minute: '2-digit',
+    });
     return `${event.title}, ${time}, ${statusLabel}`;
   }
 
@@ -430,7 +446,12 @@ export class BipCalendar implements OnDestroy {
   }
 
   protected agendaDayLabel(day: Date): string {
-    return formatDate(day, { locale: this.locale().locale, weekday: 'long', day: 'numeric', month: 'long' });
+    return formatDate(day, {
+      locale: this.locale().locale,
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
   }
 
   protected columnHeaderLabel(day: Date): string {

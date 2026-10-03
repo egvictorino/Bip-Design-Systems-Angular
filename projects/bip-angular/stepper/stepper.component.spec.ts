@@ -117,6 +117,8 @@ describe('BipStepper', () => {
     })
     class OrphanHost {}
 
-    await expect(render(OrphanHost)).rejects.toThrow('<bip-stepper-step> debe usarse dentro de <bip-stepper>');
+    await expect(render(OrphanHost)).rejects.toThrow(
+      '<bip-stepper-step> debe usarse dentro de <bip-stepper>'
+    );
   });
 });

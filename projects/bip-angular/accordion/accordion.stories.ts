@@ -16,10 +16,14 @@ import { BipAccordionContent } from './accordion-content.component';
       </bip-accordion-item>
       <bip-accordion-item value="devolucion">
         <button type="button" bipAccordionTrigger>¿Puedo devolver un producto?</button>
-        <bip-accordion-content>Sí, dentro de los primeros 30 días desde la compra.</bip-accordion-content>
+        <bip-accordion-content
+          >Sí, dentro de los primeros 30 días desde la compra.</bip-accordion-content
+        >
       </bip-accordion-item>
       <bip-accordion-item value="pago" disabled>
-        <button type="button" bipAccordionTrigger>Métodos de pago (deshabilitado en este demo)</button>
+        <button type="button" bipAccordionTrigger>
+          Métodos de pago (deshabilitado en este demo)
+        </button>
         <bip-accordion-content>Tarjeta de crédito, débito y transferencia.</bip-accordion-content>
       </bip-accordion-item>
     </bip-accordion>
@@ -43,7 +47,9 @@ export const Single: Story = {};
 
 export const Multiple: Story = {
   render: () => ({
-    moduleMetadata: { imports: [BipAccordion, BipAccordionItem, BipAccordionTrigger, BipAccordionContent] },
+    moduleMetadata: {
+      imports: [BipAccordion, BipAccordionItem, BipAccordionTrigger, BipAccordionContent],
+    },
     template: `
       <bip-accordion type="multiple" [value]="['envio']" variant="bordered" style="max-width: 28rem">
         <bip-accordion-item value="envio">

@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, effect, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  effect,
+  model,
+} from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
 import { BipFormControlBase } from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
@@ -56,7 +63,9 @@ export class BipToggle extends BipFormControlBase implements ControlValueAccesso
   protected readonly hasVisibleMessage = computed(
     () => (this.error() && !!this.errorMessage()) || !!this.helperText()
   );
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly trackClass = computed(() => {
     const classes = ['bip-toggle-track', TRACK_SIZE_CLASS[this.size()]];
@@ -65,7 +74,9 @@ export class BipToggle extends BipFormControlBase implements ControlValueAccesso
     return classes.join(' ');
   });
 
-  protected readonly thumbClass = computed(() => `bip-toggle-thumb ${THUMB_SIZE_CLASS[this.size()]}`);
+  protected readonly thumbClass = computed(
+    () => `bip-toggle-thumb ${THUMB_SIZE_CLASS[this.size()]}`
+  );
 
   protected readonly labelClass = computed(() => {
     const classes = [LABEL_SIZE_CLASS[this.size()]];

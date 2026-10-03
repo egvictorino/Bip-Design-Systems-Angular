@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { BipIdGenerator } from '@bip-design-systems/angular/core';
 import { BIP_STEPPER_CONTEXT } from './stepper-context';
@@ -47,8 +54,12 @@ export class BipStepperStep {
   protected readonly descId = computed(() => (this.description() ? this.generatedDescId : null));
 
   protected readonly hasStatus = computed(() => this.variant() !== undefined);
-  protected readonly isActive = computed(() => !this.hasStatus() && this.value() === this.context.activeValue());
-  protected readonly isCompleted = computed(() => !this.hasStatus() && this.value() < this.context.activeValue());
+  protected readonly isActive = computed(
+    () => !this.hasStatus() && this.value() === this.context.activeValue()
+  );
+  protected readonly isCompleted = computed(
+    () => !this.hasStatus() && this.value() < this.context.activeValue()
+  );
   protected readonly isLast = computed(() => this.value() === this.context.totalSteps() - 1);
 
   protected readonly iconState = computed<BipStepperStepIconState>(() => {

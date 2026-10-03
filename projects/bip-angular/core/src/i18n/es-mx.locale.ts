@@ -315,7 +315,8 @@ export const esMX: BipLocale = {
     add: 'Agregar',
     addImage: 'Agregar imagen',
     invalidImageType: 'Solo se aceptan archivos de imagen.',
-    imageTooLarge: (maxSizeLabel) => `La imagen supera el tamaño máximo permitido (${maxSizeLabel}).`,
+    imageTooLarge: (maxSizeLabel) =>
+      `La imagen supera el tamaño máximo permitido (${maxSizeLabel}).`,
   },
 
   pagination: {

@@ -17,7 +17,12 @@
       </div>
     }
     @if (columnVisibility()) {
-      <div class="bip-data-table-col-visibility-wrapper" bipClickOutside [enabled]="colPanelOpen()" (bipClickOutside)="colPanelOpen.set(false)">
+      <div
+        class="bip-data-table-col-visibility-wrapper"
+        bipClickOutside
+        [enabled]="colPanelOpen()"
+        (bipClickOutside)="colPanelOpen.set(false)"
+      >
         <button
           type="button"
           bipButton
@@ -30,7 +35,12 @@
           {{ locale().dataTable.columnVisibilityToggle }}
         </button>
         @if (colPanelOpen()) {
-          <div [id]="colPanelId" role="dialog" [attr.aria-label]="locale().dataTable.columnVisibility" class="bip-data-table-col-panel">
+          <div
+            [id]="colPanelId"
+            role="dialog"
+            [attr.aria-label]="locale().dataTable.columnVisibility"
+            class="bip-data-table-col-panel"
+          >
             @for (col of columns(); track col.key) {
               <bip-checkbox
                 [label]="col.header"
@@ -48,10 +58,18 @@
 
 @if (selectable() && selectedRows().length > 0) {
   <div class="bip-data-table-bulk-bar">
-    <span class="bip-data-table-bulk-count">{{ locale().dataTable.selectedCount(selectedRows().length) }}</span>
+    <span class="bip-data-table-bulk-count">{{
+      locale().dataTable.selectedCount(selectedRows().length)
+    }}</span>
     <div class="bip-data-table-bulk-actions">
       @for (action of bulkActions() ?? []; track action.label) {
-        <button type="button" bipButton size="sm" [variant]="action.variant ?? 'secondary'" (click)="action.onClick(selectedRows())">
+        <button
+          type="button"
+          bipButton
+          size="sm"
+          [variant]="action.variant ?? 'secondary'"
+          (click)="action.onClick(selectedRows())"
+        >
           {{ action.label }}
         </button>
       }
@@ -108,13 +126,23 @@
       }
     } @else if (paginatedData().length === 0) {
       <tr bipTableRow>
-        <td bipTableCell [attr.colspan]="colSpan()" align="center" class="bip-data-table-empty-cell">
+        <td
+          bipTableCell
+          [attr.colspan]="colSpan()"
+          align="center"
+          class="bip-data-table-empty-cell"
+        >
           <bip-empty-state [title]="emptyMessage() ?? locale().dataTable.emptyMessage" size="sm" />
         </td>
       </tr>
     } @else {
       @for (row of paginatedData(); track $index; let rowIndex = $index) {
-        <tr bipTableRow [selected]="selectable() && rowIsSelected(row, rowIndex)" [clickable]="rowsClickable()" (click)="handleRowClick(row)">
+        <tr
+          bipTableRow
+          [selected]="selectable() && rowIsSelected(row, rowIndex)"
+          [clickable]="rowsClickable()"
+          (click)="handleRowClick(row)"
+        >
           @if (selectable()) {
             <td bipTableCell>
               <bip-checkbox
@@ -129,7 +157,10 @@
             <td bipTableCell [align]="col.align ?? 'start'">
               @let cellTpl = cellTemplateFor(col.key);
               @if (cellTpl) {
-                <ng-container [ngTemplateOutlet]="cellTpl" [ngTemplateOutletContext]="cellContext(col, row, rowIndex)" />
+                <ng-container
+                  [ngTemplateOutlet]="cellTpl"
+                  [ngTemplateOutletContext]="cellContext(col, row, rowIndex)"
+                />
               } @else {
                 {{ cellValue(col, row) }}
               }
@@ -143,6 +174,10 @@
 
 @if (!loading() && totalPages() > 1) {
   <div class="bip-data-table-pagination-wrapper">
-    <bip-pagination [page]="currentPage()" [totalPages]="totalPages()" (pageChange)="onPageChange($event)" />
+    <bip-pagination
+      [page]="currentPage()"
+      [totalPages]="totalPages()"
+      (pageChange)="onPageChange($event)"
+    />
   </div>
 }

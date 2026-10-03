@@ -6,7 +6,9 @@ import type { BipSize } from '@bip-design-systems/angular/core';
 
 @Component({
   imports: [BipBadge],
-  template: `<bip-badge data-testid="host" [variant]="variant" [size]="size" [dot]="dot">Nuevo</bip-badge>`,
+  template: `<bip-badge data-testid="host" [variant]="variant" [size]="size" [dot]="dot"
+    >Nuevo</bip-badge
+  >`,
 })
 class HostComponent {
   variant: BipBadgeVariant = 'neutral';

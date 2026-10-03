@@ -72,7 +72,9 @@ describe('BipCalendarGrid', () => {
   });
 
   it('deshabilita fechas listadas en disabledDates', async () => {
-    await render(HostComponent, { componentProperties: { disabledDates: [new Date(2026, 5, 10)] } });
+    await render(HostComponent, {
+      componentProperties: { disabledDates: [new Date(2026, 5, 10)] },
+    });
     expect(screen.getByRole('button', { name: /^miércoles, 10 de junio de 2026$/ })).toBeDisabled();
   });
 

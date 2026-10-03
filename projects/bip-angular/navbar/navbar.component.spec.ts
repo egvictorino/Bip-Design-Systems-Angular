@@ -19,7 +19,10 @@ import { BipNavbarActions } from './navbar-actions.component';
  * interactivo, sin abrir el hamburguesa); los tests de comportamiento móvil usan `false`.
  */
 function provideBreakpointObserver(matches: boolean) {
-  return { provide: BreakpointObserver, useValue: { observe: () => of({ matches, breakpoints: {} }) } };
+  return {
+    provide: BreakpointObserver,
+    useValue: { observe: () => of({ matches, breakpoints: {} }) },
+  };
 }
 
 @Component({
@@ -58,9 +61,14 @@ describe('BipNavbar (escritorio)', () => {
 
     await userEvent.click(toggle);
     await waitFor(() =>
-      expect(screen.getByRole('button', { name: 'Cerrar menú' })).toHaveAttribute('aria-expanded', 'true')
+      expect(screen.getByRole('button', { name: 'Cerrar menú' })).toHaveAttribute(
+        'aria-expanded',
+        'true'
+      )
     );
-    expect(screen.getByRole('button', { name: 'Cerrar menú' }).getAttribute('aria-controls')).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: 'Cerrar menú' }).getAttribute('aria-controls')
+    ).toBeTruthy();
   });
 
   it('item activo tiene aria-current="page"', async () => {
@@ -77,25 +85,35 @@ describe('BipNavbar (escritorio)', () => {
   it('clic en un item cierra el panel móvil', async () => {
     await render(HostComponent, desktop());
     await userEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Cerrar menú' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Cerrar menú' })).toBeInTheDocument()
+    );
 
     await userEvent.click(screen.getByRole('link', { name: 'Pacientes' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Abrir menú' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Abrir menú' })).toBeInTheDocument()
+    );
   });
 
   it('clic en el brand (link) cierra el panel móvil', async () => {
     await render(HostComponent, desktop());
     await userEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Cerrar menú' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Cerrar menú' })).toBeInTheDocument()
+    );
 
     await userEvent.click(screen.getByRole('link', { name: 'Bip' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Abrir menú' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Abrir menú' })).toBeInTheDocument()
+    );
   });
 
   it('Escape cierra el panel móvil y devuelve el foco al botón de hamburguesa', async () => {
     await render(HostComponent, desktop());
     await userEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Cerrar menú' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Cerrar menú' })).toBeInTheDocument()
+    );
 
     fireEvent.keyDown(document, { key: 'Escape' });
     await waitFor(() => expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveFocus());
@@ -104,10 +122,14 @@ describe('BipNavbar (escritorio)', () => {
   it('clic fuera cierra el panel móvil', async () => {
     await render(HostComponent, desktop());
     await userEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Cerrar menú' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Cerrar menú' })).toBeInTheDocument()
+    );
 
     await userEvent.click(document.body);
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Abrir menú' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Abrir menú' })).toBeInTheDocument()
+    );
   });
 
   describe('teclado', () => {

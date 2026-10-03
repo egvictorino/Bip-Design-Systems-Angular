@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, numberAttribute, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  input,
+  numberAttribute,
+  output,
+} from '@angular/core';
 import { injectBipLocale } from '@bip-design-systems/angular/core';
 import { getPageRange } from './pagination-range';
 
@@ -24,7 +32,9 @@ export class BipPagination {
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly pageChange = output<number>();
 
-  protected readonly pageRange = computed(() => getPageRange(this.page(), this.totalPages(), this.siblingCount()));
+  protected readonly pageRange = computed(() =>
+    getPageRange(this.page(), this.totalPages(), this.siblingCount())
+  );
 
   protected goTo(target: number): void {
     if (this.disabled() || target < 1 || target > this.totalPages() || target === this.page()) {

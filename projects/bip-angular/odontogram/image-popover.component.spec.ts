@@ -53,7 +53,9 @@ describe('BipImagePopover — validación de archivo', () => {
     fixture.detectChanges();
 
     expect(onRejected).toHaveBeenCalledWith({ file, reason: 'size' });
-    expect(screen.getByRole('alert')).toHaveTextContent('La imagen supera el tamaño máximo permitido');
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'La imagen supera el tamaño máximo permitido'
+    );
   });
 
   it('acepta un archivo de imagen dentro del límite sin mostrar error', async () => {

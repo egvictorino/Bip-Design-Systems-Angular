@@ -6,7 +6,13 @@ import { BipAlert, type BipAlertVariant } from './alert.component';
 @Component({
   imports: [BipAlert],
   template: `
-    <bip-alert data-testid="host" [variant]="variant" [title]="title" [closable]="closable" (closed)="onClosed()">
+    <bip-alert
+      data-testid="host"
+      [variant]="variant"
+      [title]="title"
+      [closable]="closable"
+      (closed)="onClosed()"
+    >
       Mensaje de la alerta
     </bip-alert>
   `,

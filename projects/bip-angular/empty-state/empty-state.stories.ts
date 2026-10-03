@@ -14,7 +14,9 @@ const meta: Meta<BipEmptyState> = {
 export default meta;
 type Story = StoryObj<BipEmptyState>;
 
-export const Default: Story = { args: { title: 'Sin resultados', description: 'Prueba con otros filtros de búsqueda.' } };
+export const Default: Story = {
+  args: { title: 'Sin resultados', description: 'Prueba con otros filtros de búsqueda.' },
+};
 
 export const WithAction: Story = {
   args: { title: 'Sin resultados', description: 'Prueba con otros filtros de búsqueda.' },

@@ -34,7 +34,9 @@
       "@bip-design-systems/angular/slider": ["./projects/bip-angular/slider/index.ts"],
       "@bip-design-systems/angular/file-upload": ["./projects/bip-angular/file-upload/index.ts"],
       "@bip-design-systems/angular/modal": ["./projects/bip-angular/modal/index.ts"],
-      "@bip-design-systems/angular/confirm-dialog": ["./projects/bip-angular/confirm-dialog/index.ts"],
+      "@bip-design-systems/angular/confirm-dialog": [
+        "./projects/bip-angular/confirm-dialog/index.ts"
+      ],
       "@bip-design-systems/angular/drawer-panel": ["./projects/bip-angular/drawer-panel/index.ts"],
       "@bip-design-systems/angular/toast": ["./projects/bip-angular/toast/index.ts"],
       "@bip-design-systems/angular/tooltip": ["./projects/bip-angular/tooltip/index.ts"],
@@ -50,7 +52,9 @@
       "@bip-design-systems/angular/sidebar": ["./projects/bip-angular/sidebar/index.ts"],
       "@bip-design-systems/angular/multi-select": ["./projects/bip-angular/multi-select/index.ts"],
       "@bip-design-systems/angular/date-picker": ["./projects/bip-angular/date-picker/index.ts"],
-      "@bip-design-systems/angular/date-range-picker": ["./projects/bip-angular/date-range-picker/index.ts"],
+      "@bip-design-systems/angular/date-range-picker": [
+        "./projects/bip-angular/date-range-picker/index.ts"
+      ],
       "@bip-design-systems/angular/time-picker": ["./projects/bip-angular/time-picker/index.ts"],
       "@bip-design-systems/angular/calendar": ["./projects/bip-angular/calendar/index.ts"],
       "@bip-design-systems/angular/table": ["./projects/bip-angular/table/index.ts"],

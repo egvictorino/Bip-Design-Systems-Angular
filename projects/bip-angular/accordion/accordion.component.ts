@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  input,
+  model,
+} from '@angular/core';
 import { BIP_ACCORDION_CONTEXT, type BipAccordionContext } from './accordion-context';
 
 export type BipAccordionType = 'single' | 'multiple';

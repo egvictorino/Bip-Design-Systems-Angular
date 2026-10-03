@@ -1,4 +1,7 @@
-<fieldset class="bip-radio-group-fieldset" [attr.aria-describedby]="hasVisibleMessage() ? errorId : null">
+<fieldset
+  class="bip-radio-group-fieldset"
+  [attr.aria-describedby]="hasVisibleMessage() ? errorId : null"
+>
   @if (label()) {
     <legend [class]="legendClass()">{{ label() }}</legend>
   }
@@ -6,11 +9,18 @@
     <ng-content />
   </div>
   @if (error() && errorMessage()) {
-    <span [id]="errorId" [class]="'bip-radio-group-message bip-radio-group-message--error ' + helperClass()" role="alert">
+    <span
+      [id]="errorId"
+      [class]="'bip-radio-group-message bip-radio-group-message--error ' + helperClass()"
+      role="alert"
+    >
       {{ errorMessage() }}
     </span>
   } @else if (helperText()) {
-    <span [id]="errorId" [class]="'bip-radio-group-message bip-radio-group-message--helper ' + helperClass()">
+    <span
+      [id]="errorId"
+      [class]="'bip-radio-group-message bip-radio-group-message--helper ' + helperClass()"
+    >
       {{ helperText() }}
     </span>
   }

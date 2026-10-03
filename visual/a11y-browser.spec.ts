@@ -66,7 +66,9 @@ test.describe('a11y — axe en navegador real, color-contrast activado', () => {
     for (const colorScheme of ['light', 'dark'] as const) {
       test(`${shot} — ${colorScheme}`, async ({ page }) => {
         if (dir === 'calendar') await page.clock.setFixedTime(FROZEN_TIME);
-        await page.goto(`/iframe.html?id=${storyId}&viewMode=story&globals=colorScheme:${colorScheme}`);
+        await page.goto(
+          `/iframe.html?id=${storyId}&viewMode=story&globals=colorScheme:${colorScheme}`
+        );
         await page.waitForLoadState('networkidle');
 
         const results = await analyzeWithoutAddonAxe(page);
@@ -91,7 +93,9 @@ test.describe('a11y — estados interactivos, color-contrast activado', () => {
     for (const colorScheme of ['light', 'dark'] as const) {
       test(`${name} — ${colorScheme}`, async ({ page }) => {
         if (frozenTime) await page.clock.setFixedTime(FROZEN_TIME);
-        await page.goto(`/iframe.html?id=${storyId}&viewMode=story&globals=colorScheme:${colorScheme}`);
+        await page.goto(
+          `/iframe.html?id=${storyId}&viewMode=story&globals=colorScheme:${colorScheme}`
+        );
         await page.waitForLoadState('networkidle');
         await setup?.(page);
 

@@ -30,7 +30,9 @@
   background-color: var(--color-surface-1);
   box-shadow: var(--shadow-xl);
   opacity: 0;
-  transition: transform var(--duration-slow) var(--ease-out), opacity var(--duration-slow) var(--ease-out);
+  transition:
+    transform var(--duration-slow) var(--ease-out),
+    opacity var(--duration-slow) var(--ease-out);
 }
 
 .bip-drawer-panel:focus {
@@ -94,7 +96,9 @@
   border-radius: var(--radius-control);
   padding: var(--space-1);
   color: var(--color-txt-secondary);
-  transition: background-color var(--duration-fast), color var(--duration-fast);
+  transition:
+    background-color var(--duration-fast),
+    color var(--duration-fast);
   background: none;
   border: none;
   cursor: pointer;

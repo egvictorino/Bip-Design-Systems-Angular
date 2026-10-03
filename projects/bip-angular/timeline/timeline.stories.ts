@@ -8,10 +8,28 @@ import { BipTimelineItem } from './timeline-item.component';
   imports: [BipTimeline, BipTimelineItem],
   template: `
     <bip-timeline aria-label="Historial del pedido" style="max-width: 24rem">
-      <bip-timeline-item date="12 ene 2026" title="Pedido creado" description="El cliente realizó el pedido" variant="success" />
-      <bip-timeline-item date="13 ene 2026" title="En preparación" description="El equipo está armando el pedido" />
-      <bip-timeline-item date="14 ene 2026" title="Incidencia" description="Falta un insumo en bodega" variant="danger" />
-      <bip-timeline-item title="Entrega estimada" description="Pendiente de confirmación" variant="warning" />
+      <bip-timeline-item
+        date="12 ene 2026"
+        title="Pedido creado"
+        description="El cliente realizó el pedido"
+        variant="success"
+      />
+      <bip-timeline-item
+        date="13 ene 2026"
+        title="En preparación"
+        description="El equipo está armando el pedido"
+      />
+      <bip-timeline-item
+        date="14 ene 2026"
+        title="Incidencia"
+        description="Falta un insumo en bodega"
+        variant="danger"
+      />
+      <bip-timeline-item
+        title="Entrega estimada"
+        description="Pendiente de confirmación"
+        variant="warning"
+      />
     </bip-timeline>
   `,
 })

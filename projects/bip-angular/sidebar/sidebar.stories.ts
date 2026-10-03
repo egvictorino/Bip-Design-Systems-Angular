@@ -26,7 +26,9 @@ import { BipSidebarTrigger } from './sidebar-trigger.component';
   template: `
     <div style="display: flex; height: 28rem; border: 1px solid var(--color-edge)">
       <bip-sidebar [collapsed]="collapsed()">
-        <bip-sidebar-header style="display: flex; align-items: center; justify-content: space-between">
+        <bip-sidebar-header
+          style="display: flex; align-items: center; justify-content: space-between"
+        >
           <bip-sidebar-brand href="/">BipUI</bip-sidebar-brand>
           <button type="button" bipSidebarTrigger (click)="collapsed.set(!collapsed())">⇔</button>
         </bip-sidebar-header>
@@ -65,7 +67,14 @@ export const Basic: Story = {};
 export const Dark: Story = {
   render: () => ({
     moduleMetadata: {
-      imports: [BipSidebar, BipSidebarHeader, BipSidebarBrand, BipSidebarContent, BipSidebarItem, BipSidebarFooter],
+      imports: [
+        BipSidebar,
+        BipSidebarHeader,
+        BipSidebarBrand,
+        BipSidebarContent,
+        BipSidebarItem,
+        BipSidebarFooter,
+      ],
     },
     template: `
       <div style="display: flex; height: 20rem;">

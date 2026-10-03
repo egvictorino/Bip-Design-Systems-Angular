@@ -20,7 +20,11 @@ describe('BipCardMedia', () => {
 
   it('aplica la clase del aspectRatio indicado', async () => {
     const { container } = await render(BipCardMedia, {
-      componentInputs: { src: 'https://example.com/foto.jpg', alt: 'Descripción', aspectRatio: 'square' },
+      componentInputs: {
+        src: 'https://example.com/foto.jpg',
+        alt: 'Descripción',
+        aspectRatio: 'square',
+      },
     });
     expect(container).toHaveClass('bip-card-media--aspect-square');
   });

@@ -7,7 +7,11 @@
 
 /** Mismo día de calendario, ignorando la hora. */
 export function isSameDay(a: Date, b: Date): boolean {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 /** Nueva `Date` a medianoche del mismo día (inmutable, clona antes de mutar). */

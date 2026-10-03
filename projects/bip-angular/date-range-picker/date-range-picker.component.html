@@ -53,7 +53,11 @@
 </div>
 
 @if (error() && errorMessage()) {
-  <span [id]="errorId" class="bip-date-range-picker-message bip-date-range-picker-error-text" role="alert">
+  <span
+    [id]="errorId"
+    class="bip-date-range-picker-message bip-date-range-picker-error-text"
+    role="alert"
+  >
     {{ errorMessage() }}
   </span>
 } @else if (helperText()) {

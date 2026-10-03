@@ -16,7 +16,12 @@
     tabindex="-1"
     (click)="decrement()"
   >
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="bip-number-input-step-icon">
+    <svg
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"
+      class="bip-number-input-step-icon"
+    >
       <path
         fill-rule="evenodd"
         d="M4 10a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H4.75A.75.75 0 0 1 4 10z"
@@ -26,7 +31,10 @@
   </button>
 
   @if (prefix()) {
-    <span [class]="'bip-number-input-adornment bip-number-input-adornment--left ' + prefixClass()" aria-hidden="true">
+    <span
+      [class]="'bip-number-input-adornment bip-number-input-adornment--left ' + prefixClass()"
+      aria-hidden="true"
+    >
       {{ prefix() }}
     </span>
   }
@@ -53,7 +61,10 @@
   />
 
   @if (suffix()) {
-    <span [class]="'bip-number-input-adornment bip-number-input-adornment--right ' + suffixClass()" aria-hidden="true">
+    <span
+      [class]="'bip-number-input-adornment bip-number-input-adornment--right ' + suffixClass()"
+      aria-hidden="true"
+    >
       {{ suffix() }}
     </span>
   }
@@ -67,7 +78,12 @@
     tabindex="-1"
     (click)="increment()"
   >
-    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="bip-number-input-step-icon">
+    <svg
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"
+      class="bip-number-input-step-icon"
+    >
       <path
         fill-rule="evenodd"
         d="M10 4a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 10 4z"
@@ -77,11 +93,18 @@
   </button>
 </div>
 @if (error() && errorMessage()) {
-  <span [id]="errorId" [class]="'bip-number-input-message bip-number-input-error-text ' + helperClass()" role="alert">
+  <span
+    [id]="errorId"
+    [class]="'bip-number-input-message bip-number-input-error-text ' + helperClass()"
+    role="alert"
+  >
     {{ errorMessage() }}
   </span>
 } @else if (helperText()) {
-  <span [id]="errorId" [class]="'bip-number-input-message bip-number-input-helper-text ' + helperClass()">
+  <span
+    [id]="errorId"
+    [class]="'bip-number-input-message bip-number-input-helper-text ' + helperClass()"
+  >
     {{ helperText() }}
   </span>
 }

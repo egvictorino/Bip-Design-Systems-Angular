@@ -27,7 +27,9 @@ describe('BipToast', () => {
     const { fixture } = await render(HostComponent);
     fixture.componentInstance.toast.show({ message: 'Hola' });
     fixture.detectChanges();
-    await waitFor(() => expect(screen.getByRole('region', { name: 'Notificaciones' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('region', { name: 'Notificaciones' })).toBeInTheDocument()
+    );
   });
 
   it('show() muestra el mensaje en el DOM', async () => {
@@ -63,7 +65,9 @@ describe('BipToast', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Cerrar alerta' }));
     fixture.detectChanges();
-    await waitFor(() => expect(screen.queryByText('Cerrable')).not.toBeInTheDocument(), { timeout: 1000 });
+    await waitFor(() => expect(screen.queryByText('Cerrable')).not.toBeInTheDocument(), {
+      timeout: 1000,
+    });
   });
 
   it('múltiples toasts son visibles simultáneamente', async () => {

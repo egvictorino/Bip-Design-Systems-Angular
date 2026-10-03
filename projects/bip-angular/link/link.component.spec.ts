@@ -5,9 +5,7 @@ import { BipLink } from './link.component';
 
 @Component({
   imports: [BipLink],
-  template: `
-    <a bipLink href="/foo" [external]="external" [disabled]="disabled">Go</a>
-  `,
+  template: ` <a bipLink href="/foo" [external]="external" [disabled]="disabled">Go</a> `,
 })
 class HostComponent {
   external = false;

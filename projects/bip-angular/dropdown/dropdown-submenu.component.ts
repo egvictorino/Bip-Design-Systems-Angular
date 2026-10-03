@@ -62,7 +62,9 @@ export class BipDropdownSubmenu extends BipDropdownFocusableItem implements OnDe
   private readonly triggerBtnRef!: ElementRef<HTMLButtonElement>;
 
   private readonly allItems = contentChildren(BipDropdownFocusableItem, { descendants: true });
-  private readonly directItems = computed(() => this.allItems().filter((item) => item.menuScope === this));
+  private readonly directItems = computed(() =>
+    this.allItems().filter((item) => item.menuScope === this)
+  );
 
   private readonly injector = inject(Injector);
   private keyManager: FocusKeyManager<BipDropdownFocusableItem> | null = null;
@@ -138,7 +140,12 @@ export class BipDropdownSubmenu extends BipDropdownFocusableItem implements OnDe
       this.focus();
       return;
     }
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Home' || event.key === 'End') {
+    if (
+      event.key === 'ArrowDown' ||
+      event.key === 'ArrowUp' ||
+      event.key === 'Home' ||
+      event.key === 'End'
+    ) {
       event.stopPropagation();
       this.keyManager?.onKeydown(event);
     }

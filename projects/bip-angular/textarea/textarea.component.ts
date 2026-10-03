@@ -92,7 +92,9 @@ export class BipTextarea extends BipFormControlBase implements ControlValueAcces
     () => (this.error() && !!this.errorMessage()) || !!this.helperText()
   );
   protected readonly showFooter = computed(() => this.hasVisibleMessage() || this.showCounter());
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly labelClass = computed(() => {
     const classes = [LABEL_SIZE_CLASS[this.size()]];

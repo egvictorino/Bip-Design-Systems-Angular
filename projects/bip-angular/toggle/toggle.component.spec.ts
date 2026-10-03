@@ -71,7 +71,9 @@ describe('BipToggle', () => {
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Requerido');
   });
 

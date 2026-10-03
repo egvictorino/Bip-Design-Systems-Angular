@@ -9,7 +9,12 @@
     >
       ‹
     </button>
-    <button type="button" class="bip-calendar-today-btn" [disabled]="disabled()" (click)="goToday()">
+    <button
+      type="button"
+      class="bip-calendar-today-btn"
+      [disabled]="disabled()"
+      (click)="goToday()"
+    >
       {{ locale().calendar.today }}
     </button>
     <button
@@ -46,7 +51,12 @@
         <span class="bip-calendar-month-day-header">{{ name }}</span>
       }
     </div>
-    <div #monthGridRef class="bip-calendar-month-grid" role="grid" [attr.aria-label]="locale().calendar.monthLabel(title())">
+    <div
+      #monthGridRef
+      class="bip-calendar-month-grid"
+      role="grid"
+      [attr.aria-label]="locale().calendar.monthLabel(title())"
+    >
       @for (week of [0, 1, 2, 3, 4, 5]; track week) {
         <div class="bip-calendar-month-row" role="row">
           @for (cell of monthDays().slice(week * 7, week * 7 + 7); track cell.key) {
@@ -149,12 +159,20 @@
                     (click)="onEventBlockClick(event, $event)"
                     (keydown)="onEventBlockKeydown(event, $event)"
                   >
-                    <span class="bip-calendar-agenda-event-color" [class]="statusClass[event.status]" [style.background-color]="event.color || null"></span>
+                    <span
+                      class="bip-calendar-agenda-event-color"
+                      [class]="statusClass[event.status]"
+                      [style.background-color]="event.color || null"
+                    ></span>
                     <div class="bip-calendar-agenda-event-content">
                       <span class="bip-calendar-agenda-event-title">{{ event.title }}</span>
-                      <span class="bip-calendar-agenda-event-time">{{ eventTimeRange(event) }}</span>
+                      <span class="bip-calendar-agenda-event-time">{{
+                        eventTimeRange(event)
+                      }}</span>
                       @if (event.patientName) {
-                        <span class="bip-calendar-agenda-event-subtext">{{ event.patientName }}</span>
+                        <span class="bip-calendar-agenda-event-subtext">{{
+                          event.patientName
+                        }}</span>
                       }
                       @if (resourceName(event.doctorId); as doctor) {
                         <span class="bip-calendar-agenda-event-subtext">{{ doctor }}</span>
@@ -163,7 +181,10 @@
                         <p class="bip-calendar-agenda-event-notes">{{ event.notes }}</p>
                       }
                     </div>
-                    <span class="bip-calendar-agenda-status-badge" [class]="statusClass[event.status]">
+                    <span
+                      class="bip-calendar-agenda-status-badge"
+                      [class]="statusClass[event.status]"
+                    >
                       {{ locale().calendar.statusLabels[event.status] }}
                     </span>
                   </div>
@@ -187,11 +208,17 @@
     <div class="bip-calendar-time-columns">
       @for (day of days; track day.getTime()) {
         <div class="bip-calendar-time-column-group">
-          <div class="bip-calendar-time-column-header" [class.bip-calendar-time-column-header--today]="isToday(day)">
+          <div
+            class="bip-calendar-time-column-header"
+            [class.bip-calendar-time-column-header--today]="isToday(day)"
+          >
             {{ columnHeaderLabel(day) }}
           </div>
           <div class="bip-calendar-time-column-body" [style.height.px]="gridHeight()">
-            @for (resource of resources().length ? resources() : [undefined]; track resource?.id ?? 'all') {
+            @for (
+              resource of resources().length ? resources() : [undefined];
+              track resource?.id ?? 'all'
+            ) {
               <div
                 class="bip-calendar-time-column"
                 role="presentation"
@@ -237,7 +264,12 @@
   >
     <div class="bip-calendar-range-popover-header">
       <span>{{ locale().calendar.selectedDateRange }}</span>
-      <button type="button" class="bip-calendar-range-popover-close" [attr.aria-label]="locale().calendar.close" (click)="cancelRange()">
+      <button
+        type="button"
+        class="bip-calendar-range-popover-close"
+        [attr.aria-label]="locale().calendar.close"
+        (click)="cancelRange()"
+      >
         ×
       </button>
     </div>

@@ -35,10 +35,7 @@ class CustomSeparatorHost {
   template: `<bip-breadcrumb [items]="items" />`,
 })
 class RouterLinkHost {
-  items: BipBreadcrumbItem[] = [
-    { label: 'Inicio', routerLink: '/' },
-    { label: 'Actual' },
-  ];
+  items: BipBreadcrumbItem[] = [{ label: 'Inicio', routerLink: '/' }, { label: 'Actual' }];
 }
 
 describe('BipBreadcrumb', () => {

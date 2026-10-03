@@ -88,7 +88,9 @@ describe('BipTable', () => {
       template: `
         <bip-table stickyHeader>
           <thead bipTableHead>
-            <tr bipTableRow><th bipTableHeader>Nombre</th></tr>
+            <tr bipTableRow>
+              <th bipTableHeader>Nombre</th>
+            </tr>
           </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
@@ -112,7 +114,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader [sortable]="true">Nombre</th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader [sortable]="true">Nombre</th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -130,7 +136,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader [sortable]="true" sortDirection="asc">Nombre</th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader [sortable]="true" sortDirection="asc">Nombre</th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -138,7 +148,10 @@ describe('BipTable', () => {
     class Asc {}
 
     await render(Asc);
-    expect(screen.getByRole('columnheader', { name: /Nombre/i })).toHaveAttribute('aria-sort', 'ascending');
+    expect(screen.getByRole('columnheader', { name: /Nombre/i })).toHaveAttribute(
+      'aria-sort',
+      'ascending'
+    );
   });
 
   it('aria-sort="descending" con sortDirection="desc"', async () => {
@@ -146,7 +159,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader [sortable]="true" sortDirection="desc">Nombre</th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader [sortable]="true" sortDirection="desc">Nombre</th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -154,7 +171,10 @@ describe('BipTable', () => {
     class Desc {}
 
     await render(Desc);
-    expect(screen.getByRole('columnheader', { name: /Nombre/i })).toHaveAttribute('aria-sort', 'descending');
+    expect(screen.getByRole('columnheader', { name: /Nombre/i })).toHaveAttribute(
+      'aria-sort',
+      'descending'
+    );
   });
 
   it('encabezado no ordenable no tiene aria-sort ni tabindex', async () => {
@@ -170,7 +190,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader [sortable]="true" (sort)="onSort()">Nombre</th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader [sortable]="true" (sort)="onSort()">Nombre</th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -190,7 +214,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader [sortable]="true" (sort)="onSort()">Nombre</th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader [sortable]="true" (sort)="onSort()">Nombre</th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -210,7 +238,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader [sortable]="true" (sort)="onSort()">Nombre</th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader [sortable]="true" (sort)="onSort()">Nombre</th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -229,7 +261,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader><input type="checkbox" /></th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader><input type="checkbox" /></th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -255,7 +291,10 @@ describe('BipTable', () => {
       template: `
         <bip-table>
           <tbody bipTableBody>
-            <tr bipTableRow><th bipTableHeader scope="row">Fila</th><td bipTableCell>Dato</td></tr>
+            <tr bipTableRow>
+              <th bipTableHeader scope="row">Fila</th>
+              <td bipTableCell>Dato</td>
+            </tr>
           </tbody>
         </bip-table>
       `,
@@ -273,7 +312,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableBody, BipTableRow, BipTableCell],
       template: `
         <bip-table>
-          <tbody bipTableBody><tr bipTableRow [selected]="true"><td bipTableCell>Seleccionado</td></tr></tbody>
+          <tbody bipTableBody>
+            <tr bipTableRow [selected]="true">
+              <td bipTableCell>Seleccionado</td>
+            </tr>
+          </tbody>
         </bip-table>
       `,
     })
@@ -293,7 +336,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow [selected]="true"><th bipTableHeader>Nombre</th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow [selected]="true">
+              <th bipTableHeader>Nombre</th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -311,7 +358,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableBody, BipTableRow, BipTableCell],
       template: `
         <bip-table>
-          <tbody bipTableBody><tr bipTableRow [clickable]="true"><td bipTableCell>Fila</td></tr></tbody>
+          <tbody bipTableBody>
+            <tr bipTableRow [clickable]="true">
+              <td bipTableCell>Fila</td>
+            </tr>
+          </tbody>
         </bip-table>
       `,
     })
@@ -331,11 +382,15 @@ describe('BipTable', () => {
   it('lanza si BipTableRow se usa fuera de <bip-table>', async () => {
     @Component({
       imports: [BipTableRow, BipTableCell],
-      template: `<tr bipTableRow><td bipTableCell>X</td></tr>`,
+      template: `<tr bipTableRow>
+        <td bipTableCell>X</td>
+      </tr>`,
     })
     class Orphan {}
 
-    await expect(render(Orphan)).rejects.toThrow('<tr bipTableRow> debe usarse dentro de <bip-table>');
+    await expect(render(Orphan)).rejects.toThrow(
+      '<tr bipTableRow> debe usarse dentro de <bip-table>'
+    );
   });
 
   // ─── Compact / Normal ─────────────────────────────────────────────────────
@@ -345,8 +400,16 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody, BipTableCell],
       template: `
         <bip-table [compact]="true">
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader>Nombre</th></tr></thead>
-          <tbody bipTableBody><tr bipTableRow><td bipTableCell>Juan</td></tr></tbody>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader>Nombre</th>
+            </tr>
+          </thead>
+          <tbody bipTableBody>
+            <tr bipTableRow>
+              <td bipTableCell>Juan</td>
+            </tr>
+          </tbody>
         </bip-table>
       `,
     })
@@ -362,8 +425,16 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody, BipTableCell],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader>Nombre</th></tr></thead>
-          <tbody bipTableBody><tr bipTableRow><td bipTableCell>Juan</td></tr></tbody>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader>Nombre</th>
+            </tr>
+          </thead>
+          <tbody bipTableBody>
+            <tr bipTableRow>
+              <td bipTableCell>Juan</td>
+            </tr>
+          </tbody>
         </bip-table>
       `,
     })
@@ -380,8 +451,12 @@ describe('BipTable', () => {
       template: `
         <bip-table [striped]="true">
           <tbody bipTableBody>
-            <tr bipTableRow><td bipTableCell>Fila 1</td></tr>
-            <tr bipTableRow><td bipTableCell>Fila 2</td></tr>
+            <tr bipTableRow>
+              <td bipTableCell>Fila 1</td>
+            </tr>
+            <tr bipTableRow>
+              <td bipTableCell>Fila 2</td>
+            </tr>
           </tbody>
         </bip-table>
       `,
@@ -401,8 +476,16 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody, BipTableCell],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader align="center">Centro</th></tr></thead>
-          <tbody bipTableBody><tr bipTableRow><td bipTableCell align="center">Centro</td></tr></tbody>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader align="center">Centro</th>
+            </tr>
+          </thead>
+          <tbody bipTableBody>
+            <tr bipTableRow>
+              <td bipTableCell align="center">Centro</td>
+            </tr>
+          </tbody>
         </bip-table>
       `,
     })
@@ -418,7 +501,11 @@ describe('BipTable', () => {
       imports: [BipTable, BipTableHead, BipTableRow, BipTableHeader, BipTableBody],
       template: `
         <bip-table>
-          <thead bipTableHead><tr bipTableRow><th bipTableHeader align="end">Derecha</th></tr></thead>
+          <thead bipTableHead>
+            <tr bipTableRow>
+              <th bipTableHeader align="end">Derecha</th>
+            </tr>
+          </thead>
           <tbody bipTableBody></tbody>
         </bip-table>
       `,
@@ -447,7 +534,10 @@ describe('BipTable', () => {
   it('BipTableEmpty renderiza el mensaje por defecto del locale', async () => {
     @Component({
       imports: [BipTable, BipTableBody, BipTableEmpty],
-      template: `<bip-table><tbody bipTableBody><tr bipTableEmpty [colSpan]="3"></tr></tbody></bip-table>`,
+      template: `<bip-table
+        ><tbody bipTableBody>
+          <tr bipTableEmpty [colSpan]="3"></tr></tbody
+      ></bip-table>`,
     })
     class EmptyDefault {}
 
@@ -459,7 +549,13 @@ describe('BipTable', () => {
     @Component({
       imports: [BipTable, BipTableBody, BipTableEmpty],
       template: `
-        <bip-table><tbody bipTableBody><tr bipTableEmpty [colSpan]="3">Sin resultados para tu búsqueda</tr></tbody></bip-table>
+        <bip-table
+          ><tbody bipTableBody>
+            <tr bipTableEmpty [colSpan]="3">
+              Sin resultados para tu búsqueda
+            </tr>
+          </tbody></bip-table
+        >
       `,
     })
     class EmptyCustom {}
@@ -472,7 +568,10 @@ describe('BipTable', () => {
   it('BipTableEmpty renderiza un único td con el colSpan dado', async () => {
     @Component({
       imports: [BipTable, BipTableBody, BipTableEmpty],
-      template: `<bip-table><tbody bipTableBody><tr bipTableEmpty [colSpan]="4"></tr></tbody></bip-table>`,
+      template: `<bip-table
+        ><tbody bipTableBody>
+          <tr bipTableEmpty [colSpan]="4"></tr></tbody
+      ></bip-table>`,
     })
     class EmptyColSpan {}
 
@@ -483,7 +582,10 @@ describe('BipTable', () => {
   it('BipTableEmpty aplica clase compact en modo compact', async () => {
     @Component({
       imports: [BipTable, BipTableBody, BipTableEmpty],
-      template: `<bip-table [compact]="true"><tbody bipTableBody><tr bipTableEmpty [colSpan]="2"></tr></tbody></bip-table>`,
+      template: `<bip-table [compact]="true"
+        ><tbody bipTableBody>
+          <tr bipTableEmpty [colSpan]="2"></tr></tbody
+      ></bip-table>`,
     })
     class EmptyCompact {}
 
@@ -494,7 +596,10 @@ describe('BipTable', () => {
   it('BipTableEmpty aplica clase normal fuera de modo compact', async () => {
     @Component({
       imports: [BipTable, BipTableBody, BipTableEmpty],
-      template: `<bip-table><tbody bipTableBody><tr bipTableEmpty [colSpan]="2"></tr></tbody></bip-table>`,
+      template: `<bip-table
+        ><tbody bipTableBody>
+          <tr bipTableEmpty [colSpan]="2"></tr></tbody
+      ></bip-table>`,
     })
     class EmptyNormal {}
 
@@ -509,13 +614,18 @@ describe('BipTable', () => {
     })
     class OrphanEmpty {}
 
-    await expect(render(OrphanEmpty)).rejects.toThrow('<tr bipTableEmpty> debe usarse dentro de <bip-table>');
+    await expect(render(OrphanEmpty)).rejects.toThrow(
+      '<tr bipTableEmpty> debe usarse dentro de <bip-table>'
+    );
   });
 
   it('BipTableEmpty aplica la clase bip-table-cell-empty', async () => {
     @Component({
       imports: [BipTable, BipTableBody, BipTableEmpty],
-      template: `<bip-table><tbody bipTableBody><tr bipTableEmpty [colSpan]="2"></tr></tbody></bip-table>`,
+      template: `<bip-table
+        ><tbody bipTableBody>
+          <tr bipTableEmpty [colSpan]="2"></tr></tbody
+      ></bip-table>`,
     })
     class EmptyClass {}
 

@@ -23,10 +23,34 @@ export type BipPopoverPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 
 const GAP_PX = 4;
 
 const PLACEMENT_POSITION: Record<BipPopoverPlacement, ConnectedPosition> = {
-  'bottom-start': { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-  'bottom-end': { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: GAP_PX },
-  'top-start': { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
-  'top-end': { originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -GAP_PX },
+  'bottom-start': {
+    originX: 'start',
+    originY: 'bottom',
+    overlayX: 'start',
+    overlayY: 'top',
+    offsetY: GAP_PX,
+  },
+  'bottom-end': {
+    originX: 'end',
+    originY: 'bottom',
+    overlayX: 'end',
+    overlayY: 'top',
+    offsetY: GAP_PX,
+  },
+  'top-start': {
+    originX: 'start',
+    originY: 'top',
+    overlayX: 'start',
+    overlayY: 'bottom',
+    offsetY: -GAP_PX,
+  },
+  'top-end': {
+    originX: 'end',
+    originY: 'top',
+    overlayX: 'end',
+    overlayY: 'bottom',
+    offsetY: -GAP_PX,
+  },
 };
 
 /**

@@ -4,7 +4,11 @@ import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { BipTimePicker } from './time-picker.component';
-import type { BipTimePickerHourCycle, BipTimePickerInputMode, BipTimePickerStep } from './time-picker.component';
+import type {
+  BipTimePickerHourCycle,
+  BipTimePickerInputMode,
+  BipTimePickerStep,
+} from './time-picker.component';
 
 @Component({
   imports: [BipTimePicker],
@@ -80,15 +84,21 @@ describe('BipTimePicker', () => {
     await render(HostComponent);
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /HH:MM/ }));
-    expect(screen.getByRole('listbox', { name: 'Horas' }).querySelectorAll('[role="option"]')).toHaveLength(24);
-    expect(screen.getByRole('listbox', { name: 'Minutos' }).querySelectorAll('[role="option"]')).toHaveLength(12);
+    expect(
+      screen.getByRole('listbox', { name: 'Horas' }).querySelectorAll('[role="option"]')
+    ).toHaveLength(24);
+    expect(
+      screen.getByRole('listbox', { name: 'Minutos' }).querySelectorAll('[role="option"]')
+    ).toHaveLength(12);
   });
 
   it('renderiza 4 opciones de minutos para step=15', async () => {
     await render(HostComponent, { componentProperties: { step: 15 } });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /HH:MM/ }));
-    expect(screen.getByRole('listbox', { name: 'Minutos' }).querySelectorAll('[role="option"]')).toHaveLength(4);
+    expect(
+      screen.getByRole('listbox', { name: 'Minutos' }).querySelectorAll('[role="option"]')
+    ).toHaveLength(4);
   });
 
   it('selecciona una hora (minuto por defecto 00) y mantiene el panel abierto', async () => {
@@ -203,7 +213,9 @@ describe('BipTimePicker', () => {
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Hora requerida' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Hora requerida' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Hora requerida');
   });
 
@@ -214,7 +226,9 @@ describe('BipTimePicker', () => {
 
   it('aplica la clase full-width al host', async () => {
     const { container } = await render(HostComponent, { componentProperties: { fullWidth: true } });
-    expect(container.querySelector('bip-time-picker')).toHaveClass('bip-time-picker-wrapper--full-width');
+    expect(container.querySelector('bip-time-picker')).toHaveClass(
+      'bip-time-picker-wrapper--full-width'
+    );
   });
 
   // ── ControlValueAccessor ────────────────────────────────────────────────────

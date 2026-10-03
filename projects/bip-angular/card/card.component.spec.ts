@@ -5,7 +5,14 @@ import { BipCard } from './card.component';
 
 @Component({
   imports: [BipCard],
-  template: `<bip-card data-testid="host" [variant]="variant" [loading]="loading" [clickable]="clickable" (click)="onClick()">contenido</bip-card>`,
+  template: `<bip-card
+    data-testid="host"
+    [variant]="variant"
+    [loading]="loading"
+    [clickable]="clickable"
+    (click)="onClick()"
+    >contenido</bip-card
+  >`,
 })
 class HostComponent {
   variant: 'elevated' | 'outlined' | 'flat' = 'elevated';
@@ -28,7 +35,9 @@ describe('BipCard', () => {
   it('loading=true muestra un skeleton y oculta el contenido proyectado', async () => {
     await render(HostComponent, { componentProperties: { loading: true } });
     expect(screen.queryByText('contenido')).not.toBeInTheDocument();
-    const loadingContainer = screen.getByTestId('host').querySelector('.bip-card-loading-container');
+    const loadingContainer = screen
+      .getByTestId('host')
+      .querySelector('.bip-card-loading-container');
     expect(loadingContainer).toHaveAttribute('aria-busy', 'true');
     expect(loadingContainer).toHaveAttribute('aria-label', 'Cargando...');
   });

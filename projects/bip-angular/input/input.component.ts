@@ -91,12 +91,18 @@ export class BipInput extends BipFormControlBase implements ControlValueAccessor
   protected readonly hasVisibleMessage = computed(
     () => (this.error() && !!this.errorMessage()) || !!this.helperText()
   );
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly labelClass = computed(() => {
     const classes = [LABEL_SIZE_CLASS[this.size()]];
     classes.push(
-      this.error() ? 'bip-input-label--error' : this.focused() ? 'bip-input-label--focused' : 'bip-input-label--normal'
+      this.error()
+        ? 'bip-input-label--error'
+        : this.focused()
+          ? 'bip-input-label--focused'
+          : 'bip-input-label--normal'
     );
     if (this.disabled()) classes.push('bip-input-label--disabled');
     return classes.join(' ');

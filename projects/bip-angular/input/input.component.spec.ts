@@ -65,7 +65,9 @@ describe('BipInput', () => {
   });
 
   it('renderiza como input de password cuando type="password"', async () => {
-    const { container } = await render(HostComponent, { componentProperties: { type: 'password' } });
+    const { container } = await render(HostComponent, {
+      componentProperties: { type: 'password' },
+    });
     expect(container.querySelector('input[type="password"]')).toBeInTheDocument();
   });
 
@@ -80,7 +82,9 @@ describe('BipInput', () => {
   });
 
   it('renderiza errorMessage con role="alert" cuando error=true', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Campo requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Campo requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Campo requerido');
   });
 
@@ -155,7 +159,9 @@ describe('BipInput', () => {
   });
 
   it('alterna la visibilidad de la contraseña al hacer click', async () => {
-    const { container } = await render(HostComponent, { componentProperties: { type: 'password' } });
+    const { container } = await render(HostComponent, {
+      componentProperties: { type: 'password' },
+    });
     const user = userEvent.setup();
     const input = container.querySelector('input')!;
     expect(input).toHaveAttribute('type', 'password');
