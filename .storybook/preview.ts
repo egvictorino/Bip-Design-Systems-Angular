@@ -1,7 +1,10 @@
 import type { Preview } from '@storybook/angular-vite';
-import { componentWrapperDecorator } from '@storybook/angular-vite';
-import { BRAND_PRESET_KEYS } from '../projects/bip-angular/foundations/brand-presets';
-import { BipStorybookThemeDecorator } from '../projects/bip-angular/foundations/theme-decorator.component';
+import { componentWrapperDecorator, moduleMetadata } from '@storybook/angular-vite';
+import { BipThemeProvider } from '../projects/bip-angular/core/src/theme';
+import {
+  BRAND_PRESETS,
+  BRAND_PRESET_KEYS,
+} from '../projects/bip-angular/foundations/brand-presets';
 // Hoja de estilos global de la librería (tokens/primitives/themes/density/rtl/base, en ese
 // orden fijo — ver bip.css) — sin este import, ninguna `var(--color-*)`/`var(--space-*)`/
 // `var(--radius-*)` que usan los componentes y las demos de Foundations resuelve a nada:
@@ -86,13 +89,32 @@ const preview: Preview = {
     brand: 'default',
   },
   decorators: [
-    componentWrapperDecorator(BipStorybookThemeDecorator, (storyContext) => ({
-      theme: storyContext.globals['theme'],
-      colorScheme: storyContext.globals['colorScheme'],
-      density: storyContext.globals['density'],
-      dir: storyContext.globals['dir'],
-      brand: storyContext.globals['brand'],
-    })),
+    // Envuelve cada story en <bip-theme-provider> leyendo los globals del toolbar. Va como
+    // template (no como componente con <ng-content>) para que la story quede DENTRO del
+    // provider también en la cadena de DI: así `BipOverlay` encuentra `BipThemeContext` y los
+    // paneles heredan theme/colorScheme/density/dir. El <div> pinta `--color-surface-2` porque
+    // el provider es `display: contents` y el body del iframe se quedaría blanco en dark.
+    moduleMetadata({ imports: [BipThemeProvider] }),
+    componentWrapperDecorator(
+      (story) => `
+        <bip-theme-provider
+          [theme]="bipSbTheme"
+          [colorScheme]="bipSbColorScheme"
+          [density]="bipSbDensity"
+          [dir]="bipSbDir"
+          [tokens]="bipSbTokens"
+        >
+          <div style="min-height: 100vh; padding: var(--space-4); background: var(--color-surface-2);">${story}</div>
+        </bip-theme-provider>
+      `,
+      ({ globals }) => ({
+        bipSbTheme: globals['theme'],
+        bipSbColorScheme: globals['colorScheme'],
+        bipSbDensity: globals['density'],
+        bipSbDir: globals['dir'],
+        bipSbTokens: BRAND_PRESETS[globals['brand']]?.tokens ?? {},
+      })
+    ),
   ],
 };
 

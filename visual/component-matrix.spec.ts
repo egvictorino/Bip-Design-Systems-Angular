@@ -24,22 +24,22 @@ const FROZEN_TIME = new Date('2026-01-15T09:00:00');
  * en `--duration-*` (ver primitives.css) y sin esto los shots son inestables entre corridas.
  */
 test.describe('component matrix — un screenshot por componente (LTR + subset RTL)', () => {
-  for (const { dir, storyId, rtl } of COMPONENT_MATRIX) {
-    test(`${dir} — LTR`, async ({ page }) => {
+  for (const { dir, storyId, shot = dir, rtl } of COMPONENT_MATRIX) {
+    test(`${shot} — LTR`, async ({ page }) => {
       if (dir === 'calendar') await page.clock.setFixedTime(FROZEN_TIME);
       await page.goto(`/iframe.html?id=${storyId}&viewMode=story`);
       await page.waitForLoadState('networkidle');
-      await expect(page.locator('#storybook-root')).toHaveScreenshot(`${dir}.png`, {
+      await expect(page.locator('#storybook-root')).toHaveScreenshot(`${shot}.png`, {
         animations: 'disabled',
       });
     });
 
     if (rtl) {
-      test(`${dir} — RTL`, async ({ page }) => {
+      test(`${shot} — RTL`, async ({ page }) => {
         if (dir === 'calendar') await page.clock.setFixedTime(FROZEN_TIME);
         await page.goto(`/iframe.html?id=${storyId}&viewMode=story&globals=dir:rtl`);
         await page.waitForLoadState('networkidle');
-        await expect(page.locator('#storybook-root')).toHaveScreenshot(`${dir}-rtl.png`, {
+        await expect(page.locator('#storybook-root')).toHaveScreenshot(`${shot}-rtl.png`, {
           animations: 'disabled',
         });
       });
@@ -70,4 +70,10 @@ test('cobertura: todo secondary entry de projects/bip-angular/ tiene entrada en 
   const missing = dirs.filter((dir) => !covered.has(dir));
 
   expect(missing, `Componentes sin cobertura visual: ${missing.join(', ')}`).toEqual([]);
+});
+
+test('cobertura: cada shot de COMPONENT_MATRIX tiene nombre único (no se pisan baselines)', () => {
+  const shots = COMPONENT_MATRIX.map((e) => e.shot ?? e.dir);
+  const duplicated = shots.filter((shot, i) => shots.indexOf(shot) !== i);
+  expect(duplicated, `Shots duplicados: ${duplicated.join(', ')}`).toEqual([]);
 });
