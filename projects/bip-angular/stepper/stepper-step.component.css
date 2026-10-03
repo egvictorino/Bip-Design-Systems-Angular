@@ -60,7 +60,7 @@ div.bip-stepper-step-marker {
 
 :host(.bip-stepper-step--active) .bip-stepper-step-marker {
   border-color: var(--color-primary);
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 :host(.bip-stepper-step--completed) .bip-stepper-step-marker {

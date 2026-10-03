@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { COMPONENT_MATRIX } from './component-matrix';
+import { A11Y_STATES } from './a11y-states';
 
 /**
  * El addon-a11y de Storybook (preview.ts, `manual: true`) inyecta su propia copia de
@@ -17,7 +18,7 @@ import { COMPONENT_MATRIX } from './component-matrix';
  */
 const AXE_ALREADY_RUNNING = 'Axe is already running';
 
-async function analyzeWithoutAddonAxe(page: Page, attempts = 3) {
+async function analyzeWithoutAddonAxe(page: Page, disableRules: string[] = [], attempts = 3) {
   for (let attempt = 1; attempt <= attempts; attempt++) {
     await page.evaluate(() => {
       try {
@@ -27,7 +28,13 @@ async function analyzeWithoutAddonAxe(page: Page, attempts = 3) {
       }
     });
     try {
-      return await new AxeBuilder({ page }).include('#storybook-root').analyze();
+      // Los paneles (calendario, dropdown, select…) viven en el overlay del CDK, fuera de
+      // `#storybook-root`: sin incluirlo, axe nunca los vería.
+      return await new AxeBuilder({ page })
+        .include('#storybook-root')
+        .include('.cdk-overlay-container')
+        .disableRules(disableRules)
+        .analyze();
     } catch (error) {
       const isAddonRace = error instanceof Error && error.message.includes(AXE_ALREADY_RUNNING);
       if (!isAddonRace || attempt === attempts) throw error;
@@ -63,6 +70,32 @@ test.describe('a11y — axe en navegador real, color-contrast activado', () => {
         await page.waitForLoadState('networkidle');
 
         const results = await analyzeWithoutAddonAxe(page);
+
+        expect(
+          results.violations,
+          results.violations
+            .map((v) => `[${v.id}] ${v.help} (${v.nodes.length} nodo(s))\n${v.helpUrl}`)
+            .join('\n\n')
+        ).toEqual([]);
+      });
+    }
+  }
+});
+
+/**
+ * Estados además de la story canónica (hover, paneles abiertos, selected…): ver
+ * `a11y-states.ts`. Aquí es donde `--color-primary` usado como texto se ve de verdad.
+ */
+test.describe('a11y — estados interactivos, color-contrast activado', () => {
+  for (const { name, storyId, frozenTime, setup, disableRules } of A11Y_STATES) {
+    for (const colorScheme of ['light', 'dark'] as const) {
+      test(`${name} — ${colorScheme}`, async ({ page }) => {
+        if (frozenTime) await page.clock.setFixedTime(FROZEN_TIME);
+        await page.goto(`/iframe.html?id=${storyId}&viewMode=story&globals=colorScheme:${colorScheme}`);
+        await page.waitForLoadState('networkidle');
+        await setup?.(page);
+
+        const results = await analyzeWithoutAddonAxe(page, disableRules);
 
         expect(
           results.violations,

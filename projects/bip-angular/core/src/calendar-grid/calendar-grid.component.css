@@ -187,7 +187,7 @@
 .bip-calendar-grid-clear-btn {
   border: none;
   background: none;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   font-size: var(--text-sm);
   font-weight: 500;
   cursor: pointer;
