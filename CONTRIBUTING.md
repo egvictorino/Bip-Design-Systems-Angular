@@ -76,6 +76,11 @@ pnpm test:visual:docker                    # verificar contra baselines existent
 pnpm test:visual:docker --update-snapshots # regenerar tras un cambio visual deliberado
 ```
 
+**Vitest y Docker/Playwright se corren por separado, nunca en paralelo**: la emulación `linux/amd64`
+y la suite de Vitest compiten por CPU y producen timeouts falsos en ambas (un fallo así no es una
+regresión: reintenta la suite sola). Los flags de `playwright test` se pasan tal cual, incluidos
+patrones con `|` o espacios: `pnpm test:visual:docker -g "a|b"`.
+
 La imagen Docker (`scripts/visual-docker.sh`) y el `container` del job `visual-regression` en
 `pr-validation.yml` se fijan a la versión exacta de `@playwright/test` — se suben juntos.
 
