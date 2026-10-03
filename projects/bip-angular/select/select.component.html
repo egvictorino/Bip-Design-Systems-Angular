@@ -127,6 +127,14 @@
   </span>
 }
 
+@if (search()) {
+  <!-- Fuera del overlay y siempre montada: si se insertara junto con su texto (al abrir el panel
+       en la misma tarea que empieza la carga) los lectores de pantalla no la anunciarían. -->
+  <span class="bip-select-sr-only" role="status" aria-live="polite">{{
+    loading() ? locale().select.loading : ''
+  }}</span>
+}
+
 <ng-template #panelTemplate>
   <div class="bip-select-panel" (mousedown)="keepFocus($event)">
     <div
@@ -184,16 +192,11 @@
         }
       }
     </div>
-    <div
-      class="bip-select-loading"
-      role="status"
-      aria-live="polite"
-      [attr.aria-label]="locale().select.loading"
-    >
-      @if (loading()) {
-        <span class="bip-select-spinner" aria-hidden="true"></span>
+    @if (loading()) {
+      <div class="bip-select-loading" aria-hidden="true">
+        <span class="bip-select-spinner"></span>
         {{ locale().select.loadingText }}
-      }
-    </div>
+      </div>
+    }
   </div>
 </ng-template>

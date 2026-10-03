@@ -39,5 +39,5 @@
 
 .bip-navbar-item--active {
   background-color: var(--color-surface-2);
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }

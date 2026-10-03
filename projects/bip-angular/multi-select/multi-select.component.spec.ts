@@ -249,6 +249,41 @@ describe('BipMultiSelect', () => {
     expect(screen.getByText('Cargando...')).toBeInTheDocument();
   });
 
+  it('la región de carga está montada fuera del panel, también cerrado (regresión)', async () => {
+    const { fixture } = await render(HostComponent);
+    const status = screen.getByRole('status');
+    expect(status).toHaveTextContent('');
+    fixture.componentInstance.loading = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(screen.getByRole('status')).toBe(status);
+    expect(status).toHaveTextContent('Cargando opciones');
+  });
+
+  it('Enter sobre el botón de un chip lo quita sin abrir el panel (regresión)', async () => {
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { value: ['mx', 'us'] },
+    });
+    const user = userEvent.setup();
+    screen.getByRole('button', { name: 'Eliminar México' }).focus();
+    await user.keyboard('{Enter}');
+    expect(fixture.componentInstance.value).toEqual(['us']);
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  it('deshabilitar el control con el panel abierto lo cierra (regresión)', async () => {
+    const host = new ReactiveFormHostComponent();
+    const { fixture } = await render(ReactiveFormHostComponent, {
+      componentProperties: { control: host.control },
+    });
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    host.control.disable();
+    fixture.detectChanges();
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
   it('aplica la clase full-width al host', async () => {
     const { container } = await render(HostComponent, { componentProperties: { fullWidth: true } });
     expect(container.querySelector('bip-multi-select')).toHaveClass(
@@ -322,6 +357,37 @@ describe('BipMultiSelect', () => {
       fixture.detectChanges();
       expect(screen.getByText('México')).toBeInTheDocument();
     });
+
+    it('los chips siguen el orden de value() aunque cambie options() (regresión)', async () => {
+      const { fixture } = await render(HostComponent, {
+        componentProperties: {
+          externalFilter: true,
+          options: [
+            { value: 'mx', label: 'México' },
+            { value: 'es', label: 'España' },
+          ],
+          value: ['mx', 'es'],
+        },
+      });
+      const chipLabels = () =>
+        Array.from(document.querySelectorAll('.bip-multi-select-chip-remove'), (b) =>
+          b.getAttribute('aria-label')
+        );
+      expect(chipLabels()).toEqual(['Eliminar México', 'Eliminar España']);
+      fixture.componentInstance.options = [{ value: 'es', label: 'España' }];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(chipLabels()).toEqual(['Eliminar México', 'Eliminar España']);
+    });
+
+    it('sin externalFilter, un valor que sale de options() pierde su chip (regresión)', async () => {
+      const { fixture } = await render(HostComponent, { componentProperties: { value: ['mx'] } });
+      expect(screen.getByText('México')).toBeInTheDocument();
+      fixture.componentInstance.options = [{ value: 'es', label: 'España' }];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(screen.queryByText('México')).not.toBeInTheDocument();
+    });
   });
 
   describe('searchPlacement="trigger"', () => {
@@ -379,6 +445,41 @@ describe('BipMultiSelect', () => {
       expect(fixture.componentInstance.value).toEqual(['mx', 'us']);
     });
 
+    it('tras filtrar, Enter deja activa la misma opción y no la de su posición (regresión)', async () => {
+      const { fixture } = await render(HostComponent, inline());
+      const user = userEvent.setup();
+      const combobox = screen.getByRole('combobox');
+      await user.type(combobox, 'est');
+      await user.keyboard('{Enter}');
+      expect(fixture.componentInstance.value).toEqual(['us']);
+      expect(combobox).toHaveValue('');
+      expect(combobox).toHaveAttribute(
+        'aria-activedescendant',
+        screen.getByRole('option', { name: 'Estados Unidos' }).id
+      );
+      await user.keyboard('{Enter}');
+      expect(fixture.componentInstance.value).toEqual([]);
+    });
+
+    it('Backspace quita el último chip aunque esté oculto por maxVisibleChips (regresión)', async () => {
+      const { fixture } = await render(
+        HostComponent,
+        inline({ value: ['mx', 'us'], maxVisibleChips: 1 })
+      );
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('{Backspace}');
+      expect(fixture.componentInstance.value).toEqual(['mx']);
+    });
+
+    it('Backspace salta los chips de opciones deshabilitadas (regresión)', async () => {
+      const { fixture } = await render(HostComponent, inline({ value: ['mx', 'ca'] }));
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      await user.keyboard('{Backspace}');
+      expect(fixture.componentInstance.value).toEqual(['ca']);
+    });
+
     it('Backspace con el campo vacío quita el último chip; con texto, no', async () => {
       const { fixture } = await render(HostComponent, inline({ value: ['mx', 'us'] }));
       const user = userEvent.setup();
@@ -433,7 +534,8 @@ describe('BipMultiSelect', () => {
       await render(HostComponent, inline({ loading: true }));
       const user = userEvent.setup();
       await user.click(screen.getByRole('combobox'));
-      expect(screen.getByRole('status')).toHaveTextContent('Cargando...');
+      expect(screen.getByRole('status')).toHaveTextContent('Cargando opciones');
+      expect(screen.getByText('Cargando...')).toBeInTheDocument();
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
       expect(screen.getByRole('combobox')).not.toHaveAttribute('aria-controls');
     });

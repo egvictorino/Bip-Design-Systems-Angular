@@ -120,7 +120,13 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   readonly maxVisibleChips = input<number | undefined>(undefined);
   readonly showSelectAll = input(false, { transform: booleanAttribute });
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Si es `true`, no filtra internamente — asume que el consumidor ya filtró `options()` a partir de `search`. */
+  /**
+   * Búsqueda remota: no filtra internamente, el consumidor reemplaza `options()` a partir de
+   * `searchQuery`. Los chips elegidos se conservan (en el orden de `value()`) aunque salgan de
+   * `options()`; un valor inicial que nunca estuvo en `options()` no tiene label conocido:
+   * inclúyelo en la primera carga. Pon `loading` en `true` en cuanto llegue `searchQuery` (antes
+   * del debounce): mientras no lo esté, la lista anterior sigue visible y Enter puede elegir de ella.
+   */
   readonly externalFilter = input(false, { transform: booleanAttribute });
 
   readonly searchQuery = output<string>();
@@ -205,7 +211,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   );
 
   /**
-   * Opciones elegidas conocidas. Las que ya no están en `options()` (p. ej. `externalFilter`, donde el
+   * Con `externalFilter`: opciones elegidas conocidas. Las que ya no están en `options()` (el
    * consumidor reemplaza la lista al buscar) se recuerdan para no perder su chip; un valor que nunca
    * estuvo en `options()` no tiene label conocido y no se muestra.
    */
@@ -225,11 +231,13 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   });
 
   protected readonly selectedOptions = computed(() => {
+    if (this.externalFilter()) {
+      // En el orden de `value()`: `options()` cambia en cada búsqueda y los chips no deben reordenarse.
+      const known = this.knownSelected();
+      return this.value().flatMap((v) => known.get(v) ?? []);
+    }
     const selected = new Set(this.value());
-    const current = this.options().filter((o) => selected.has(o.value));
-    const present = new Set(current.map((o) => o.value));
-    const remembered = [...this.knownSelected().values()].filter((o) => !present.has(o.value));
-    return [...current, ...remembered];
+    return this.options().filter((o) => selected.has(o.value));
   });
   protected readonly visibleChips = computed(() => {
     const max = this.maxVisibleChips();
@@ -303,6 +311,10 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
       });
     });
     effect(() => {
+      // Un `control.disable()` con el panel abierto no debe dejar opciones clicables.
+      if (this.disabled()) untracked(() => this.closePanel());
+    });
+    effect(() => {
       // Se emite en cada cambio de query (incluido el '' inicial al abrir), para que un
       // consumidor con `externalFilter` pueda filtrar `options()` él mismo.
       const q = this.query();
@@ -352,7 +364,8 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.inlineSearch()) return;
+    // Enter/Espacio sobre los botones de chip o limpiar-todo llegan aquí por burbuja: son suyos.
+    if (this.inlineSearch() || event.target !== event.currentTarget) return;
     if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowDown') {
       event.preventDefault();
       this.openPanel();
@@ -377,7 +390,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   }
 
   protected toggleOption(option: BipMultiSelectOption): void {
-    if (option.disabled) return;
+    if (option.disabled || this.disabled()) return;
     const current = this.value();
     const next = current.includes(option.value)
       ? current.filter((v) => v !== option.value)
@@ -396,6 +409,7 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
   }
 
   protected handleSelectAll(): void {
+    if (this.disabled()) return;
     const selectable = this.selectableFiltered();
     if (this.allFilteredSelected()) {
       const toRemove = new Set(selectable.map((o) => o.value));
@@ -440,9 +454,12 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
         if (!entry) return;
         if (entry.option) this.toggleOption(entry.option);
         else this.handleSelectAll();
-        // Multiselección: el panel sigue abierto; se limpia lo escrito y la opción activa se queda donde estaba.
+        // Multiselección: el panel sigue abierto; se limpia lo escrito y la opción activa se queda
+        // en la misma opción (por valor: los ids son posicionales y cambian al quitar el filtro).
         this.query.set('');
-        this.activeRaw.set(this.entries().findIndex((e) => e.id === entry.id));
+        this.activeRaw.set(
+          this.entries().findIndex((e) => e.option?.value === entry.option?.value)
+        );
         return;
       }
       case 'Escape':
@@ -453,8 +470,11 @@ export class BipMultiSelect extends BipFormControlBase implements ControlValueAc
         return;
       case 'Backspace': {
         if (this.query() !== '') return;
-        const last = this.visibleChips().at(-1);
-        if (!last || last.disabled) return;
+        // El último chip (aunque esté oculto por `maxVisibleChips`) que no sea de una opción deshabilitada.
+        const last = this.selectedOptions()
+          .filter((o) => !o.disabled)
+          .at(-1);
+        if (!last) return;
         event.preventDefault();
         this.emitChange(this.value().filter((v) => v !== last.value));
         return;

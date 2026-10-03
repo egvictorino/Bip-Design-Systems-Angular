@@ -32,7 +32,7 @@
   color: var(--color-txt);
 }
 .bip-select-label--focused {
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 .bip-select-label--error {
   color: var(--color-danger);
@@ -244,6 +244,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Objetivo de 24×24 (WCAG 2.5.8): ocupa justo el hueco entre el chevron y el padding del texto. */
+  min-inline-size: var(--space-6);
+  min-block-size: var(--space-6);
   padding: var(--space-0);
   border: none;
   background: transparent;
@@ -313,7 +316,7 @@
 }
 .bip-select-option--selected {
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 .bip-select-option--disabled {
   opacity: 0.4;
@@ -325,11 +328,21 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
+  padding: var(--space-4);
   color: var(--color-txt-secondary);
   font-size: var(--text-sm);
 }
-.bip-select-loading:not(:empty) {
-  padding: var(--space-4);
+
+.bip-select-sr-only {
+  position: absolute;
+  width: var(--space-px);
+  height: var(--space-px);
+  padding: var(--space-0);
+  margin: calc(var(--space-px) * -1);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 .bip-select-spinner {
   width: 1rem;

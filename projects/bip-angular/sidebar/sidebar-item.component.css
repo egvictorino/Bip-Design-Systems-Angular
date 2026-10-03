@@ -39,7 +39,7 @@
 
 .bip-sidebar-item--active {
   background-color: var(--color-surface-2);
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   font-weight: 500;
 }
 
