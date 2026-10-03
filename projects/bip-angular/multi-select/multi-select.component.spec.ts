@@ -582,7 +582,7 @@ describe('BipMultiSelect', () => {
       const css = readFileSync(resolve(__dirname, 'multi-select.component.css'), 'utf-8');
       const bg = (selector: string) =>
         new RegExp(
-          `${selector.replace(/[.]/g, '\\.')}\\s*\\{[^}]*background-color:\\s*([^;]+);`
+          `${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{[^}]*background-color:\\s*([^;]+);`
         ).exec(css)?.[1];
       expect(bg('.bip-multi-select-chip')).toBe('var(--color-surface-3)');
       expect(bg('.bip-multi-select--filled .bip-multi-select-chip')).toBe('var(--color-field)');
