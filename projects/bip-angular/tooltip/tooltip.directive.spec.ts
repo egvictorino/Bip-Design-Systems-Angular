@@ -42,7 +42,9 @@ describe('BipTooltip', () => {
   it('mouseenter muestra el tooltip con el contenido', async () => {
     await render(HostComponent);
     fireEvent.mouseEnter(screen.getByRole('button'));
-    await waitFor(() => expect(screen.getByRole('tooltip')).toHaveTextContent('Información adicional'));
+    await waitFor(() =>
+      expect(screen.getByRole('tooltip')).toHaveTextContent('Información adicional')
+    );
   });
 
   it('mouseleave cierra el tooltip', async () => {

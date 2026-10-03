@@ -48,7 +48,10 @@ class DisabledDemo {
 }
 
 export const Disabled: Story = {
-  render: () => ({ moduleMetadata: { imports: [DisabledDemo] }, template: `<bip-input-disabled-demo />` }),
+  render: () => ({
+    moduleMetadata: { imports: [DisabledDemo] },
+    template: `<bip-input-disabled-demo />`,
+  }),
 };
 
 export const FullWidth: Story = {
@@ -73,5 +76,8 @@ class ReactiveFormsDemo {
 }
 
 export const ReactiveForms: Story = {
-  render: () => ({ moduleMetadata: { imports: [ReactiveFormsDemo] }, template: `<bip-input-reactive-forms-demo />` }),
+  render: () => ({
+    moduleMetadata: { imports: [ReactiveFormsDemo] },
+    template: `<bip-input-reactive-forms-demo />`,
+  }),
 };

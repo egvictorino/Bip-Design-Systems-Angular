@@ -28,7 +28,13 @@
 
   @if (loading()) {
     <bip-spinner size="md" aria-hidden="true" />
-    <div [class]="variant() === 'compact' ? 'bip-file-upload-dropzone-text bip-file-upload-dropzone-text--compact' : 'bip-file-upload-dropzone-text'">
+    <div
+      [class]="
+        variant() === 'compact'
+          ? 'bip-file-upload-dropzone-text bip-file-upload-dropzone-text--compact'
+          : 'bip-file-upload-dropzone-text'
+      "
+    >
       <p class="bip-file-upload-dropzone-title bip-file-upload-dropzone-title--normal">
         {{ locale().fileUpload.uploading }}
       </p>
@@ -49,7 +55,13 @@
       />
     </svg>
 
-    <div [class]="variant() === 'compact' ? 'bip-file-upload-dropzone-text bip-file-upload-dropzone-text--compact' : 'bip-file-upload-dropzone-text'">
+    <div
+      [class]="
+        variant() === 'compact'
+          ? 'bip-file-upload-dropzone-text bip-file-upload-dropzone-text--compact'
+          : 'bip-file-upload-dropzone-text'
+      "
+    >
       <p [class]="dropzoneTitleClass()">
         {{ isDragging() ? locale().fileUpload.dropHere : locale().fileUpload.dragHere }}
       </p>
@@ -68,7 +80,12 @@
   <ul class="bip-file-upload-file-list">
     @for (file of value(); track file.name + file.size + file.lastModified) {
       <li class="bip-file-upload-file-item">
-        <svg viewBox="0 0 20 20" fill="currentColor" class="bip-file-upload-file-icon" aria-hidden="true">
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          class="bip-file-upload-file-icon"
+          aria-hidden="true"
+        >
           <path
             fill-rule="evenodd"
             d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
@@ -84,7 +101,12 @@
           class="bip-file-upload-remove-btn"
           (click)="removeFile(file)"
         >
-          <svg viewBox="0 0 16 16" fill="currentColor" class="bip-file-upload-remove-btn-icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            class="bip-file-upload-remove-btn-icon"
+            aria-hidden="true"
+          >
             <path
               d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"
             />
@@ -96,11 +118,18 @@
 }
 
 @if (error() && errorMessage()) {
-  <span [id]="errorId" [class]="'bip-file-upload-message bip-file-upload-error-text ' + helperClass()" role="alert">
+  <span
+    [id]="errorId"
+    [class]="'bip-file-upload-message bip-file-upload-error-text ' + helperClass()"
+    role="alert"
+  >
     {{ errorMessage() }}
   </span>
 } @else if (helperText()) {
-  <span [id]="errorId" [class]="'bip-file-upload-message bip-file-upload-helper-text ' + helperClass()">
+  <span
+    [id]="errorId"
+    [class]="'bip-file-upload-message bip-file-upload-helper-text ' + helperClass()"
+  >
     {{ helperText() }}
   </span>
 }

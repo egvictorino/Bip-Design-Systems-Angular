@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, dateKey, getDaysInMonth, getMondayOffset, isSameDay, monthIndex } from './date-helpers';
+import {
+  addDays,
+  dateKey,
+  getDaysInMonth,
+  getMondayOffset,
+  isSameDay,
+  monthIndex,
+} from './date-helpers';
 
 describe('isSameDay', () => {
   it('es true para el mismo año/mes/día aunque difiera la hora', () => {

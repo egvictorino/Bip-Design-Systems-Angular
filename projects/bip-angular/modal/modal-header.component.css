@@ -22,7 +22,9 @@
   border-radius: var(--radius-control);
   padding: var(--space-1);
   color: var(--color-txt-secondary);
-  transition: background-color var(--duration-fast), color var(--duration-fast);
+  transition:
+    background-color var(--duration-fast),
+    color var(--duration-fast);
   background: none;
   border: none;
   cursor: pointer;

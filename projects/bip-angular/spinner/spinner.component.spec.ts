@@ -23,10 +23,13 @@ describe('BipSpinner', () => {
     expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it.each(['xs', 'sm', 'md', 'lg', 'xl'] as const)('size=%s aplica la clase correspondiente', async (size) => {
-    const { container } = await render(BipSpinner, { componentInputs: { size } });
-    expect(container.querySelector('svg')).toHaveClass(`bip-spinner-svg--${size}`);
-  });
+  it.each(['xs', 'sm', 'md', 'lg', 'xl'] as const)(
+    'size=%s aplica la clase correspondiente',
+    async (size) => {
+      const { container } = await render(BipSpinner, { componentInputs: { size } });
+      expect(container.querySelector('svg')).toHaveClass(`bip-spinner-svg--${size}`);
+    }
+  );
 
   it('no aplica clase de speed cuando se omite', async () => {
     const { container } = await render(BipSpinner);

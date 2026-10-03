@@ -21,5 +21,9 @@ export const Loading: Story = { args: { ...Default.args, loading: true, value: '
 export const Debounced: Story = { args: { ...Default.args, debounceMs: 300 } };
 export const SearchOnEnter: Story = { args: { ...Default.args, searchOnEnter: true } };
 export const WithError: Story = {
-  args: { ...Default.args, error: true, errorMessage: 'La búsqueda debe tener al menos 3 caracteres' },
+  args: {
+    ...Default.args,
+    error: true,
+    errorMessage: 'La búsqueda debe tener al menos 3 caracteres',
+  },
 };

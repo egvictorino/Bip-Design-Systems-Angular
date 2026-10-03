@@ -41,6 +41,8 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 ### Changed
 
 - `BipMultiSelect`: el filtro del buscador ahora ignora acentos ("mexico" encuentra "México").
+- `visual/a11y-states.ts`: axe en navegador real sobre estados (hover, paneles abiertos,
+  seleccionado) además de la story canónica, e incluye el overlay del CDK.
 
 ### Fixed
 
@@ -64,6 +66,17 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   heredaban el tema. La regresión visual y `a11y-browser` en dark ahora prueban dark de verdad
   (baselines regeneradas). `visual/component-matrix.ts` admite shots extra por componente: se
   suman `select-searchable-clearable` y `multi-select-trigger-search` (LTR y RTL).
+- Contraste en dark: el texto que usaba `--color-primary` (3.3–4.0:1, bajo AA) pasa a
+  `--color-primary-text` en `BipButton` `bare`/`soul`, los botones Hoy/Limpiar/Ahora de los
+  pickers, la cabecera de "hoy" de `BipCalendar`, el marcador activo de `BipStepper` y la acción
+  activa del detalle de `BipOdontogram`. Los usos sobre iconos SVG quedan en `--color-primary`
+  (guard `testing/primary-text.spec.ts` con allowlist). En light no cambia nada.
+- `BipCalendar` (semana/día): el color por defecto del bloque de evento ya no pisa el
+  `--color-txt-on-*` de su estado (texto blanco sobre warning/success/surface-4 medía 1.5–2.3:1).
+- `BipMultiSelect` `filled`: el chip tenía el mismo fondo que el campo y no se distinguía; ahora
+  usa `--color-field` (y `--color-surface-3` en el resto de variantes, igual que la referencia).
+- `scripts/visual-docker.sh`: los argumentos del usuario ya no se re-parsean dentro de `bash -c`
+  (un `-g "a|b"` rompía el comando).
 
 ## [0.1.0] - 2026-10-02
 

@@ -1,6 +1,21 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, inject, input, signal, untracked } from '@angular/core';
-import { BipIdGenerator, breakpointQuery, injectBipLocale, mediaQuery } from '@bip-design-systems/angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+} from '@angular/core';
+import {
+  BipIdGenerator,
+  breakpointQuery,
+  injectBipLocale,
+  mediaQuery,
+} from '@bip-design-systems/angular/core';
 import { BIP_NAVBAR_CONTEXT, type BipNavbarContext } from './navbar-context';
 
 export type BipNavbarVariant = 'default' | 'elevated' | 'transparent';
@@ -81,7 +96,8 @@ export class BipNavbar implements BipNavbarContext {
       untracked(() => {
         if (open && !wasOpen) {
           const timeoutId = setTimeout(() => {
-            const firstItem: HTMLElement | null = this.elementRef.nativeElement.querySelector('[data-navbar-item]');
+            const firstItem: HTMLElement | null =
+              this.elementRef.nativeElement.querySelector('[data-navbar-item]');
             firstItem?.focus();
           });
           onCleanup(() => clearTimeout(timeoutId));

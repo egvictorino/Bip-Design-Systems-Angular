@@ -1,4 +1,7 @@
-<fieldset class="bip-checkbox-group-fieldset" [attr.aria-describedby]="hasVisibleMessage() ? messageId : null">
+<fieldset
+  class="bip-checkbox-group-fieldset"
+  [attr.aria-describedby]="hasVisibleMessage() ? messageId : null"
+>
   @if (label()) {
     <legend [class]="legendClass()">{{ label() }}</legend>
   }
@@ -6,11 +9,18 @@
     <ng-content />
   </div>
   @if (error() && errorMessage()) {
-    <span [id]="messageId" [class]="'bip-checkbox-group-message bip-checkbox-group-message--error ' + helperClass()" role="alert">
+    <span
+      [id]="messageId"
+      [class]="'bip-checkbox-group-message bip-checkbox-group-message--error ' + helperClass()"
+      role="alert"
+    >
       {{ errorMessage() }}
     </span>
   } @else if (helperText()) {
-    <span [id]="messageId" [class]="'bip-checkbox-group-message bip-checkbox-group-message--helper ' + helperClass()">
+    <span
+      [id]="messageId"
+      [class]="'bip-checkbox-group-message bip-checkbox-group-message--helper ' + helperClass()"
+    >
       {{ helperText() }}
     </span>
   }

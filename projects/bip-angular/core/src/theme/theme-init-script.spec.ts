@@ -87,6 +87,8 @@ describe('getThemeInitScript', () => {
     // El valor leído solo se acepta si está en la lista fija de literales válidos — no hay
     // forma de que termine en data-theme/data-color-scheme sin pasar por ese filtro.
     expect(script).toMatch(/\[\s*"square"\s*,\s*"rounded"\s*\]\.indexOf\(saved\.theme\)/);
-    expect(script).toMatch(/\[\s*"light"\s*,\s*"dark"\s*,\s*"system"\s*\]\.indexOf\(saved\.colorScheme\)/);
+    expect(script).toMatch(
+      /\[\s*"light"\s*,\s*"dark"\s*,\s*"system"\s*\]\.indexOf\(saved\.colorScheme\)/
+    );
   });
 });

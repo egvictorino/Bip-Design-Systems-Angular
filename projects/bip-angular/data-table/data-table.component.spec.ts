@@ -108,19 +108,25 @@ describe('BipDataTable', () => {
   });
 
   it('usa emptyMessage custom', async () => {
-    await render(HostComponent, { componentProperties: { data: [], emptyMessage: 'Nada por aquí' } });
+    await render(HostComponent, {
+      componentProperties: { data: [], emptyMessage: 'Nada por aquí' },
+    });
     expect(screen.getByText('Nada por aquí')).toBeInTheDocument();
   });
 
   it('renderiza filas skeleton mientras loading=true', async () => {
-    const { container } = await render(HostComponent, { componentProperties: { loading: true, pageSize: 3 } });
+    const { container } = await render(HostComponent, {
+      componentProperties: { loading: true, pageSize: 3 },
+    });
     expect(container.querySelectorAll('bip-skeleton')).toHaveLength(9); // 3 filas x 3 columnas
   });
 
   // ─── Row click ────────────────────────────────────────────────────────────
 
   it('emite rowClick al hacer click en una fila cuando rowsClickable=true', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { rowsClickable: true } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { rowsClickable: true },
+    });
     fireEvent.click(screen.getByText('Persona 1'));
     expect(fixture.componentInstance.onRowClick).toHaveBeenCalledWith(
       expect.objectContaining({ name: 'Persona 1' })
@@ -137,10 +143,16 @@ describe('BipDataTable', () => {
 
   it('ordena ascendente/descendente/limpia al hacer click repetido en un encabezado ordenable', async () => {
     await render(HostComponent, {
-      componentProperties: { data: [makeRows(1)[0], { id: 2, name: 'Ana', email: 'a@x.com', age: 20 }] },
+      componentProperties: {
+        data: [makeRows(1)[0], { id: 2, name: 'Ana', email: 'a@x.com', age: 20 }],
+      },
     });
     const header = screen.getByRole('columnheader', { name: /Nombre/i });
-    const rowsText = () => screen.getAllByRole('row').slice(1).map((r) => r.textContent);
+    const rowsText = () =>
+      screen
+        .getAllByRole('row')
+        .slice(1)
+        .map((r) => r.textContent);
 
     fireEvent.click(header);
     expect(header).toHaveAttribute('aria-sort', 'ascending');
@@ -188,7 +200,9 @@ describe('BipDataTable', () => {
   });
 
   it('el skeleton de carga tiene exactamente pageSize filas', async () => {
-    const { container } = await render(HostComponent, { componentProperties: { loading: true, pageSize: 7 } });
+    const { container } = await render(HostComponent, {
+      componentProperties: { loading: true, pageSize: 7 },
+    });
     const skeletonRows = container.querySelectorAll('tbody tr');
     expect(skeletonRows).toHaveLength(7);
   });
@@ -201,13 +215,19 @@ describe('BipDataTable', () => {
   });
 
   it('renderiza el buscador cuando searchable=true', async () => {
-    await render(HostComponent, { componentProperties: { searchable: true, searchKeys: ['name'] } });
+    await render(HostComponent, {
+      componentProperties: { searchable: true, searchKeys: ['name'] },
+    });
     expect(screen.getByRole('search')).toBeInTheDocument();
   });
 
   it('usa searchPlaceholder custom como label del buscador', async () => {
     await render(HostComponent, {
-      componentProperties: { searchable: true, searchKeys: ['name'], searchPlaceholder: 'Buscar persona...' },
+      componentProperties: {
+        searchable: true,
+        searchKeys: ['name'],
+        searchPlaceholder: 'Buscar persona...',
+      },
     });
     expect(screen.getByText('Buscar persona...')).toBeInTheDocument();
   });
@@ -231,7 +251,9 @@ describe('BipDataTable', () => {
 
   it('muestra el estado vacío cuando la búsqueda no tiene coincidencias', async () => {
     const user = userEvent.setup();
-    await render(HostComponent, { componentProperties: { searchable: true, searchKeys: ['name'] } });
+    await render(HostComponent, {
+      componentProperties: { searchable: true, searchKeys: ['name'] },
+    });
     await user.type(screen.getByRole('search').querySelector('input')!, 'zzz-no-existe');
     expect(screen.getByText('No hay datos disponibles')).toBeInTheDocument();
   });
@@ -274,7 +296,10 @@ describe('BipDataTable', () => {
   it('emite sortChange en modo serverSide al ordenar', async () => {
     const { fixture } = await render(HostComponent, { componentProperties: { serverSide: true } });
     fireEvent.click(screen.getByRole('columnheader', { name: /Nombre/i }));
-    expect(fixture.componentInstance.onSortChange).toHaveBeenCalledWith({ key: 'name', direction: 'asc' });
+    expect(fixture.componentInstance.onSortChange).toHaveBeenCalledWith({
+      key: 'name',
+      direction: 'asc',
+    });
   });
 
   // ─── Selección ────────────────────────────────────────────────────────────
@@ -369,7 +394,9 @@ describe('BipDataTable', () => {
   });
 
   it('aplica defaultHiddenColumns en el render inicial', async () => {
-    await render(HostComponent, { componentProperties: { columnVisibility: true, defaultHiddenColumns: ['email'] } });
+    await render(HostComponent, {
+      componentProperties: { columnVisibility: true, defaultHiddenColumns: ['email'] },
+    });
     expect(screen.queryByRole('columnheader', { name: 'Email' })).toBeNull();
     expect(screen.getByRole('columnheader', { name: 'Nombre' })).toBeInTheDocument();
   });
@@ -377,9 +404,14 @@ describe('BipDataTable', () => {
   // ─── aria-label / region ──────────────────────────────────────────────────
 
   it('aplica role="region" y aria-label cuando se provee ariaLabel', async () => {
-    const { container } = await render(HostComponent, { componentProperties: { ariaLabel: 'Tabla de pacientes' } });
+    const { container } = await render(HostComponent, {
+      componentProperties: { ariaLabel: 'Tabla de pacientes' },
+    });
     expect(container.querySelector('bip-data-table')).toHaveAttribute('role', 'region');
-    expect(container.querySelector('bip-data-table')).toHaveAttribute('aria-label', 'Tabla de pacientes');
+    expect(container.querySelector('bip-data-table')).toHaveAttribute(
+      'aria-label',
+      'Tabla de pacientes'
+    );
   });
 
   it('no aplica role ni aria-label sin ariaLabel', async () => {

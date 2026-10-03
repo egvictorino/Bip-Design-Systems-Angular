@@ -14,7 +14,9 @@ export interface BipAccordionContext {
   toggleItem(itemValue: string): void;
 }
 
-export const BIP_ACCORDION_CONTEXT = new InjectionToken<BipAccordionContext>('BIP_ACCORDION_CONTEXT');
+export const BIP_ACCORDION_CONTEXT = new InjectionToken<BipAccordionContext>(
+  'BIP_ACCORDION_CONTEXT'
+);
 
 /**
  * Contrato que `button[bipAccordionTrigger]`/`<bip-accordion-content>` necesitan de su

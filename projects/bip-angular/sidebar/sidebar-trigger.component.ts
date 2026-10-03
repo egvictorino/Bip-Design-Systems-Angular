@@ -10,7 +10,8 @@ import { BIP_SIDEBAR_CONTEXT } from './sidebar-context';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'bip-sidebar-trigger',
-    '[attr.aria-label]': 'context.isCollapsed() ? locale().sidebar.expand : locale().sidebar.collapse',
+    '[attr.aria-label]':
+      'context.isCollapsed() ? locale().sidebar.expand : locale().sidebar.collapse',
     '[attr.aria-expanded]': '!context.isCollapsed()',
     '[attr.aria-controls]': 'context.sidebarId',
     '(click)': 'context.toggleCollapsed()',

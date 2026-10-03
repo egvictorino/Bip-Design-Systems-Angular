@@ -52,7 +52,8 @@ export class BipCheckboxGroup {
   );
 
   protected readonly legendClass = computed(
-    () => `bip-checkbox-group-legend ${LEGEND_SIZE_CLASS[this.size()]} ${this.error() ? 'bip-checkbox-group-legend--error' : 'bip-checkbox-group-legend--default'}`
+    () =>
+      `bip-checkbox-group-legend ${LEGEND_SIZE_CLASS[this.size()]} ${this.error() ? 'bip-checkbox-group-legend--error' : 'bip-checkbox-group-legend--default'}`
   );
 
   protected readonly helperClass = computed(() => HELPER_SIZE_CLASS[this.size()]);

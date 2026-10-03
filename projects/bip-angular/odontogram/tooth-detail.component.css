@@ -177,7 +177,7 @@
 
 .bip-tooth-detail-action--active {
   border-color: var(--color-primary);
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 .bip-tooth-detail-action--active:hover {

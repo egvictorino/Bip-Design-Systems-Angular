@@ -3,14 +3,20 @@
  * módulo), aquí el foco se **recorta** en los extremos (clamp), nunca da la vuelta. Deliberado:
  * fiel a la referencia React.
  */
-export function navigateSidebarItems(event: KeyboardEvent, sidebarId: string, document: Document): void {
+export function navigateSidebarItems(
+  event: KeyboardEvent,
+  sidebarId: string,
+  document: Document
+): void {
   if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
 
   const panel = document.getElementById(sidebarId);
   if (!panel) return;
 
   const items = Array.from(
-    panel.querySelectorAll<HTMLElement>('[data-sidebar-item]:not([aria-disabled="true"]):not(:disabled)')
+    panel.querySelectorAll<HTMLElement>(
+      '[data-sidebar-item]:not([aria-disabled="true"]):not(:disabled)'
+    )
   );
   const currentIndex = items.indexOf(document.activeElement as HTMLElement);
   if (currentIndex === -1) return;

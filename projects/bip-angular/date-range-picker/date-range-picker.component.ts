@@ -63,7 +63,10 @@ const SIZE_CLASS: Record<BipSize, string> = {
     '[class.bip-date-range-picker-wrapper--full-width]': 'fullWidth()',
   },
 })
-export class BipDateRangePicker extends BipFormControlBase implements ControlValueAccessor, OnDestroy {
+export class BipDateRangePicker
+  extends BipFormControlBase
+  implements ControlValueAccessor, OnDestroy
+{
   readonly value = model<BipDateRange>({ ...EMPTY_RANGE });
 
   readonly min = input<Date | undefined>(undefined);
@@ -85,16 +88,22 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
 
   private onChange: (value: BipDateRange) => void = () => {};
 
-  @ViewChild('triggerRef', { static: true }) private readonly triggerRef!: ElementRef<HTMLButtonElement>;
-  @ViewChild('panelTemplate', { static: true }) private readonly panelTemplate!: TemplateRef<unknown>;
+  @ViewChild('triggerRef', { static: true })
+  private readonly triggerRef!: ElementRef<HTMLButtonElement>;
+  @ViewChild('panelTemplate', { static: true })
+  private readonly panelTemplate!: TemplateRef<unknown>;
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
 
-  protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly hasVisibleMessage = computed(
+    () => (this.error() && !!this.errorMessage()) || !!this.helperText()
+  );
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly previewTo = computed(() => {
     const range = this.value();
@@ -235,8 +244,20 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
-            { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-            { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
+            {
+              originX: 'start',
+              originY: 'bottom',
+              overlayX: 'start',
+              overlayY: 'top',
+              offsetY: GAP_PX,
+            },
+            {
+              originX: 'start',
+              originY: 'top',
+              overlayX: 'start',
+              overlayY: 'bottom',
+              offsetY: -GAP_PX,
+            },
           ])
           .withPush(true),
         scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
@@ -251,7 +272,9 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
       this.closePanel();
     });
     this.overlayRef = overlayRef;
-    queueMicrotask(() => overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus());
+    queueMicrotask(() =>
+      overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus()
+    );
   }
 
   private hidePanel(): void {

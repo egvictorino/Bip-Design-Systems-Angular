@@ -10,8 +10,19 @@
   <span [class]="'bip-search-input-search-icon ' + searchIconClass()" aria-hidden="true">
     @if (loading()) {
       <svg viewBox="0 0 24 24" fill="none" [class]="iconClass()">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="bip-search-input-spinner-track" />
-        <path fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4z" class="bip-search-input-spinner-fill" />
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+          class="bip-search-input-spinner-track"
+        />
+        <path
+          fill="currentColor"
+          d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4z"
+          class="bip-search-input-spinner-fill"
+        />
       </svg>
     } @else {
       <svg viewBox="0 0 20 20" fill="currentColor" [class]="iconClass()">
@@ -56,11 +67,18 @@
   }
 </div>
 @if (error() && errorMessage()) {
-  <span [id]="errorId" [class]="'bip-search-input-message bip-search-input-error-text ' + helperClass()" role="alert">
+  <span
+    [id]="errorId"
+    [class]="'bip-search-input-message bip-search-input-error-text ' + helperClass()"
+    role="alert"
+  >
     {{ errorMessage() }}
   </span>
 } @else if (helperText()) {
-  <span [id]="errorId" [class]="'bip-search-input-message bip-search-input-helper-text ' + helperClass()">
+  <span
+    [id]="errorId"
+    [class]="'bip-search-input-message bip-search-input-helper-text ' + helperClass()"
+  >
     {{ helperText() }}
   </span>
 }

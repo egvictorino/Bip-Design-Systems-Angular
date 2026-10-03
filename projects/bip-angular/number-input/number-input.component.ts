@@ -116,18 +116,28 @@ export class BipNumberInput extends BipFormControlBase implements ControlValueAc
   protected readonly hasVisibleMessage = computed(
     () => (this.error() && !!this.errorMessage()) || !!this.helperText()
   );
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly isIncrementDisabled = computed(() => {
     const max = this.max();
     const current = this.value();
-    return this.disabled() || this.readonly() || (max !== undefined && current !== null && current >= max);
+    return (
+      this.disabled() ||
+      this.readonly() ||
+      (max !== undefined && current !== null && current >= max)
+    );
   });
 
   protected readonly isDecrementDisabled = computed(() => {
     const min = this.min();
     const current = this.value();
-    return this.disabled() || this.readonly() || (min !== undefined && current !== null && current <= min);
+    return (
+      this.disabled() ||
+      this.readonly() ||
+      (min !== undefined && current !== null && current <= min)
+    );
   });
 
   protected readonly labelClass = computed(() => {
@@ -149,7 +159,10 @@ export class BipNumberInput extends BipFormControlBase implements ControlValueAc
   protected readonly suffixClass = computed(() => SUFFIX_SIZE_CLASS[this.size()]);
 
   protected readonly inputClass = computed(() => {
-    const classes = [`bip-number-input--${this.variant()}${this.error() ? '-error' : ''}`, INPUT_SIZE_CLASS[this.size()]];
+    const classes = [
+      `bip-number-input--${this.variant()}${this.error() ? '-error' : ''}`,
+      INPUT_SIZE_CLASS[this.size()],
+    ];
     if (this.prefix()) classes.push(INPUT_PREFIX_SIZE_CLASS[this.size()]);
     if (this.suffix()) classes.push(INPUT_SUFFIX_SIZE_CLASS[this.size()]);
     return classes.join(' ');

@@ -146,7 +146,9 @@ describe('BipCalendar', () => {
   });
 
   it('"Hoy" fija la fecha al día actual', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { date: new Date(2020, 0, 1) } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { date: new Date(2020, 0, 1) },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: 'Hoy' }));
     expect(fixture.componentInstance.date.getFullYear()).toBe(new Date().getFullYear());

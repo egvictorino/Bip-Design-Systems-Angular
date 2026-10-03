@@ -1,19 +1,13 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  input,
+} from '@angular/core';
 
 export type BipStackGap =
-  | '0'
-  | '0-5'
-  | '1'
-  | '1-5'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '8'
-  | '10'
-  | '12'
-  | '16';
+  '0' | '0-5' | '1' | '1-5' | '2' | '3' | '4' | '5' | '6' | '8' | '10' | '12' | '16';
 export type BipStackDirection = 'row' | 'column';
 export type BipStackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 export type BipStackJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';

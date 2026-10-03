@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, contentChildren, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChildren,
+  input,
+  model,
+} from '@angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 import { injectBipLocale } from '@bip-design-systems/angular/core';
 import { BIP_STEPPER_CONTEXT, type BipStepperContext } from './stepper-context';

@@ -25,7 +25,9 @@
     @if (value()) {
       <span class="bip-date-picker-value">{{ displayValue() }}</span>
     } @else {
-      <span class="bip-date-picker-placeholder">{{ placeholder() || locale().datePicker.placeholder }}</span>
+      <span class="bip-date-picker-placeholder">{{
+        placeholder() || locale().datePicker.placeholder
+      }}</span>
     }
     @if (loading()) {
       <span class="bip-date-picker-spinner" aria-hidden="true"></span>

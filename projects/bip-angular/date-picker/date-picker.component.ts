@@ -77,16 +77,22 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
 
   private onChange: (value: Date | null) => void = () => {};
 
-  @ViewChild('triggerRef', { static: true }) private readonly triggerRef!: ElementRef<HTMLButtonElement>;
-  @ViewChild('panelTemplate', { static: true }) private readonly panelTemplate!: TemplateRef<unknown>;
+  @ViewChild('triggerRef', { static: true })
+  private readonly triggerRef!: ElementRef<HTMLButtonElement>;
+  @ViewChild('panelTemplate', { static: true })
+  private readonly panelTemplate!: TemplateRef<unknown>;
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
 
-  protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly hasVisibleMessage = computed(
+    () => (this.error() && !!this.errorMessage()) || !!this.helperText()
+  );
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly gridStrings = computed<BipCalendarGridStrings>(() => {
     const dp = this.locale().datePicker;
@@ -214,8 +220,20 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
-            { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-            { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
+            {
+              originX: 'start',
+              originY: 'bottom',
+              overlayX: 'start',
+              overlayY: 'top',
+              offsetY: GAP_PX,
+            },
+            {
+              originX: 'start',
+              originY: 'top',
+              overlayX: 'start',
+              overlayY: 'bottom',
+              offsetY: -GAP_PX,
+            },
           ])
           .withPush(true),
         scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
@@ -230,7 +248,9 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
       this.closePanel();
     });
     this.overlayRef = overlayRef;
-    queueMicrotask(() => overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus());
+    queueMicrotask(() =>
+      overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus()
+    );
   }
 
   private hidePanel(): void {

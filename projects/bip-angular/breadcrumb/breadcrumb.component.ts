@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, contentChild, input, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  input,
+  TemplateRef,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { injectBipLocale } from '@bip-design-systems/angular/core';
@@ -33,7 +40,9 @@ export class BipBreadcrumb {
   readonly items = input.required<readonly BipBreadcrumbItem[]>();
   readonly ariaLabel = input<string | undefined>(undefined);
 
-  protected readonly resolvedAriaLabel = computed(() => this.ariaLabel() ?? this.locale().breadcrumb.nav);
+  protected readonly resolvedAriaLabel = computed(
+    () => this.ariaLabel() ?? this.locale().breadcrumb.nav
+  );
 
   protected readonly separatorTemplate = contentChild(BipBreadcrumbSeparator, {
     read: TemplateRef,

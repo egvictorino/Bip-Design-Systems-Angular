@@ -20,7 +20,12 @@ import {
 import type { ControlValueAccessor } from '@angular/forms';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { BipFormControlBase, BipIdGenerator, BipOverlay, injectBipLocale } from '@bip-design-systems/angular/core';
+import {
+  BipFormControlBase,
+  BipIdGenerator,
+  BipOverlay,
+  injectBipLocale,
+} from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 import {
   getMinutes,
@@ -98,15 +103,20 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
 
   @ViewChild('triggerRef') private readonly triggerRef?: ElementRef<HTMLButtonElement>;
   @ViewChild('textInputRef') private readonly textInputRef?: ElementRef<HTMLInputElement>;
-  @ViewChild('panelTemplate', { static: true }) private readonly panelTemplate!: TemplateRef<unknown>;
+  @ViewChild('panelTemplate', { static: true })
+  private readonly panelTemplate!: TemplateRef<unknown>;
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
 
-  protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly hasVisibleMessage = computed(
+    () => (this.error() && !!this.errorMessage()) || !!this.helperText()
+  );
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly triggerClass = computed(() => {
     const classes = [SIZE_CLASS[this.size()]];
@@ -128,7 +138,9 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
   });
 
   protected readonly hoursOptions = computed(() =>
-    this.hourCycle() === '12' ? [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] : Array.from({ length: 24 }, (_, i) => i)
+    this.hourCycle() === '12'
+      ? [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+      : Array.from({ length: 24 }, (_, i) => i)
   );
   protected readonly minutesOptions = computed(() => getMinutes(this.step()));
 
@@ -233,8 +245,10 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     if (hour === null) return false;
     const min = this.minParsed();
     const max = this.maxParsed();
-    if (min.hour !== null && hour === min.hour && min.minute !== null && minute < min.minute) return true;
-    if (max.hour !== null && hour === max.hour && max.minute !== null && minute > max.minute) return true;
+    if (min.hour !== null && hour === min.hour && min.minute !== null && minute < min.minute)
+      return true;
+    if (max.hour !== null && hour === max.hour && max.minute !== null && minute > max.minute)
+      return true;
     return false;
   }
 
@@ -266,7 +280,8 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
 
   protected onHourSelect(hourOption: number): void {
     if (this.isHourOptionDisabled(hourOption)) return;
-    const hour24 = this.hourCycle() === '12' ? to24h(hourOption, this.selectedPeriod() ?? 'AM') : hourOption;
+    const hour24 =
+      this.hourCycle() === '12' ? to24h(hourOption, this.selectedPeriod() ?? 'AM') : hourOption;
     const minute = this.selectedMinute() ?? 0;
     this.emitChange(`${pad2(hour24)}:${pad2(minute)}`);
     this.announcement.set(this.locale().timePicker.hourSelectedAnnouncement(String(hourOption)));
@@ -276,7 +291,9 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     if (this.isMinuteDisabled(minute)) return;
     const hour = this.selectedHour() ?? 0;
     this.emitChange(`${pad2(hour)}:${pad2(minute)}`);
-    this.announcement.set(this.locale().timePicker.timeSelectedAnnouncement(`${pad2(hour)}:${pad2(minute)}`));
+    this.announcement.set(
+      this.locale().timePicker.timeSelectedAnnouncement(`${pad2(hour)}:${pad2(minute)}`)
+    );
     this.closePanel();
   }
 
@@ -346,8 +363,12 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
   }
 
   protected onHourColumnKeydown(event: KeyboardEvent): void {
-    this.onColumnKeydown(event, this.hoursOptions(), (v) => this.isHourOptionDisabled(v), this.focusedHourIdx, (v) =>
-      this.onHourSelect(v)
+    this.onColumnKeydown(
+      event,
+      this.hoursOptions(),
+      (v) => this.isHourOptionDisabled(v),
+      this.focusedHourIdx,
+      (v) => this.onHourSelect(v)
     );
   }
 
@@ -404,8 +425,20 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
-            { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-            { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
+            {
+              originX: 'start',
+              originY: 'bottom',
+              overlayX: 'start',
+              overlayY: 'top',
+              offsetY: GAP_PX,
+            },
+            {
+              originX: 'start',
+              originY: 'top',
+              overlayX: 'start',
+              overlayY: 'bottom',
+              offsetY: -GAP_PX,
+            },
           ])
           .withPush(true),
         scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
@@ -420,7 +453,9 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
       this.closePanel();
     });
     this.overlayRef = overlayRef;
-    queueMicrotask(() => overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus());
+    queueMicrotask(() =>
+      overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus()
+    );
   }
 
   private hidePanel(): void {

@@ -56,14 +56,20 @@ export class BipProgressBar {
   protected readonly clampedValue = computed(() => Math.min(100, Math.max(0, this.value())));
   protected readonly showHeader = computed(() => Boolean(this.label() || this.showValue()));
 
-  protected readonly ariaLabel = computed(() => this.label() || this.locale().progressBar.defaultLabel);
+  protected readonly ariaLabel = computed(
+    () => this.label() || this.locale().progressBar.defaultLabel
+  );
   protected readonly ariaValueText = computed(() =>
     !this.indeterminate() && this.valueText() ? this.valueText() : null
   );
-  protected readonly ariaValueNow = computed(() => (this.indeterminate() ? null : this.clampedValue()));
+  protected readonly ariaValueNow = computed(() =>
+    this.indeterminate() ? null : this.clampedValue()
+  );
   protected readonly ariaBusy = computed(() => (this.indeterminate() ? 'true' : null));
 
-  protected readonly trackClasses = computed(() => `bip-progress-track ${TRACK_SIZE_CLASS[this.size()]}`);
+  protected readonly trackClasses = computed(
+    () => `bip-progress-track ${TRACK_SIZE_CLASS[this.size()]}`
+  );
   protected readonly fillClasses = computed(() => {
     const variantClass = FILL_VARIANT_CLASS[this.variant()];
     const stripedOn = this.striped();

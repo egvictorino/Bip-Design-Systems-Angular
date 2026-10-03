@@ -40,5 +40,8 @@ export const Required: Story = { args: { ...Default.args, required: true } };
 class CheckboxGroupDemo {}
 
 export const Group: Story = {
-  render: () => ({ moduleMetadata: { imports: [CheckboxGroupDemo] }, template: `<bip-checkbox-group-demo />` }),
+  render: () => ({
+    moduleMetadata: { imports: [CheckboxGroupDemo] },
+    template: `<bip-checkbox-group-demo />`,
+  }),
 };

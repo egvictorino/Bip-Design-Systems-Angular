@@ -26,7 +26,9 @@
   box-shadow: var(--shadow-xl);
   opacity: 0;
   transform: scale(0.95);
-  transition: opacity var(--duration-fast) ease, transform var(--duration-fast) ease;
+  transition:
+    opacity var(--duration-fast) ease,
+    transform var(--duration-fast) ease;
 }
 
 .bip-modal-dialog:focus {

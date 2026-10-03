@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  input,
+} from '@angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 
 export type BipBadgeVariant = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';

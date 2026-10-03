@@ -5,7 +5,9 @@ import { BipText, type BipTextColor, type BipTextSize } from './text.component';
 
 @Component({
   imports: [BipText],
-  template: `<p bipText data-testid="host" [size]="size" [color]="color" [truncate]="truncate">hola</p>`,
+  template: `<p bipText data-testid="host" [size]="size" [color]="color" [truncate]="truncate">
+    hola
+  </p>`,
 })
 class HostComponent {
   size: BipTextSize = 'md';
@@ -22,7 +24,11 @@ describe('BipText', () => {
   it('aplica clases de size/weight/color por defecto', async () => {
     await render(HostComponent);
     const host = screen.getByTestId('host');
-    expect(host).toHaveClass('bip-text--size-base', 'bip-text--weight-normal', 'bip-text--color-default');
+    expect(host).toHaveClass(
+      'bip-text--size-base',
+      'bip-text--weight-normal',
+      'bip-text--color-default'
+    );
   });
 
   it('aplica la clase del size indicado', async () => {

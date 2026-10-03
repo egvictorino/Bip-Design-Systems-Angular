@@ -12,7 +12,9 @@ import { BIP_SIDEBAR_CONTEXT } from './sidebar-context';
   template: `
     @if (!context.isCollapsed()) {
       @if (href()) {
-        <a class="bip-sidebar-brand" [href]="href()"><ng-container [ngTemplateOutlet]="content" /></a>
+        <a class="bip-sidebar-brand" [href]="href()"
+          ><ng-container [ngTemplateOutlet]="content"
+        /></a>
       } @else {
         <span class="bip-sidebar-brand"><ng-container [ngTemplateOutlet]="content" /></span>
       }

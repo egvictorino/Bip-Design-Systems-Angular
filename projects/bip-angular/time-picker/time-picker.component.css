@@ -195,7 +195,7 @@
 .bip-time-picker-now-btn {
   border: none;
   background: none;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   font-weight: 500;
   font-size: var(--text-sm);
   cursor: pointer;

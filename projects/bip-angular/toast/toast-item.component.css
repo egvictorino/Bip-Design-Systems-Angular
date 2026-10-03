@@ -1,7 +1,9 @@
 :host {
   display: block;
   will-change: transform;
-  transition: opacity var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
   opacity: 0;
 }
 
@@ -52,7 +54,9 @@
 .bip-toast-card {
   border-radius: var(--radius-container);
   overflow: hidden;
-  box-shadow: var(--shadow-lg), 0 0 0 1px var(--color-edge);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px var(--color-edge);
 }
 
 .bip-toast-progress-track {

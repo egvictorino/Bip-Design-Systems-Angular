@@ -27,7 +27,11 @@
       @if (badge() !== undefined) {
         <span class="bip-sidebar-item-badge" aria-hidden="true">{{ badge() }}</span>
       }
-      <span class="bip-sidebar-submenu-chevron" [class.bip-sidebar-submenu-chevron--open]="isOpen()" aria-hidden="true"></span>
+      <span
+        class="bip-sidebar-submenu-chevron"
+        [class.bip-sidebar-submenu-chevron--open]="isOpen()"
+        aria-hidden="true"
+      ></span>
     </button>
     @if (isOpen()) {
       <div [id]="subMenuId" class="bip-sidebar-submenu-list">

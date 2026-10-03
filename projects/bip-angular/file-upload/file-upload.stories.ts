@@ -18,7 +18,13 @@ type Story = StoryObj<BipFileUpload>;
 export const Default: Story = { args: { label: 'Documentos' } };
 export const Multiple: Story = { args: { ...Default.args, multiple: true } };
 export const WithConstraints: Story = {
-  args: { ...Default.args, multiple: true, maxFiles: 3, maxSize: 5 * 1024 * 1024, accept: 'image/*,.pdf' },
+  args: {
+    ...Default.args,
+    multiple: true,
+    maxFiles: 3,
+    maxSize: 5 * 1024 * 1024,
+    accept: 'image/*,.pdf',
+  },
 };
 export const Compact: Story = { args: { ...Default.args, variant: 'compact' } };
 export const Loading: Story = { args: { ...Default.args, loading: true } };

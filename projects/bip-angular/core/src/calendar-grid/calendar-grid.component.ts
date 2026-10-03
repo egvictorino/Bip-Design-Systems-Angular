@@ -13,7 +13,14 @@ import {
   untracked,
 } from '@angular/core';
 import { BipIdGenerator } from '../a11y';
-import { addDays, dateKey, getDaysInMonth, getMondayOffset, monthIndex, startOfDay } from '../utils';
+import {
+  addDays,
+  dateKey,
+  getDaysInMonth,
+  getMondayOffset,
+  monthIndex,
+  startOfDay,
+} from '../utils';
 
 export type BipCalendarGridMode = 'single' | 'range';
 export type BipCalendarGridView = 'days' | 'months' | 'years';
@@ -109,7 +116,9 @@ export class BipCalendarGrid {
     Math.floor(this.today.getFullYear() / YEARS_PER_BLOCK) * YEARS_PER_BLOCK
   );
 
-  private readonly disabledSet = computed(() => new Set(this.disabledDates().map((d) => dateKey(d))));
+  private readonly disabledSet = computed(
+    () => new Set(this.disabledDates().map((d) => dateKey(d)))
+  );
   private readonly minDay = computed(() => {
     const min = this.min();
     return min ? startOfDay(min) : undefined;
@@ -171,7 +180,12 @@ export class BipCalendarGrid {
 
   private readonly dayLabelFormatter = computed(
     () =>
-      new Intl.DateTimeFormat(this.localeTag(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+      new Intl.DateTimeFormat(this.localeTag(), {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
   );
 
   protected dayAriaLabel(date: Date): string {
@@ -208,7 +222,9 @@ export class BipCalendarGrid {
       const view = this.calendarView();
       if (view !== 'years') return;
       queueMicrotask(() => {
-        const el = this.elementRef.nativeElement.querySelector<HTMLButtonElement>(`[data-year="${year}"]`);
+        const el = this.elementRef.nativeElement.querySelector<HTMLButtonElement>(
+          `[data-year="${year}"]`
+        );
         el?.focus({ preventScroll: true });
       });
     });
