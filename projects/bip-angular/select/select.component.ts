@@ -126,6 +126,8 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
    * de `searchQuery`. La opción elegida sigue mostrando su label aunque ya no esté en las opciones
    * filtradas: el componente recuerda la última opción elegida (una sola). Un valor inicial que
    * nunca estuvo en `options()` no tiene label conocido: inclúyelo en la primera carga.
+   * Pon `loading` en `true` en cuanto llegue `searchQuery` (antes del debounce): mientras no lo
+   * esté, la lista anterior sigue visible y Enter puede elegir de ella.
    */
   readonly externalFilter = ngInput(false, { transform: booleanAttribute });
   /** Estado de carga de una búsqueda remota: oculta las opciones y lo anuncia (`aria-live`). */
@@ -202,18 +204,26 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
     return classes.join(' ');
   });
 
-  /** La opción elegida si está en las opciones actuales; si no, la última conocida con ese valor. */
+  /**
+   * La opción elegida si está en las opciones actuales; con `externalFilter`, si no, la última
+   * conocida con ese valor (sin búsqueda remota, un valor que sale de `options()` ya no tiene label).
+   */
   private readonly selectedOption = linkedSignal<
-    { value: string; found: BipSelectOption | null },
+    { value: string; found: BipSelectOption | null; remember: boolean },
     BipSelectOption | null
   >({
     source: () => {
       const value = this.value();
       const all = [...this.options(), ...this.groups().flatMap((group) => group.options)];
-      return { value, found: all.find((option) => option.value === value) ?? null };
+      return {
+        value,
+        found: all.find((option) => option.value === value) ?? null,
+        remember: this.externalFilter(),
+      };
     },
     computation: (source, previous) =>
-      source.found ?? (previous?.value?.value === source.value ? previous.value : null),
+      source.found ??
+      (source.remember && previous?.value?.value === source.value ? previous.value : null),
   });
 
   protected readonly selectedLabel = computed(() => this.selectedOption()?.label ?? '');
@@ -286,6 +296,10 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
         this.panelElement?.querySelector(`#${id}`)?.scrollIntoView?.({ block: 'nearest' });
       });
     });
+    effect(() => {
+      // Un `control.disable()` con el panel abierto no debe dejar opciones clicables.
+      if (this.disabled()) untracked(() => this.closePanel());
+    });
   }
 
   ngOnDestroy(): void {
@@ -356,7 +370,9 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
         if (!this.isOpen()) {
           // Patrón WAI-ARIA combobox: con el popup oculto, Escape limpia el valor.
           if (this.showClear()) {
+            // stopPropagation: el mismo Escape no debe cerrar además un Modal/Drawer contenedor.
             event.preventDefault();
+            event.stopPropagation();
             this.clear();
           }
           return;
@@ -369,8 +385,11 @@ export class BipSelect extends BipFormControlBase implements ControlValueAccesso
   }
 
   protected selectEntry(entry: BipSelectEntry): void {
-    if (entry.disabled) return;
+    if (entry.disabled || this.disabled()) return;
     this.value.set(entry.option.value);
+    // Se fija ya: si el consumidor restaura `options()` de forma síncrona al recibir
+    // `searchQuery('')` (en `closePanel`), el label no debe depender de ellas.
+    this.selectedOption.set(entry.option);
     this.onChange(entry.option.value);
     this.closePanel();
   }

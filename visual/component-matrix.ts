@@ -1,7 +1,8 @@
 /**
  * Manifiesto de cobertura visual por componente — un screenshot canónico por secondary
  * entry point de `projects/bip-angular/` (50, todos salvo `core` — ver SKIP_LIST abajo,
- * mismo criterio que `SKIP_LIST` en `testing/a11y.spec.ts`: no renderiza UI propia).
+ * mismo criterio que `SKIP_LIST` en `testing/a11y.spec.ts`: no renderiza UI propia), más
+ * shots extra (`shot`) para modos con geometría propia que la story canónica no muestra.
  *
  * `storyId` es la story canónica de cada componente (la primera exportada de su
  * `*.stories.ts`) — se extrajo del `index.json` real de Storybook
@@ -19,6 +20,8 @@
 export interface ComponentMatrixEntry {
   dir: string;
   storyId: string;
+  /** Nombre del PNG y del test; por defecto `dir`. Obligatorio (y único) en los shots extra. */
+  shot?: string;
   rtl?: true;
 }
 
@@ -48,6 +51,12 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
   { dir: 'link', storyId: 'components-link--default' },
   { dir: 'modal', storyId: 'components-modal--basic' },
   { dir: 'multi-select', storyId: 'components-multiselect--default', rtl: true },
+  {
+    dir: 'multi-select',
+    shot: 'multi-select-trigger-search',
+    storyId: 'components-multiselect--trigger-search',
+    rtl: true,
+  },
   { dir: 'navbar', storyId: 'components-navbar--basic' },
   { dir: 'number-input', storyId: 'components-numberinput--default', rtl: true },
   { dir: 'odontogram', storyId: 'components-odontogram--default' },
@@ -57,6 +66,12 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
   { dir: 'radio', storyId: 'components-radio--default' },
   { dir: 'search-input', storyId: 'components-searchinput--default', rtl: true },
   { dir: 'select', storyId: 'components-select--default', rtl: true },
+  {
+    dir: 'select',
+    shot: 'select-searchable-clearable',
+    storyId: 'components-select--searchable-clearable',
+    rtl: true,
+  },
   { dir: 'sidebar', storyId: 'components-sidebar--basic', rtl: true },
   { dir: 'skeleton', storyId: 'components-skeleton--text' },
   { dir: 'slider', storyId: 'components-slider--default' },

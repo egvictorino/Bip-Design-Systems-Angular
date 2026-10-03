@@ -124,6 +124,12 @@
   </span>
 }
 
+<!-- Fuera del overlay y siempre montada: si se insertara junto con su texto (al abrir el panel en
+     la misma tarea que empieza la carga) los lectores de pantalla no la anunciarían. -->
+<span class="bip-multi-select-sr-only" role="status" aria-live="polite">{{
+  loading() ? locale().multiSelect.loading : ''
+}}</span>
+
 <ng-template #panelTemplate>
   <div
     class="bip-multi-select-panel"
@@ -148,18 +154,12 @@
       </div>
     }
 
-    <div
-      class="bip-multi-select-loading"
-      role="status"
-      aria-live="polite"
-      [attr.aria-label]="locale().multiSelect.loading"
-    >
-      @if (loading()) {
-        <span class="bip-multi-select-spinner" aria-hidden="true"></span>
+    @if (loading()) {
+      <div class="bip-multi-select-loading" aria-hidden="true">
+        <span class="bip-multi-select-spinner"></span>
         {{ locale().multiSelect.loadingText }}
-      }
-    </div>
-    @if (!loading()) {
+      </div>
+    } @else {
       <ul
         [id]="listboxId"
         class="bip-multi-select-listbox"

@@ -20,19 +20,23 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   acentos). Textos i18n `select.options` y `select.noResults` en `esMX` y `enUS`.
 - `BipSelect`: búsqueda remota con `externalFilter` (no filtra internamente; el consumidor
   reemplaza `options()`), salida `searchQuery` (emite lo escrito y `''` al cerrar) e input
-  `loading` (oculta las opciones, `aria-busy` en el campo y región `aria-live="polite"` con
-  "Cargando..."). La opción elegida conserva su label aunque ya no esté en `options()` (se recuerda
-  la última elegida; un valor inicial debe venir en la primera carga).
-- `BipSelect`: input `clearable` (default `false`, solo con `search`). Botón con `aria-label`
-  localizado, visible con valor y sin `disabled`; limpia a `''`, emite el cambio y devuelve el foco.
-  Escape con el panel cerrado también limpia.
+  `loading` (oculta las opciones, `aria-busy` en el campo y región `role="status"`
+  `aria-live="polite"` siempre montada fuera del panel que anuncia "Cargando opciones"). La opción
+  elegida conserva su label aunque ya no esté en `options()`, también si el consumidor restaura la
+  lista de forma síncrona al cerrar (se recuerda la última elegida; un valor inicial debe venir en
+  la primera carga).
+- `BipSelect`: input `clearable` (default `false`, solo con `search`). Botón de 24×24 con
+  `aria-label` localizado, visible con valor y sin `disabled`; limpia a `''`, emite el cambio y
+  devuelve el foco. Escape con el panel cerrado también limpia, sin propagarse (no cierra un
+  Modal/Drawer contenedor).
 - `core/utils`: `firstEnabledIndex()` y `nextEnabledIndex()`. i18n `select.loading`,
   `select.loadingText` y `select.clear` en `esMX` y `enUS`.
 - `BipMultiSelect`: input `searchPlacement` (`'panel'` | `'trigger'`, default `'panel'`: sin
   cambios para quien ya lo usa). Con `'trigger'` el buscador es un `<input role="combobox">` junto
   a los chips (patrón "tags input", `aria-activedescendant`, foco real siempre en el input):
-  ↓↑ Enter (alterna sin cerrar) Escape Tab, Backspace con el campo vacío quita el último chip;
-  "Seleccionar todo" es la primera entrada navegable.
+  ↓↑ Enter (alterna sin cerrar; la opción activa se mantiene) Escape Tab, Backspace con el campo
+  vacío quita el último chip (aunque esté oculto por `maxVisibleChips`; salta los de opciones
+  deshabilitadas); "Seleccionar todo" es la primera entrada navegable.
 
 ### Changed
 
@@ -43,9 +47,23 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 - `BipSelect`: padding del campo con propiedades lógicas; en RTL el texto se montaba sobre el
   chevron.
 - `BipMultiSelect`: con `externalFilter` los chips elegidos ya no desaparecen cuando el consumidor
-  reemplaza `options()` (se recuerdan; un valor que nunca estuvo en `options()` sigue sin label).
+  reemplaza `options()` (se recuerdan, en el orden de `value()`; un valor que nunca estuvo en
+  `options()` sigue sin label).
 - `BipMultiSelect`: el estado de carga usa una región `role="status"` `aria-live="polite"` siempre
-  montada en el panel (antes se montaba junto con su texto y no se anunciaba de forma fiable).
+  montada fuera del panel (antes se montaba junto con su texto, dentro del overlay, y no se
+  anunciaba de forma fiable); el spinner visible es `aria-hidden`.
+- `BipMultiSelect`: Enter/Espacio sobre el botón de quitar un chip o de limpiar todo no hacían nada
+  y abrían el panel (el trigger los interceptaba por burbuja).
+- `BipSelect` y `BipMultiSelect`: deshabilitar el control con el panel abierto lo cierra; antes las
+  opciones seguían siendo clicables y cambiaban el valor de un control deshabilitado.
+- `BipTabs`, `BipNavbar`, `BipSidebar` (ítem activo) y `BipSelect` (label enfocado, opción
+  elegida): en dark el texto usaba `--color-primary` (3.66:1 sobre `surface-2`, bajo AA); ahora usa
+  `--color-primary-text`. En light no cambia.
+- Storybook: el decorator global de theming nunca se montaba (`NG0304`), así que los selectores de
+  theme, color scheme, densidad y marca del toolbar no tenían efecto (solo `dir`) y los overlays no
+  heredaban el tema. La regresión visual y `a11y-browser` en dark ahora prueban dark de verdad
+  (baselines regeneradas). `visual/component-matrix.ts` admite shots extra por componente: se
+  suman `select-searchable-clearable` y `multi-select-trigger-search` (LTR y RTL).
 
 ## [0.1.0] - 2026-10-02
 

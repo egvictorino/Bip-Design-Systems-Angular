@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { enUS, provideBipLocale } from '@bip-design-systems/angular/core';
 import { BipSelect } from './select.component';
 import type { BipSelectOption, BipSelectOptionGroup } from './select.component';
@@ -58,6 +58,28 @@ class HostComponent {
   clearable = false;
   queries: string[] = [];
   value = '';
+}
+
+const REMOTE_DEFAULTS: BipSelectOption[] = [{ value: 'mx', label: 'México' }];
+
+/** Consumidor de búsqueda remota que restaura la lista por defecto de forma síncrona. */
+@Component({
+  imports: [BipSelect],
+  template: `<bip-select
+    label="País"
+    [search]="true"
+    [externalFilter]="true"
+    [options]="options"
+    [(value)]="value"
+    (searchQuery)="onQuery($event)"
+  />`,
+})
+class SyncRemoteHostComponent {
+  options: BipSelectOption[] = REMOTE_DEFAULTS;
+  value = '';
+  onQuery(query: string): void {
+    this.options = query ? [{ value: 'z1', label: 'Zeta' }] : REMOTE_DEFAULTS;
+  }
 }
 
 @Component({
@@ -328,6 +350,28 @@ describe('BipSelect', () => {
       expect(host.control.touched).toBe(true);
     });
 
+    it('deshabilitar el control con el panel abierto lo cierra (regresión)', async () => {
+      const host = new SearchReactiveFormHostComponent();
+      const { fixture } = await render(SearchReactiveFormHostComponent, {
+        componentProperties: { control: host.control },
+      });
+      const user = userEvent.setup();
+      await user.click(screen.getByRole('combobox'));
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+      host.control.disable();
+      fixture.detectChanges();
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('sin externalFilter, un valor que sale de options() deja de mostrar su label (regresión)', async () => {
+      const { fixture } = await render(HostComponent, search({ value: 'mx' }));
+      expect(screen.getByRole('combobox')).toHaveValue('México');
+      fixture.componentInstance.options = [{ value: 'es', label: 'España' }];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(screen.getByRole('combobox')).toHaveValue('');
+    });
+
     it('FormControl: writeValue() refleja el valor y disabled deshabilita el input', async () => {
       const host = new SearchReactiveFormHostComponent();
       host.control.setValue('us');
@@ -375,14 +419,35 @@ describe('BipSelect', () => {
       expect(combobox).toHaveValue('México');
     });
 
+    it('elegida una opción, conserva su label aunque el consumidor restaure options() de forma síncrona (regresión)', async () => {
+      await render(SyncRemoteHostComponent);
+      const user = userEvent.setup();
+      const combobox = screen.getByRole('combobox');
+      await user.type(combobox, 'z');
+      await user.keyboard('{Enter}');
+      expect(combobox).toHaveValue('Zeta');
+    });
+
     it('loading anuncia el estado, oculta opciones y marca aria-busy', async () => {
       await render(HostComponent, remote({ loading: true }));
       const user = userEvent.setup();
       await user.click(screen.getByRole('combobox'));
-      expect(screen.getByRole('status')).toHaveTextContent('Cargando...');
+      expect(screen.getByRole('status')).toHaveTextContent('Cargando opciones');
       expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
+      expect(screen.getByText('Cargando...')).toBeInTheDocument();
       expect(screen.queryAllByRole('option')).toHaveLength(0);
       expect(screen.getByRole('combobox')).toHaveAttribute('aria-busy', 'true');
+    });
+
+    it('la región de carga está montada fuera del panel, también cerrado (regresión)', async () => {
+      const { fixture } = await render(HostComponent, remote());
+      const status = screen.getByRole('status');
+      expect(status).toHaveTextContent('');
+      fixture.componentInstance.loading = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(screen.getByRole('status')).toBe(status);
+      expect(status).toHaveTextContent('Cargando opciones');
     });
 
     it('al llegar resultados nuevos la opción activa pasa a la primera habilitada', async () => {
@@ -454,6 +519,21 @@ describe('BipSelect', () => {
       expect(fixture.componentInstance.value).toBe('mx');
       await user.keyboard('{Escape}');
       expect(fixture.componentInstance.value).toBe('');
+    });
+
+    it('el Escape que limpia no se propaga: no cierra un Modal/Drawer contenedor (regresión)', async () => {
+      const { fixture } = await render(HostComponent, clearable());
+      const user = userEvent.setup();
+      const onDocumentKeydown = vi.fn();
+      document.addEventListener('keydown', onDocumentKeydown);
+      try {
+        screen.getByRole('combobox').focus();
+        await user.keyboard('{Escape}');
+        expect(fixture.componentInstance.value).toBe('');
+        expect(onDocumentKeydown).not.toHaveBeenCalled();
+      } finally {
+        document.removeEventListener('keydown', onDocumentKeydown);
+      }
     });
 
     it('usa el aria-label del locale activo', async () => {
