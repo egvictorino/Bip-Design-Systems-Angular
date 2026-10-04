@@ -25,6 +25,8 @@ export interface ComponentMatrixEntry {
   rtl?: true;
   /** Agrega el shot `<shot>-dark` (`globals=colorScheme:dark`): para lo que solo falla en dark. */
   dark?: true;
+  /** Congela el reloj (FROZEN_TIME) para stories que renderizan con `new Date()`. */
+  frozenTime?: true;
 }
 
 export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
@@ -47,7 +49,21 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
   { dir: 'container', storyId: 'components-container--default' },
   { dir: 'data-table', storyId: 'components-datatable--default' },
   { dir: 'date-picker', storyId: 'components-datepicker--default', rtl: true },
+  {
+    dir: 'date-picker',
+    shot: 'date-picker-with-value',
+    storyId: 'components-datepicker--with-value',
+    rtl: true,
+    frozenTime: true,
+  },
   { dir: 'date-range-picker', storyId: 'components-daterangepicker--default' },
+  {
+    dir: 'date-range-picker',
+    shot: 'date-range-picker-with-value',
+    storyId: 'components-daterangepicker--with-value',
+    rtl: true,
+    frozenTime: true,
+  },
   { dir: 'divider', storyId: 'components-divider--horizontal' },
   { dir: 'drawer-panel', storyId: 'components-drawerpanel--basic', rtl: true },
   { dir: 'dropdown', storyId: 'components-dropdown--basic', rtl: true },

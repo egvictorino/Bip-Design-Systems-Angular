@@ -52,7 +52,11 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 - `BipDatePicker` y `BipDateRangePicker`: el botón de limpiar ya no está anidado en el trigger
   (`nested-interactive`): es un `<button>` nativo hermano, con Enter/Espacio nativos, y al limpiar
   el foco vuelve al trigger. Estados axe `date-picker-with-value` y `date-range-picker-with-value`.
-
+- `BipDatePicker` y `BipDateRangePicker`: tabular del trigger al botón de limpiar ya no marca el
+  control como touched antes de tiempo (solo al salir del wrapper completo, vía `focusout` y
+  `relatedTarget`), y pulsar la "×" con el panel abierto no lo cierra (el botón cuenta como parte
+  del control, igual que en la referencia React). Estado axe `date-picker-error-with-value` y shots
+  `date-picker-with-value` / `date-range-picker-with-value` (LTR y RTL) en la matriz visual.
 - Contraste AA del hover/press de primary en dark: `--color-primary-hover` y
   `--color-primary-press` oscurecen en vez de aclarar (texto blanco encima: 3.56:1 y 2.77:1 →
   6.05:1 y 7.89:1; afecta a `bipButton` primary, paginación, día/mes/año seleccionado del

@@ -7,7 +7,11 @@
   </label>
 }
 
-<div class="bip-date-range-picker-trigger-wrapper">
+<div
+  #triggerWrapperRef
+  class="bip-date-range-picker-trigger-wrapper"
+  (focusout)="onFocusOut($event)"
+>
   <button
     #triggerRef
     type="button"
@@ -19,7 +23,6 @@
     [attr.aria-describedby]="messageId()"
     [attr.aria-invalid]="hasError() || null"
     (click)="toggle()"
-    (blur)="onBlur()"
   >
     @if (value().from) {
       <span class="bip-date-range-picker-value">{{ displayValue() }}</span>
@@ -42,6 +45,7 @@
     <button
       type="button"
       class="bip-date-range-picker-clear"
+      (mousedown)="$event.preventDefault()"
       [attr.aria-label]="locale().dateRangePicker.clearSelection"
       (click)="onClearRange()"
     >

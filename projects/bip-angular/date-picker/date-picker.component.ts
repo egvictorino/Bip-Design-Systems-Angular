@@ -77,6 +77,8 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
 
   private onChange: (value: Date | null) => void = () => {};
 
+  @ViewChild('triggerWrapperRef', { static: true })
+  private readonly triggerWrapperRef!: ElementRef<HTMLElement>;
   @ViewChild('triggerRef', { static: true })
   private readonly triggerRef!: ElementRef<HTMLButtonElement>;
   @ViewChild('panelTemplate', { static: true })
@@ -203,7 +205,13 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
     this.closePanel(true);
   }
 
-  protected onBlur(): void {
+  /**
+   * Touched solo cuando el foco sale del wrapper (trigger + limpiar): tabular del trigger al botón
+   * de limpiar no es "salir" del control.
+   */
+  protected onFocusOut(event: FocusEvent): void {
+    const next = event.relatedTarget;
+    if (next instanceof Node && this.triggerWrapperRef.nativeElement.contains(next)) return;
     this.markTouched();
   }
 
@@ -249,8 +257,9 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
     );
     overlayRef.attach(new TemplatePortal(this.panelTemplate, this.viewContainerRef));
     overlayRef.outsidePointerEvents().subscribe((event) => {
-      const trigger = this.triggerRef.nativeElement;
-      if (event.target instanceof Node && trigger.contains(event.target)) return;
+      // El wrapper incluye el botón de limpiar: pulsarlo no cuenta como clic fuera.
+      const wrapper = this.triggerWrapperRef.nativeElement;
+      if (event.target instanceof Node && wrapper.contains(event.target)) return;
       this.closePanel();
     });
     this.overlayRef = overlayRef;
