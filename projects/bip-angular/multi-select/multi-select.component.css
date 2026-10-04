@@ -176,7 +176,7 @@
 }
 .bip-multi-select--bare.bip-multi-select--inline:focus-within {
   box-shadow: none;
-  border-block-end-color: var(--color-primary-hover);
+  border-block-end-color: var(--color-edge-primary-hover);
 }
 .bip-multi-select--bare.bip-multi-select--inline.bip-multi-select--error:focus-within {
   border-block-end-color: var(--color-danger);

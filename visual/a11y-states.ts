@@ -43,8 +43,8 @@ const waitForCalendarPanel = async (page: Page) => {
 };
 
 export const A11Y_STATES: A11yStateEntry[] = [
-  ...(['bare', 'soul'] as const).flatMap((variant) => {
-    const label = variant === 'bare' ? 'Bare' : 'Soul';
+  ...(['primary', 'bare', 'soul'] as const).flatMap((variant) => {
+    const label = { primary: 'Primary', bare: 'Bare', soul: 'Soul' }[variant];
     return [
       {
         name: `button-${variant}-hover`,

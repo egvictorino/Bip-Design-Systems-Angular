@@ -181,3 +181,24 @@ describe('BipButton — hover/press de bare y soul (contraste dark)', () => {
     expect(body).not.toMatch(/var\(--color-primary-(hover|press)\)/);
   });
 });
+
+describe('BipButton — hover/press de primary (contraste dark)', () => {
+  // jsdom no aplica la cascada; el contraste real lo audita axe (a11y-states.ts: button-primary-*).
+  const css = readFileSync(resolve(__dirname, 'button.component.css'), 'utf-8');
+  const rule = (selector: string) =>
+    css.split('}').find((block) => block.split('{')[0]!.trim() === selector) ?? '';
+
+  it.each([
+    ['hover', '--color-primary-hover'],
+    ['active', '--color-primary-press'],
+  ] as const)('primary :%s rellena con %s y conserva --color-txt-on-primary', (state, token) => {
+    const body = rule(
+      `:host(.bip-button--primary):${state}:not(:disabled):not([aria-disabled='true'])`
+    );
+    expect(body).toContain(`background-color: var(${token})`);
+    expect(body).not.toMatch(/(^|[;\s])color:/);
+    expect(css).toMatch(
+      /:host\(\.bip-button--primary\)\s*{[^}]*color: var\(--color-txt-on-primary\)/
+    );
+  });
+});

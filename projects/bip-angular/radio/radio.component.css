@@ -30,7 +30,7 @@
 }
 
 .bip-radio-ring:hover {
-  border-color: var(--color-primary-hover);
+  border-color: var(--color-edge-primary-hover);
 }
 
 .bip-radio-ring--error {
