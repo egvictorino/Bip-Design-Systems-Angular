@@ -43,6 +43,11 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 - `BipMultiSelect`: el filtro del buscador ahora ignora acentos ("mexico" encuentra "México").
 - `visual/a11y-states.ts`: axe en navegador real sobre estados (hover, paneles abiertos,
   seleccionado) además de la story canónica, e incluye el overlay del CDK.
+- Cobertura axe del hover de un día seleccionado de otro mes en la cuadrícula del DatePicker
+  (`date-picker-selected-outside-month-hover`, light y dark; falla si se quita
+  `:not(.bip-calendar-grid-day--selected)`) y story `WithOutsideMonthSelection`.
+  Hallazgo aparte, no corregido aquí: con valor, el botón "Limpiar fecha" queda anidado en el
+  trigger (`nested-interactive`).
 
 ### Fixed
 
