@@ -143,9 +143,6 @@ export const A11Y_STATES: A11yStateEntry[] = [
     name: 'date-picker-selected-outside-month-hover',
     storyId: 'components-datepicker--with-outside-month-selection',
     frozenTime: true,
-    // Con valor, el botón "Limpiar fecha" (span role=button) queda anidado en el trigger <button>:
-    // hallazgo estructural conocido de BipDatePicker, ajeno al contraste que audita este estado.
-    disableRules: ['nested-interactive'],
     setup: async (page) => {
       await page.locator('.bip-date-picker-trigger').click();
       await waitForCalendarPanel(page);
@@ -154,6 +151,25 @@ export const A11Y_STATES: A11yStateEntry[] = [
       await expect(day).toHaveClass(/bip-calendar-grid-day--other-month/);
       await expect(day).toHaveClass(/bip-calendar-grid-day--selected/);
       await day.hover();
+      await settle(page);
+    },
+  },
+  {
+    // Con valor aparece el botón de limpiar: debe ser hermano del trigger (nested-interactive).
+    name: 'date-picker-with-value',
+    storyId: 'components-datepicker--with-value',
+    frozenTime: true,
+    setup: async (page) => {
+      await expect(page.getByRole('button', { name: 'Limpiar fecha' })).toBeVisible();
+      await settle(page);
+    },
+  },
+  {
+    name: 'date-range-picker-with-value',
+    storyId: 'components-daterangepicker--with-value',
+    frozenTime: true,
+    setup: async (page) => {
+      await expect(page.getByRole('button', { name: 'Limpiar selección' })).toBeVisible();
       await settle(page);
     },
   },

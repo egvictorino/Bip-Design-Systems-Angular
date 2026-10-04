@@ -18,6 +18,7 @@
 }
 
 .bip-date-range-picker-trigger-wrapper {
+  position: relative;
   display: flex;
 }
 :host.bip-date-range-picker-wrapper--full-width .bip-date-range-picker-trigger-wrapper {
@@ -77,15 +78,28 @@
   color: var(--color-txt-secondary);
 }
 
+.bip-date-range-picker-trigger--clearable {
+  /* deja sitio al botón de limpiar, que es hermano del trigger y va en absoluto */
+  padding-inline-end: var(--space-9);
+}
 .bip-date-range-picker-clear {
+  position: absolute;
+  inset-inline-end: var(--space-2);
+  inset-block-start: 50%;
+  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-inline-size: var(--space-6);
+  min-block-size: var(--space-6);
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
   color: var(--color-txt-secondary);
   cursor: pointer;
   line-height: 1;
   border-radius: var(--radius-control);
-  flex-shrink: 0;
 }
 .bip-date-range-picker-clear:hover {
   color: var(--color-txt);

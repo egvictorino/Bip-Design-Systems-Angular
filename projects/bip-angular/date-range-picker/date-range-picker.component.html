@@ -28,19 +28,7 @@
         {{ placeholder() || locale().dateRangePicker.placeholder }}
       </span>
     }
-    @if (value().from && !disabled()) {
-      <span
-        class="bip-date-range-picker-clear"
-        role="button"
-        tabindex="0"
-        [attr.aria-label]="locale().dateRangePicker.clearSelection"
-        (click)="onClearRange($event)"
-        (keydown.enter)="onClearRange($event)"
-        (keydown.space)="onClearRange($event)"
-      >
-        ×
-      </span>
-    } @else {
+    @if (!showClear()) {
       <span class="bip-date-range-picker-calendar-icon" aria-hidden="true">
         <svg viewBox="0 0 16 16" fill="currentColor">
           <path
@@ -50,6 +38,16 @@
       </span>
     }
   </button>
+  @if (showClear()) {
+    <button
+      type="button"
+      class="bip-date-range-picker-clear"
+      [attr.aria-label]="locale().dateRangePicker.clearSelection"
+      (click)="onClearRange()"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  }
 </div>
 
 @if (error() && errorMessage()) {

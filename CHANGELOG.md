@@ -46,10 +46,12 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 - Cobertura axe del hover de un día seleccionado de otro mes en la cuadrícula del DatePicker
   (`date-picker-selected-outside-month-hover`, light y dark; falla si se quita
   `:not(.bip-calendar-grid-day--selected)`) y story `WithOutsideMonthSelection`.
-  Hallazgo aparte, no corregido aquí: con valor, el botón "Limpiar fecha" queda anidado en el
-  trigger (`nested-interactive`).
 
 ### Fixed
+
+- `BipDatePicker` y `BipDateRangePicker`: el botón de limpiar ya no está anidado en el trigger
+  (`nested-interactive`): es un `<button>` nativo hermano, con Enter/Espacio nativos, y al limpiar
+  el foco vuelve al trigger. Estados axe `date-picker-with-value` y `date-range-picker-with-value`.
 
 - Contraste AA del hover/press de primary en dark: `--color-primary-hover` y
   `--color-primary-press` oscurecen en vez de aclarar (texto blanco encima: 3.56:1 y 2.77:1 →
