@@ -22,6 +22,11 @@ export const WithValue: Story = {
   args: { ...Default.args, value: new Date() },
 };
 
+/** Valor 31-dic-2025: al navegar a enero 2026 aparece como día seleccionado de otro mes. */
+export const WithOutsideMonthSelection: Story = {
+  args: { ...Default.args, value: new Date(2025, 11, 31) },
+};
+
 export const WithMinMax: Story = {
   args: {
     ...Default.args,

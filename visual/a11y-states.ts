@@ -137,6 +137,27 @@ export const A11Y_STATES: A11yStateEntry[] = [
     },
   },
   {
+    // Hover sobre un día seleccionado de OTRO mes: la regla de hover de other-month no debe pisar
+    // el texto de marca del seleccionado. Abre en diciembre (el valor); "Mes siguiente" lleva a
+    // enero 2026, donde el 31-dic es de otro mes.
+    name: 'date-picker-selected-outside-month-hover',
+    storyId: 'components-datepicker--with-outside-month-selection',
+    frozenTime: true,
+    // Con valor, el botón "Limpiar fecha" (span role=button) queda anidado en el trigger <button>:
+    // hallazgo estructural conocido de BipDatePicker, ajeno al contraste que audita este estado.
+    disableRules: ['nested-interactive'],
+    setup: async (page) => {
+      await page.locator('.bip-date-picker-trigger').click();
+      await waitForCalendarPanel(page);
+      await page.getByRole('button', { name: 'Mes siguiente' }).click();
+      const day = page.locator('.bip-calendar-grid-day[data-date="2025-12-31"]');
+      await expect(day).toHaveClass(/bip-calendar-grid-day--other-month/);
+      await expect(day).toHaveClass(/bip-calendar-grid-day--selected/);
+      await day.hover();
+      await settle(page);
+    },
+  },
+  {
     name: 'date-range-picker-open',
     storyId: 'components-daterangepicker--default',
     frozenTime: true,
