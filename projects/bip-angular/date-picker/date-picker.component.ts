@@ -117,8 +117,14 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
   protected readonly triggerClass = computed(() => {
     const classes = [SIZE_CLASS[this.size()]];
     if (this.error()) classes.push('bip-date-picker-trigger--error');
+    if (this.showClear()) classes.push('bip-date-picker-trigger--clearable');
     return classes.join(' ');
   });
+
+  /** El botón de limpiar es hermano del trigger (un control no puede anidarse en otro). */
+  protected readonly showClear = computed(
+    () => !!this.value() && !this.disabled() && !this.loading()
+  );
 
   protected readonly displayValue = computed(() => {
     const value = this.value();
@@ -187,9 +193,9 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
     this.closePanel();
   }
 
-  protected onClear(event: Event): void {
-    event.stopPropagation();
+  protected onClear(): void {
     this.emitChange(null);
+    this.triggerRef.nativeElement.focus();
   }
 
   protected onEscape(event: Event): void {

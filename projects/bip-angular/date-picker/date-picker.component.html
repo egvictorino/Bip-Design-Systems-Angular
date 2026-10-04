@@ -31,19 +31,7 @@
     }
     @if (loading()) {
       <span class="bip-date-picker-spinner" aria-hidden="true"></span>
-    } @else if (value() && !disabled()) {
-      <span
-        class="bip-date-picker-clear"
-        role="button"
-        tabindex="0"
-        [attr.aria-label]="locale().datePicker.clear"
-        (click)="onClear($event)"
-        (keydown.enter)="onClear($event)"
-        (keydown.space)="onClear($event)"
-      >
-        ×
-      </span>
-    } @else {
+    } @else if (!showClear()) {
       <span class="bip-date-picker-calendar-icon" aria-hidden="true">
         <svg viewBox="0 0 16 16" fill="currentColor">
           <path
@@ -53,6 +41,16 @@
       </span>
     }
   </button>
+  @if (showClear()) {
+    <button
+      type="button"
+      class="bip-date-picker-clear"
+      [attr.aria-label]="locale().datePicker.clear"
+      (click)="onClear()"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  }
 </div>
 
 @if (error() && errorMessage()) {

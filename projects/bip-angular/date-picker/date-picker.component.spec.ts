@@ -114,6 +114,56 @@ describe('BipDatePicker', () => {
     expect(screen.queryByRole('button', { name: 'Limpiar fecha' })).not.toBeInTheDocument();
   });
 
+  describe('botón de limpiar (control hermano, no anidado en el trigger)', () => {
+    const setup = async () => {
+      const result = await render(HostComponent, {
+        componentProperties: { value: new Date(2026, 5, 1) },
+      });
+      const clear = screen.getByRole('button', { name: 'Limpiar fecha' });
+      const trigger = screen.getByRole('button', { name: /2026|junio|jun/ });
+      return { ...result, clear, trigger, user: userEvent.setup() };
+    };
+
+    it('es un <button> nativo que no es descendiente del trigger', async () => {
+      const { clear, trigger } = await setup();
+      expect(clear.tagName).toBe('BUTTON');
+      expect(trigger.contains(clear)).toBe(false);
+      expect(trigger.querySelector('[role="button"], button')).toBeNull();
+    });
+
+    it.each(['{Enter}', ' '])('se activa con el teclado (%j) y vacía el valor', async (key) => {
+      const { clear, user, fixture } = await setup();
+      clear.focus();
+      await user.keyboard(key);
+      expect(fixture.componentInstance.value).toBeNull();
+    });
+
+    it('el trigger lleva --clearable solo mientras hay valor', async () => {
+      const { trigger } = await setup();
+      expect(trigger).toHaveClass('bip-date-picker-trigger--clearable');
+    });
+
+    it('devuelve el foco al trigger y no abre el panel', async () => {
+      const { clear, trigger, user } = await setup();
+      await user.click(clear);
+      expect(trigger).toHaveFocus();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('no renderiza el botón de limpiar con disabled aunque haya valor', async () => {
+    const host = new ReactiveFormHostComponent();
+    host.control.setValue(new Date(2026, 5, 1));
+    host.control.disable();
+    await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
+    expect(screen.queryByRole('button', { name: 'Limpiar fecha' })).not.toBeInTheDocument();
+  });
+
+  it('no renderiza el botón de limpiar con loading aunque haya valor', async () => {
+    await render(BipDatePicker, { inputs: { value: new Date(2026, 5, 1), loading: true } });
+    expect(screen.queryByRole('button', { name: 'Limpiar fecha' })).not.toBeInTheDocument();
+  });
+
   it('activa aria-invalid cuando error=true', async () => {
     await render(HostComponent, { componentProperties: { error: true } });
     expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute(

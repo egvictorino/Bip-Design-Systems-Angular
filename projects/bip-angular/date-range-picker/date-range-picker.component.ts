@@ -135,8 +135,12 @@ export class BipDateRangePicker
   protected readonly triggerClass = computed(() => {
     const classes = [SIZE_CLASS[this.size()]];
     if (this.error()) classes.push('bip-date-range-picker-trigger--error');
+    if (this.showClear()) classes.push('bip-date-range-picker-trigger--clearable');
     return classes.join(' ');
   });
+
+  /** El botón de limpiar es hermano del trigger (un control no puede anidarse en otro). */
+  protected readonly showClear = computed(() => !!this.value().from && !this.disabled());
 
   protected readonly displayValue = computed(() => {
     const { from, to } = this.value();
@@ -218,9 +222,9 @@ export class BipDateRangePicker
     this.hoverDate.set(date);
   }
 
-  protected onClearRange(event: Event): void {
-    event.stopPropagation();
+  protected onClearRange(): void {
     this.commitRange({ ...EMPTY_RANGE });
+    this.triggerRef.nativeElement.focus();
   }
 
   protected onClearFromGrid(): void {
