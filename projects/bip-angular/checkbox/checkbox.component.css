@@ -30,7 +30,7 @@
 }
 
 .bip-checkbox-box:hover {
-  border-color: var(--color-primary-hover);
+  border-color: var(--color-edge-primary-hover);
 }
 
 .bip-checkbox-box--error {

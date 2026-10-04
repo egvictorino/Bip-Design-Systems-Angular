@@ -46,6 +46,12 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- Contraste AA del hover/press de primary en dark: `--color-primary-hover` y
+  `--color-primary-press` oscurecen en vez de aclarar (texto blanco encima: 3.56:1 y 2.77:1 →
+  6.05:1 y 7.89:1; afecta a `bipButton` primary, paginación, día/mes/año seleccionado del
+  calendario, confirmar del rango y popovers del odontograma). Nuevo token
+  `--color-edge-primary-hover` para bordes y foco de marca en hover (checkbox, radio, inputs,
+  select, file-upload…): conserva el aspecto actual. Light no cambia.
 - `BipCalendar`: contraste AA (4.5:1) en los textos atenuados. Fechas de otro mes dentro de un
   rango: `--color-txt-secondary` sobre `--color-secondary` (4.1 → 5.4:1 light, 4.2 → 5.7:1 dark); el
   día de hoy en otro mes conserva su blanco sobre `--color-primary` (1.6 → 8.2:1 light). Agenda:

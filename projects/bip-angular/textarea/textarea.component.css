@@ -158,11 +158,11 @@
   border-radius: var(--radius-none);
 }
 .bip-textarea--bare:hover:not(:disabled) {
-  border-bottom-color: var(--color-primary-hover);
+  border-bottom-color: var(--color-edge-primary-hover);
 }
 .bip-textarea--bare:focus-visible {
   box-shadow: none;
-  border-bottom-color: var(--color-primary-hover);
+  border-bottom-color: var(--color-edge-primary-hover);
 }
 .bip-textarea--bare.bip-textarea--error {
   border-bottom-color: var(--color-danger);

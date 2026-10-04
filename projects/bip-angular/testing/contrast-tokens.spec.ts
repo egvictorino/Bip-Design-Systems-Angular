@@ -143,3 +143,72 @@ describe('styles/tokens.css — contraste WCAG AA de tokens reales (no solo la f
     });
   });
 });
+
+/**
+ * Resolver mínimo para los derivados de marca: `#hex`, `var(--x)` y
+ * `color-mix(in srgb, var(--x), white|black N%)`, usando los valores del propio bloque de
+ * tokens.css (jsdom no resuelve color-mix). Cubre solo esas formas; cualquier otra lanza.
+ */
+const channels = (hex: string): number[] => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+const toHex = (rgb: number[]): string =>
+  '#' + rgb.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
+
+const resolveToken = (name: string, block: string, depth = 0): string => {
+  if (depth > 5) throw new Error(`Referencia circular resolviendo --${name}`);
+  const raw = block
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1]
+    ?.trim();
+  if (!raw) throw new Error(`--${name} no está declarado en el bloque`);
+  if (/^#[0-9a-fA-F]{6}$/.test(raw)) return raw.toLowerCase();
+  const ref = raw.match(/^var\(--([\w-]+)\)$/);
+  if (ref) return resolveToken(ref[1]!, block, depth + 1);
+  const mix = raw.match(/^color-mix\(in srgb,\s*var\(--([\w-]+)\),\s*(white|black)\s+(\d+)%\)$/);
+  if (!mix) throw new Error(`Forma no soportada para --${name}: ${raw}`);
+  const base = channels(resolveToken(mix[1]!, block, depth + 1));
+  const target = mix[2] === 'white' ? 255 : 0;
+  const p = Number(mix[3]) / 100;
+  return toHex(base.map((v) => v * (1 - p) + target * p));
+};
+
+describe('styles/tokens.css — hover/press de primary (derivados con color-mix resueltos)', () => {
+  const tokensCss = readFileSync(TOKENS_CSS_PATH, 'utf-8');
+  const blocks = {
+    light: extractBlock(tokensCss, /\[data-color-scheme='light'\]\s*{([^}]*)}/s),
+    dark: extractBlock(tokensCss, /\[data-color-scheme='dark'\]\s*{([^}]*)}/s),
+  };
+
+  // Anclas documentadas: si cambia la semilla o el porcentaje, el resolver y estos hex deben
+  // seguir de acuerdo.
+  it.each([
+    ['light', 'color-primary-hover', '#1f2b99'],
+    ['light', 'color-primary-press', '#151d66'],
+    ['dark', 'color-primary-hover', '#4758c5'],
+    ['dark', 'color-primary-press', '#3b49a2'],
+    ['dark', 'color-edge-primary-hover', '#6e7feb'],
+  ] as const)('%s: --%s resuelve a %s', (scheme, token, expected) => {
+    expect(resolveToken(token, blocks[scheme])).toBe(expected);
+  });
+
+  describe.each(['light', 'dark'] as const)('esquema %s', (scheme) => {
+    it.each(['color-primary-hover', 'color-primary-press'])(
+      '--%s alcanza 4.5:1 contra --color-txt-on-primary',
+      (token) => {
+        const fill = resolveToken(token, blocks[scheme]);
+        const text = resolveToken('color-txt-on-primary', blocks[scheme]);
+        const ratio = contrastRatio(fill, text);
+        expect(
+          ratio,
+          `--${token}(${fill}) vs --color-txt-on-primary(${text}) = ${ratio.toFixed(2)}:1`
+        ).toBeGreaterThanOrEqual(AA_CONTRAST_THRESHOLD);
+      }
+    );
+
+    it('--color-edge-primary-hover alcanza 3:1 (non-text) contra --color-field', () => {
+      const edge = resolveToken('color-edge-primary-hover', blocks[scheme]);
+      const field = resolveToken('color-field', blocks[scheme]);
+      const ratio = contrastRatio(edge, field);
+      expect(ratio, `${edge} vs ${field} = ${ratio.toFixed(2)}:1`).toBeGreaterThanOrEqual(3);
+    });
+  });
+});

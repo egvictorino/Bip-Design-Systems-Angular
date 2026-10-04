@@ -149,11 +149,11 @@
   border-radius: var(--radius-none);
 }
 .bip-number-input--bare:hover:not(:disabled) {
-  border-bottom-color: var(--color-primary-hover);
+  border-bottom-color: var(--color-edge-primary-hover);
 }
 .bip-number-input--bare:focus-visible {
   box-shadow: none;
-  border-bottom-color: var(--color-primary-hover);
+  border-bottom-color: var(--color-edge-primary-hover);
 }
 
 .bip-number-input--bare-error {

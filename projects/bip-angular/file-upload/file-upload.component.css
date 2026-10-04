@@ -76,12 +76,12 @@
   background-color: var(--color-field);
 }
 .bip-file-upload-dropzone--default:hover {
-  border-color: var(--color-primary-hover);
+  border-color: var(--color-edge-primary-hover);
   background-color: var(--color-surface-3);
 }
 
 .bip-file-upload-dropzone--dragging {
-  border-color: var(--color-primary-hover);
+  border-color: var(--color-edge-primary-hover);
   background-color: var(--color-surface-3);
 }
 
