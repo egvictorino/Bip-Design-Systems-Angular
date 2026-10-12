@@ -62,10 +62,10 @@ async function analyzeWithoutAddonAxe(page: Page, disableRules: string[] = [], a
 const FROZEN_TIME = new Date('2026-01-15T09:00:00');
 
 test.describe('a11y — axe en navegador real, color-contrast activado', () => {
-  for (const { dir, storyId, shot = dir } of COMPONENT_MATRIX) {
+  for (const { dir, storyId, shot = dir, frozenTime } of COMPONENT_MATRIX) {
     for (const colorScheme of ['light', 'dark'] as const) {
       test(`${shot} — ${colorScheme}`, async ({ page }) => {
-        if (dir === 'calendar') await page.clock.setFixedTime(FROZEN_TIME);
+        if (dir === 'calendar' || frozenTime) await page.clock.setFixedTime(FROZEN_TIME);
         await page.goto(
           `/iframe.html?id=${storyId}&viewMode=story&globals=colorScheme:${colorScheme}`
         );

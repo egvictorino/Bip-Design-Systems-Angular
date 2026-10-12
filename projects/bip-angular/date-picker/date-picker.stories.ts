@@ -43,6 +43,11 @@ export const WithError: Story = {
   args: { ...Default.args, error: true, errorMessage: 'Debes seleccionar una fecha' },
 };
 
+/** Error con valor: el botón de limpiar convive con el borde y el mensaje de error. */
+export const WithErrorAndValue: Story = {
+  args: { ...WithError.args, value: new Date() },
+};
+
 export const Loading: Story = {
   args: { ...Default.args, loading: true },
 };

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { BipDatePicker } from './date-picker.component';
 
 @Component({
@@ -41,6 +41,17 @@ class HostComponent {
 })
 class ReactiveFormHostComponent {
   readonly control = new FormControl<Date | null>(null);
+}
+
+@Component({
+  imports: [BipDatePicker, ReactiveFormsModule],
+  template: `
+    <bip-date-picker [formControl]="control" label="Campo" />
+    <button type="button">Después</button>
+  `,
+})
+class TouchedHostComponent {
+  readonly control = new FormControl<Date | null>(new Date(2026, 5, 1));
 }
 
 describe('BipDatePicker', () => {
@@ -234,5 +245,70 @@ describe('BipDatePicker', () => {
     host.control.disable();
     await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
     expect(screen.getByRole('button', { name: 'Fecha de nacimiento' })).toBeDisabled();
+  });
+});
+
+describe('BipDatePicker — touched y clic fuera con el botón de limpiar', () => {
+  const setup = async () => {
+    const result = await render(TouchedHostComponent);
+    const control = result.fixture.componentInstance.control;
+    const clear = screen.getByRole('button', { name: 'Limpiar fecha' });
+    const trigger = document.querySelector<HTMLButtonElement>('.bip-date-picker-trigger')!;
+    return {
+      control,
+      clear,
+      trigger,
+      after: screen.getByRole('button', { name: 'Después' }),
+      user: userEvent.setup(),
+    };
+  };
+
+  it('tabular del trigger al botón de limpiar no marca touched', async () => {
+    const { control, trigger, clear, user } = await setup();
+    trigger.focus();
+    await user.tab();
+    expect(clear).toHaveFocus();
+    expect(control.touched).toBe(false);
+  });
+
+  it('salir del wrapper completo (limpiar → siguiente control) sí marca touched', async () => {
+    const { control, clear, after, user } = await setup();
+    clear.focus();
+    await user.tab();
+    expect(after).toHaveFocus();
+    expect(control.touched).toBe(true);
+  });
+
+  it('limpiar con el ratón no marca touched y deja el foco en el trigger', async () => {
+    const { control, clear, trigger, user } = await setup();
+    await user.click(clear);
+    expect(trigger).toHaveFocus();
+    expect(control.touched).toBe(false);
+  });
+
+  it('mousedown sobre limpiar no roba el foco (Safari/Firefox: relatedTarget nulo marcaría touched)', async () => {
+    const { clear, trigger } = await setup();
+    trigger.focus();
+    const notPrevented = clear.dispatchEvent(
+      new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    );
+    expect(notPrevented).toBe(false);
+  });
+
+  it('con el panel abierto, pulsar limpiar no lo cierra y vacía el valor', async () => {
+    const { control, trigger, clear, user } = await setup();
+    await user.click(trigger);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.click(clear);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(control.value).toEqual(null);
+  });
+
+  it('un clic fuera del wrapper sigue cerrando el panel', async () => {
+    const { trigger, user } = await setup();
+    await user.click(trigger);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.click(document.body);
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 });

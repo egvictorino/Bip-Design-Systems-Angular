@@ -165,6 +165,17 @@ export const A11Y_STATES: A11yStateEntry[] = [
     },
   },
   {
+    // Error + valor + botón de limpiar: el borde/texto de error conviven con el limpiar hermano.
+    name: 'date-picker-error-with-value',
+    storyId: 'components-datepicker--with-error-and-value',
+    frozenTime: true,
+    setup: async (page) => {
+      await expect(page.getByRole('button', { name: 'Limpiar fecha' })).toBeVisible();
+      await expect(page.getByRole('alert')).toBeVisible();
+      await settle(page);
+    },
+  },
+  {
     name: 'date-range-picker-with-value',
     storyId: 'components-daterangepicker--with-value',
     frozenTime: true,
