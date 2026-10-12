@@ -204,6 +204,33 @@ describe('styles/tokens.css — hover/press de primary (derivados con color-mix 
       }
     );
 
+    /*
+     * Non-text (WCAG 1.4.11, 3:1): el indicador que identifica el botón primary es su relleno en
+     * REPOSO, y ese debe distinguirse de las superficies donde se apoya. Ratios medidos en dark
+     * (sRGB, WCAG) — el texto blanco encima cumple AA en los tres:
+     *
+     *   relleno             color    vs surface-1  vs field/surface-2
+     *   reposo              #5468e8  4.03          3.67
+     *   hover (black 15%)   #4758c5  3.10          2.82
+     *   press (black 30%)   #3b49a2  2.37          2.16
+     *
+     * Hover y press quedan por debajo de 3:1 a propósito: son estados transitorios que no se
+     * muestran junto a su reposo, el botón se identifica por su texto y la forma, y aclararlos
+     * (≤7% de black para llegar a 3:1 contra field) los acercaría al reposo y perdería la
+     * jerarquía visual reposo > hover > press. En light el reposo (#2939cc) mide 8.2:1 contra
+     * #ffffff y 7.9:1 contra #fafafa, con margen.
+     * Por eso solo se fija el reposo; hover/press mantienen su guard de texto (≥4.5:1).
+     */
+    it.each(['color-surface-1', 'color-field', 'color-surface-2'])(
+      '--color-primary (reposo) alcanza 3:1 (non-text) contra --%s',
+      (surface) => {
+        const fill = resolveToken('color-primary', blocks[scheme]);
+        const bg = resolveToken(surface, blocks[scheme]);
+        const ratio = contrastRatio(fill, bg);
+        expect(ratio, `${fill} vs ${bg} = ${ratio.toFixed(2)}:1`).toBeGreaterThanOrEqual(3);
+      }
+    );
+
     it('--color-edge-primary-hover alcanza 3:1 (non-text) contra --color-field', () => {
       const edge = resolveToken('color-edge-primary-hover', blocks[scheme]);
       const field = resolveToken('color-field', blocks[scheme]);
