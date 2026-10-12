@@ -129,6 +129,7 @@ Un componente está terminado solo si tiene **todo** esto:
 - Baselines visuales **solo Linux, solo Docker** (`pnpm test:visual:docker`); nunca nativo en macOS.
 - `storyId` de `visual/component-matrix.ts` sale de `storybook-static/index.json`, nunca a mano.
 - `.storybook/preview.ts` debe importar `styles/bip.css`; sin eso ninguna `var(--color-*)` resuelve.
+- `tokens.css`: un comentario de una línea sin `:` se lee como grupo de Foundations; usa varias líneas o `:` (guard en `testing/tokens.spec.ts`).
 - jsdom no aplica cascada CSS ni `ResizeObserver`: lo visual/layout se verifica en Storybook o Docker.
 - Paquete publicado: `exports["./styles/*"]` y `sideEffects: ["**/*.css"]` van a mano en
   `projects/bip-angular/package.json`; `LICENSE` se copia con `scripts/copy-license.cjs`.
