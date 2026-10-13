@@ -54,7 +54,12 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 - `BipOdontogram`: el foco de teclado de los botones y campos de los popovers de nota e imágenes,
   del detalle del diente y de la cuadrícula usa `box-shadow: var(--focus-ring)` (antes un anillo de
   1px; en confirmar/guardar y en la condición activa era del color del relleno del botón y quedaba
-  invisible, WCAG 1.4.11). Las superficies SVG del diente siguen bajando la opacidad (pendiente).
+  invisible, WCAG 1.4.11).
+- `BipOdontogram`: el foco de teclado de las superficies del diente (detalle) ya no se señala solo
+  con `opacity: 0.7` (1.00:1 en superficies sanas y entre 1.09:1 y 1.88:1 en el resto; WCAG
+  1.4.11/2.4.7). Cada superficie dibuja un anillo de dos tonos sobre un `<polygon>` espejo
+  `aria-hidden` (hueco `--color-surface-1` + banda `--focus-ring-color`, mismo patrón que
+  `--focus-ring`). `:hover` conserva la opacidad.
 
 - `BipDateRangePicker`: en un layout RTL el algoritmo bidi reordenaba las dos fechas y el rango se
   veía "20/01/2026 – 15/01/2026" (el placeholder, con letras, ya salía de izquierda a derecha). El

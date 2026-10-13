@@ -3,6 +3,11 @@
   flex-shrink: 0;
 }
 
+/* El anillo de foco sale del borde de las superficies exteriores. */
+.bip-tooth-svg--interactive {
+  overflow: visible;
+}
+
 .bip-tooth-surface {
   stroke: var(--color-edge-medium);
   outline: none;
@@ -12,9 +17,45 @@
   cursor: pointer;
 }
 
-.bip-tooth-surface--interactive:hover,
-.bip-tooth-surface--interactive:focus-visible {
+.bip-tooth-surface--interactive:hover {
   opacity: 0.7;
+}
+
+/*
+ * Foco de teclado: anillo de dos tonos centrado en el borde de la superficie. Los trazos son
+ * centrados, así que se dibuja primero la banda ancha (offset + ancho a cada lado) y encima el
+ * hueco más angosto (offset a cada lado): queda el mismo patrón que `--focus-ring`.
+ * `non-scaling-stroke` los mantiene en px reales, sin depender del viewBox.
+ */
+.bip-tooth-focus {
+  display: none;
+  pointer-events: none;
+}
+
+.bip-tooth-focus-ring,
+.bip-tooth-focus-gap {
+  fill: none;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.bip-tooth-focus-ring {
+  stroke: var(--focus-ring-color);
+  stroke-width: calc(2 * (var(--focus-ring-offset) + var(--focus-ring-width)));
+}
+
+.bip-tooth-focus-gap {
+  stroke: var(--color-surface-1);
+  stroke-width: calc(2 * var(--focus-ring-offset));
+}
+
+.bip-tooth-surface[data-surface='buccal']:focus-visible ~ .bip-tooth-focus[data-surface='buccal'],
+.bip-tooth-surface[data-surface='lingual']:focus-visible ~ .bip-tooth-focus[data-surface='lingual'],
+.bip-tooth-surface[data-surface='mesial']:focus-visible ~ .bip-tooth-focus[data-surface='mesial'],
+.bip-tooth-surface[data-surface='distal']:focus-visible ~ .bip-tooth-focus[data-surface='distal'],
+.bip-tooth-surface[data-surface='occlusal']:focus-visible
+  ~ .bip-tooth-focus[data-surface='occlusal'] {
+  display: inline;
 }
 
 .bip-tooth-fill-healthy {
