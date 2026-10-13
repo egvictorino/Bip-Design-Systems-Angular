@@ -8,10 +8,13 @@ const ODONTOGRAM_DIR = resolve(SRC_DIR, 'odontogram');
 
 /**
  * Selectores que no pueden usar `box-shadow` como indicador de foco. Cada uno con su motivo.
- * Vacía hoy: las superficies SVG del diente pintan su foco con un anillo propio (ver el `it` de
- * `tooth-svg.component.css` abajo).
+ * Las superficies SVG del diente no están aquí: pintan su foco con un anillo propio (ver el
+ * `describe` de `tooth-svg.component.css` abajo).
  */
-const ALLOWLIST: Record<string, string> = {};
+const ALLOWLIST: Record<string, string> = {
+  '.bip-odontogram-tooth-cell--selected':
+    'compuesta: banda de selección + anillo de foco desplazado (ver el `it` de la celda seleccionada)',
+};
 
 /**
  * Límite: solo reglas cuyo selector termina en `:focus-visible` (no `:focus`, `:is()` ni pseudo-elementos).
@@ -105,6 +108,38 @@ describe('odontogram — :focus-visible usa var(--focus-ring)', () => {
         )
           throw new Error(`:focus-visible solo con opacity: ${list!.trim()}`);
       }
+    });
+  });
+
+  describe('celda seleccionada con foco (odontogram.component.css)', () => {
+    const css = readFileSync(resolve(ODONTOGRAM_DIR, 'odontogram.component.css'), 'utf-8').replace(
+      /\/\*[\s\S]*?\*\//g,
+      ''
+    );
+    const rule = (selector: string) =>
+      [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find(
+        ([, list]) => list!.trim().replace(/\s+/g, ' ') === selector
+      );
+
+    it('la regla combinada: banda de selección, y hueco y anillo de foco desplazados 2px', () => {
+      const body = rule('.bip-odontogram-tooth-cell--selected:focus-visible')?.[2] ?? '';
+      const value = /box-shadow:\s*([^;]+);/.exec(body)?.[1]?.replace(/\s+/g, ' ').trim();
+      expect(value).toBe(
+        '0 0 0 2px var(--color-primary), ' +
+          '0 0 0 calc(2px + var(--focus-ring-offset)) var(--color-surface-1), ' +
+          '0 0 0 calc(2px + var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color)'
+      );
+    });
+
+    it('va después de --button:focus-visible (misma especificidad: gana la última)', () => {
+      const index = (selector: string) =>
+        [...css.matchAll(/([^{}]+)\{/g)].findIndex(
+          ([, list]) => list!.trim().replace(/\s+/g, ' ') === selector
+        );
+      const base = index('.bip-odontogram-tooth-cell--button:focus-visible');
+      const combined = index('.bip-odontogram-tooth-cell--selected:focus-visible');
+      expect(base).toBeGreaterThan(-1);
+      expect(combined).toBeGreaterThan(base);
     });
   });
 });
