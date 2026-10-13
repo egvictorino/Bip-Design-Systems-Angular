@@ -51,6 +51,10 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipOdontogram`: una celda seleccionada que recibe foco de teclado perdía la banda de selección
+  (`--button:focus-visible` la pisaba con el mismo `box-shadow` que una celda sin seleccionar). Nueva
+  regla `--selected:focus-visible`: conserva la banda de 2px y desplaza hacia fuera el anillo de
+  foco (hueco + banda), así selección y foco se distinguen entre sí.
 - `BipOdontogram`: el foco de teclado de los botones y campos de los popovers de nota e imágenes,
   del detalle del diente y de la cuadrícula usa `box-shadow: var(--focus-ring)` (antes un anillo de
   1px; en confirmar/guardar y en la condición activa era del color del relleno del botón y quedaba
