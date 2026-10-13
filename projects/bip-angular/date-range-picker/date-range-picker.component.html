@@ -25,7 +25,7 @@
     (click)="toggle()"
   >
     @if (value().from) {
-      <span class="bip-date-range-picker-value">{{ displayValue() }}</span>
+      <span class="bip-date-range-picker-value" [attr.dir]="valueDir()">{{ displayValue() }}</span>
     } @else {
       <span class="bip-date-range-picker-placeholder">
         {{ placeholder() || locale().dateRangePicker.placeholder }}

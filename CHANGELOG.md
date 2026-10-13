@@ -10,6 +10,8 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Added
 
+- `core/utils`: `localeDirection(tag)` → `'ltr' | 'rtl'` según el script del locale (`Intl.Locale`,
+  SSR-safe; tag inválido → `'ltr'`).
 - `BipSelect`: input `search` (boolean, default `false`). Convierte el `<select>` nativo en un
   combobox editable (patrón WAI-ARIA "editable combobox with list autocomplete"): se escribe en
   el propio campo y las opciones y grupos se filtran en el panel (`BipOverlay`); ↓↑ Enter Escape,
@@ -49,6 +51,10 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipDateRangePicker`: en un layout RTL el algoritmo bidi reordenaba las dos fechas y el rango se
+  veía "20/01/2026 – 15/01/2026" (el placeholder, con letras, ya salía de izquierda a derecha). El
+  valor lleva ahora `dir` según el idioma del locale (`ltr` con es-MX/en-US, `rtl` con ar/he).
+  La referencia React tiene el mismo problema (string sin aislar).
 - `BipDatePicker` y `BipDateRangePicker`: el botón de limpiar ya no está anidado en el trigger
   (`nested-interactive`): es un `<button>` nativo hermano, con Enter/Espacio nativos, y al limpiar
   el foco vuelve al trigger. Estados axe `date-picker-with-value` y `date-range-picker-with-value`.
