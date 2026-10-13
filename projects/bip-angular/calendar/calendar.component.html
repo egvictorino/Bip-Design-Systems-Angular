@@ -26,7 +26,9 @@
     >
       ›
     </button>
-    <span class="bip-calendar-title">{{ title() }}</span>
+    <span class="bip-calendar-title"
+      ><span [attr.dir]="textDir()">{{ title() }}</span></span
+    >
   </div>
   <div class="bip-calendar-view-switcher">
     @for (v of views; track v) {
@@ -166,9 +168,9 @@
                     ></span>
                     <div class="bip-calendar-agenda-event-content">
                       <span class="bip-calendar-agenda-event-title">{{ event.title }}</span>
-                      <span class="bip-calendar-agenda-event-time">{{
-                        eventTimeRange(event)
-                      }}</span>
+                      <span class="bip-calendar-agenda-event-time"
+                        ><span [attr.dir]="textDir()">{{ eventTimeRange(event) }}</span></span
+                      >
                       @if (event.patientName) {
                         <span class="bip-calendar-agenda-event-subtext">{{
                           event.patientName

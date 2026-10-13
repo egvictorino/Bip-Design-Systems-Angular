@@ -210,3 +210,50 @@ describe('calendar-grid.component.css — días de otro mes', () => {
     ).toContain('background-color: var(--color-primary-hover)');
   });
 });
+
+@Component({
+  imports: [BipCalendarGrid],
+  template: `
+    <div dir="rtl">
+      <bip-calendar-grid [(viewDate)]="viewDate" [strings]="strings" [localeTag]="localeTag" />
+    </div>
+  `,
+})
+class RtlHostComponent {
+  viewDate = new Date(2026, 0, 15);
+  strings = STRINGS;
+  localeTag = 'es-MX';
+}
+
+describe('BipCalendarGrid — aislamiento bidi del rango de años', () => {
+  // jsdom no aplica el algoritmo bidi: se fija la estructura (`dir` del span interior y texto en
+  // orden lógico), no el pintado. La vista de años necesita dos clics en el encabezado, y la
+  // matriz visual no tiene `play`, así que solo la cubre este spec.
+  const openYears = async (localeTag?: string) => {
+    const result = await render(RtlHostComponent, {
+      componentProperties: localeTag ? { localeTag } : {},
+    });
+    const user = userEvent.setup();
+    const heading = () =>
+      result.container.querySelector<HTMLElement>('.bip-calendar-grid-heading-btn')!;
+    await user.click(heading()); // días → meses
+    await user.click(heading()); // meses → años
+    return result.container.querySelector<HTMLElement>('.bip-calendar-grid-heading-static > span')!;
+  };
+
+  it('span interior con dir="ltr" y rango en orden lógico dentro de un layout RTL', async () => {
+    const span = await openYears();
+    expect(span).toHaveAttribute('dir', 'ltr');
+    expect(span.textContent).toMatch(/^\d{4} – \d{4}$/);
+  });
+
+  it('el elemento exterior no lleva dir (conserva el layout lógico)', async () => {
+    const span = await openYears();
+    expect(span.parentElement).not.toHaveAttribute('dir');
+  });
+
+  it('dir="rtl" con un localeTag de escritura RTL', async () => {
+    const span = await openYears('he-IL');
+    expect(span).toHaveAttribute('dir', 'rtl');
+  });
+});

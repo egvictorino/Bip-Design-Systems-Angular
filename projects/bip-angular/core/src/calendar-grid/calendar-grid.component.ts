@@ -18,6 +18,7 @@ import {
   dateKey,
   getDaysInMonth,
   getMondayOffset,
+  localeDirection,
   monthIndex,
   startOfDay,
 } from '../utils';
@@ -172,6 +173,8 @@ export class BipCalendarGrid {
     const start = this.yearRangeStart();
     return Array.from({ length: YEARS_PER_BLOCK }, (_, i) => start + i);
   });
+  /** El rango "2016 – 2027" es solo numérico: se aísla con la dirección del idioma (ver BipCalendar). */
+  protected readonly yearRangeDir = computed(() => localeDirection(this.localeTag()));
   protected readonly yearRangeLabel = computed(() => {
     const start = this.yearRangeStart();
     return this.strings().yearRange(start, start + YEARS_PER_BLOCK - 1);

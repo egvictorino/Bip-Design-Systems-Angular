@@ -26,6 +26,7 @@ import {
   getMondayOffset,
   injectBipLocale,
   isSameDay,
+  localeDirection,
   startOfDay,
 } from '@bip-design-systems/angular/core';
 import type { CalendarEventStatus, CalendarView } from '@bip-design-systems/angular/core';
@@ -112,6 +113,14 @@ export class BipCalendar implements OnDestroy {
   protected readonly views = VIEWS;
   protected readonly statusClass = STATUS_CLASS;
   protected readonly hourHeight = HOUR_HEIGHT_PX;
+
+  /**
+   * Los rangos "inicio – fin" del título semanal y de la hora de la agenda se aíslan con la
+   * dirección del idioma, no la de la página: en un layout RTL el algoritmo bidi reordena los
+   * extremos (runs numéricos separados por un guion neutro). `dir` va en un span interior para
+   * no volver físico el layout del elemento exterior (`margin-inline-start`, `text-align: start`).
+   */
+  protected readonly textDir = computed(() => localeDirection(this.locale().locale));
 
   // ── Encabezado ────────────────────────────────────────────────────────────
 
