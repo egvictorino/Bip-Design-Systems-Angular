@@ -51,6 +51,13 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipCalendar` y `BipCalendarGrid`: en un layout RTL el algoritmo bidi reordenaba los extremos de
+  los rangos "inicio – fin" (runs numéricos separados por un guion neutro): el título semanal salía
+  `ene–18ene,202612` (el 12 quedaba a la derecha), la hora de la agenda `.a.m.–09:30a.m09:00` y el
+  rango de años del selector `2027–2016`. Cada uno lleva ahora un `<span>` interior con `dir`
+  según el idioma del locale (`ltr` con es-MX/en-US, `rtl` con ar/he), reusando `localeDirection()`;
+  el layout exterior (`margin-inline-start`, `text-align: start`) sigue en RTL. Misma causa que
+  `BipDateRangePicker`. Baselines RTL nuevas: `calendar-week-view` y `calendar-agenda-view`.
 - `BipOdontogram`: una celda seleccionada que recibe foco de teclado perdía la banda de selección
   (`--button:focus-visible` la pisaba con el mismo `box-shadow` que una celda sin seleccionar). Nueva
   regla `--selected:focus-visible`: conserva la banda de 2px y desplaza hacia fuera el anillo de

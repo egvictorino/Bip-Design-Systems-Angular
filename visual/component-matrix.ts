@@ -42,6 +42,13 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
     shot: 'calendar-week-view',
     storyId: 'components-calendar--week-view',
     dark: true,
+    rtl: true,
+  },
+  {
+    dir: 'calendar',
+    shot: 'calendar-agenda-view',
+    storyId: 'components-calendar--agenda-view',
+    rtl: true,
   },
   { dir: 'card', storyId: 'components-card--simple' },
   { dir: 'checkbox', storyId: 'components-checkbox--default' },

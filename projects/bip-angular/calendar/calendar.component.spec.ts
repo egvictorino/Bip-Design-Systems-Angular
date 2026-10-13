@@ -4,7 +4,12 @@ import { Component } from '@angular/core';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import type { CalendarView } from '@bip-design-systems/angular/core';
+import {
+  enUS,
+  mergeLocale,
+  provideBipLocale,
+  type CalendarView,
+} from '@bip-design-systems/angular/core';
 import { BipCalendar } from './calendar.component';
 import type { BipCalendarEvent, BipCalendarResource } from './calendar.types';
 
@@ -294,5 +299,63 @@ describe('calendar.component.css — contraste AA', () => {
       bodyOf('.bip-calendar-agenda-event--cancelled .bip-calendar-agenda-event-title')
     ).toContain('text-decoration: line-through');
     expect(css).not.toMatch(/agenda-event--cancelled\s*{/);
+  });
+});
+
+@Component({
+  imports: [BipCalendar],
+  template: `
+    <div dir="rtl">
+      <bip-calendar [events]="events" [view]="view" [date]="date" />
+    </div>
+  `,
+})
+class RtlHostComponent {
+  events: BipCalendarEvent[] = EVENTS;
+  view: CalendarView = 'week';
+  date = TODAY;
+}
+
+describe('BipCalendar — aislamiento bidi de los rangos "inicio – fin"', () => {
+  // jsdom no aplica el algoritmo bidi: se fija la estructura (el `dir` del span interior y el
+  // texto en orden lógico), no el pintado, que cubre la baseline RTL de visual/.
+  const titleSpan = (container: HTMLElement) =>
+    container.querySelector<HTMLElement>('.bip-calendar-title > span')!;
+  const timeSpan = (container: HTMLElement) =>
+    container.querySelector<HTMLElement>('.bip-calendar-agenda-event-time > span')!;
+
+  it('título semanal: span interior con dir="ltr" dentro de un layout RTL', async () => {
+    const { container } = await render(RtlHostComponent);
+    expect(titleSpan(container)).toHaveAttribute('dir', 'ltr');
+    expect(titleSpan(container).textContent).toMatch(/^15 .+ – 21 .+, 2026$/);
+  });
+
+  it('el elemento exterior del título no lleva dir (conserva el layout lógico)', async () => {
+    const { container } = await render(RtlHostComponent);
+    expect(container.querySelector('.bip-calendar-title')).not.toHaveAttribute('dir');
+  });
+
+  it('título semanal: dir="rtl" con un locale de escritura RTL', async () => {
+    const { container } = await render(RtlHostComponent, {
+      providers: [provideBipLocale(mergeLocale(enUS, { locale: 'he-IL' }))],
+    });
+    expect(titleSpan(container)).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('hora del evento en la agenda: span interior con dir="ltr" y orden lógico', async () => {
+    const { container } = await render(RtlHostComponent, {
+      componentProperties: { view: 'agenda' },
+    });
+    expect(timeSpan(container)).toHaveAttribute('dir', 'ltr');
+    expect(timeSpan(container).textContent).toMatch(/^09:00.* – 09:30/);
+    expect(container.querySelector('.bip-calendar-agenda-event-time')).not.toHaveAttribute('dir');
+  });
+
+  it('hora del evento en la agenda: dir="rtl" con un locale de escritura RTL', async () => {
+    const { container } = await render(RtlHostComponent, {
+      componentProperties: { view: 'agenda' },
+      providers: [provideBipLocale(mergeLocale(enUS, { locale: 'he-IL' }))],
+    });
+    expect(timeSpan(container)).toHaveAttribute('dir', 'rtl');
   });
 });

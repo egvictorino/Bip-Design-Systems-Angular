@@ -155,7 +155,9 @@
       >
         ‹
       </button>
-      <span class="bip-calendar-grid-heading-static">{{ yearRangeLabel() }}</span>
+      <span class="bip-calendar-grid-heading-static"
+        ><span [attr.dir]="yearRangeDir()">{{ yearRangeLabel() }}</span></span
+      >
       <button
         type="button"
         class="bip-calendar-grid-nav-btn"
