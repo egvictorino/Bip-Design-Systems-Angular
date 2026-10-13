@@ -101,3 +101,18 @@
   --z-modal: 50;
   --z-toast: 100;
 }
+
+/*
+ * Tokens de este archivo que encadenan `var(--color-*)`: un custom property se sustituye en el
+ * elemento donde se declara, así que en :root `--focus-ring` se queda con los colores del esquema
+ * de <html> y un wrapper `data-color-scheme='dark'` (ThemeProvider) lo heredaba con los de light
+ * (hueco blanco y banda azul de light sobre fondo oscuro). Se re-declaran en cada elemento que
+ * lleva el atributo, mismo patrón de doble selector que tokens.css. Cada token con `var(--color-*)`
+ * en el bloque :root de arriba debe repetirse aquí (guard en testing/tokens.spec.ts).
+ */
+[data-color-scheme] {
+  --focus-ring-color: var(--color-primary);
+  --focus-ring:
+    0 0 0 var(--focus-ring-offset) var(--color-surface-1),
+    0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+}
