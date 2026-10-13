@@ -52,7 +52,7 @@
 
 .bip-image-popover-close:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-image-popover-gallery {
@@ -95,7 +95,7 @@
 }
 
 .bip-image-popover-thumb-btn:focus-visible {
-  box-shadow: 0 0 0 2px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-image-popover-thumb-btn--selected {
@@ -131,7 +131,8 @@
 .bip-image-popover-thumb-delete:focus-visible {
   opacity: 1;
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-danger);
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-image-popover-thumb-label {
@@ -207,7 +208,7 @@
 
 .bip-image-popover-add-select:focus-visible {
   border-color: var(--color-edge-focus);
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-image-popover-add-preview {
@@ -236,7 +237,7 @@
 
 .bip-image-popover-file-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-image-popover-file-error {
@@ -267,7 +268,7 @@
 
 .bip-image-popover-cancel-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-image-popover-confirm-btn {
@@ -287,7 +288,7 @@
 
 .bip-image-popover-confirm-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-primary);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-image-popover-confirm-btn:disabled {
@@ -317,7 +318,7 @@
 
 .bip-image-popover-add-image-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-image-popover-icon-plus {

@@ -65,7 +65,7 @@
 
 .bip-odontogram-tooth-cell--button:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-odontogram-tooth-cell--selected {

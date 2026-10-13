@@ -53,7 +53,7 @@
 
 .bip-tooth-detail-close:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-tooth-detail-body {
@@ -112,7 +112,7 @@
 
 .bip-tooth-detail-condition-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-tooth-detail-condition-btn--active {
@@ -172,7 +172,7 @@
 
 .bip-tooth-detail-action:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-tooth-detail-action--active {
