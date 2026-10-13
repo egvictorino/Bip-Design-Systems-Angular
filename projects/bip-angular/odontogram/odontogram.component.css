@@ -73,6 +73,18 @@
   border-radius: var(--radius-control);
 }
 
+/*
+ * Seleccionada + foco: `--button:focus-visible` tiene la misma especificidad y, sin esta regla,
+ * pisaba la banda de selección con el anillo. Se conserva la banda de 2px y el anillo de foco
+ * (hueco + banda) se corre hacia fuera esos 2px, así cada estado se distingue del otro.
+ */
+.bip-odontogram-tooth-cell--selected:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--color-primary),
+    0 0 0 calc(2px + var(--focus-ring-offset)) var(--color-surface-1),
+    0 0 0 calc(2px + var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+}
+
 .bip-odontogram-number-row--upper {
   display: flex;
   align-items: center;
