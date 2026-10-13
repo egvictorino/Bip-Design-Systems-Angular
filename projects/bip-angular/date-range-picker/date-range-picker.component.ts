@@ -26,6 +26,7 @@ import {
   formatDate,
   injectBipLocale,
   isSameDay,
+  localeDirection,
   startOfDay,
 } from '@bip-design-systems/angular/core';
 import type { BipCalendarGridStrings, BipSize } from '@bip-design-systems/angular/core';
@@ -156,6 +157,13 @@ export class BipDateRangePicker
     const fromLabel = formatDate(from, fmtOptions);
     return to ? `${fromLabel} – ${formatDate(to, fmtOptions)}` : `${fromLabel} – ...`;
   });
+
+  /**
+   * El valor "inicio – fin" se aísla con la dirección del idioma, no la de la página: sin esto, en
+   * un layout RTL el algoritmo bidi reordena las dos fechas (runs numéricos) y el fin queda a la
+   * izquierda aunque el locale sea LTR; el placeholder (con letras) ya se pintaba de izquierda a derecha.
+   */
+  protected readonly valueDir = computed(() => localeDirection(this.locale().locale));
 
   constructor() {
     super();

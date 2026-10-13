@@ -3,6 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { enUS, mergeLocale, provideBipLocale } from '@bip-design-systems/angular/core';
 import { BipDateRangePicker } from './date-range-picker.component';
 import type { BipDateRange } from './date-range-picker.component';
 
@@ -354,5 +355,44 @@ describe('BipDateRangePicker — touched y clic fuera con el botón de limpiar',
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
     await user.click(document.body);
     await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+});
+
+@Component({
+  imports: [BipDateRangePicker],
+  template: `
+    <div dir="rtl">
+      <bip-date-range-picker label="Rango" [value]="value" />
+    </div>
+  `,
+})
+class RtlHostComponent {
+  value: BipDateRange = { from: new Date(2026, 0, 15), to: new Date(2026, 0, 20) };
+}
+
+describe('BipDateRangePicker — orden y aislamiento bidi del valor', () => {
+  // jsdom no aplica el algoritmo bidi: se fija la estructura (orden del DOM y `dir` del span que
+  // lo aísla), no el pintado, que cubre la baseline RTL de visual/.
+  const valueSpan = () => document.querySelector<HTMLElement>('.bip-date-range-picker-value')!;
+
+  it('aísla el valor con la dirección del locale dentro de un layout RTL', async () => {
+    await render(RtlHostComponent);
+    expect(valueSpan()).toHaveAttribute('dir', 'ltr');
+    expect(valueSpan().textContent?.trim()).toBe('15/01/2026 – 20/01/2026');
+  });
+
+  it('también aísla el rango parcial "inicio – ..."', async () => {
+    await render(RtlHostComponent, {
+      componentProperties: { value: { from: new Date(2026, 0, 15), to: null } },
+    });
+    expect(valueSpan()).toHaveAttribute('dir', 'ltr');
+    expect(valueSpan().textContent?.trim()).toBe('15/01/2026 – ...');
+  });
+
+  it('usa dir="rtl" con un locale de escritura RTL', async () => {
+    await render(RtlHostComponent, {
+      providers: [provideBipLocale(mergeLocale(enUS, { locale: 'he-IL' }))],
+    });
+    expect(valueSpan()).toHaveAttribute('dir', 'rtl');
   });
 });
