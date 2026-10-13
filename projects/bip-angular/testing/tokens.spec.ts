@@ -160,6 +160,24 @@ describe('styles/primitives.css — dominio invariante (motion, focus ring, tipo
     }
   });
 
+  it('todo token de :root que encadena var(--color-*) se re-declara bajo [data-color-scheme]', () => {
+    // Un custom property se sustituye donde se declara: sin esto, en un wrapper dark el token
+    // hereda los colores de light resueltos en <html> (p. ej. --focus-ring).
+    const css = readFileSync(PRIMITIVES_CSS_PATH, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '');
+    const blocks = (selector: string) =>
+      [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+        .filter(([, list]) => list!.trim() === selector)
+        .map(([, , body]) => body!)
+        .join('\n');
+    const chained = (body: string) =>
+      [...body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)]
+        .filter(([, , value]) => /var\(--color-/.test(value!))
+        .map(([, name]) => name!);
+    const rootTokens = chained(blocks(':root'));
+    expect(rootTokens).toContain('--focus-ring');
+    expect(chained(blocks('[data-color-scheme]')).sort()).toEqual(rootTokens.sort());
+  });
+
   it('declara los tokens de motion que bipTheme (Bloque 2) deberá mapear', () => {
     const primitivesCss = readFileSync(PRIMITIVES_CSS_PATH, 'utf-8');
     for (const token of EXPECTED_MOTION_TOKENS) {
