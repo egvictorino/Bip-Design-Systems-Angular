@@ -304,6 +304,39 @@ describe('BipOdontogram — interactividad', () => {
   });
 });
 
+describe('BipOdontogram — anillo de foco de las superficies', () => {
+  // jsdom no aplica la cascada: se fija la estructura (el espejo `aria-hidden` de cada superficie,
+  // solo en modo interactivo); que se muestre con `:focus-visible` lo fija el guard de CSS y la
+  // verificación en Storybook/Docker.
+  it('el diente interactivo tiene un anillo espejo oculto a AT por cada superficie', async () => {
+    const user = userEvent.setup();
+    await render(HostComponent);
+    const panel = await openDetailPanel(user, 11);
+    const svg = within(panel).getByRole('group', { name: /Diente 11/ });
+    const surfaces = [...svg.querySelectorAll('polygon.bip-tooth-surface')];
+    const rings = [...svg.querySelectorAll('g.bip-tooth-focus')];
+    expect(surfaces).toHaveLength(5);
+    expect(rings).toHaveLength(5);
+    expect(svg).toHaveClass('bip-tooth-svg--interactive');
+    surfaces.forEach((surface, i) => {
+      const ring = rings[i]!;
+      expect(ring).toHaveAttribute('aria-hidden', 'true');
+      expect(ring.getAttribute('data-surface')).toBe(surface.getAttribute('data-surface'));
+      for (const polygon of ring.querySelectorAll('polygon')) {
+        expect(polygon.getAttribute('points')).toBe(surface.getAttribute('points'));
+        expect(polygon).not.toHaveAttribute('tabindex');
+        expect(polygon).not.toHaveAttribute('role');
+      }
+    });
+  });
+
+  it('el diente de solo lectura de la cuadrícula no lleva anillos', async () => {
+    await render(HostComponent, { componentProperties: { disabled: true } });
+    expect(getToothSVG(11).querySelectorAll('.bip-tooth-focus')).toHaveLength(0);
+    expect(getToothSVG(11)).not.toHaveClass('bip-tooth-svg--interactive');
+  });
+});
+
 describe('BipOdontogram — tamaño', () => {
   it('sm renderiza SVG de 24px', async () => {
     await render(HostComponent, { componentProperties: { size: 'sm' } });

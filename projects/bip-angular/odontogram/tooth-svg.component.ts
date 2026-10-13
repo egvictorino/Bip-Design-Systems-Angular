@@ -18,6 +18,11 @@ import {
  * interacción en la cuadrícula principal de `<bip-odontogram>` (tamaño sm/md/lg) y de forma
  * interactiva en `<bip-tooth-detail>` (tamaño xl=120px).
  *
+ * El foco de teclado de cada superficie se dibuja como anillo de dos tonos (`.bip-tooth-focus`,
+ * mismo patrón que `--focus-ring`: hueco `--color-surface-1` + banda `--focus-ring-color`) sobre
+ * un `<polygon>` espejo: `box-shadow`/`outline` no aplican a formas SVG y bajar la opacidad no
+ * llega a 3:1 (WCAG 1.4.11) sobre ningún relleno.
+ *
  * Diverge de React: el `<svg>` es `role="img"` solo en modo no interactivo; si hay superficies
  * `role="button"` es `role="group"` (un `img` tiene hijos presentacionales: nested-interactive).
  */
@@ -31,10 +36,12 @@ import {
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="toothLabel()"
       class="bip-tooth-svg"
+      [class.bip-tooth-svg--interactive]="interactive()"
     >
       @for (s of surfaceStates(); track s.surface) {
         <polygon
           [attr.points]="s.points"
+          [attr.data-surface]="s.surface"
           [class]="s.fillClass"
           class="bip-tooth-surface"
           [class.bip-tooth-surface--interactive]="interactive()"
@@ -46,6 +53,15 @@ import {
           (click)="onSurfaceActivate(s.surface)"
           (keydown)="onSurfaceKeydown($event, s.surface)"
         />
+      }
+
+      @if (interactive()) {
+        @for (s of surfaceStates(); track s.surface) {
+          <g class="bip-tooth-focus" [attr.data-surface]="s.surface" aria-hidden="true">
+            <polygon [attr.points]="s.points" class="bip-tooth-focus-ring" />
+            <polygon [attr.points]="s.points" class="bip-tooth-focus-gap" />
+          </g>
+        }
       }
 
       @if (isMissing()) {
