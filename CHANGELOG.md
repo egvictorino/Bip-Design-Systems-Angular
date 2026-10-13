@@ -58,6 +58,12 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   según el idioma del locale (`ltr` con es-MX/en-US, `rtl` con ar/he), reusando `localeDirection()`;
   el layout exterior (`margin-inline-start`, `text-align: start`) sigue en RTL. Misma causa que
   `BipDateRangePicker`. Baselines RTL nuevas: `calendar-week-view` y `calendar-agenda-view`.
+- `--focus-ring` y `--focus-ring-color` (`styles/primitives.css`): en un wrapper
+  `data-color-scheme='dark'` (ThemeProvider) el anillo de foco heredaba los colores de light
+  resueltos en `<html>` (hueco blanco y banda `#2939cc` sobre fondo oscuro, ≈2.3:1 contra
+  `#121212`). Ahora se re-declaran bajo `[data-color-scheme]` y resuelven con el esquema del
+  propio elemento (hueco `#121212`, banda `#5468e8` en dark). Guard en `testing/tokens.spec.ts`:
+  todo token de `:root` que encadene `var(--color-*)` debe repetirse bajo `[data-color-scheme]`.
 - `BipOdontogram`: una celda seleccionada que recibe foco de teclado perdía la banda de selección
   (`--button:focus-visible` la pisaba con el mismo `box-shadow` que una celda sin seleccionar). Nueva
   regla `--selected:focus-visible`: conserva la banda de 2px y desplaza hacia fuera el anillo de
