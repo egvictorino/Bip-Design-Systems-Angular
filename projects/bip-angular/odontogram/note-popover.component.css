@@ -45,7 +45,7 @@
 
 .bip-note-popover-close:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-note-popover-textarea {
@@ -62,7 +62,7 @@
 
 .bip-note-popover-textarea:focus-visible {
   border-color: var(--color-edge-focus);
-  box-shadow: 0 0 0 1px var(--color-edge-focus);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-note-popover-textarea--readonly {
@@ -92,5 +92,5 @@
 
 .bip-note-popover-save:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-primary);
+  box-shadow: var(--focus-ring);
 }
