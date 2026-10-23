@@ -74,9 +74,8 @@
 :host(.bip-button--secondary):active:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-secondary-press);
 }
-:host(.bip-button--secondary):focus-visible {
-  --focus-ring-color: var(--color-secondary);
-}
+/* El foco del secondary usa el anillo primary: --color-secondary (#e7e7e7 / #2a2a2a) daría ~1.2:1
+   contra el hueco del anillo (WCAG 1.4.11). */
 
 :host(.bip-button--bare) {
   background-color: transparent;

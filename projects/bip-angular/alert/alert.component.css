@@ -99,7 +99,8 @@
   outline: none;
 }
 .bip-alert-close-btn:focus-visible {
-  --focus-ring-color: currentColor;
+  /* Anillo primary en todas las variantes: currentColor daría 2.28:1 (success) y 1.92:1 (warning)
+     contra el hueco blanco del anillo en light (WCAG 1.4.11). */
   box-shadow: var(--focus-ring);
 }
 

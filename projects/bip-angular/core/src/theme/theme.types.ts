@@ -52,8 +52,8 @@ export interface BipRadiusOverrides {
 }
 
 /**
- * Overrides del anillo de foco — reemplaza el `box-shadow: var(--focus-ring)`
- * que cada componente re-declara (ver `--focus-ring` en primitives.css).
+ * Overrides del anillo de foco — ancho, offset y color con los que `base.css` resuelve
+ * `--focus-ring` en cada elemento (ver `--focus-ring` en primitives.css).
  */
 export interface BipFocusRingOverrides {
   width?: string;

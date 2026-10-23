@@ -24,6 +24,22 @@
   box-sizing: border-box;
 }
 
+/*
+ * Anillo de foco por elemento. Un custom property se sustituye donde se declara: con
+ * `--focus-ring` solo en :root (primitives.css), un `--focus-ring-color` local (variantes danger,
+ * estados de error, alert) nunca lo alcanzaba y todos pintaban el primary. Re-declararlo en cada
+ * elemento lo resuelve con el color, ancho y offset del propio elemento. Misma expresión que
+ * primitives.css (guard en testing/focus-ring-overrides.spec.ts). Los componentes NO deben
+ * declarar `--focus-ring`: solo `--focus-ring-color` y `box-shadow: var(--focus-ring)`.
+ */
+*,
+*::before,
+*::after {
+  --focus-ring:
+    0 0 0 var(--focus-ring-offset) var(--color-surface-1),
+    0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
+}
+
 body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
