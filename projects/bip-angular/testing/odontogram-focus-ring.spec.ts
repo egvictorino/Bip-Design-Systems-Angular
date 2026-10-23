@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { relative, resolve } from 'path';
 import { describe, it, expect } from 'vitest';
 import { findComponentCssFiles } from './find-css-files';
+import { findFocusFindings, formatFinding } from './focus-ring-rules';
 
 const SRC_DIR = resolve(__dirname, '..');
 const ODONTOGRAM_DIR = resolve(SRC_DIR, 'odontogram');
@@ -17,33 +18,14 @@ const ALLOWLIST: Record<string, string> = {
 };
 
 /**
- * Límite: solo reglas cuyo selector termina en `:focus-visible` (no `:focus`, `:is()` ni pseudo-elementos).
- * Todo `:focus-visible` del odontograma pinta `box-shadow: var(--focus-ring)`. Un anillo propio
- * (`0 0 0 1px var(--color-primary)`) es del mismo color que el relleno de los botones primary y no
- * se distingue (WCAG 1.4.11); `--focus-ring` lleva un hueco en `--color-surface-1` que lo separa.
+ * Todo foco del odontograma (`:focus`, `:focus-visible`, `:focus-within`, en cualquier posición del
+ * selector) pinta `box-shadow: var(--focus-ring)`, y cada `:focus-visible` tiene su anillo. Un
+ * anillo propio (`0 0 0 1px var(--color-primary)`) es del mismo color que el relleno de los
+ * botones primary y no se distingue (WCAG 1.4.11); `--focus-ring` lleva un hueco en
+ * `--color-surface-1` que lo separa. El parser vive en `focus-ring-rules.ts` (con sus propios specs).
  */
 function findOffenders(css: string, relPath: string): string[] {
-  const noComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  const withRing = new Set<string>();
-  const bases = new Set<string>();
-  const offenders: string[] = [];
-  for (const [, selectorList, body] of noComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
-    const shadow = /box-shadow:\s*([^;]+);/.exec(body ?? '')?.[1]?.trim();
-    for (const part of selectorList!.split(',')) {
-      const sel = part.trim().replace(/\s+/g, ' ');
-      if (!sel.endsWith(':focus-visible')) continue;
-      const base = sel.replace(/:focus-visible$/, '');
-      if (base in ALLOWLIST) continue;
-      bases.add(base);
-      if (shadow === 'var(--focus-ring)') withRing.add(base);
-      else if (shadow) offenders.push(`${relPath} :: ${sel} { box-shadow: ${shadow} }`);
-    }
-  }
-  for (const base of bases) {
-    if (!withRing.has(base))
-      offenders.push(`${relPath} :: ${base}:focus-visible sin var(--focus-ring)`);
-  }
-  return offenders;
+  return findFocusFindings(css, ALLOWLIST).map((f) => formatFinding(relPath, f));
 }
 
 describe('odontogram — :focus-visible usa var(--focus-ring)', () => {
