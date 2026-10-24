@@ -83,7 +83,9 @@
   /* Focus ring — reemplaza el patrón repetido a mano
      `0 0 0 2px var(--color-surface-1), 0 0 0 4px var(--color-primary)`.
      --focus-ring-color se redeclara localmente (p. ej. en variantes danger)
-     para reusar la misma sombra con otro color, sin duplicarla. */
+     para reusar la misma sombra con otro color, sin duplicarla. Eso solo funciona porque base.css
+     vuelve a declarar --focus-ring en cada elemento: aquí, en :root, la sombra se sustituye una
+     sola vez y un override local no la alcanzaría. Esta declaración queda como valor inicial. */
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
   --focus-ring-color: var(--color-primary);

@@ -62,6 +62,17 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
   en danger, `--color-danger`). Es inset porque los items van a ancho completo y pegados entre sí.
   El buscador (`BipDropdownSearch`) usa `var(--focus-ring)` en lugar de un anillo propio de 2px
   primary. Divergen de la referencia React, que tiene los mismos estilos de foco (solo fondo).
+- Anillo de foco (`--focus-ring`): los overrides locales de `--focus-ring-color` no tenían efecto
+  (`--focus-ring` se sustituía una sola vez en `:root`), así que el foco de teclado de los botones
+  `danger` y de los estados de error de input, textarea, select, search-input, number-input,
+  checkbox, radio y toggle salía en primary. `base.css` re-declara `--focus-ring` en cada elemento
+  (`*`, `::before`, `::after`) y ahora esos anillos salen en `--color-danger` (5.45:1 en light,
+  6.14:1 en dark contra el hueco). Sin override siguen en primary: el botón `secondary` (el
+  override con `--color-secondary` daría ~1.2:1) y el cierre del `alert` (`currentColor` daría
+  2.28:1 en success y 1.92:1 en warning). Guard en `testing/focus-ring-overrides.spec.ts`.
+  Requiere `base.css` (lo carga `bip.css`): quien importe hojas sueltas de `styles/` debe incluirlo.
+  Un `--focus-ring` (sombra completa) declarado por el consumidor en un ancestro ya no se hereda:
+  los ajustes de ancho, offset y color del ThemeProvider sí.
 - `BipCalendar` y `BipCalendarGrid`: en un layout RTL el algoritmo bidi reordenaba los extremos de
   los rangos "inicio – fin" (runs numéricos separados por un guion neutro): el título semanal salía
   `ene–18ene,202612` (el 12 quedaba a la derecha), la hora de la agenda `.a.m.–09:30a.m09:00` y el
