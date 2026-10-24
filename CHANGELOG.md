@@ -51,6 +51,13 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- Variantes `bare` de `BipInput`, `BipSelect`, `BipTextarea`, `BipNumberInput` y `BipMultiSelect`
+  (búsqueda en el trigger): el foco de teclado solo cambiaba el subrayado de primary a
+  primary-hover, igual que el hover (1.37:1 en light, 1.30:1 en dark; WCAG 1.4.11), y con error no
+  cambiaba nada (WCAG 2.4.7). Ahora usan el anillo completo (`var(--focus-ring)`), como ya hacía
+  `BipSearchInput` bare, y con error el anillo va en `--color-danger`. `BipMultiSelect` con error
+  pinta también en danger el anillo de las variantes outlined y filled, como el resto de campos.
+  Diverge de la referencia React, que tiene el mismo problema en `bare`.
 - `BipDropdownItem` y `BipDropdownItemCheckbox`: sus estilos nunca se aplicaban. Bajo
   `ViewEncapsulation.Emulated` un selector plano (`.bip-dropdown-item`) no coincide con el propio
   elemento host, así que los items se veían como botones nativos (fondo gris, borde y contorno del

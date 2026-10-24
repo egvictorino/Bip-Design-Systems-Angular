@@ -151,9 +151,10 @@
 .bip-number-input--bare:hover:not(:disabled) {
   border-bottom-color: var(--color-edge-primary-hover);
 }
+/* Foco con el anillo completo, como search-input--bare: el subrayado primary → primary-hover
+   (igual que el hover) daba 1.37:1 y con error no cambiaba nada (WCAG 1.4.11 / 2.4.7). */
 .bip-number-input--bare:focus-visible {
-  box-shadow: none;
-  border-bottom-color: var(--color-edge-primary-hover);
+  box-shadow: var(--focus-ring);
 }
 
 .bip-number-input--bare-error {
@@ -163,7 +164,8 @@
   border-radius: var(--radius-none);
 }
 .bip-number-input--bare-error:focus-visible {
-  box-shadow: none;
+  --focus-ring-color: var(--color-danger);
+  box-shadow: var(--focus-ring);
 }
 
 /* ─── Stepper buttons ─────────────────────────────────────────────────────── */
