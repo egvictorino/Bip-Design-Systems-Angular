@@ -51,6 +51,21 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- Estilos de host que nunca se aplicaban (mismo bug que corrigió 89e3d08 en otros 44 componentes):
+  bajo `ViewEncapsulation.Emulated` un selector plano `.bip-x` se compila a `.bip-x[_ngcontent-H]`
+  y no coincide con el host. `BipText`, `BipCard`, `BipCardMedia`, `BipStatsCard`, `BipEmptyState`,
+  `BipAlert`, `BipAvatar` (tamaño) y las celdas y cabeceras de tabla estilaban así las clases que
+  ponen en su host; pasan a `:host(...)`. Cambios visibles: card con fondo, borde o sombra, padding,
+  radio y foco de `clickable` con `--focus-ring`; card-media con su `aspect-ratio`; alert (y toast)
+  con fondo `*-light`, borde `inline-start` y el icono del color de la variante; text con tamaño,
+  peso, color, alineación y truncado; stats-card con fondo, borde o sombra, padding y tamaño del
+  valor; empty-state con su gap y padding (también la fila vacía de `BipDataTable`); avatar con
+  tamaño fijo `xs`…`xl`; cabeceras de tabla alineadas a `start` y `align` en celdas y cabeceras.
+  **Migración:** las clases por defecto ahora sí aplican y le ganan a una clase propia en el host
+  (`<bip-card class="p-4">` pierde ese padding; `bipText` ya no hereda color, tamaño ni peso):
+  usa los inputs (`padding`, `radius`, `color`, `size`…). Guard estático en
+  `testing/host-class-selectors.spec.ts` (cruza las clases del host del `.ts` con los selectores
+  planos de su CSS).
 - Variantes `bare` de `BipInput`, `BipSelect`, `BipTextarea`, `BipNumberInput` y `BipMultiSelect`
   (búsqueda en el trigger): el foco de teclado solo cambiaba el subrayado de primary a
   primary-hover, igual que el hover (1.37:1 en light, 1.30:1 en dark; WCAG 1.4.11), y con error no
