@@ -251,7 +251,7 @@ export function findFocusFindings(
     const hasRing = shadow !== undefined && shadow.replace(/\s+/g, '') === 'var(--focus-ring)';
     for (const selector of rule.selectors) {
       if (!hasFocusPseudo(selector)) continue;
-      if (withoutFocus(selector) in allowlist) continue;
+      if (Object.hasOwn(allowlist, withoutFocus(selector))) continue;
       const where = rule.context.length ? `${selector} @ ${rule.context.join(' ')}` : selector;
 
       if (shadow !== undefined && !hasRing)

@@ -51,6 +51,17 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipTimePicker`: el anillo de foco de la opción activa quedaba recortado por los costados (la
+  columna tiene `overflow-y: auto`, que también recorta en horizontal, y la opción ocupa todo el
+  ancho). La columna reserva `--focus-ring-offset` + `--focus-ring-width` de padding. Además, el anillo
+  de la opción activa solo aparece cuando su columna tiene el foco (al abrir, horas y minutos
+  mostraban un anillo a la vez y no se sabía dónde estaba el foco, WCAG 2.4.7), y las opciones
+  AM/PM y el botón "Ahora", que se alcanzan con Tab, usan `var(--focus-ring)` en lugar del contorno
+  del navegador. Guard de foco
+  para toda la librería en `testing/focus-ring-library.spec.ts`: todo `:focus`/`:focus-visible`/
+  `:focus-within` de los CSS de componente pinta `var(--focus-ring)`, salvo una allowlist por
+  archivo y justificada (paneles de diálogo, contenedores compuestos, items de menú con anillo inset
+  y la celda seleccionada del odontograma).
 - Estilos de host que nunca se aplicaban (mismo bug que corrigió 89e3d08 en otros 44 componentes):
   bajo `ViewEncapsulation.Emulated` un selector plano `.bip-x` se compila a `.bip-x[_ngcontent-H]`
   y no coincide con el host. `BipText`, `BipCard`, `BipCardMedia`, `BipStatsCard`, `BipEmptyState`,

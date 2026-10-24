@@ -155,6 +155,9 @@
   gap: var(--space-0-5);
   max-height: 12rem;
   overflow-y: auto;
+  /* Sitio para el anillo de foco de la opción activa (offset + ancho): overflow-y: auto también
+     recorta en horizontal y la opción ocupa todo el ancho de la columna. */
+  padding: calc(var(--focus-ring-offset) + var(--focus-ring-width));
 }
 .bip-time-picker-column-list:focus-visible {
   outline: none;
@@ -177,7 +180,15 @@
   background-color: var(--color-primary);
   color: var(--color-txt-on-primary);
 }
-.bip-time-picker-option--focused {
+/* Opción activa (aria-activedescendant): el anillo solo cuando su columna tiene el foco. Sin la
+   condición, al abrir el panel horas y minutos mostraban un anillo a la vez y no se sabía qué
+   columna tenía el foco (WCAG 2.4.7). */
+.bip-time-picker-column-list:focus .bip-time-picker-option--focused {
+  box-shadow: var(--focus-ring);
+}
+/* AM/PM y "Ahora" son botones que se alcanzan con Tab. */
+.bip-time-picker-option:focus-visible {
+  outline: none;
   box-shadow: var(--focus-ring);
 }
 .bip-time-picker-option--disabled {
@@ -204,4 +215,8 @@
 }
 .bip-time-picker-now-btn:hover {
   background-color: var(--color-secondary);
+}
+.bip-time-picker-now-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
