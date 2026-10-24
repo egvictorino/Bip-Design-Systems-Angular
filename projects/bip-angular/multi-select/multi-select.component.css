@@ -174,12 +174,11 @@
 .bip-multi-select--inline:focus-within {
   box-shadow: var(--focus-ring);
 }
-.bip-multi-select--bare.bip-multi-select--inline:focus-within {
-  box-shadow: none;
-  border-block-end-color: var(--color-edge-primary-hover);
-}
-.bip-multi-select--bare.bip-multi-select--inline.bip-multi-select--error:focus-within {
-  border-block-end-color: var(--color-danger);
+/* bare inline hereda el anillo de --inline:focus-within (antes lo anulaba: el subrayado solo
+   cambiaba a primary-hover, 1.37:1). Con error, el anillo de cualquier variante va en danger. */
+.bip-multi-select--error:focus-visible,
+.bip-multi-select--error.bip-multi-select--inline:focus-within {
+  --focus-ring-color: var(--color-danger);
 }
 .bip-multi-select-inline-input {
   flex: 1 1 4ch;
