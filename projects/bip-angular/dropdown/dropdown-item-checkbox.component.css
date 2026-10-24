@@ -1,11 +1,11 @@
 /* Base compartida con BipDropdownItem (dropdown-item.component.css) — duplicada a propósito:
-   ViewEncapsulation.Emulated scopea el CSS por componente, así que una clase con el mismo
-   nombre en otro *.component.css no llegaría a aplicarse aquí. */
-.bip-dropdown-item {
+   ViewEncapsulation.Emulated scopea el CSS por componente. Los estilos del propio botón van con
+   :host: un selector plano (.bip-dropdown-item) nunca coincide con el elemento host. */
+:host {
   display: flex;
   width: 100%;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1-5);
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
   text-align: start;
@@ -18,25 +18,24 @@
   color: var(--color-txt);
 }
 
-.bip-dropdown-item:focus {
+:host(:focus) {
   outline: none;
 }
 
-.bip-dropdown-item:focus-visible {
+/* Anillo inset: los items van a ancho completo y pegados entre sí y al borde del menú, uno
+   exterior taparía al vecino. El fondo solo no pasa 3:1 (1.24:1 contra el menú, WCAG 1.4.11). */
+:host(:focus-visible) {
+  background-color: var(--color-surface-3);
+  box-shadow: inset 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+:host(:hover) {
   background-color: var(--color-surface-3);
 }
 
-.bip-dropdown-item:hover {
-  background-color: var(--color-surface-3);
-}
-
-.bip-dropdown-item:disabled {
+:host(:disabled) {
   cursor: not-allowed;
   opacity: 0.5;
-}
-
-.bip-dropdown-item-checkbox {
-  gap: var(--space-1-5);
 }
 
 .bip-dropdown-item-check-indicator {

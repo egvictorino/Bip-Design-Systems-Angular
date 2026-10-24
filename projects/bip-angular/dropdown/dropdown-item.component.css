@@ -1,4 +1,4 @@
-.bip-dropdown-item {
+:host {
   display: flex;
   width: 100%;
   align-items: center;
@@ -15,31 +15,35 @@
   color: var(--color-txt);
 }
 
-.bip-dropdown-item:focus {
+:host(:focus) {
   outline: none;
 }
 
-.bip-dropdown-item:focus-visible {
+/* Anillo inset: los items van a ancho completo y pegados entre sí y al borde del menú, uno
+   exterior taparía al vecino. El fondo solo no pasa 3:1 (1.24:1 contra el menú, WCAG 1.4.11). */
+:host(:focus-visible) {
+  background-color: var(--color-surface-3);
+  box-shadow: inset 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+:host(:hover) {
   background-color: var(--color-surface-3);
 }
 
-.bip-dropdown-item:hover {
-  background-color: var(--color-surface-3);
-}
-
-.bip-dropdown-item:disabled {
+:host(:disabled) {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-.bip-dropdown-item--danger {
+:host(.bip-dropdown-item--danger) {
   color: var(--color-danger);
 }
 
-.bip-dropdown-item--danger:hover {
+:host(.bip-dropdown-item--danger:hover) {
   background-color: var(--color-danger-light);
 }
 
-.bip-dropdown-item--danger:focus-visible {
+:host(.bip-dropdown-item--danger:focus-visible) {
   background-color: var(--color-danger-light);
+  --focus-ring-color: var(--color-danger);
 }
