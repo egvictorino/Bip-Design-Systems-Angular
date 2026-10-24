@@ -51,6 +51,17 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipDropdownItem` y `BipDropdownItemCheckbox`: sus estilos nunca se aplicaban. Bajo
+  `ViewEncapsulation.Emulated` un selector plano (`.bip-dropdown-item`) no coincide con el propio
+  elemento host, así que los items se veían como botones nativos (fondo gris, borde y contorno del
+  navegador); solo el trigger del submenú, que está dentro de su template, se pintaba bien. Los
+  estilos del botón (layout, hover, disabled, danger) pasan a `:host(...)`.
+- `BipDropdown`: el foco de teclado de los items (item, checkbox, submenú y danger) solo cambiaba el
+  fondo a `--color-surface-3` (1.24:1 contra el menú, WCAG 1.4.11); ahora suma un anillo inset de
+  `--focus-ring-width` en `--focus-ring-color` (6.66:1 en light, 3.26:1 en dark contra `surface-3`;
+  en danger, `--color-danger`). Es inset porque los items van a ancho completo y pegados entre sí.
+  El buscador (`BipDropdownSearch`) usa `var(--focus-ring)` en lugar de un anillo propio de 2px
+  primary. Divergen de la referencia React, que tiene los mismos estilos de foco (solo fondo).
 - Anillo de foco (`--focus-ring`): los overrides locales de `--focus-ring-color` no tenían efecto
   (`--focus-ring` se sustituía una sola vez en `:root`), así que el foco de teclado de los botones
   `danger` y de los estados de error de input, textarea, select, search-input, number-input,

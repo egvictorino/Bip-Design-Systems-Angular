@@ -22,5 +22,5 @@
 
 .bip-dropdown-search-input:focus-visible {
   border-color: var(--color-edge-focus);
-  box-shadow: 0 0 0 2px var(--color-primary);
+  box-shadow: var(--focus-ring);
 }
