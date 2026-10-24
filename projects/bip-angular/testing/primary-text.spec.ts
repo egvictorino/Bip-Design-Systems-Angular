@@ -15,7 +15,7 @@ const SRC_DIR = resolve(__dirname, '..');
  * oscuro que el reposo).
  */
 const ALLOWLIST: Record<string, string> = {
-  'alert/alert.component.css :: .bip-alert--info':
+  'alert/alert.component.css :: :host(.bip-alert--info)':
     'solo pinta el icono SVG; el texto usa --color-info-text',
   'alert/alert.component.css :: .bip-alert-close-btn--info': 'botón cerrar: icono SVG',
   'alert/alert.component.css :: .bip-alert-close-btn--info:hover': 'botón cerrar: icono SVG',

@@ -4,13 +4,13 @@
   width: 100%;
 }
 
-.bip-card-media--aspect-video {
+:host(.bip-card-media--aspect-video) {
   aspect-ratio: 16 / 9;
 }
-.bip-card-media--aspect-square {
+:host(.bip-card-media--aspect-square) {
   aspect-ratio: 1 / 1;
 }
-.bip-card-media--aspect-wide {
+:host(.bip-card-media--aspect-wide) {
   aspect-ratio: 21 / 9;
 }
 

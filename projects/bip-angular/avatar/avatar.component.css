@@ -33,23 +33,23 @@
 
 /* ─── Tamaños ────────────────────────────────────────────────────────────── */
 
-.bip-avatar--xs {
+:host(.bip-avatar--xs) {
   width: 1.5rem;
   height: 1.5rem;
 }
-.bip-avatar--sm {
+:host(.bip-avatar--sm) {
   width: 2rem;
   height: 2rem;
 }
-.bip-avatar--md {
+:host(.bip-avatar--md) {
   width: 2.5rem;
   height: 2.5rem;
 }
-.bip-avatar--lg {
+:host(.bip-avatar--lg) {
   width: 3rem;
   height: 3rem;
 }
-.bip-avatar--xl {
+:host(.bip-avatar--xl) {
   width: 4rem;
   height: 4rem;
 }
