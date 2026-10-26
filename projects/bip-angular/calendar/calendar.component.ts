@@ -16,6 +16,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { A11yModule } from '@angular/cdk/a11y';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -81,7 +82,7 @@ function minutesOfDay(date: Date): number {
  */
 @Component({
   selector: 'bip-calendar',
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, A11yModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -285,10 +286,16 @@ export class BipCalendar implements OnDestroy {
   private readonly injector = inject(Injector);
   private readonly document = inject(DOCUMENT);
   private rangeOverlayRef: OverlayRef | null = null;
+  /** Elemento enfocado al abrir el popover (la celda donde empezó el arrastre): se restaura al cerrar. */
+  private rangeReturnFocus: HTMLElement | null = null;
 
   private showRangePopover(): void {
     const anchor = this.monthGridRef;
     if (!anchor) return;
+    // Antes del dispose: al destruirse un popover anterior el foco cae a <body> y se perdería la celda.
+    const active = this.document.activeElement;
+    if (active instanceof HTMLElement && active !== this.document.body)
+      this.rangeReturnFocus = active;
     this.rangeOverlayRef?.dispose();
     const overlayRef = this.bipOverlay.create(
       {
@@ -306,12 +313,22 @@ export class BipCalendar implements OnDestroy {
     );
     overlayRef.attach(new TemplatePortal(this.rangePopoverTemplate, this.viewContainerRef));
     this.rangeOverlayRef = overlayRef;
+    // Diálogo modal: el foco pasa a él al abrir (como date-picker y time-picker); sin esto el foco
+    // se quedaba en la celda y ni Escape ni Tab llegaban al popover.
+    queueMicrotask(() =>
+      overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus()
+    );
   }
 
   private closeRangePopover(): void {
     this.rangeOverlayRef?.dispose();
     this.rangeOverlayRef = null;
     this.pendingRange.set(null);
+    // Confirmar, cancelar, Escape y el clic en la capa: el foco vuelve a donde estaba (si sigue en
+    // el DOM) en vez de caer a <body> al destruirse el popover.
+    const target = this.rangeReturnFocus;
+    this.rangeReturnFocus = null;
+    if (target?.isConnected) target.focus();
   }
 
   protected onRangePopoverEscape(event: Event): void {

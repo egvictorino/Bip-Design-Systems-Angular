@@ -21,7 +21,7 @@ const INSET =
 const ALLOWLIST: Record<string, Record<string, string>> = {
   'calendar/calendar.component.css': {
     '.bip-calendar-range-popover':
-      'popover de selección de rango (tabindex="-1"): se abre arrastrando con el mouse y no recibe foco por teclado',
+      'popover de selección de rango (tabindex="-1"): recibe el foco al abrir y lo pasa a sus controles, que llevan var(--focus-ring)',
   },
   'date-picker/date-picker.component.css': { '.bip-date-picker-panel': DIALOG },
   'date-range-picker/date-range-picker.component.css': { '.bip-date-range-picker-panel': DIALOG },

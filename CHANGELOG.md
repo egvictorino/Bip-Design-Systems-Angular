@@ -51,6 +51,12 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipCalendar`: el popover de confirmación de la selección de rango por arrastre (vista mes) es
+  `role="dialog"` + `aria-modal` pero no gestionaba el foco (medido en Chromium, en light, dark y
+  RTL): el foco se quedaba en la celda donde empezó el arrastre, así que Escape no cerraba el
+  popover, Tab nunca entraba y al confirmar o cancelar el foco caía a `<body>`. Ahora el foco pasa al
+  diálogo al abrir, `cdkTrapFocus` lo atrapa y, al cerrar (confirmar, "×", Escape o clic en la
+  capa), vuelve a esa celda.
 - `BipDatePicker` y `BipDateRangePicker`: el panel es `role="dialog"` + `aria-modal` pero no atrapaba
   el foco (medido en Chromium: con 12 Tab el foco salía del panel en los Tab 6 a 8, en light, dark
   y RTL); ahora lleva `cdkTrapFocus`, como modal, drawer, popover y `BipTimePicker`. Además, al

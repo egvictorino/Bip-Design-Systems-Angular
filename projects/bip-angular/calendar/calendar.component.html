@@ -261,6 +261,8 @@
     role="dialog"
     aria-modal="true"
     tabindex="-1"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="false"
     [attr.aria-label]="locale().calendar.selectedDateRange"
     (keydown.escape)="onRangePopoverEscape($event)"
   >
