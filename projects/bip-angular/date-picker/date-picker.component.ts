@@ -17,6 +17,7 @@ import {
   untracked,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
+import { A11yModule } from '@angular/cdk/a11y';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -45,7 +46,7 @@ const SIZE_CLASS: Record<BipSize, string> = {
  */
 @Component({
   selector: 'bip-date-picker',
-  imports: [BipCalendarGrid],
+  imports: [A11yModule, BipCalendarGrid],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -187,12 +188,13 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
 
   protected onDaySelected(date: Date): void {
     this.emitChange(date);
-    this.closePanel();
+    // El foco real está en el panel: sin refocus caería a <body> al destruirse.
+    this.closePanel(true);
   }
 
   protected onTodaySelected(): void {
     this.emitChange(this.today);
-    this.closePanel();
+    this.closePanel(true);
   }
 
   protected onClear(): void {

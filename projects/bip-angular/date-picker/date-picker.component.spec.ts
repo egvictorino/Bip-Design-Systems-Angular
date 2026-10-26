@@ -312,3 +312,38 @@ describe('BipDatePicker — touched y clic fuera con el botón de limpiar', () =
     await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 });
+
+describe('BipDatePicker — foco del panel', () => {
+  it('el diálogo atrapa el foco: anclas de cdkTrapFocus alrededor del panel', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: /DD\/MM\/AAAA/ }));
+    const dialog = await screen.findByRole('dialog');
+    // jsdom no simula Tab: el ciclo real se verifica en Docker (ver CHANGELOG).
+    await vi.waitFor(() => {
+      expect(dialog.previousElementSibling).toHaveClass('cdk-focus-trap-anchor');
+      expect(dialog.nextElementSibling).toHaveClass('cdk-focus-trap-anchor');
+    });
+  });
+
+  it('al elegir un día el foco vuelve al trigger (no cae a <body>)', async () => {
+    await render(HostComponent, { componentProperties: { value: new Date(2026, 5, 1) } });
+    const user = userEvent.setup();
+    const trigger = screen.getByRole('button', { name: /01\/06\/2026/ });
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: /^lunes, 15 de junio de 2026$/ }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+  });
+
+  it('al elegir "Hoy" el foco vuelve al trigger', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    const trigger = screen.getByRole('button', { name: /DD\/MM\/AAAA/ });
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: 'Hoy' }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    // El trigger cambia su nombre al tener valor: se busca el botón con aria-haspopup.
+    expect(screen.getByRole('button', { expanded: false })).toHaveFocus();
+  });
+});

@@ -17,6 +17,7 @@ import {
   untracked,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
+import { A11yModule } from '@angular/cdk/a11y';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -55,7 +56,7 @@ const SIZE_CLASS: Record<BipSize, string> = {
  */
 @Component({
   selector: 'bip-date-range-picker',
-  imports: [BipCalendarGrid],
+  imports: [A11yModule, BipCalendarGrid],
   templateUrl: './date-range-picker.component.html',
   styleUrl: './date-range-picker.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -225,7 +226,8 @@ export class BipDateRangePicker
     } else {
       this.commitRange({ from: range.from, to: date });
     }
-    this.closePanel();
+    // El foco real está en el panel: sin refocus caería a <body> al destruirse.
+    this.closePanel(true);
   }
 
   protected onDayHover(date: Date | null): void {

@@ -51,6 +51,11 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipDatePicker` y `BipDateRangePicker`: el panel es `role="dialog"` + `aria-modal` pero no atrapaba
+  el foco (medido en Chromium: con 12 Tab el foco salía del panel en los Tab 6 a 8, en light, dark
+  y RTL); ahora lleva `cdkTrapFocus`, como modal, drawer, popover y `BipTimePicker`. Además, al
+  elegir un día o "Hoy" (y al completar el rango) el foco vuelve al trigger: antes caía a `<body>`
+  al destruirse el panel.
 - `BipTimePicker`: tres fallos de foco y teclado del panel, medidos en Chromium. (1) El diálogo es
   `aria-modal` pero no atrapaba el foco: tras horas → minutos → AM → PM → "Ahora", Tab salía del
   panel con el panel abierto; ahora lleva `cdkTrapFocus` (mismo patrón que modal, drawer y popover).
