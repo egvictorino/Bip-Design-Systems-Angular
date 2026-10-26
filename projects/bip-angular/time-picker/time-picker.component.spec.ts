@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BipTimePicker } from './time-picker.component';
 import type {
   BipTimePickerHourCycle,
@@ -254,5 +254,73 @@ describe('BipTimePicker', () => {
     host.control.disable();
     await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
     expect(screen.getByRole('button', { name: 'Hora de la cita' })).toBeDisabled();
+  });
+});
+
+describe('BipTimePicker — foco y teclado del panel', () => {
+  afterEach(() => {
+    delete (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView;
+  });
+
+  it('modo texto: el botón del reloj abre el panel y Escape devuelve el foco al input', async () => {
+    await render(HostComponent, { componentProperties: { inputMode: 'text' } });
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: 'Abrir selector de hora' }));
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(screen.getByRole('textbox')).toHaveFocus();
+  });
+
+  it('modo texto: un segundo clic en el reloj cierra el panel (no se cierra y reabre)', async () => {
+    await render(HostComponent, { componentProperties: { inputMode: 'text' } });
+    const user = userEvent.setup();
+    const clock = screen.getByRole('button', { name: 'Abrir selector de hora' });
+    await user.click(clock);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.click(clock);
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  it('el diálogo atrapa el foco: anclas de cdkTrapFocus alrededor del panel', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: /HH:MM/ }));
+    const dialog = await screen.findByRole('dialog');
+    // jsdom no simula Tab: el ciclo real se verifica en Docker (ver CHANGELOG).
+    await vi.waitFor(() => {
+      expect(dialog.previousElementSibling).toHaveClass('cdk-focus-trap-anchor');
+      expect(dialog.nextElementSibling).toHaveClass('cdk-focus-trap-anchor');
+    });
+  });
+
+  it('al elegir "Ahora" el panel se cierra y el foco vuelve al trigger (no cae a <body>)', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: /HH:MM/ }));
+    await screen.findByRole('dialog');
+    await user.click(screen.getByRole('button', { name: 'Ahora' }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(document.activeElement).not.toBe(document.body);
+    expect(document.activeElement?.className).toContain('bip-time-picker-trigger');
+  });
+
+  it('al abrir y con ArrowDown hace scroll a la opción activa (block: nearest)', async () => {
+    const scrollIntoView = vi.fn();
+    (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView = scrollIntoView;
+    await render(HostComponent, { componentProperties: { step: 5 } });
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: /HH:MM/ }));
+    await screen.findByRole('dialog');
+    await vi.waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' });
+
+    scrollIntoView.mockClear();
+    const hours = screen.getAllByRole('listbox')[0]!;
+    hours.focus();
+    await user.keyboard('{ArrowDown}');
+    await vi.waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
+    const scrolled = (scrollIntoView.mock.contexts as HTMLElement[]).map((el) => el.id);
+    expect(scrolled).toContain(hours.getAttribute('aria-activedescendant'));
   });
 });

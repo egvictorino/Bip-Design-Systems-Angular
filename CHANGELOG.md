@@ -51,6 +51,17 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipTimePicker`: tres fallos de foco y teclado del panel, medidos en Chromium. (1) El diálogo es
+  `aria-modal` pero no atrapaba el foco: tras horas → minutos → AM → PM → "Ahora", Tab salía del
+  panel con el panel abierto; ahora lleva `cdkTrapFocus` (mismo patrón que modal, drawer y popover).
+  (2) Las columnas usan `aria-activedescendant` y nada hacía scroll a la opción activa: al abrir
+  con un valor tardío o bajar con las flechas quedaba hasta 382px fuera de vista; ahora se hace
+  `scrollIntoView({ block: 'nearest' })` al abrir y al moverse, con `scroll-padding-block` para no
+  recortar el anillo. (3) En `inputMode="text"` el botón del reloj no abría el panel (`showPanel()`
+  salía porque solo buscaba el trigger del modo picker); el overlay se ancla al input y los clics
+  dentro del wrapper (reloj incluido) no cuentan como "fuera".
+  Además, al elegir un minuto o "Ahora" el foco vuelve al trigger (o al input en modo texto): antes
+  caía a `<body>` al destruirse el panel.
 - `BipTimePicker`: el anillo de foco de la opción activa quedaba recortado por los costados (la
   columna tiene `overflow-y: auto`, que también recorta en horizontal, y la opción ocupa todo el
   ancho). La columna reserva `--focus-ring-offset` + `--focus-ring-width` de padding. Además, el anillo

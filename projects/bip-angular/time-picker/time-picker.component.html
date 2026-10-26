@@ -7,7 +7,7 @@
   </label>
 }
 
-<div class="bip-time-picker-trigger-wrapper">
+<div #triggerWrapperRef class="bip-time-picker-trigger-wrapper">
   @if (inputMode() === 'text') {
     <input
       #textInputRef
@@ -79,6 +79,8 @@
     role="dialog"
     aria-modal="true"
     tabindex="-1"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="false"
     [attr.aria-label]="locale().timePicker.selectTime"
     (keydown.escape)="onEscape($event)"
   >
