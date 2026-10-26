@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { render, screen } from '@testing-library/angular';
+import { fireEvent, render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { BipTimePicker } from './time-picker.component';
@@ -270,6 +270,29 @@ describe('BipTimePicker — foco y teclado del panel', () => {
     await user.keyboard('{Escape}');
     await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(screen.getByRole('textbox')).toHaveFocus();
+  });
+
+  it('modo texto: Escape con el foco en el input cierra el panel y conserva el foco', async () => {
+    await render(HostComponent, { componentProperties: { inputMode: 'text' } });
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: 'Abrir selector de hora' }));
+    await screen.findByRole('dialog');
+    const input = screen.getByRole('textbox');
+    input.focus();
+    await user.keyboard('{Escape}');
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(input).toHaveFocus();
+  });
+
+  it('modo texto: Escape con el panel cerrado no se intercepta (no hace nada)', async () => {
+    await render(HostComponent, { componentProperties: { inputMode: 'text' } });
+    const user = userEvent.setup();
+    const input = screen.getByRole('textbox');
+    await user.type(input, '09:30');
+    const notPrevented = fireEvent.keyDown(input, { key: 'Escape' });
+    expect(notPrevented).toBe(true);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(input).toHaveValue('09:30');
   });
 
   it('modo texto: un segundo clic en el reloj cierra el panel (no se cierra y reabre)', async () => {

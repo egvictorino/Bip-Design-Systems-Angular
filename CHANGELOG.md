@@ -51,6 +51,13 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipTimePicker` (`inputMode="text"`): con el panel abierto y el foco en el input (por ejemplo tras
+  hacer clic en él), Escape no cerraba el panel, porque `keydown.escape` solo estaba en el diálogo
+  (medido en Chromium, en light, dark y RTL). El input cierra ahora el panel con Escape y conserva
+  el foco; con el panel cerrado no intercepta la tecla. Sigue siendo decisión de diseño, no un fallo,
+  que el texto inválido no se pinte como error (es transitorio: `aria-invalid` sigue lo que se
+  escribe y al salir se restaura el último valor válido) y que `touched` se marque al pulsar el
+  reloj (mismo criterio que date-picker y date-range-picker: el foco sale del campo).
 - Campos con error: el hover pisaba el borde danger. `:hover:not(:disabled)` pesa (0,3,0) más que la
   regla de error, así que `BipInput`, `BipTextarea` y `BipSelect` (outlined y bare), y los triggers de
   `BipDatePicker`, `BipDateRangePicker` y `BipTimePicker` pasaban del borde danger a primary o
