@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: var(--space-1);
 }
-:host.bip-date-picker-wrapper--full-width {
+:host(.bip-date-picker-wrapper--full-width) {
   width: 100%;
 }
 
@@ -21,7 +21,7 @@
   position: relative;
   display: flex;
 }
-:host.bip-date-picker-wrapper--full-width .bip-date-picker-trigger-wrapper {
+:host(.bip-date-picker-wrapper--full-width) .bip-date-picker-trigger-wrapper {
   width: 100%;
 }
 

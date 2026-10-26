@@ -120,4 +120,16 @@ describe('CSS de componente — las clases del host se estilan con :host(...)', 
       '.bip-x-align-end :: .bip-x-align-end .child',
     ]);
   });
+
+  it(':host con clase o atributo va entre paréntesis: `:host(.x)`, no `:host.x` ni `:host[a]`', () => {
+    // Compilan igual bajo Emulated, pero `:host.x` no es CSS estándar; convención de CLAUDE.md.
+    const offenders = components.flatMap(([rel, , css]) =>
+      parseRules(readFileSync(css, 'utf-8')).flatMap((rule) =>
+        rule.selectors
+          .filter((selector) => /:host[.[]/.test(selector))
+          .map((selector) => `${rel} :: ${selector}`)
+      )
+    );
+    expect(offenders).toEqual([]);
+  });
 });

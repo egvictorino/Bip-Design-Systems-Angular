@@ -4,7 +4,7 @@
   gap: var(--space-1);
 }
 
-:host.bip-select-wrapper--full-width {
+:host(.bip-select-wrapper--full-width) {
   width: 100%;
 }
 
@@ -52,7 +52,7 @@
   position: relative;
 }
 
-:host.bip-select-wrapper--full-width .bip-select-container {
+:host(.bip-select-wrapper--full-width) .bip-select-container {
   width: 100%;
 }
 
