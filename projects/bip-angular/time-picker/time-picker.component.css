@@ -41,7 +41,8 @@
     border-color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
 }
-.bip-time-picker-trigger:hover:not(:disabled) {
+/* El hover excluye el error (ver testing/error-border-hover.spec.ts). */
+.bip-time-picker-trigger:not(.bip-time-picker-trigger--error):hover:not(:disabled) {
   border-color: var(--color-primary);
 }
 .bip-time-picker-trigger:focus-visible {

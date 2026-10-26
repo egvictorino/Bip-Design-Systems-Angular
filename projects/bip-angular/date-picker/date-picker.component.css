@@ -40,7 +40,8 @@
     border-color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
 }
-.bip-date-picker-trigger:hover:not(:disabled) {
+/* El hover excluye el error (ver testing/error-border-hover.spec.ts). */
+.bip-date-picker-trigger:not(.bip-date-picker-trigger--error):hover:not(:disabled) {
   border-color: var(--color-primary);
 }
 .bip-date-picker-trigger:focus-visible {

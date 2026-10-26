@@ -166,7 +166,8 @@
   border: 1px solid var(--color-edge);
   background-color: var(--color-field);
 }
-.bip-input--outlined:hover:not(:disabled) {
+/* El hover excluye el error (ver testing/error-border-hover.spec.ts). */
+.bip-input--outlined:not(.bip-input--error):hover:not(:disabled) {
   border-color: var(--color-edge-hover);
 }
 .bip-input--outlined:focus-visible {
@@ -204,7 +205,7 @@
   background-color: transparent;
   border-radius: var(--radius-none);
 }
-.bip-input--bare:hover:not(:disabled) {
+.bip-input--bare:not(.bip-input--error):hover:not(:disabled) {
   border-bottom-color: var(--color-edge-primary-hover);
 }
 /* Foco con el anillo completo, como search-input--bare: el subrayado primary → primary-hover
