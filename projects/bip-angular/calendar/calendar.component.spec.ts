@@ -1,17 +1,18 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { Component } from '@angular/core';
-import { render, screen } from '@testing-library/angular';
+import { fireEvent, render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   enUS,
+  esMX,
   mergeLocale,
   provideBipLocale,
   type CalendarView,
 } from '@bip-design-systems/angular/core';
 import { BipCalendar } from './calendar.component';
-import type { BipCalendarEvent, BipCalendarResource } from './calendar.types';
+import type { BipCalendarDateRange, BipCalendarEvent, BipCalendarResource } from './calendar.types';
 
 const TODAY = new Date(2026, 5, 15);
 
@@ -357,5 +358,87 @@ describe('BipCalendar — aislamiento bidi de los rangos "inicio – fin"', () =
       providers: [provideBipLocale(mergeLocale(enUS, { locale: 'he-IL' }))],
     });
     expect(timeSpan(container)).toHaveAttribute('dir', 'rtl');
+  });
+});
+
+@Component({
+  imports: [BipCalendar],
+  template: `<bip-calendar
+    [events]="[]"
+    view="month"
+    [date]="date"
+    (rangeSelect)="range = $event"
+  />`,
+})
+class RangeHostComponent {
+  date = TODAY;
+  range: BipCalendarDateRange | null = null;
+}
+
+describe('BipCalendar — foco del popover de rango', () => {
+  /** Arrastre de la celda 0 a la 9 (el mousedown real enfoca la celda: jsdom no lo hace). */
+  const dragRange = async () => {
+    const cells = document.querySelectorAll<HTMLElement>('.bip-calendar-month-cell');
+    const start = cells[0]!;
+    start.focus();
+    fireEvent.mouseDown(start, { button: 0 });
+    fireEvent.mouseEnter(cells[9]!);
+    fireEvent.mouseUp(document);
+    return { start, dialog: await screen.findByRole('dialog') };
+  };
+
+  it('al abrir, el foco pasa al diálogo (antes se quedaba en la celda)', async () => {
+    await render(RangeHostComponent);
+    const { dialog } = await dragRange();
+    await vi.waitFor(() => expect(dialog).toHaveFocus());
+  });
+
+  it('el diálogo atrapa el foco: anclas de cdkTrapFocus alrededor del popover', async () => {
+    await render(RangeHostComponent);
+    const { dialog } = await dragRange();
+    // jsdom no simula Tab: el ciclo real se verifica en Docker (ver CHANGELOG).
+    await vi.waitFor(() => {
+      expect(dialog.previousElementSibling).toHaveClass('cdk-focus-trap-anchor');
+      expect(dialog.nextElementSibling).toHaveClass('cdk-focus-trap-anchor');
+    });
+  });
+
+  it('Escape cierra el popover y el foco vuelve a la celda donde empezó el arrastre', async () => {
+    await render(RangeHostComponent);
+    const user = userEvent.setup();
+    const { start, dialog } = await dragRange();
+    await vi.waitFor(() => expect(dialog).toHaveFocus());
+    await user.keyboard('{Escape}');
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(start).toHaveFocus();
+  });
+
+  it('"Crear evento" emite el rango, cierra y devuelve el foco a la celda', async () => {
+    const { fixture } = await render(RangeHostComponent);
+    const user = userEvent.setup();
+    const { start } = await dragRange();
+    await user.click(screen.getByRole('button', { name: esMX.calendar.createEvent }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(fixture.componentInstance.range).not.toBeNull();
+    expect(start).toHaveFocus();
+  });
+
+  it('el clic en la capa cancela sin emitir y devuelve el foco a la celda', async () => {
+    const { fixture } = await render(RangeHostComponent);
+    const { start } = await dragRange();
+    fireEvent.click(document.querySelector('.bip-calendar-range-overlay')!);
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(fixture.componentInstance.range).toBeNull();
+    expect(start).toHaveFocus();
+  });
+
+  it('"×" cancela sin emitir y devuelve el foco a la celda', async () => {
+    const { fixture } = await render(RangeHostComponent);
+    const user = userEvent.setup();
+    const { start } = await dragRange();
+    await user.click(screen.getByRole('button', { name: esMX.calendar.close }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(fixture.componentInstance.range).toBeNull();
+    expect(start).toHaveFocus();
   });
 });
