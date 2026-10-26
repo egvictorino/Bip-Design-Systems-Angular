@@ -102,6 +102,10 @@ describe('foco de teclado — toda la librería usa var(--focus-ring)', () => {
     expect(lastValue(rule!, 'padding')?.replace(/\s+/g, ' ')).toBe(
       'calc(var(--focus-ring-offset) + var(--focus-ring-width))'
     );
+    // `scrollIntoView({ block: 'nearest' })` deja la opción activa pegada al borde del scroll.
+    expect(lastValue(rule!, 'scroll-padding-block')?.replace(/\s+/g, ' ')).toBe(
+      'calc(var(--focus-ring-offset) + var(--focus-ring-width))'
+    );
   });
 
   it('cada excepción de la allowlist sigue siendo necesaria', () => {
