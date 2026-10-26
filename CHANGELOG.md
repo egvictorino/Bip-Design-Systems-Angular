@@ -51,6 +51,13 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- Campos con error: el hover pisaba el borde danger. `:hover:not(:disabled)` pesa (0,3,0) más que la
+  regla de error, así que `BipInput`, `BipTextarea` y `BipSelect` (outlined y bare), y los triggers de
+  `BipDatePicker`, `BipDateRangePicker` y `BipTimePicker` pasaban del borde danger a primary o
+  `edge-hover` al pasar el puntero (medido en Chromium: nueve casos, en light, dark y RTL), y en
+  `bare` enfocado se veía el anillo danger con el subrayado azul. El `BipSelect` `filled` con error también perdía su fondo danger-light con el hover (pasaba a gris). La regla de hover excluye ahora el
+  estado de error (`:not(.…--error)`); el hover sin error no cambia. Diverge de la referencia React,
+  que tiene el mismo problema. Guard en `testing/error-border-hover.spec.ts`.
 - `BipCalendar`: el popover de confirmación de la selección de rango por arrastre (vista mes) es
   `role="dialog"` + `aria-modal` pero no gestionaba el foco (medido en Chromium, en light, dark y
   RTL): el foco se quedaba en la celda donde empezó el arrastre, así que Escape no cerraba el
