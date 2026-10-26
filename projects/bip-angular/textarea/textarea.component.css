@@ -4,11 +4,11 @@
   gap: var(--space-1);
 }
 
-:host.bip-textarea-wrapper--full-width {
+:host(.bip-textarea-wrapper--full-width) {
   width: 100%;
 }
 
-:host.bip-textarea-wrapper--full-width .bip-textarea {
+:host(.bip-textarea-wrapper--full-width) .bip-textarea {
   width: 100%;
 }
 

@@ -4,7 +4,7 @@
   gap: var(--space-1);
 }
 
-:host.bip-number-input-wrapper--full-width {
+:host(.bip-number-input-wrapper--full-width) {
   width: 100%;
 }
 
@@ -54,7 +54,7 @@
   align-items: center;
 }
 
-:host.bip-number-input-wrapper--full-width .bip-number-input-container {
+:host(.bip-number-input-wrapper--full-width) .bip-number-input-container {
   width: 100%;
 }
 

@@ -4,7 +4,7 @@
   gap: var(--space-1-5);
 }
 
-:host.bip-slider-wrapper--full-width {
+:host(.bip-slider-wrapper--full-width) {
   width: 100%;
 }
 

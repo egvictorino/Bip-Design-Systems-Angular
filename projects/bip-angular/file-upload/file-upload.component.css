@@ -4,7 +4,7 @@
   gap: var(--space-1);
 }
 
-:host.bip-file-upload-wrapper--full-width {
+:host(.bip-file-upload-wrapper--full-width) {
   width: 100%;
 }
 
@@ -53,7 +53,7 @@
   cursor: pointer;
 }
 
-:host.bip-file-upload-wrapper--full-width .bip-file-upload-dropzone {
+:host(.bip-file-upload-wrapper--full-width) .bip-file-upload-dropzone {
   width: 100%;
 }
 

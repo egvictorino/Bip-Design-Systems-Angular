@@ -13,7 +13,7 @@
   gap: var(--space-1);
 }
 
-:host.bip-search-input-wrapper--full-width {
+:host(.bip-search-input-wrapper--full-width) {
   width: 100%;
 }
 
@@ -58,7 +58,7 @@
   position: relative;
 }
 
-:host.bip-search-input-wrapper--full-width .bip-search-input-container {
+:host(.bip-search-input-wrapper--full-width) .bip-search-input-container {
   width: 100%;
 }
 
