@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, inject, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 import { BipIdGenerator } from '@bip-design-systems/angular/core';
 import { BIP_TABS_CONTEXT, type BipTabsContext } from './tabs-context';

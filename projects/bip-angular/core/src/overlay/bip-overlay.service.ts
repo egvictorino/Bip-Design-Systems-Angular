@@ -1,4 +1,9 @@
-import { Overlay, type OverlayConfig, type OverlayPositionBuilder, type OverlayRef } from '@angular/cdk/overlay';
+import {
+  Overlay,
+  type OverlayConfig,
+  type OverlayPositionBuilder,
+  type OverlayRef,
+} from '@angular/cdk/overlay';
 import { EnvironmentInjector, Injectable, Injector, effect, inject } from '@angular/core';
 import { BipThemeContext, defaultThemeAttributes } from '../theme';
 

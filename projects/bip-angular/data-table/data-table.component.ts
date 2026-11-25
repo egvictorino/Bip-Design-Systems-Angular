@@ -14,7 +14,11 @@ import {
   untracked,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { injectBipLocale, BipIdGenerator, BipVisuallyHidden } from '@bip-design-systems/angular/core';
+import {
+  injectBipLocale,
+  BipIdGenerator,
+  BipVisuallyHidden,
+} from '@bip-design-systems/angular/core';
 import {
   BipTable,
   BipTableHead,
@@ -89,7 +93,9 @@ export class BipDataTable<T = Record<string, unknown>> {
   readonly emptyMessage = input<string | undefined>(undefined);
   readonly striped = input(false, { transform: booleanAttribute });
   readonly compact = input(false, { transform: booleanAttribute });
-  readonly keyExtractor = input<((row: T, index: number) => string | number) | undefined>(undefined);
+  readonly keyExtractor = input<((row: T, index: number) => string | number) | undefined>(
+    undefined
+  );
   /** Ver nota de `table-row.component.ts`/`handleRowClick`: Angular no detecta si `(rowClick)` tiene listeners. */
   readonly rowsClickable = input(false, { transform: booleanAttribute });
 
@@ -129,7 +135,11 @@ export class BipDataTable<T = Record<string, unknown>> {
     const override = this.visibleColumnKeysOverride();
     if (override) return override;
     const hidden = this.defaultHiddenColumns();
-    return new Set(this.columns().filter((col) => !hidden?.includes(col.key)).map((col) => col.key));
+    return new Set(
+      this.columns()
+        .filter((col) => !hidden?.includes(col.key))
+        .map((col) => col.key)
+    );
   });
 
   protected readonly activeColumns = computed(() =>
@@ -172,7 +182,9 @@ export class BipDataTable<T = Record<string, unknown>> {
     this.serverSide() ? (this.totalCount() ?? this.data().length) : this.sortedData().length
   );
 
-  protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalRows() / this.pageSize())));
+  protected readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.totalRows() / this.pageSize()))
+  );
 
   protected readonly paginatedData = computed(() => {
     if (this.serverSide()) return this.sortedData();
@@ -198,9 +210,13 @@ export class BipDataTable<T = Record<string, unknown>> {
     this.data().filter((row, i) => this.selectedKeys().has(this.keyFor(row, i)))
   );
 
-  protected readonly colSpan = computed(() => this.activeColumns().length + (this.selectable() ? 1 : 0));
+  protected readonly colSpan = computed(
+    () => this.activeColumns().length + (this.selectable() ? 1 : 0)
+  );
 
-  protected readonly skeletonRows = computed(() => Array.from({ length: this.pageSize() }, (_, i) => i));
+  protected readonly skeletonRows = computed(() =>
+    Array.from({ length: this.pageSize() }, (_, i) => i)
+  );
 
   constructor() {
     effect(() => {
@@ -243,7 +259,11 @@ export class BipDataTable<T = Record<string, unknown>> {
     return this.headerTemplates().find((t) => t.key() === key)?.templateRef;
   }
 
-  protected cellContext(column: BipDataTableColumn<T>, row: T, pageIndex: number): BipDataTableCellContext<T> {
+  protected cellContext(
+    column: BipDataTableColumn<T>,
+    row: T,
+    pageIndex: number
+  ): BipDataTableCellContext<T> {
     return {
       $implicit: row,
       value: (row as Record<string, unknown>)[column.key],

@@ -8,7 +8,15 @@ import { BipTableHeader } from './table-header.component';
 import { BipTableCell } from './table-cell.component';
 import { BipTableEmpty } from './table-empty.component';
 
-const IMPORTS = [BipTable, BipTableHead, BipTableBody, BipTableRow, BipTableHeader, BipTableCell, BipTableEmpty];
+const IMPORTS = [
+  BipTable,
+  BipTableHead,
+  BipTableBody,
+  BipTableRow,
+  BipTableHeader,
+  BipTableCell,
+  BipTableEmpty,
+];
 
 @Component({
   selector: 'bip-table-demo',
@@ -17,7 +25,14 @@ const IMPORTS = [BipTable, BipTableHead, BipTableBody, BipTableRow, BipTableHead
     <bip-table [striped]="striped()" [compact]="compact()">
       <thead bipTableHead>
         <tr bipTableRow>
-          <th bipTableHeader [sortable]="true" [sortDirection]="sortDirection()" (sort)="toggleSort()">Nombre</th>
+          <th
+            bipTableHeader
+            [sortable]="true"
+            [sortDirection]="sortDirection()"
+            (sort)="toggleSort()"
+          >
+            Nombre
+          </th>
           <th bipTableHeader>Email</th>
           <th bipTableHeader align="end">Edad</th>
         </tr>
@@ -45,7 +60,9 @@ class TableDemo {
   ]);
 
   toggleSort(): void {
-    this.sortDirection.set(this.sortDirection() === 'asc' ? 'desc' : this.sortDirection() === 'desc' ? null : 'asc');
+    this.sortDirection.set(
+      this.sortDirection() === 'asc' ? 'desc' : this.sortDirection() === 'desc' ? null : 'asc'
+    );
   }
 }
 

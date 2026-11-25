@@ -1,4 +1,9 @@
-<div role="region" [attr.aria-label]="locale().toast.region" class="bip-toast-region" [class]="positionClass()">
+<div
+  role="region"
+  [attr.aria-label]="locale().toast.region"
+  class="bip-toast-region"
+  [class]="positionClass()"
+>
   @if (items().length > 0) {
     <div
       class="bip-toast-stack"

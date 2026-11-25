@@ -102,7 +102,9 @@ export class BipAvatar {
   private readonly imgError = signal(false);
 
   protected readonly effectiveSize = computed(() => this.size() ?? this.groupSize?.() ?? 'md');
-  protected readonly sizeContainerClass = computed(() => SIZE_CONTAINER_CLASS[this.effectiveSize()]);
+  protected readonly sizeContainerClass = computed(
+    () => SIZE_CONTAINER_CLASS[this.effectiveSize()]
+  );
   protected readonly sizeTextClass = computed(() => SIZE_TEXT_CLASS[this.effectiveSize()]);
   protected readonly sizeStatusClass = computed(() => SIZE_STATUS_CLASS[this.effectiveSize()]);
 

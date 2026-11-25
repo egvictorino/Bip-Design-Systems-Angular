@@ -16,7 +16,10 @@ const meta: Meta<TooltipDemoArgs> = {
   argTypes: {
     position: { control: 'select', options: ['top', 'bottom', 'left', 'right'] },
     align: { control: 'select', options: ['start', 'center', 'end'] },
-    variant: { control: 'select', options: ['default', 'light', 'info', 'success', 'warning', 'error'] },
+    variant: {
+      control: 'select',
+      options: ['default', 'light', 'info', 'success', 'warning', 'error'],
+    },
   },
   args: {
     content: 'Información adicional',

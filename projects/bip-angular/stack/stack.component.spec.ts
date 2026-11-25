@@ -1,7 +1,13 @@
 import { Component } from '@angular/core';
 import { render, screen } from '@testing-library/angular';
 import { describe, expect, it } from 'vitest';
-import { BipStack, type BipStackAlign, type BipStackDirection, type BipStackGap, type BipStackJustify } from './stack.component';
+import {
+  BipStack,
+  type BipStackAlign,
+  type BipStackDirection,
+  type BipStackGap,
+  type BipStackJustify,
+} from './stack.component';
 
 @Component({
   imports: [BipStack],

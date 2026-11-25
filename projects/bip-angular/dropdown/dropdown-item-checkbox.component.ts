@@ -11,7 +11,9 @@ import { BIP_DROPDOWN_MENU_SCOPE } from './dropdown-menu-scope';
 @Component({
   selector: 'button[bipDropdownItemCheckbox]',
   template: `
-    <span class="bip-dropdown-item-check-indicator" aria-hidden="true">{{ checked() ? '✓' : '' }}</span>
+    <span class="bip-dropdown-item-check-indicator" aria-hidden="true">{{
+      checked() ? '✓' : ''
+    }}</span>
     <ng-content />
   `,
   styleUrl: './dropdown-item-checkbox.component.css',

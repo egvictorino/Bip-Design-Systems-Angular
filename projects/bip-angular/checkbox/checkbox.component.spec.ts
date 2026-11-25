@@ -88,7 +88,9 @@ describe('BipCheckbox', () => {
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Requerido');
   });
 
@@ -120,7 +122,10 @@ describe('BipCheckbox', () => {
 
   it('BipCheckboxGroup con error propaga aria-invalid a los checkboxes hijos', async () => {
     await render(GroupHostComponent, { componentProperties: { groupError: true } });
-    expect(screen.getByRole('checkbox', { name: 'Deportes' })).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('checkbox', { name: 'Deportes' })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
   });
 
   // ── ControlValueAccessor ────────────────────────────────────────────────────

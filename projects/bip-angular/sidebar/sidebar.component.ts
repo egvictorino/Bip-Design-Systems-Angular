@@ -1,5 +1,13 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { BipIdGenerator, injectBipLocale } from '@bip-design-systems/angular/core';
 import { BIP_SIDEBAR_CONTEXT, type BipSidebarContext } from './sidebar-context';

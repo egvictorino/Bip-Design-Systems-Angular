@@ -80,6 +80,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Formato (Prettier)
+        run: pnpm format:check
+
       - name: Typecheck
         run: pnpm typecheck
 

@@ -160,6 +160,24 @@ describe('styles/primitives.css — dominio invariante (motion, focus ring, tipo
     }
   });
 
+  it('todo token de :root que encadena var(--color-*) se re-declara bajo [data-color-scheme]', () => {
+    // Un custom property se sustituye donde se declara: sin esto, en un wrapper dark el token
+    // hereda los colores de light resueltos en <html> (p. ej. --focus-ring).
+    const css = readFileSync(PRIMITIVES_CSS_PATH, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '');
+    const blocks = (selector: string) =>
+      [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+        .filter(([, list]) => list!.trim() === selector)
+        .map(([, , body]) => body!)
+        .join('\n');
+    const chained = (body: string) =>
+      [...body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)]
+        .filter(([, , value]) => /var\(--color-/.test(value!))
+        .map(([, name]) => name!);
+    const rootTokens = chained(blocks(':root'));
+    expect(rootTokens).toContain('--focus-ring');
+    expect(chained(blocks('[data-color-scheme]')).sort()).toEqual(rootTokens.sort());
+  });
+
   it('declara los tokens de motion que bipTheme (Bloque 2) deberá mapear', () => {
     const primitivesCss = readFileSync(PRIMITIVES_CSS_PATH, 'utf-8');
     for (const token of EXPECTED_MOTION_TOKENS) {
@@ -186,5 +204,50 @@ describe('styles/density.css — dominio del eje de densidad (comfortable/compac
     );
 
     expect([...comfortableTokens].sort()).toEqual([...compactTokens].sort());
+  });
+});
+
+/**
+ * `foundations/tokens.data.ts` parsea tokens.css línea a línea: un comentario de UNA sola línea
+ * sin ":" se toma como encabezado de grupo y reagrupa los tokens siguientes en la story
+ * Foundations/Colors (rompió una baseline sin ningún fallo de test). Solo se aceptan los
+ * encabezados conocidos o comentarios con ":"; el resto debe ir en varias líneas.
+ */
+// Mantener sincronizado con GROUP_ORDER de foundations/tokens.data.ts al añadir un grupo.
+const KNOWN_GROUP_HEADER =
+  /^(Interaction|Text|Surface|Border|Feedback) — (semillas?|derivados)$|^Shadows \(/;
+
+const findAmbiguousLineComments = (css: string): string[] =>
+  css
+    .split('\n')
+    .map((line) => line.trim().match(/^\/\*\s*(.*?)\s*\*\/$/)?.[1])
+    .filter((text): text is string => text !== undefined)
+    .filter((text) => !text.includes(':') && !KNOWN_GROUP_HEADER.test(text));
+
+describe('styles/tokens.css — comentarios de una línea (los lee foundations/tokens.data.ts)', () => {
+  it('todo comentario de una línea es un encabezado de grupo conocido o contiene ":"', () => {
+    const tokensCss = readFileSync(TOKENS_CSS_PATH, 'utf-8');
+    expect(findAmbiguousLineComments(tokensCss)).toEqual([]);
+  });
+
+  it('detecta un comentario de una línea sin ":" que se leería como encabezado de grupo', () => {
+    const css = [
+      '  --color-a: #000000;',
+      '  /* black 30% quedaba bajo AA */',
+      '  --color-b: #111111;',
+    ].join('\n');
+    expect(findAmbiguousLineComments(css)).toEqual(['black 30% quedaba bajo AA']);
+  });
+
+  it('no marca encabezados válidos, comentarios con ":" ni comentarios multilínea', () => {
+    const css = [
+      '  /* Interaction — semillas */',
+      '  /* Text — derivados */',
+      '  /* Shadows (dark — mayor opacidad) */',
+      '  /* medía 4.05:1 contra --color-success-light */',
+      '  /* comentario',
+      '     en varias líneas sin dos puntos */',
+    ].join('\n');
+    expect(findAmbiguousLineComments(css)).toEqual([]);
   });
 });

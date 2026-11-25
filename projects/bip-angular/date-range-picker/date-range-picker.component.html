@@ -7,7 +7,11 @@
   </label>
 }
 
-<div class="bip-date-range-picker-trigger-wrapper">
+<div
+  #triggerWrapperRef
+  class="bip-date-range-picker-trigger-wrapper"
+  (focusout)="onFocusOut($event)"
+>
   <button
     #triggerRef
     type="button"
@@ -19,28 +23,15 @@
     [attr.aria-describedby]="messageId()"
     [attr.aria-invalid]="hasError() || null"
     (click)="toggle()"
-    (blur)="onBlur()"
   >
     @if (value().from) {
-      <span class="bip-date-range-picker-value">{{ displayValue() }}</span>
+      <span class="bip-date-range-picker-value" [attr.dir]="valueDir()">{{ displayValue() }}</span>
     } @else {
       <span class="bip-date-range-picker-placeholder">
         {{ placeholder() || locale().dateRangePicker.placeholder }}
       </span>
     }
-    @if (value().from && !disabled()) {
-      <span
-        class="bip-date-range-picker-clear"
-        role="button"
-        tabindex="0"
-        [attr.aria-label]="locale().dateRangePicker.clearSelection"
-        (click)="onClearRange($event)"
-        (keydown.enter)="onClearRange($event)"
-        (keydown.space)="onClearRange($event)"
-      >
-        ×
-      </span>
-    } @else {
+    @if (!showClear()) {
       <span class="bip-date-range-picker-calendar-icon" aria-hidden="true">
         <svg viewBox="0 0 16 16" fill="currentColor">
           <path
@@ -50,10 +41,25 @@
       </span>
     }
   </button>
+  @if (showClear()) {
+    <button
+      type="button"
+      class="bip-date-range-picker-clear"
+      (mousedown)="$event.preventDefault()"
+      [attr.aria-label]="locale().dateRangePicker.clearSelection"
+      (click)="onClearRange()"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  }
 </div>
 
 @if (error() && errorMessage()) {
-  <span [id]="errorId" class="bip-date-range-picker-message bip-date-range-picker-error-text" role="alert">
+  <span
+    [id]="errorId"
+    class="bip-date-range-picker-message bip-date-range-picker-error-text"
+    role="alert"
+  >
     {{ errorMessage() }}
   </span>
 } @else if (helperText()) {
@@ -68,6 +74,8 @@
     role="dialog"
     aria-modal="true"
     tabindex="-1"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="false"
     [attr.aria-label]="locale().dateRangePicker.selectRange"
     (keydown.escape)="onEscape($event)"
   >

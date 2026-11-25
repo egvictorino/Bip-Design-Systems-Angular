@@ -13,7 +13,16 @@ import {
   untracked,
 } from '@angular/core';
 import { BipIdGenerator } from '../a11y';
-import { addDays, dateKey, getDaysInMonth, getMondayOffset, monthIndex, startOfDay } from '../utils';
+import {
+  addDays,
+  dateKey,
+  getDaysInMonth,
+  getMondayOffset,
+  localeDirection,
+  monthIndex,
+  startOfDay,
+} from '../utils';
+import { isoDateKey } from '../utils/date-helpers';
 
 export type BipCalendarGridMode = 'single' | 'range';
 export type BipCalendarGridView = 'days' | 'months' | 'years';
@@ -44,6 +53,7 @@ export interface BipCalendarGridStrings {
 interface BipCalendarDayCell {
   date: Date;
   inCurrentMonth: boolean;
+  /** `YYYY-MM-DD` (ISO): `data-date` del botón y clave de `track`/foco. */
   key: string;
 }
 
@@ -109,7 +119,9 @@ export class BipCalendarGrid {
     Math.floor(this.today.getFullYear() / YEARS_PER_BLOCK) * YEARS_PER_BLOCK
   );
 
-  private readonly disabledSet = computed(() => new Set(this.disabledDates().map((d) => dateKey(d))));
+  private readonly disabledSet = computed(
+    () => new Set(this.disabledDates().map((d) => dateKey(d)))
+  );
   private readonly minDay = computed(() => {
     const min = this.min();
     return min ? startOfDay(min) : undefined;
@@ -135,9 +147,17 @@ export class BipCalendarGrid {
     const cells: BipCalendarDayCell[] = [];
     for (let i = 0; i < totalCells; i++) {
       const date = new Date(year, month, i - offset + 1);
-      cells.push({ date, inCurrentMonth: date.getMonth() === month, key: dateKey(date) });
+      cells.push({ date, inCurrentMonth: date.getMonth() === month, key: isoDateKey(date) });
     }
     return cells;
+  });
+
+  /** Semanas de 7 celdas; solo las necesarias (4–6), nunca una fila `role="row"` sin gridcells. */
+  protected readonly weeks = computed<BipCalendarDayCell[][]>(() => {
+    const cells = this.days();
+    const weeks: BipCalendarDayCell[][] = [];
+    for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+    return weeks;
   });
 
   protected readonly canGoPrevMonth = computed(() => {
@@ -153,6 +173,8 @@ export class BipCalendarGrid {
     const start = this.yearRangeStart();
     return Array.from({ length: YEARS_PER_BLOCK }, (_, i) => start + i);
   });
+  /** El rango "2016 – 2027" es solo numérico: se aísla con la dirección del idioma (ver BipCalendar). */
+  protected readonly yearRangeDir = computed(() => localeDirection(this.localeTag()));
   protected readonly yearRangeLabel = computed(() => {
     const start = this.yearRangeStart();
     return this.strings().yearRange(start, start + YEARS_PER_BLOCK - 1);
@@ -167,11 +189,16 @@ export class BipCalendarGrid {
   });
 
   protected readonly todayDisabled = computed(() => this.isDayDisabled(this.today));
-  protected readonly focusedDateKey = computed(() => dateKey(this.focusedDate()));
+  protected readonly focusedDateKey = computed(() => isoDateKey(this.focusedDate()));
 
   private readonly dayLabelFormatter = computed(
     () =>
-      new Intl.DateTimeFormat(this.localeTag(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+      new Intl.DateTimeFormat(this.localeTag(), {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
   );
 
   protected dayAriaLabel(date: Date): string {
@@ -198,7 +225,7 @@ export class BipCalendarGrid {
       if (view !== 'days') return;
       queueMicrotask(() => {
         const el = this.elementRef.nativeElement.querySelector<HTMLButtonElement>(
-          `[data-date="${dateKey(date)}"]`
+          `[data-date="${isoDateKey(date)}"]`
         );
         el?.focus({ preventScroll: true });
       });
@@ -208,7 +235,9 @@ export class BipCalendarGrid {
       const view = this.calendarView();
       if (view !== 'years') return;
       queueMicrotask(() => {
-        const el = this.elementRef.nativeElement.querySelector<HTMLButtonElement>(`[data-year="${year}"]`);
+        const el = this.elementRef.nativeElement.querySelector<HTMLButtonElement>(
+          `[data-year="${year}"]`
+        );
         el?.focus({ preventScroll: true });
       });
     });

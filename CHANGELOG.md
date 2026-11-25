@@ -8,6 +8,261 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-25
+
+> **Migración desde 0.1.0.** Revisa tus estilos propios antes de actualizar:
+>
+> - Las variantes de `BipText`, `BipCard`, `BipCardMedia`, `BipStatsCard`, `BipEmptyState`,
+>   `BipAlert`, `BipAvatar` y las celdas de tabla **ahora sí se aplican** (antes no llegaban al
+>   host), y sus clases por defecto le ganan a una clase propia puesta en el componente:
+>   `<bip-card class="p-4">` pierde ese padding y `bipText` ya no hereda color, tamaño ni peso. Usa
+>   los inputs (`padding`, `radius`, `color`, `size`…).
+> - `--focus-ring` se resuelve en cada elemento desde `base.css` (lo carga `bip.css`): un
+>   `--focus-ring` completo declarado en un ancestro ya no se hereda; ajusta `--focus-ring-width`,
+>   `--focus-ring-offset` o `--focus-ring-color`. Quien importe hojas sueltas de `styles/` debe
+>   incluir `base.css`.
+
+### Added
+
+- `core/utils`: `localeDirection(tag)` → `'ltr' | 'rtl'` según el script del locale (`Intl.Locale`,
+  SSR-safe; tag inválido → `'ltr'`).
+- `BipSelect`: input `search` (boolean, default `false`). Convierte el `<select>` nativo en un
+  combobox editable (patrón WAI-ARIA "editable combobox with list autocomplete"): se escribe en
+  el propio campo y las opciones y grupos se filtran en el panel (`BipOverlay`); ↓↑ Enter Escape,
+  `aria-activedescendant`, "Sin resultados" localizado, compatible con `[(value)]` y Forms. Sin
+  `search` el DOM y el comportamiento son idénticos a los anteriores.
+- `BipMultiSelect`: input `search` (boolean, default `true`) para ocultar el buscador del panel.
+- `core/utils`: `matchesSearch()` y `foldSearchText()` (búsqueda sin distinguir mayúsculas ni
+  acentos). Textos i18n `select.options` y `select.noResults` en `esMX` y `enUS`.
+- `BipSelect`: búsqueda remota con `externalFilter` (no filtra internamente; el consumidor
+  reemplaza `options()`), salida `searchQuery` (emite lo escrito y `''` al cerrar) e input
+  `loading` (oculta las opciones, `aria-busy` en el campo y región `role="status"`
+  `aria-live="polite"` siempre montada fuera del panel que anuncia "Cargando opciones"). La opción
+  elegida conserva su label aunque ya no esté en `options()`, también si el consumidor restaura la
+  lista de forma síncrona al cerrar (se recuerda la última elegida; un valor inicial debe venir en
+  la primera carga).
+- `BipSelect`: input `clearable` (default `false`, solo con `search`). Botón de 24×24 con
+  `aria-label` localizado, visible con valor y sin `disabled`; limpia a `''`, emite el cambio y
+  devuelve el foco. Escape con el panel cerrado también limpia, sin propagarse (no cierra un
+  Modal/Drawer contenedor).
+- `core/utils`: `firstEnabledIndex()` y `nextEnabledIndex()`. i18n `select.loading`,
+  `select.loadingText` y `select.clear` en `esMX` y `enUS`.
+- `BipMultiSelect`: input `searchPlacement` (`'panel'` | `'trigger'`, default `'panel'`: sin
+  cambios para quien ya lo usa). Con `'trigger'` el buscador es un `<input role="combobox">` junto
+  a los chips (patrón "tags input", `aria-activedescendant`, foco real siempre en el input):
+  ↓↑ Enter (alterna sin cerrar; la opción activa se mantiene) Escape Tab, Backspace con el campo
+  vacío quita el último chip (aunque esté oculto por `maxVisibleChips`; salta los de opciones
+  deshabilitadas); "Seleccionar todo" es la primera entrada navegable.
+
+### Changed
+
+- `BipMultiSelect`: el filtro del buscador ahora ignora acentos ("mexico" encuentra "México").
+- `visual/a11y-states.ts`: axe en navegador real sobre estados (hover, paneles abiertos,
+  seleccionado) además de la story canónica, e incluye el overlay del CDK.
+- Cobertura axe del hover de un día seleccionado de otro mes en la cuadrícula del DatePicker
+  (`date-picker-selected-outside-month-hover`, light y dark; falla si se quita
+  `:not(.bip-calendar-grid-day--selected)`) y story `WithOutsideMonthSelection`.
+
+### Fixed
+
+- `BipTimePicker` (`inputMode="text"`): con el panel abierto y el foco en el input (por ejemplo tras
+  hacer clic en él), Escape no cerraba el panel, porque `keydown.escape` solo estaba en el diálogo
+  (medido en Chromium, en light, dark y RTL). El input cierra ahora el panel con Escape y conserva
+  el foco; con el panel cerrado no intercepta la tecla. Sigue siendo decisión de diseño, no un fallo,
+  que el texto inválido no se pinte como error (es transitorio: `aria-invalid` sigue lo que se
+  escribe y al salir se restaura el último valor válido) y que `touched` se marque al pulsar el
+  reloj (mismo criterio que date-picker y date-range-picker: el foco sale del campo).
+- `BipToast`: con un tema redondeado (`data-theme='rounded'`), el `<bip-alert>` interno redondeaba
+  sus cuatro esquinas (`--radius-surface`) dentro de la tarjeta, que ya recorta las exteriores con su
+  radio y `overflow: hidden`: quedaban muescas transparentes contra la barra de progreso (medido en
+  Chromium: alert 12px dentro de una tarjeta de 16px). Desde que `BipAlert` pinta su fondo (#47) se
+  veían. El alert del toast usa `--radius-none` y lo recorta la tarjeta.
+- Campos con error: el hover pisaba el borde danger. `:hover:not(:disabled)` pesa (0,3,0) más que la
+  regla de error, así que `BipInput`, `BipTextarea` y `BipSelect` (outlined y bare), y los triggers de
+  `BipDatePicker`, `BipDateRangePicker` y `BipTimePicker` pasaban del borde danger a primary o
+  `edge-hover` al pasar el puntero (medido en Chromium: nueve casos, en light, dark y RTL), y en
+  `bare` enfocado se veía el anillo danger con el subrayado azul. El `BipSelect` `filled` con error también perdía su fondo danger-light con el hover (pasaba a gris). La regla de hover excluye ahora el
+  estado de error (`:not(.…--error)`); el hover sin error no cambia. Diverge de la referencia React,
+  que tiene el mismo problema. Guard en `testing/error-border-hover.spec.ts`.
+- `BipCalendar`: el popover de confirmación de la selección de rango por arrastre (vista mes) es
+  `role="dialog"` + `aria-modal` pero no gestionaba el foco (medido en Chromium, en light, dark y
+  RTL): el foco se quedaba en la celda donde empezó el arrastre, así que Escape no cerraba el
+  popover, Tab nunca entraba y al confirmar o cancelar el foco caía a `<body>`. Ahora el foco pasa al
+  diálogo al abrir, `cdkTrapFocus` lo atrapa y, al cerrar (confirmar, "×", Escape o clic en la
+  capa), vuelve a esa celda.
+- `BipDatePicker` y `BipDateRangePicker`: el panel es `role="dialog"` + `aria-modal` pero no atrapaba
+  el foco (medido en Chromium: con 12 Tab el foco salía del panel en los Tab 6 a 8, en light, dark
+  y RTL); ahora lleva `cdkTrapFocus`, como modal, drawer, popover y `BipTimePicker`. Además, al
+  elegir un día o "Hoy" (y al completar el rango) el foco vuelve al trigger: antes caía a `<body>`
+  al destruirse el panel.
+- `BipTimePicker`: tres fallos de foco y teclado del panel, medidos en Chromium. (1) El diálogo es
+  `aria-modal` pero no atrapaba el foco: tras horas → minutos → AM → PM → "Ahora", Tab salía del
+  panel con el panel abierto; ahora lleva `cdkTrapFocus` (mismo patrón que modal, drawer y popover).
+  (2) Las columnas usan `aria-activedescendant` y nada hacía scroll a la opción activa: al abrir
+  con un valor tardío o bajar con las flechas quedaba hasta 382px fuera de vista; ahora se hace
+  `scrollIntoView({ block: 'nearest' })` al abrir y al moverse, con `scroll-padding-block` para no
+  recortar el anillo. (3) En `inputMode="text"` el botón del reloj no abría el panel (`showPanel()`
+  salía porque solo buscaba el trigger del modo picker); el overlay se ancla al input y los clics
+  dentro del wrapper (reloj incluido) no cuentan como "fuera".
+  Además, al elegir un minuto o "Ahora" el foco vuelve al trigger (o al input en modo texto): antes
+  caía a `<body>` al destruirse el panel.
+- `BipTimePicker`: el anillo de foco de la opción activa quedaba recortado por los costados (la
+  columna tiene `overflow-y: auto`, que también recorta en horizontal, y la opción ocupa todo el
+  ancho). La columna reserva `--focus-ring-offset` + `--focus-ring-width` de padding. Además, el anillo
+  de la opción activa solo aparece cuando su columna tiene el foco (al abrir, horas y minutos
+  mostraban un anillo a la vez y no se sabía dónde estaba el foco, WCAG 2.4.7), y las opciones
+  AM/PM y el botón "Ahora", que se alcanzan con Tab, usan `var(--focus-ring)` en lugar del contorno
+  del navegador. Guard de foco
+  para toda la librería en `testing/focus-ring-library.spec.ts`: todo `:focus`/`:focus-visible`/
+  `:focus-within` de los CSS de componente pinta `var(--focus-ring)`, salvo una allowlist por
+  archivo y justificada (paneles de diálogo, contenedores compuestos, items de menú con anillo inset
+  y la celda seleccionada del odontograma).
+- Estilos de host que nunca se aplicaban (mismo bug que corrigió 89e3d08 en otros 44 componentes):
+  bajo `ViewEncapsulation.Emulated` un selector plano `.bip-x` se compila a `.bip-x[_ngcontent-H]`
+  y no coincide con el host. `BipText`, `BipCard`, `BipCardMedia`, `BipStatsCard`, `BipEmptyState`,
+  `BipAlert`, `BipAvatar` (tamaño) y las celdas y cabeceras de tabla estilaban así las clases que
+  ponen en su host; pasan a `:host(...)`. Cambios visibles: card con fondo, borde o sombra, padding,
+  radio y foco de `clickable` con `--focus-ring`; card-media con su `aspect-ratio`; alert (y toast)
+  con fondo `*-light`, borde `inline-start` y el icono del color de la variante; text con tamaño,
+  peso, color, alineación y truncado; stats-card con fondo, borde o sombra, padding y tamaño del
+  valor; empty-state con su gap y padding (también la fila vacía de `BipDataTable`); avatar con
+  tamaño fijo `xs`…`xl`; cabeceras de tabla alineadas a `start` y `align` en celdas y cabeceras.
+  **Migración:** las clases por defecto ahora sí aplican y le ganan a una clase propia en el host
+  (`<bip-card class="p-4">` pierde ese padding; `bipText` ya no hereda color, tamaño ni peso):
+  usa los inputs (`padding`, `radius`, `color`, `size`…). Guard estático en
+  `testing/host-class-selectors.spec.ts` (cruza las clases del host del `.ts` con los selectores
+  planos de su CSS).
+- Variantes `bare` de `BipInput`, `BipSelect`, `BipTextarea`, `BipNumberInput` y `BipMultiSelect`
+  (búsqueda en el trigger): el foco de teclado solo cambiaba el subrayado de primary a
+  primary-hover, igual que el hover (1.37:1 en light, 1.30:1 en dark; WCAG 1.4.11), y con error no
+  cambiaba nada (WCAG 2.4.7). Ahora usan el anillo completo (`var(--focus-ring)`), como ya hacía
+  `BipSearchInput` bare, y con error el anillo va en `--color-danger`. `BipMultiSelect` con error
+  pinta también en danger el anillo de las variantes outlined y filled, como el resto de campos.
+  Diverge de la referencia React, que tiene el mismo problema en `bare`.
+- `BipDropdownItem` y `BipDropdownItemCheckbox`: sus estilos nunca se aplicaban. Bajo
+  `ViewEncapsulation.Emulated` un selector plano (`.bip-dropdown-item`) no coincide con el propio
+  elemento host, así que los items se veían como botones nativos (fondo gris, borde y contorno del
+  navegador); solo el trigger del submenú, que está dentro de su template, se pintaba bien. Los
+  estilos del botón (layout, hover, disabled, danger) pasan a `:host(...)`.
+- `BipDropdown`: el foco de teclado de los items (item, checkbox, submenú y danger) solo cambiaba el
+  fondo a `--color-surface-3` (1.24:1 contra el menú, WCAG 1.4.11); ahora suma un anillo inset de
+  `--focus-ring-width` en `--focus-ring-color` (6.66:1 en light, 3.26:1 en dark contra `surface-3`;
+  en danger, `--color-danger`). Es inset porque los items van a ancho completo y pegados entre sí.
+  El buscador (`BipDropdownSearch`) usa `var(--focus-ring)` en lugar de un anillo propio de 2px
+  primary. Divergen de la referencia React, que tiene los mismos estilos de foco (solo fondo).
+- Anillo de foco (`--focus-ring`): los overrides locales de `--focus-ring-color` no tenían efecto
+  (`--focus-ring` se sustituía una sola vez en `:root`), así que el foco de teclado de los botones
+  `danger` y de los estados de error de input, textarea, select, search-input, number-input,
+  checkbox, radio y toggle salía en primary. `base.css` re-declara `--focus-ring` en cada elemento
+  (`*`, `::before`, `::after`) y ahora esos anillos salen en `--color-danger` (5.45:1 en light,
+  6.14:1 en dark contra el hueco). Sin override siguen en primary: el botón `secondary` (el
+  override con `--color-secondary` daría ~1.2:1) y el cierre del `alert` (`currentColor` daría
+  2.28:1 en success y 1.92:1 en warning). Guard en `testing/focus-ring-overrides.spec.ts`.
+  Requiere `base.css` (lo carga `bip.css`): quien importe hojas sueltas de `styles/` debe incluirlo.
+  Un `--focus-ring` (sombra completa) declarado por el consumidor en un ancestro ya no se hereda:
+  los ajustes de ancho, offset y color del ThemeProvider sí.
+- `BipCalendar` y `BipCalendarGrid`: en un layout RTL el algoritmo bidi reordenaba los extremos de
+  los rangos "inicio – fin" (runs numéricos separados por un guion neutro): el título semanal salía
+  `ene–18ene,202612` (el 12 quedaba a la derecha), la hora de la agenda `.a.m.–09:30a.m09:00` y el
+  rango de años del selector `2027–2016`. Cada uno lleva ahora un `<span>` interior con `dir`
+  según el idioma del locale (`ltr` con es-MX/en-US, `rtl` con ar/he), reusando `localeDirection()`;
+  el layout exterior (`margin-inline-start`, `text-align: start`) sigue en RTL. Misma causa que
+  `BipDateRangePicker`. Baselines RTL nuevas: `calendar-week-view` y `calendar-agenda-view`.
+- `--focus-ring` y `--focus-ring-color` (`styles/primitives.css`): en un wrapper
+  `data-color-scheme='dark'` (ThemeProvider) el anillo de foco heredaba los colores de light
+  resueltos en `<html>` (hueco blanco y banda `#2939cc` sobre fondo oscuro, ≈2.3:1 contra
+  `#121212`). Ahora se re-declaran bajo `[data-color-scheme]` y resuelven con el esquema del
+  propio elemento (hueco `#121212`, banda `#5468e8` en dark). Guard en `testing/tokens.spec.ts`:
+  todo token de `:root` que encadene `var(--color-*)` debe repetirse bajo `[data-color-scheme]`.
+- `BipOdontogram`: una celda seleccionada que recibe foco de teclado perdía la banda de selección
+  (`--button:focus-visible` la pisaba con el mismo `box-shadow` que una celda sin seleccionar). Nueva
+  regla `--selected:focus-visible`: conserva la banda de 2px y desplaza hacia fuera el anillo de
+  foco (hueco + banda), así selección y foco se distinguen entre sí.
+- `BipOdontogram`: el foco de teclado de los botones y campos de los popovers de nota e imágenes,
+  del detalle del diente y de la cuadrícula usa `box-shadow: var(--focus-ring)` (antes un anillo de
+  1px; en confirmar/guardar y en la condición activa era del color del relleno del botón y quedaba
+  invisible, WCAG 1.4.11).
+- `BipOdontogram`: el foco de teclado de las superficies del diente (detalle) ya no se señala solo
+  con `opacity: 0.7` (1.00:1 en superficies sanas y entre 1.09:1 y 1.88:1 en el resto; WCAG
+  1.4.11/2.4.7). Cada superficie dibuja un anillo de dos tonos sobre un `<polygon>` espejo
+  `aria-hidden` (hueco `--color-surface-1` + banda `--focus-ring-color`, mismo patrón que
+  `--focus-ring`). `:hover` conserva la opacidad.
+
+- `BipDateRangePicker`: en un layout RTL el algoritmo bidi reordenaba las dos fechas y el rango se
+  veía "20/01/2026 – 15/01/2026" (el placeholder, con letras, ya salía de izquierda a derecha). El
+  valor lleva ahora `dir` según el idioma del locale (`ltr` con es-MX/en-US, `rtl` con ar/he).
+  La referencia React tiene el mismo problema (string sin aislar).
+- `BipDatePicker` y `BipDateRangePicker`: el botón de limpiar ya no está anidado en el trigger
+  (`nested-interactive`): es un `<button>` nativo hermano, con Enter/Espacio nativos, y al limpiar
+  el foco vuelve al trigger. Estados axe `date-picker-with-value` y `date-range-picker-with-value`.
+- `BipDatePicker` y `BipDateRangePicker`: tabular del trigger al botón de limpiar ya no marca el
+  control como touched antes de tiempo (solo al salir del wrapper completo, vía `focusout` y
+  `relatedTarget`), y pulsar la "×" con el panel abierto no lo cierra (el botón cuenta como parte
+  del control, igual que en la referencia React). Estado axe `date-picker-error-with-value` y shots
+  `date-picker-with-value` / `date-range-picker-with-value` (LTR y RTL) en la matriz visual.
+- Contraste AA del hover/press de primary en dark: `--color-primary-hover` y
+  `--color-primary-press` oscurecen en vez de aclarar (texto blanco encima: 3.56:1 y 2.77:1 →
+  6.05:1 y 7.89:1; afecta a `bipButton` primary, paginación, día/mes/año seleccionado del
+  calendario, confirmar del rango y popovers del odontograma). Nuevo token
+  `--color-edge-primary-hover` para bordes y foco de marca en hover (checkbox, radio, inputs,
+  select, file-upload…): conserva el aspecto actual. Light no cambia.
+- `BipCalendar`: contraste AA (4.5:1) en los textos atenuados. Fechas de otro mes dentro de un
+  rango: `--color-txt-secondary` sobre `--color-secondary` (4.1 → 5.4:1 light, 4.2 → 5.7:1 dark); el
+  día de hoy en otro mes conserva su blanco sobre `--color-primary` (1.6 → 8.2:1 light). Agenda:
+  filtros y badges de estado conservan su `--color-txt-on-*` (pending 1.9 → 9.2:1, completed
+  2.3 → 7.7:1 en light), el filtro inactivo (con contorno) y el evento cancelado ya no usan `opacity` (el título cancelado se tacha). El hover
+  de los botones de vista ya no pisa al activo (1.2:1 en light).
+- `BipDatePicker`/`BipDateRangePicker`: el hover de un día seleccionado de otro mes conserva
+  `--color-txt-on-primary` (con `--color-txt-secondary` medía 2.5:1 en light).
+- `BipDatePicker` y `BipDateRangePicker` (cuadrícula compartida): los días de otro mes medían
+  2.2:1 (light) y 2.7:1 (dark) por usar `opacity: 0.5`; ahora usan `--color-txt-utility` sin
+  opacidad (5.1 / 5.4:1), y `--color-txt-secondary` sobre `--color-secondary` (día en rango u
+  hover, 5.4 / 5.7:1). El día/mes/año seleccionado conserva `--color-primary-hover` al pasar el
+  ratón (antes caía a `--color-secondary` con texto blanco). La cuadrícula ya no renderiza filas
+  `role="row"` sin gridcells (siempre pintaba 6 semanas aunque el mes tuviera 4 o 5; axe:
+  `aria-required-children`), y `data-date` pasa a ISO `YYYY-MM-DD` (antes el 31-dic-2025 salía
+  como `2025-11-31`).
+- `visual/a11y-states.ts`: los estados `date-picker-open`/`date-range-picker-open` esperan a que
+  el diálogo y sus días estén en el DOM antes de correr axe; en una máquina lenta (Docker
+  emulado) axe medía antes de que existiera el panel y el check pasaba en local y fallaba en CI.
+- `BipSelect`: padding del campo con propiedades lógicas; en RTL el texto se montaba sobre el
+  chevron.
+- `BipMultiSelect`: con `externalFilter` los chips elegidos ya no desaparecen cuando el consumidor
+  reemplaza `options()` (se recuerdan, en el orden de `value()`; un valor que nunca estuvo en
+  `options()` sigue sin label).
+- `BipMultiSelect`: el estado de carga usa una región `role="status"` `aria-live="polite"` siempre
+  montada fuera del panel (antes se montaba junto con su texto, dentro del overlay, y no se
+  anunciaba de forma fiable); el spinner visible es `aria-hidden`.
+- `BipMultiSelect`: Enter/Espacio sobre el botón de quitar un chip o de limpiar todo no hacían nada
+  y abrían el panel (el trigger los interceptaba por burbuja).
+- `BipSelect` y `BipMultiSelect`: deshabilitar el control con el panel abierto lo cierra; antes las
+  opciones seguían siendo clicables y cambiaban el valor de un control deshabilitado.
+- `BipTabs`, `BipNavbar`, `BipSidebar` (ítem activo) y `BipSelect` (label enfocado, opción
+  elegida): en dark el texto usaba `--color-primary` (3.66:1 sobre `surface-2`, bajo AA); ahora usa
+  `--color-primary-text`. En light no cambia.
+- Storybook: el decorator global de theming nunca se montaba (`NG0304`), así que los selectores de
+  theme, color scheme, densidad y marca del toolbar no tenían efecto (solo `dir`) y los overlays no
+  heredaban el tema. La regresión visual y `a11y-browser` en dark ahora prueban dark de verdad
+  (baselines regeneradas). `visual/component-matrix.ts` admite shots extra por componente: se
+  suman `select-searchable-clearable` y `multi-select-trigger-search` (LTR y RTL).
+- Contraste en dark: el texto que usaba `--color-primary` (3.3–4.0:1, bajo AA) pasa a
+  `--color-primary-text` en `BipButton` `bare`/`soul`, los botones Hoy/Limpiar/Ahora de los
+  pickers, la cabecera de "hoy" de `BipCalendar`, el marcador activo de `BipStepper` y la acción
+  activa del detalle de `BipOdontogram`. Los usos sobre iconos SVG quedan en `--color-primary`
+  (guard `testing/primary-text.spec.ts` con allowlist). En light no cambia nada.
+- `BipCalendar` (semana/día): el color por defecto del bloque de evento ya no pisa el
+  `--color-txt-on-*` de su estado (texto blanco sobre warning/success/surface-4 medía 1.5–2.3:1).
+- `BipMultiSelect` `filled`: el chip tenía el mismo fondo que el campo y no se distinguía; ahora
+  usa `--color-field` (y `--color-surface-3` en el resto de variantes, igual que la referencia).
+- `scripts/visual-docker.sh`: los argumentos del usuario ya no se re-parsean dentro de `bash -c`
+  (un `-g "a|b"` rompía el comando).
+- `BipOdontogram`: el diente del panel de detalle es `role="group"` (antes `role="img"` con
+  superficies `role="button"` anidadas: `nested-interactive`, también en la referencia React). La
+  cuadrícula principal sigue con `role="img"`.
+- `BipButton` `bare`/`soul`: en dark, hover/press usaban `--color-primary-hover/press` (white 15%
+  sobre la semilla, 4.8:1) y quedaban más oscuros que el reposo (`--color-primary-text`, 5.2:1);
+  ahora usan los tokens nuevos `--color-primary-text-hover/-press` (6.4:1 y 7.8:1). En light no cambia.
+
 ## [0.1.0] - 2026-10-02
 
 ### Added

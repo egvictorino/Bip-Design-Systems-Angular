@@ -9,7 +9,13 @@ import { BipRadioGroup } from './radio-group.component';
 @Component({
   imports: [BipRadio, BipRadioGroup],
   template: `
-    <bip-radio-group label="Plan" [helperText]="helperText" [error]="error" [errorMessage]="errorMessage" [(value)]="selected">
+    <bip-radio-group
+      label="Plan"
+      [helperText]="helperText"
+      [error]="error"
+      [errorMessage]="errorMessage"
+      [(value)]="selected"
+    >
       <bip-radio value="free" label="Gratis" />
       <bip-radio value="pro" label="Pro" />
       <bip-radio value="enterprise" label="Empresa" [disabled]="true" />
@@ -83,7 +89,9 @@ describe('BipRadioGroup + BipRadio', () => {
   });
 
   it('renderiza errorMessage del grupo con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Elige un plan' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Elige un plan' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Elige un plan');
   });
 

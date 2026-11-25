@@ -40,5 +40,10 @@
 </div>
 
 @if (isMobileOpen() && !isDesktop()) {
-  <div class="bip-navbar-overlay" role="presentation" aria-hidden="true" (click)="closeMobile()"></div>
+  <div
+    class="bip-navbar-overlay"
+    role="presentation"
+    aria-hidden="true"
+    (click)="closeMobile()"
+  ></div>
 }

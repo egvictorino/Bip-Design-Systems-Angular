@@ -8,10 +8,10 @@
 # suben juntos, nunca por separado (un desfase acá es exactamente el tipo de fallo
 # silencioso que este script existe para evitar).
 #
-# Uso:
+# Uso (los args se pasan intactos, incluidos patrones con `|` o espacios):
 #   ./scripts/visual-docker.sh                     # verifica contra las baselines commiteadas
 #   ./scripts/visual-docker.sh --update-snapshots   # regenera baselines
-#   ./scripts/visual-docker.sh -g "RTL"             # cualquier flag del CLI de playwright test pasa tal cual
+#   ./scripts/visual-docker.sh -g "RTL|a11y"         # cualquier flag del CLI de playwright test pasa tal cual
 set -euo pipefail
 
 PLAYWRIGHT_VERSION="1.63.0"
@@ -32,10 +32,12 @@ fi
 # hace que `pnpm install` directamente falle con Node 24, así que se instala un Node 22 LTS
 # propio dentro del contenedor y se antepone al PATH, en vez de relajar el pin del repo para
 # acomodar la imagen.
-NODE_PIN_VERSION="22.21.1"
+export NODE_PIN_VERSION="22.21.1"
 
 echo "▶ Corriendo regresión visual en ${IMAGE} (linux/amd64)…"
 
+# El script interno va entre comillas simples y los args del usuario se pasan como argv
+# ("$@" tras `bash`), así que Docker/bash no los vuelven a parsear: `-g "a|b"` llega intacto.
 docker run --rm \
   --platform linux/amd64 \
   -v "${REPO_ROOT}:/work" \
@@ -43,15 +45,16 @@ docker run --rm \
   -v /work/projects/bip-angular/node_modules \
   -w /work \
   -e CI=true \
+  -e NODE_PIN_VERSION \
   "$IMAGE" \
-  bash -c "
+  bash -c '
     set -e
-    curl -fsSL https://nodejs.org/dist/v${NODE_PIN_VERSION}/node-v${NODE_PIN_VERSION}-linux-x64.tar.gz -o /tmp/node22.tar.gz
+    curl -fsSL "https://nodejs.org/dist/v${NODE_PIN_VERSION}/node-v${NODE_PIN_VERSION}-linux-x64.tar.gz" -o /tmp/node22.tar.gz
     mkdir -p /opt/node22
     tar -xzf /tmp/node22.tar.gz -C /opt/node22 --strip-components=1
-    export PATH=\"/opt/node22/bin:\$PATH\"
+    export PATH="/opt/node22/bin:$PATH"
     corepack enable
     corepack prepare pnpm@9.15.9 --activate
     pnpm install --frozen-lockfile
-    pnpm exec playwright test --config=playwright.visual.config.ts $*
-  "
+    pnpm exec playwright test --config=playwright.visual.config.ts "$@"
+  ' bash "$@"

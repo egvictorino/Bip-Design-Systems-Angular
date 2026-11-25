@@ -11,7 +11,7 @@ const EXCLUDED_DIRS = new Set(['node_modules', 'dist', '.angular', 'storybook-st
 
 /**
  * Helper compartido por los guards de estilos (testing/*.spec.ts). Cada guard filtra
- * después por sufijo (*.component.css vs cualquier *.css) — ver CLAUDE.md § Bloque 1.
+ * después por sufijo (*.component.css vs cualquier *.css) — ver docs/plan-maestro.md § Bloque 1.
  */
 export function findFiles(dir: string, matches: (name: string) => boolean): string[] {
   const entries = readdirSync(dir);

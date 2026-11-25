@@ -20,7 +20,11 @@ describe('BipGrid', () => {
 
   it('por defecto es responsive con gap 4', async () => {
     await render(HostComponent);
-    expect(screen.getByTestId('host')).toHaveClass('bip-grid', 'bip-grid--cols-responsive', 'bip-grid--gap-4');
+    expect(screen.getByTestId('host')).toHaveClass(
+      'bip-grid',
+      'bip-grid--cols-responsive',
+      'bip-grid--gap-4'
+    );
   });
 
   it('columns=3 aplica bip-grid--cols-3', async () => {

@@ -6,9 +6,18 @@ import { BipStack } from './stack.component';
   selector: 'bip-stack-demo',
   imports: [BipStack],
   template: `
-    <div bipStack [direction]="direction" [gap]="gap" [align]="align" [justify]="justify" [wrap]="wrap">
+    <div
+      bipStack
+      [direction]="direction"
+      [gap]="gap"
+      [align]="align"
+      [justify]="justify"
+      [wrap]="wrap"
+    >
       @for (i of [1, 2, 3]; track i) {
-        <div style="background: var(--color-surface-3); padding: var(--space-4); border-radius: var(--radius-control);">
+        <div
+          style="background: var(--color-surface-3); padding: var(--space-4); border-radius: var(--radius-control);"
+        >
           Item {{ i }}
         </div>
       }

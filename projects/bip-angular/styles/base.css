@@ -1,7 +1,7 @@
 /**
  * Reset base y utilidades globales — puerto de src/index.css (bip-design-system React),
  * separado en su propio archivo porque aquí cada hoja de styles/ vive en un fichero propio
- * (ver CLAUDE.md § Bloque 1). Importado último en bip.css: depende de --font-sans,
+ * (ver docs/plan-maestro.md § Bloque 1). Importado último en bip.css: depende de --font-sans,
  * --text-base, --leading-normal, --color-txt (primitives.css/tokens.css) y de
  * --duration-* (primitives.css) para el bloque prefers-reduced-motion.
  */
@@ -22,6 +22,22 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/*
+ * Anillo de foco por elemento. Un custom property se sustituye donde se declara: con
+ * `--focus-ring` solo en :root (primitives.css), un `--focus-ring-color` local (variantes danger,
+ * estados de error, alert) nunca lo alcanzaba y todos pintaban el primary. Re-declararlo en cada
+ * elemento lo resuelve con el color, ancho y offset del propio elemento. Misma expresión que
+ * primitives.css (guard en testing/focus-ring-overrides.spec.ts). Los componentes NO deben
+ * declarar `--focus-ring`: solo `--focus-ring-color` y `box-shadow: var(--focus-ring)`.
+ */
+*,
+*::before,
+*::after {
+  --focus-ring:
+    0 0 0 var(--focus-ring-offset) var(--color-surface-1),
+    0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--focus-ring-color);
 }
 
 body {

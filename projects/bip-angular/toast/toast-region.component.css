@@ -49,5 +49,7 @@
 .bip-toast-wrapper {
   position: absolute;
   width: 100%;
-  transition: transform var(--duration-slow) var(--ease-out), opacity var(--duration-slow) var(--ease-out);
+  transition:
+    transform var(--duration-slow) var(--ease-out),
+    opacity var(--duration-slow) var(--ease-out);
 }

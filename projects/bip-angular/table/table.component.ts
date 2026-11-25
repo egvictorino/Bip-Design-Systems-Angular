@@ -13,7 +13,11 @@ import { BIP_TABLE_CONTEXT, type BipTableContext } from './table-context';
   template: `
     <table class="bip-table">
       @if (caption()) {
-        <caption class="bip-table-caption">{{ caption() }}</caption>
+        <caption class="bip-table-caption">
+          {{
+            caption()
+          }}
+        </caption>
       }
       <ng-content />
     </table>

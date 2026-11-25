@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { BipDatePicker } from './date-picker.component';
 
 @Component({
@@ -43,6 +43,17 @@ class ReactiveFormHostComponent {
   readonly control = new FormControl<Date | null>(null);
 }
 
+@Component({
+  imports: [BipDatePicker, ReactiveFormsModule],
+  template: `
+    <bip-date-picker [formControl]="control" label="Campo" />
+    <button type="button">Después</button>
+  `,
+})
+class TouchedHostComponent {
+  readonly control = new FormControl<Date | null>(new Date(2026, 5, 1));
+}
+
 describe('BipDatePicker', () => {
   it('muestra el placeholder por defecto cuando no hay valor', async () => {
     await render(HostComponent);
@@ -81,7 +92,9 @@ describe('BipDatePicker', () => {
   });
 
   it('selecciona un día y cierra el calendario', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { value: new Date(2026, 5, 1) } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { value: new Date(2026, 5, 1) },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /01\/06\/2026/ }));
     await user.click(screen.getByRole('button', { name: /^lunes, 15 de junio de 2026$/ }));
@@ -99,7 +112,9 @@ describe('BipDatePicker', () => {
   });
 
   it('renderiza un botón de limpiar cuando hay valor y lo vacía al hacer click', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { value: new Date(2026, 5, 1) } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { value: new Date(2026, 5, 1) },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: 'Limpiar fecha' }));
     expect(fixture.componentInstance.value).toBeNull();
@@ -110,13 +125,68 @@ describe('BipDatePicker', () => {
     expect(screen.queryByRole('button', { name: 'Limpiar fecha' })).not.toBeInTheDocument();
   });
 
+  describe('botón de limpiar (control hermano, no anidado en el trigger)', () => {
+    const setup = async () => {
+      const result = await render(HostComponent, {
+        componentProperties: { value: new Date(2026, 5, 1) },
+      });
+      const clear = screen.getByRole('button', { name: 'Limpiar fecha' });
+      const trigger = screen.getByRole('button', { name: /2026|junio|jun/ });
+      return { ...result, clear, trigger, user: userEvent.setup() };
+    };
+
+    it('es un <button> nativo que no es descendiente del trigger', async () => {
+      const { clear, trigger } = await setup();
+      expect(clear.tagName).toBe('BUTTON');
+      expect(trigger.contains(clear)).toBe(false);
+      expect(trigger.querySelector('[role="button"], button')).toBeNull();
+    });
+
+    it.each(['{Enter}', ' '])('se activa con el teclado (%j) y vacía el valor', async (key) => {
+      const { clear, user, fixture } = await setup();
+      clear.focus();
+      await user.keyboard(key);
+      expect(fixture.componentInstance.value).toBeNull();
+    });
+
+    it('el trigger lleva --clearable solo mientras hay valor', async () => {
+      const { trigger } = await setup();
+      expect(trigger).toHaveClass('bip-date-picker-trigger--clearable');
+    });
+
+    it('devuelve el foco al trigger y no abre el panel', async () => {
+      const { clear, trigger, user } = await setup();
+      await user.click(clear);
+      expect(trigger).toHaveFocus();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('no renderiza el botón de limpiar con disabled aunque haya valor', async () => {
+    const host = new ReactiveFormHostComponent();
+    host.control.setValue(new Date(2026, 5, 1));
+    host.control.disable();
+    await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
+    expect(screen.queryByRole('button', { name: 'Limpiar fecha' })).not.toBeInTheDocument();
+  });
+
+  it('no renderiza el botón de limpiar con loading aunque haya valor', async () => {
+    await render(BipDatePicker, { inputs: { value: new Date(2026, 5, 1), loading: true } });
+    expect(screen.queryByRole('button', { name: 'Limpiar fecha' })).not.toBeInTheDocument();
+  });
+
   it('activa aria-invalid cuando error=true', async () => {
     await render(HostComponent, { componentProperties: { error: true } });
-    expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Fecha requerida' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Fecha requerida' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Fecha requerida');
   });
 
@@ -147,7 +217,9 @@ describe('BipDatePicker', () => {
 
   it('aplica la clase full-width al host', async () => {
     const { container } = await render(HostComponent, { componentProperties: { fullWidth: true } });
-    expect(container.querySelector('bip-date-picker')).toHaveClass('bip-date-picker-wrapper--full-width');
+    expect(container.querySelector('bip-date-picker')).toHaveClass(
+      'bip-date-picker-wrapper--full-width'
+    );
   });
 
   // ── ControlValueAccessor ────────────────────────────────────────────────────
@@ -173,5 +245,105 @@ describe('BipDatePicker', () => {
     host.control.disable();
     await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
     expect(screen.getByRole('button', { name: 'Fecha de nacimiento' })).toBeDisabled();
+  });
+});
+
+describe('BipDatePicker — touched y clic fuera con el botón de limpiar', () => {
+  const setup = async () => {
+    const result = await render(TouchedHostComponent);
+    const control = result.fixture.componentInstance.control;
+    const clear = screen.getByRole('button', { name: 'Limpiar fecha' });
+    const trigger = document.querySelector<HTMLButtonElement>('.bip-date-picker-trigger')!;
+    return {
+      control,
+      clear,
+      trigger,
+      after: screen.getByRole('button', { name: 'Después' }),
+      user: userEvent.setup(),
+    };
+  };
+
+  it('tabular del trigger al botón de limpiar no marca touched', async () => {
+    const { control, trigger, clear, user } = await setup();
+    trigger.focus();
+    await user.tab();
+    expect(clear).toHaveFocus();
+    expect(control.touched).toBe(false);
+  });
+
+  it('salir del wrapper completo (limpiar → siguiente control) sí marca touched', async () => {
+    const { control, clear, after, user } = await setup();
+    clear.focus();
+    await user.tab();
+    expect(after).toHaveFocus();
+    expect(control.touched).toBe(true);
+  });
+
+  it('limpiar con el ratón no marca touched y deja el foco en el trigger', async () => {
+    const { control, clear, trigger, user } = await setup();
+    await user.click(clear);
+    expect(trigger).toHaveFocus();
+    expect(control.touched).toBe(false);
+  });
+
+  it('mousedown sobre limpiar no roba el foco (Safari/Firefox: relatedTarget nulo marcaría touched)', async () => {
+    const { clear, trigger } = await setup();
+    trigger.focus();
+    const notPrevented = clear.dispatchEvent(
+      new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    );
+    expect(notPrevented).toBe(false);
+  });
+
+  it('con el panel abierto, pulsar limpiar no lo cierra y vacía el valor', async () => {
+    const { control, trigger, clear, user } = await setup();
+    await user.click(trigger);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.click(clear);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(control.value).toEqual(null);
+  });
+
+  it('un clic fuera del wrapper sigue cerrando el panel', async () => {
+    const { trigger, user } = await setup();
+    await user.click(trigger);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.click(document.body);
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+});
+
+describe('BipDatePicker — foco del panel', () => {
+  it('el diálogo atrapa el foco: anclas de cdkTrapFocus alrededor del panel', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: /DD\/MM\/AAAA/ }));
+    const dialog = await screen.findByRole('dialog');
+    // jsdom no simula Tab: el ciclo real se verifica en Docker (ver CHANGELOG).
+    await vi.waitFor(() => {
+      expect(dialog.previousElementSibling).toHaveClass('cdk-focus-trap-anchor');
+      expect(dialog.nextElementSibling).toHaveClass('cdk-focus-trap-anchor');
+    });
+  });
+
+  it('al elegir un día el foco vuelve al trigger (no cae a <body>)', async () => {
+    await render(HostComponent, { componentProperties: { value: new Date(2026, 5, 1) } });
+    const user = userEvent.setup();
+    const trigger = screen.getByRole('button', { name: /01\/06\/2026/ });
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: /^lunes, 15 de junio de 2026$/ }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+  });
+
+  it('al elegir "Hoy" el foco vuelve al trigger', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    const trigger = screen.getByRole('button', { name: /DD\/MM\/AAAA/ });
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: 'Hoy' }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    // El trigger cambia su nombre al tener valor: se busca el botón con aria-haspopup.
+    expect(screen.getByRole('button', { expanded: false })).toHaveFocus();
   });
 });

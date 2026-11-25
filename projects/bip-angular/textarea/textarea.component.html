@@ -24,18 +24,27 @@
 @if (showFooter()) {
   <div class="bip-textarea-footer">
     @if (error() && errorMessage()) {
-      <span [id]="errorId" [class]="'bip-textarea-message bip-textarea-error-text ' + helperClass()" role="alert">
+      <span
+        [id]="errorId"
+        [class]="'bip-textarea-message bip-textarea-error-text ' + helperClass()"
+        role="alert"
+      >
         {{ errorMessage() }}
       </span>
     } @else if (helperText()) {
-      <span [id]="errorId" [class]="'bip-textarea-message bip-textarea-helper-text ' + helperClass()">
+      <span
+        [id]="errorId"
+        [class]="'bip-textarea-message bip-textarea-helper-text ' + helperClass()"
+      >
         {{ helperText() }}
       </span>
     } @else {
       <span></span>
     }
     @if (showCounter()) {
-      <span [class]="counterClass() + ' ' + helperClass()">{{ charCount() }} / {{ maxLength() }}</span>
+      <span [class]="counterClass() + ' ' + helperClass()"
+        >{{ charCount() }} / {{ maxLength() }}</span
+      >
     }
   </div>
 }

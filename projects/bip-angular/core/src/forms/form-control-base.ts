@@ -80,9 +80,11 @@ export abstract class BipFormControlBase
   });
 
   ngOnInit(): void {
-    this.ngControl?.control?.events.pipe(takeUntilDestroyed(this.formControlDestroyRef)).subscribe(() => {
-      this.controlEventsTick.update((tick) => tick + 1);
-    });
+    this.ngControl?.control?.events
+      .pipe(takeUntilDestroyed(this.formControlDestroyRef))
+      .subscribe(() => {
+        this.controlEventsTick.update((tick) => tick + 1);
+      });
   }
 
   constructor() {

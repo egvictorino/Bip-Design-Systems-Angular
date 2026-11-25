@@ -7,7 +7,7 @@
   </label>
 }
 
-<div class="bip-date-picker-trigger-wrapper">
+<div #triggerWrapperRef class="bip-date-picker-trigger-wrapper" (focusout)="onFocusOut($event)">
   <button
     #triggerRef
     type="button"
@@ -20,28 +20,17 @@
     [attr.aria-invalid]="hasError() || null"
     [attr.aria-busy]="loading() || null"
     (click)="toggle()"
-    (blur)="onBlur()"
   >
     @if (value()) {
       <span class="bip-date-picker-value">{{ displayValue() }}</span>
     } @else {
-      <span class="bip-date-picker-placeholder">{{ placeholder() || locale().datePicker.placeholder }}</span>
+      <span class="bip-date-picker-placeholder">{{
+        placeholder() || locale().datePicker.placeholder
+      }}</span>
     }
     @if (loading()) {
       <span class="bip-date-picker-spinner" aria-hidden="true"></span>
-    } @else if (value() && !disabled()) {
-      <span
-        class="bip-date-picker-clear"
-        role="button"
-        tabindex="0"
-        [attr.aria-label]="locale().datePicker.clear"
-        (click)="onClear($event)"
-        (keydown.enter)="onClear($event)"
-        (keydown.space)="onClear($event)"
-      >
-        ×
-      </span>
-    } @else {
+    } @else if (!showClear()) {
       <span class="bip-date-picker-calendar-icon" aria-hidden="true">
         <svg viewBox="0 0 16 16" fill="currentColor">
           <path
@@ -51,6 +40,17 @@
       </span>
     }
   </button>
+  @if (showClear()) {
+    <button
+      type="button"
+      class="bip-date-picker-clear"
+      (mousedown)="$event.preventDefault()"
+      [attr.aria-label]="locale().datePicker.clear"
+      (click)="onClear()"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  }
 </div>
 
 @if (error() && errorMessage()) {
@@ -69,6 +69,8 @@
     role="dialog"
     aria-modal="true"
     tabindex="-1"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="false"
     [attr.aria-label]="locale().datePicker.calendar"
     (keydown.escape)="onEscape($event)"
   >

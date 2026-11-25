@@ -72,7 +72,10 @@ describe('BipPagination', () => {
 
   it('aria-current="page" solo en la página activa', async () => {
     await render(HostComponent);
-    expect(screen.getByRole('button', { name: 'Página 5' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('button', { name: 'Página 5' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
     expect(screen.getByRole('button', { name: 'Página 4' })).not.toHaveAttribute('aria-current');
   });
 

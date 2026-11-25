@@ -6,37 +6,104 @@
     }
   </label>
 }
-<div class="bip-select-container">
-  <select
-    [id]="fieldId"
-    [class]="'bip-select ' + selectClass()"
-    [disabled]="disabled()"
-    [required]="required()"
-    [attr.aria-invalid]="hasError() || null"
-    [attr.aria-describedby]="messageId()"
-    (change)="onSelectChange($event)"
-    (focus)="onFocus()"
-    (blur)="onBlur()"
+<div #containerRef class="bip-select-container">
+  @if (search()) {
+    <input
+      #searchInputRef
+      [id]="fieldId"
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      [class]="'bip-select bip-select--search ' + selectClass()"
+      [disabled]="disabled()"
+      [required]="required()"
+      [placeholder]="placeholder()"
+      [value]="displayText()"
+      [attr.aria-expanded]="isOpen()"
+      aria-haspopup="listbox"
+      aria-autocomplete="list"
+      [attr.aria-controls]="isOpen() ? listboxId : null"
+      [attr.aria-activedescendant]="activeOptionId()"
+      [attr.aria-invalid]="hasError() || null"
+      [attr.aria-busy]="loading() || null"
+      [attr.aria-describedby]="messageId()"
+      (input)="onSearchInput($any($event.target).value)"
+      (click)="onSearchClick()"
+      (keydown)="onSearchKeydown($event)"
+      (focus)="onSearchFocus()"
+      (blur)="onSearchBlur()"
+    />
+  } @else {
+    <select
+      [id]="fieldId"
+      [class]="'bip-select ' + selectClass()"
+      [disabled]="disabled()"
+      [required]="required()"
+      [attr.aria-invalid]="hasError() || null"
+      [attr.aria-describedby]="messageId()"
+      (change)="onSelectChange($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+    >
+      @if (placeholder()) {
+        <option value="" disabled [selected]="value() === ''">{{ placeholder() }}</option>
+      }
+      @for (option of options(); track option.value) {
+        <option
+          [value]="option.value"
+          [disabled]="!!option.disabled"
+          [selected]="option.value === value()"
+        >
+          {{ option.label }}
+        </option>
+      }
+      @for (group of groups(); track group.label) {
+        <optgroup [label]="group.label" [disabled]="!!group.disabled">
+          @for (option of group.options; track option.value) {
+            <option
+              [value]="option.value"
+              [disabled]="!!option.disabled"
+              [selected]="option.value === value()"
+            >
+              {{ option.label }}
+            </option>
+          }
+        </optgroup>
+      }
+    </select>
+  }
+  @if (showClear()) {
+    <button
+      type="button"
+      class="bip-select-clear"
+      tabindex="-1"
+      [attr.aria-label]="locale().select.clear"
+      (mousedown)="keepFocus($event)"
+      (click)="clear()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+  }
+  <span
+    [class]="chevronClass()"
+    [class.bip-select-chevron--clickable]="search()"
+    aria-hidden="true"
+    (mousedown)="keepFocus($event)"
+    (click)="search() && onChevronClick()"
   >
-    @if (placeholder()) {
-      <option value="" disabled [selected]="value() === ''">{{ placeholder() }}</option>
-    }
-    @for (option of options(); track option.value) {
-      <option [value]="option.value" [disabled]="!!option.disabled" [selected]="option.value === value()">
-        {{ option.label }}
-      </option>
-    }
-    @for (group of groups(); track group.label) {
-      <optgroup [label]="group.label" [disabled]="!!group.disabled">
-        @for (option of group.options; track option.value) {
-          <option [value]="option.value" [disabled]="!!option.disabled" [selected]="option.value === value()">
-            {{ option.label }}
-          </option>
-        }
-      </optgroup>
-    }
-  </select>
-  <span [class]="chevronClass()" aria-hidden="true">
     <svg viewBox="0 0 16 16" fill="currentColor" class="bip-select-chevron-icon">
       <path
         fill-rule="evenodd"
@@ -47,7 +114,11 @@
   </span>
 </div>
 @if (error() && errorMessage()) {
-  <span [id]="errorId" [class]="'bip-select-message bip-select-error-text ' + helperClass()" role="alert">
+  <span
+    [id]="errorId"
+    [class]="'bip-select-message bip-select-error-text ' + helperClass()"
+    role="alert"
+  >
     {{ errorMessage() }}
   </span>
 } @else if (helperText()) {
@@ -55,3 +126,77 @@
     {{ helperText() }}
   </span>
 }
+
+@if (search()) {
+  <!-- Fuera del overlay y siempre montada: si se insertara junto con su texto (al abrir el panel
+       en la misma tarea que empieza la carga) los lectores de pantalla no la anunciarían. -->
+  <span class="bip-select-sr-only" role="status" aria-live="polite">{{
+    loading() ? locale().select.loading : ''
+  }}</span>
+}
+
+<ng-template #panelTemplate>
+  <div class="bip-select-panel" (mousedown)="keepFocus($event)">
+    <div
+      [id]="listboxId"
+      class="bip-select-listbox"
+      role="listbox"
+      [attr.aria-label]="label() || locale().select.options"
+    >
+      @if (!loading()) {
+        @for (entry of visible().loose; track entry.id) {
+          <button
+            type="button"
+            [id]="entry.id"
+            class="bip-select-option"
+            [class.bip-select-option--active]="entry.index === activeIndex()"
+            [class.bip-select-option--selected]="entry.option.value === value()"
+            [class.bip-select-option--disabled]="entry.disabled"
+            role="option"
+            tabindex="-1"
+            [attr.aria-selected]="entry.option.value === value()"
+            [attr.aria-disabled]="entry.disabled || null"
+            (click)="selectEntry(entry)"
+          >
+            {{ entry.option.label }}
+          </button>
+        }
+        @for (group of visible().groups; track group.id) {
+          <div role="group" [attr.aria-labelledby]="group.id">
+            <div [id]="group.id" class="bip-select-group-header" role="presentation">
+              {{ group.label }}
+            </div>
+            @for (entry of group.entries; track entry.id) {
+              <button
+                type="button"
+                [id]="entry.id"
+                class="bip-select-option"
+                [class.bip-select-option--active]="entry.index === activeIndex()"
+                [class.bip-select-option--selected]="entry.option.value === value()"
+                [class.bip-select-option--disabled]="entry.disabled"
+                role="option"
+                tabindex="-1"
+                [attr.aria-selected]="entry.option.value === value()"
+                [attr.aria-disabled]="entry.disabled || null"
+                (click)="selectEntry(entry)"
+              >
+                {{ entry.option.label }}
+              </button>
+            }
+          </div>
+        }
+        @if (visible().entries.length === 0) {
+          <div class="bip-select-no-results" role="presentation">
+            {{ locale().select.noResults }}
+          </div>
+        }
+      }
+    </div>
+    @if (loading()) {
+      <div class="bip-select-loading" aria-hidden="true">
+        <span class="bip-select-spinner"></span>
+        {{ locale().select.loadingText }}
+      </div>
+    }
+  </div>
+</ng-template>

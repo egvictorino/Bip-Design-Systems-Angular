@@ -12,8 +12,12 @@ import type { BipToastVariant } from './toast.types';
       <button type="button" style="padding: 8px 16px" (click)="show('success')">Éxito</button>
       <button type="button" style="padding: 8px 16px" (click)="show('warning')">Advertencia</button>
       <button type="button" style="padding: 8px 16px" (click)="show('danger')">Error</button>
-      <button type="button" style="padding: 8px 16px" (click)="showPersistent()">Persistente</button>
-      <button type="button" style="padding: 8px 16px" (click)="showMany()">Mostrar 5 seguidos</button>
+      <button type="button" style="padding: 8px 16px" (click)="showPersistent()">
+        Persistente
+      </button>
+      <button type="button" style="padding: 8px 16px" (click)="showMany()">
+        Mostrar 5 seguidos
+      </button>
     </div>
   `,
 })

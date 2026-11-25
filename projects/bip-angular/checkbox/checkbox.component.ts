@@ -90,7 +90,9 @@ export class BipCheckbox extends BipFormControlBase implements ControlValueAcces
   protected readonly hasVisibleMessage = computed(
     () => (this.resolvedError() && !!this.errorMessage()) || !!this.helperText()
   );
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly boxClass = computed(() => {
     const classes = ['bip-checkbox-box', BOX_SIZE_CLASS[this.resolvedSize()]];
@@ -99,7 +101,9 @@ export class BipCheckbox extends BipFormControlBase implements ControlValueAcces
     return classes.join(' ');
   });
 
-  protected readonly iconClass = computed(() => `bip-checkbox-icon ${ICON_SIZE_CLASS[this.resolvedSize()]}`);
+  protected readonly iconClass = computed(
+    () => `bip-checkbox-icon ${ICON_SIZE_CLASS[this.resolvedSize()]}`
+  );
 
   protected readonly labelClass = computed(() => {
     const classes = [LABEL_SIZE_CLASS[this.resolvedSize()]];

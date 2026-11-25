@@ -6,6 +6,7 @@ export { formatCurrency } from './currency';
 export type { FormatCurrencyOptions } from './currency';
 export { formatDate } from './date-format';
 export type { FormatDateOptions } from './date-format';
+export { localeDirection } from './locale-direction';
 export { formatFileSize } from './file-size';
 export {
   addDays,
@@ -17,6 +18,8 @@ export {
   startOfDay,
 } from './date-helpers';
 export { validateRFC } from './rfc';
+export { firstEnabledIndex, nextEnabledIndex } from './active-option';
+export { foldSearchText, matchesSearch } from './search';
 export { BipCurrencyPipe } from './bip-currency.pipe';
 export { BipDatePipe } from './bip-date.pipe';
 export { bipRfcValidator } from './bip-rfc.validator';

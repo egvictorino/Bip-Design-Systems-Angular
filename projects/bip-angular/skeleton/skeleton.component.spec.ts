@@ -9,12 +9,16 @@ describe('BipSkeleton', () => {
   });
 
   it('variant=text con lines=1 renderiza un único bloque', async () => {
-    const { container } = await render(BipSkeleton, { componentInputs: { variant: 'text', lines: 1 } });
+    const { container } = await render(BipSkeleton, {
+      componentInputs: { variant: 'text', lines: 1 },
+    });
     expect(container.querySelectorAll('.bip-skeleton-base').length).toBe(1);
   });
 
   it('variant=text con lines=3 renderiza 3 líneas, la última más corta', async () => {
-    const { container } = await render(BipSkeleton, { componentInputs: { variant: 'text', lines: 3 } });
+    const { container } = await render(BipSkeleton, {
+      componentInputs: { variant: 'text', lines: 3 },
+    });
     const lines = container.querySelectorAll('.bip-skeleton-base');
     expect(lines.length).toBe(3);
     expect(lines[0]).toHaveClass('bip-skeleton--line-full');

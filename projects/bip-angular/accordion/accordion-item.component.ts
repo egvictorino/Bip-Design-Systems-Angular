@@ -1,6 +1,17 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { BipIdGenerator } from '@bip-design-systems/angular/core';
-import { BIP_ACCORDION_CONTEXT, BIP_ACCORDION_ITEM_CONTEXT, type BipAccordionItemContext } from './accordion-context';
+import {
+  BIP_ACCORDION_CONTEXT,
+  BIP_ACCORDION_ITEM_CONTEXT,
+  type BipAccordionItemContext,
+} from './accordion-context';
 
 const VARIANT_CLASS: Record<string, string> = {
   default: 'bip-accordion-item--default',

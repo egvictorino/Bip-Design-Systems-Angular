@@ -7,7 +7,11 @@
 
 /** Mismo día de calendario, ignorando la hora. */
 export function isSameDay(a: Date, b: Date): boolean {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 /** Nueva `Date` a medianoche del mismo día (inmutable, clona antes de mutar). */
@@ -43,4 +47,14 @@ export function monthIndex(date: Date): number {
 /** Clave `"Y-M-D"` (sin padding) — para membresía en Set (fechas deshabilitadas) y `data-date`. */
 export function dateKey(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+}
+
+/**
+ * Clave ISO `"YYYY-MM-DD"` (mes base 1, con padding, hora local) — para el atributo `data-date`
+ * de la cuadrícula del calendario. Distinta de `dateKey`, cuyo mes es base 0 y daba
+ * `2025-11-31` para el 31 de diciembre de 2025.
+ */
+export function isoDateKey(date: Date): string {
+  const pad = (n: number, width = 2) => String(n).padStart(width, '0');
+  return `${pad(date.getFullYear(), 4)}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }

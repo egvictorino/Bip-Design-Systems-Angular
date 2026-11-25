@@ -18,9 +18,15 @@ import {
   untracked,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
+import { A11yModule } from '@angular/cdk/a11y';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { BipFormControlBase, BipIdGenerator, BipOverlay, injectBipLocale } from '@bip-design-systems/angular/core';
+import {
+  BipFormControlBase,
+  BipIdGenerator,
+  BipOverlay,
+  injectBipLocale,
+} from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 import {
   getMinutes,
@@ -54,6 +60,7 @@ const SIZE_CLASS: Record<BipSize, string> = {
  */
 @Component({
   selector: 'bip-time-picker',
+  imports: [A11yModule],
   templateUrl: './time-picker.component.html',
   styleUrl: './time-picker.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -98,15 +105,23 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
 
   @ViewChild('triggerRef') private readonly triggerRef?: ElementRef<HTMLButtonElement>;
   @ViewChild('textInputRef') private readonly textInputRef?: ElementRef<HTMLInputElement>;
-  @ViewChild('panelTemplate', { static: true }) private readonly panelTemplate!: TemplateRef<unknown>;
+  /** Trigger + (en modo texto) input y botón del reloj: clic en cualquiera no cuenta como "fuera". */
+  @ViewChild('triggerWrapperRef', { static: true })
+  private readonly triggerWrapperRef!: ElementRef<HTMLElement>;
+  @ViewChild('panelTemplate', { static: true })
+  private readonly panelTemplate!: TemplateRef<unknown>;
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
 
-  protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly hasVisibleMessage = computed(
+    () => (this.error() && !!this.errorMessage()) || !!this.helperText()
+  );
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly triggerClass = computed(() => {
     const classes = [SIZE_CLASS[this.size()]];
@@ -128,7 +143,9 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
   });
 
   protected readonly hoursOptions = computed(() =>
-    this.hourCycle() === '12' ? [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] : Array.from({ length: 24 }, (_, i) => i)
+    this.hourCycle() === '12'
+      ? [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+      : Array.from({ length: 24 }, (_, i) => i)
   );
   protected readonly minutesOptions = computed(() => getMinutes(this.step()));
 
@@ -158,6 +175,11 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     effect(() => {
       const v = this.value();
       untracked(() => this.textValue.set(v));
+    });
+    effect(() => {
+      this.focusedHourIdx();
+      this.focusedMinuteIdx();
+      untracked(() => this.scrollActiveOptionsIntoView());
     });
     // Auto-ajuste: si el valor queda fuera de [minTime,maxTime] (p.ej. el consumidor cambia
     // minTime en caliente), se recorta al límite más cercano, redondeando al step.
@@ -233,8 +255,10 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     if (hour === null) return false;
     const min = this.minParsed();
     const max = this.maxParsed();
-    if (min.hour !== null && hour === min.hour && min.minute !== null && minute < min.minute) return true;
-    if (max.hour !== null && hour === max.hour && max.minute !== null && minute > max.minute) return true;
+    if (min.hour !== null && hour === min.hour && min.minute !== null && minute < min.minute)
+      return true;
+    if (max.hour !== null && hour === max.hour && max.minute !== null && minute > max.minute)
+      return true;
     return false;
   }
 
@@ -264,9 +288,20 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     this.closePanel(true);
   }
 
+  /**
+   * Modo texto, con el foco en el input: Escape cierra el panel abierto (el `keydown.escape` del
+   * diálogo solo se dispara con el foco dentro). Con el panel cerrado no se intercepta.
+   */
+  protected onTextEscape(event: Event): void {
+    if (!this.isOpen()) return;
+    event.preventDefault();
+    this.closePanel(true);
+  }
+
   protected onHourSelect(hourOption: number): void {
     if (this.isHourOptionDisabled(hourOption)) return;
-    const hour24 = this.hourCycle() === '12' ? to24h(hourOption, this.selectedPeriod() ?? 'AM') : hourOption;
+    const hour24 =
+      this.hourCycle() === '12' ? to24h(hourOption, this.selectedPeriod() ?? 'AM') : hourOption;
     const minute = this.selectedMinute() ?? 0;
     this.emitChange(`${pad2(hour24)}:${pad2(minute)}`);
     this.announcement.set(this.locale().timePicker.hourSelectedAnnouncement(String(hourOption)));
@@ -276,8 +311,11 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     if (this.isMinuteDisabled(minute)) return;
     const hour = this.selectedHour() ?? 0;
     this.emitChange(`${pad2(hour)}:${pad2(minute)}`);
-    this.announcement.set(this.locale().timePicker.timeSelectedAnnouncement(`${pad2(hour)}:${pad2(minute)}`));
-    this.closePanel();
+    this.announcement.set(
+      this.locale().timePicker.timeSelectedAnnouncement(`${pad2(hour)}:${pad2(minute)}`)
+    );
+    // El foco real está en el panel (listbox): sin refocus caería a <body> al destruirse.
+    this.closePanel(true);
   }
 
   protected onPeriodSelect(period: 'AM' | 'PM'): void {
@@ -292,7 +330,7 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     const now = new Date();
     const minute = snapToStep(now.getMinutes(), this.step());
     this.emitChange(`${pad2(now.getHours())}:${pad2(minute)}`);
-    this.closePanel();
+    this.closePanel(true);
   }
 
   protected onTextChange(text: string): void {
@@ -346,8 +384,12 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
   }
 
   protected onHourColumnKeydown(event: KeyboardEvent): void {
-    this.onColumnKeydown(event, this.hoursOptions(), (v) => this.isHourOptionDisabled(v), this.focusedHourIdx, (v) =>
-      this.onHourSelect(v)
+    this.onColumnKeydown(
+      event,
+      this.hoursOptions(),
+      (v) => this.isHourOptionDisabled(v),
+      this.focusedHourIdx,
+      (v) => this.onHourSelect(v)
     );
   }
 
@@ -397,15 +439,29 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
   }
 
   private showPanel(): void {
-    if (this.overlayRef || !this.triggerRef) return;
+    // Modo texto: no hay `#triggerRef`; el panel se ancla al input.
+    const origin = this.triggerRef ?? this.textInputRef;
+    if (this.overlayRef || !origin) return;
     const overlayRef = this.bipOverlay.create(
       {
         positionStrategy: this.bipOverlay
           .position()
-          .flexibleConnectedTo(this.triggerRef)
+          .flexibleConnectedTo(origin)
           .withPositions([
-            { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-            { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
+            {
+              originX: 'start',
+              originY: 'bottom',
+              overlayX: 'start',
+              overlayY: 'top',
+              offsetY: GAP_PX,
+            },
+            {
+              originX: 'start',
+              originY: 'top',
+              overlayX: 'start',
+              overlayY: 'bottom',
+              offsetY: -GAP_PX,
+            },
           ])
           .withPush(true),
         scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
@@ -415,12 +471,37 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     );
     overlayRef.attach(new TemplatePortal(this.panelTemplate, this.viewContainerRef));
     overlayRef.outsidePointerEvents().subscribe((event) => {
-      const trigger = this.triggerRef?.nativeElement;
-      if (trigger && event.target instanceof Node && trigger.contains(event.target)) return;
+      // El wrapper incluye el botón del reloj: pulsarlo no cuenta como clic fuera (si no, cerraría
+      // el panel y el `toggle()` del mismo clic lo reabriría).
+      const wrapper = this.triggerWrapperRef.nativeElement;
+      if (event.target instanceof Node && wrapper.contains(event.target)) return;
       this.closePanel();
     });
     this.overlayRef = overlayRef;
-    queueMicrotask(() => overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus());
+    queueMicrotask(() => {
+      overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus();
+      // El effect de scroll ya corrió al abrir; aquí se repite por si el overlay se adjuntó después.
+      this.scrollActiveOptionsIntoView();
+    });
+  }
+
+  /**
+   * Con `aria-activedescendant` el navegador no hace scroll a la opción activa: se hace aquí, al
+   * abrir (para ver el valor actual) y al moverse con el teclado.
+   */
+  private scrollActiveOptionsIntoView(): void {
+    const panel = this.overlayRef?.overlayElement;
+    if (!panel) return;
+    const hour = this.focusedHourIdx();
+    const minute = this.focusedMinuteIdx();
+    const ids = [
+      hour !== null ? `${this.hoursListId}-opt-${this.hoursOptions()[hour]}` : null,
+      minute !== null ? `${this.minutesListId}-opt-${this.minutesOptions()[minute]}` : null,
+    ];
+    for (const id of ids)
+      // `scrollIntoView` no existe en jsdom.
+      if (id)
+        panel.querySelector(`[id="${CSS.escape(id)}"]`)?.scrollIntoView?.({ block: 'nearest' });
   }
 
   private hidePanel(): void {

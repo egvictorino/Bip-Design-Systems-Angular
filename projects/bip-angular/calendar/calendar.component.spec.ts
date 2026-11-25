@@ -1,10 +1,18 @@
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 import { Component } from '@angular/core';
-import { render, screen } from '@testing-library/angular';
+import { fireEvent, render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
-import type { CalendarView } from '@bip-design-systems/angular/core';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  enUS,
+  esMX,
+  mergeLocale,
+  provideBipLocale,
+  type CalendarView,
+} from '@bip-design-systems/angular/core';
 import { BipCalendar } from './calendar.component';
-import type { BipCalendarEvent, BipCalendarResource } from './calendar.types';
+import type { BipCalendarDateRange, BipCalendarEvent, BipCalendarResource } from './calendar.types';
 
 const TODAY = new Date(2026, 5, 15);
 
@@ -146,7 +154,9 @@ describe('BipCalendar', () => {
   });
 
   it('"Hoy" fija la fecha al día actual', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { date: new Date(2020, 0, 1) } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { date: new Date(2020, 0, 1) },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: 'Hoy' }));
     expect(fixture.componentInstance.date.getFullYear()).toBe(new Date().getFullYear());
@@ -227,5 +237,208 @@ describe('BipCalendar', () => {
       await user.click(screen.getByRole('checkbox', { name: label }));
     }
     expect(screen.getByText('No hay eventos con los filtros seleccionados')).toBeInTheDocument();
+  });
+});
+
+/**
+ * jsdom no aplica la cascada, así que el contraste real lo mide axe en navegador
+ * (visual/a11y-browser.spec.ts, estados `calendar-*`). Aquí se fijan las decisiones de CSS que lo
+ * garantizan.
+ */
+describe('calendar.component.css — contraste AA', () => {
+  const css = readFileSync(resolve(__dirname, 'calendar.component.css'), 'utf-8').replace(
+    /\/\*[\s\S]*?\*\//g,
+    ''
+  );
+  const bodyOf = (selector: string): string => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+    const match = css.match(new RegExp(`(?:^|})\\s*${escaped}\\s*{([^}]*)}`));
+    if (!match) throw new Error(`No se encontró el selector ${selector}`);
+    return match[1];
+  };
+
+  it('días de otro mes: --color-txt-utility sin opacity y sin pisar al día de hoy', () => {
+    const body = bodyOf(
+      '.bip-calendar-month-cell-date--other-month:not(.bip-calendar-month-cell-date--today)'
+    );
+    expect(body).toContain('color: var(--color-txt-utility)');
+    expect(body).not.toMatch(/opacity/);
+  });
+
+  it('días de otro mes en rango: sube a --color-txt-secondary sobre --color-secondary', () => {
+    expect(
+      bodyOf(
+        '.bip-calendar-month-cell--in-range .bip-calendar-month-cell-date--other-month:not(.bip-calendar-month-cell-date--today)'
+      )
+    ).toContain('color: var(--color-txt-secondary)');
+  });
+
+  it('el hover de los botones de vista excluye el activo (texto blanco sobre --color-primary)', () => {
+    expect(
+      bodyOf('.bip-calendar-view-btn:hover:not(:disabled):not(.bip-calendar-view-btn--active)')
+    ).toContain('background-color: var(--color-secondary)');
+    expect(css).not.toMatch(/\.bip-calendar-view-btn:hover:not\(:disabled\)\s*{/);
+  });
+
+  it.each(['.bip-calendar-agenda-filter-btn', '.bip-calendar-agenda-status-badge'])(
+    '%s: el color por defecto va en :where() para no pisar el par --color-txt-on-* del estado',
+    (selector) => {
+      expect(bodyOf(`:where(${selector})`)).toContain('color: var(--color-txt-on-primary)');
+      expect(bodyOf(selector)).not.toMatch(/(^|[\s;])color:/);
+    }
+  );
+
+  it('filtro inactivo de agenda: superficie neutra + texto secundario, sin opacity', () => {
+    const body = bodyOf('.bip-calendar-agenda-filter-btn.bip-calendar-agenda-filter-btn--inactive');
+    expect(body).toContain('background-color: var(--color-surface-3)');
+    expect(body).toContain('color: var(--color-txt-secondary)');
+    expect(css).not.toMatch(/filter-btn--inactive\s*{[^}]*opacity/);
+  });
+
+  it('evento cancelado de agenda: tachado y texto secundario, sin opacity en la tarjeta', () => {
+    expect(
+      bodyOf('.bip-calendar-agenda-event--cancelled .bip-calendar-agenda-event-title')
+    ).toContain('text-decoration: line-through');
+    expect(css).not.toMatch(/agenda-event--cancelled\s*{/);
+  });
+});
+
+@Component({
+  imports: [BipCalendar],
+  template: `
+    <div dir="rtl">
+      <bip-calendar [events]="events" [view]="view" [date]="date" />
+    </div>
+  `,
+})
+class RtlHostComponent {
+  events: BipCalendarEvent[] = EVENTS;
+  view: CalendarView = 'week';
+  date = TODAY;
+}
+
+describe('BipCalendar — aislamiento bidi de los rangos "inicio – fin"', () => {
+  // jsdom no aplica el algoritmo bidi: se fija la estructura (el `dir` del span interior y el
+  // texto en orden lógico), no el pintado, que cubre la baseline RTL de visual/.
+  const titleSpan = (container: HTMLElement) =>
+    container.querySelector<HTMLElement>('.bip-calendar-title > span')!;
+  const timeSpan = (container: HTMLElement) =>
+    container.querySelector<HTMLElement>('.bip-calendar-agenda-event-time > span')!;
+
+  it('título semanal: span interior con dir="ltr" dentro de un layout RTL', async () => {
+    const { container } = await render(RtlHostComponent);
+    expect(titleSpan(container)).toHaveAttribute('dir', 'ltr');
+    expect(titleSpan(container).textContent).toMatch(/^15 .+ – 21 .+, 2026$/);
+  });
+
+  it('el elemento exterior del título no lleva dir (conserva el layout lógico)', async () => {
+    const { container } = await render(RtlHostComponent);
+    expect(container.querySelector('.bip-calendar-title')).not.toHaveAttribute('dir');
+  });
+
+  it('título semanal: dir="rtl" con un locale de escritura RTL', async () => {
+    const { container } = await render(RtlHostComponent, {
+      providers: [provideBipLocale(mergeLocale(enUS, { locale: 'he-IL' }))],
+    });
+    expect(titleSpan(container)).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('hora del evento en la agenda: span interior con dir="ltr" y orden lógico', async () => {
+    const { container } = await render(RtlHostComponent, {
+      componentProperties: { view: 'agenda' },
+    });
+    expect(timeSpan(container)).toHaveAttribute('dir', 'ltr');
+    expect(timeSpan(container).textContent).toMatch(/^09:00.* – 09:30/);
+    expect(container.querySelector('.bip-calendar-agenda-event-time')).not.toHaveAttribute('dir');
+  });
+
+  it('hora del evento en la agenda: dir="rtl" con un locale de escritura RTL', async () => {
+    const { container } = await render(RtlHostComponent, {
+      componentProperties: { view: 'agenda' },
+      providers: [provideBipLocale(mergeLocale(enUS, { locale: 'he-IL' }))],
+    });
+    expect(timeSpan(container)).toHaveAttribute('dir', 'rtl');
+  });
+});
+
+@Component({
+  imports: [BipCalendar],
+  template: `<bip-calendar
+    [events]="[]"
+    view="month"
+    [date]="date"
+    (rangeSelect)="range = $event"
+  />`,
+})
+class RangeHostComponent {
+  date = TODAY;
+  range: BipCalendarDateRange | null = null;
+}
+
+describe('BipCalendar — foco del popover de rango', () => {
+  /** Arrastre de la celda 0 a la 9 (el mousedown real enfoca la celda: jsdom no lo hace). */
+  const dragRange = async () => {
+    const cells = document.querySelectorAll<HTMLElement>('.bip-calendar-month-cell');
+    const start = cells[0]!;
+    start.focus();
+    fireEvent.mouseDown(start, { button: 0 });
+    fireEvent.mouseEnter(cells[9]!);
+    fireEvent.mouseUp(document);
+    return { start, dialog: await screen.findByRole('dialog') };
+  };
+
+  it('al abrir, el foco pasa al diálogo (antes se quedaba en la celda)', async () => {
+    await render(RangeHostComponent);
+    const { dialog } = await dragRange();
+    await vi.waitFor(() => expect(dialog).toHaveFocus());
+  });
+
+  it('el diálogo atrapa el foco: anclas de cdkTrapFocus alrededor del popover', async () => {
+    await render(RangeHostComponent);
+    const { dialog } = await dragRange();
+    // jsdom no simula Tab: el ciclo real se verifica en Docker (ver CHANGELOG).
+    await vi.waitFor(() => {
+      expect(dialog.previousElementSibling).toHaveClass('cdk-focus-trap-anchor');
+      expect(dialog.nextElementSibling).toHaveClass('cdk-focus-trap-anchor');
+    });
+  });
+
+  it('Escape cierra el popover y el foco vuelve a la celda donde empezó el arrastre', async () => {
+    await render(RangeHostComponent);
+    const user = userEvent.setup();
+    const { start, dialog } = await dragRange();
+    await vi.waitFor(() => expect(dialog).toHaveFocus());
+    await user.keyboard('{Escape}');
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(start).toHaveFocus();
+  });
+
+  it('"Crear evento" emite el rango, cierra y devuelve el foco a la celda', async () => {
+    const { fixture } = await render(RangeHostComponent);
+    const user = userEvent.setup();
+    const { start } = await dragRange();
+    await user.click(screen.getByRole('button', { name: esMX.calendar.createEvent }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(fixture.componentInstance.range).not.toBeNull();
+    expect(start).toHaveFocus();
+  });
+
+  it('el clic en la capa cancela sin emitir y devuelve el foco a la celda', async () => {
+    const { fixture } = await render(RangeHostComponent);
+    const { start } = await dragRange();
+    fireEvent.click(document.querySelector('.bip-calendar-range-overlay')!);
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(fixture.componentInstance.range).toBeNull();
+    expect(start).toHaveFocus();
+  });
+
+  it('"×" cancela sin emitir y devuelve el foco a la celda', async () => {
+    const { fixture } = await render(RangeHostComponent);
+    const user = userEvent.setup();
+    const { start } = await dragRange();
+    await user.click(screen.getByRole('button', { name: esMX.calendar.close }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(fixture.componentInstance.range).toBeNull();
+    expect(start).toHaveFocus();
   });
 });

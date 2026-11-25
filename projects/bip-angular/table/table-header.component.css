@@ -46,14 +46,14 @@
   color: var(--color-primary);
 }
 
-.bip-table-align-start {
+:host(.bip-table-align-start) {
   text-align: start;
 }
 
-.bip-table-align-center {
+:host(.bip-table-align-center) {
   text-align: center;
 }
 
-.bip-table-align-end {
+:host(.bip-table-align-end) {
   text-align: end;
 }
