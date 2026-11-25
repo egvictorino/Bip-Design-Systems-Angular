@@ -288,6 +288,16 @@ export class BipTimePicker extends BipFormControlBase implements ControlValueAcc
     this.closePanel(true);
   }
 
+  /**
+   * Modo texto, con el foco en el input: Escape cierra el panel abierto (el `keydown.escape` del
+   * diálogo solo se dispara con el foco dentro). Con el panel cerrado no se intercepta.
+   */
+  protected onTextEscape(event: Event): void {
+    if (!this.isOpen()) return;
+    event.preventDefault();
+    this.closePanel(true);
+  }
+
   protected onHourSelect(hourOption: number): void {
     if (this.isHourOptionDisabled(hourOption)) return;
     const hour24 =

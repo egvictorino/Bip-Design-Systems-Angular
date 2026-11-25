@@ -21,6 +21,7 @@
       [placeholder]="placeholder() || locale().timePicker.placeholder"
       [value]="textValue()"
       (input)="onTextChange($any($event.target).value)"
+      (keydown.escape)="onTextEscape($event)"
       (blur)="onTextBlur()"
     />
     <button
