@@ -51,6 +51,11 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ### Fixed
 
+- `BipToast`: con un tema redondeado (`data-theme='rounded'`), el `<bip-alert>` interno redondeaba
+  sus cuatro esquinas (`--radius-surface`) dentro de la tarjeta, que ya recorta las exteriores con su
+  radio y `overflow: hidden`: quedaban muescas transparentes contra la barra de progreso (medido en
+  Chromium: alert 12px dentro de una tarjeta de 16px). Desde que `BipAlert` pinta su fondo (#47) se
+  veían. El alert del toast usa `--radius-none` y lo recorta la tarjeta.
 - Campos con error: el hover pisaba el borde danger. `:hover:not(:disabled)` pesa (0,3,0) más que la
   regla de error, así que `BipInput`, `BipTextarea` y `BipSelect` (outlined y bare), y los triggers de
   `BipDatePicker`, `BipDateRangePicker` y `BipTimePicker` pasaban del borde danger a primary o
