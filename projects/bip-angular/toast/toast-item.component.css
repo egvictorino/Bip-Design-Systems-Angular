@@ -59,6 +59,13 @@
     0 0 0 1px var(--color-edge);
 }
 
+/* La tarjeta ya recorta las esquinas exteriores (radio + overflow hidden). El alert pinta su propio
+   fondo con `--radius-surface` en las cuatro esquinas: con un tema redondeado dejaba muescas
+   transparentes contra la barra de progreso y dentro del radio de la tarjeta. */
+.bip-toast-card > bip-alert {
+  border-radius: var(--radius-none);
+}
+
 .bip-toast-progress-track {
   height: 0.25rem;
   background-color: var(--color-edge);
