@@ -10,7 +10,7 @@ const SRC_DIR = resolve(__dirname, '..');
  * '@angular/cdk/overlay'` como valor — todo lo demás debe pasar por `BipOverlay`
  * (`core/src/overlay/bip-overlay.service.ts`), que reexpone `position()` y
  * `scrollStrategies` para no forzar a cada componente a inyectar el `Overlay` del CDK
- * directo. Ver CLAUDE.md § Bloque 2 y § Reglas de código.
+ * directo. Ver docs/plan-maestro.md § Bloque 2 y CLAUDE.md § Reglas de código.
  */
 const ALLOWED_PATH = 'core/src/overlay/bip-overlay.service.ts';
 

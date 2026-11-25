@@ -83,7 +83,7 @@ export const BIP_THEME_PROVIDERS = [
 ];
 
 /**
- * Lógica compartida por `<bip-theme-provider>` y `[bipTheme]` — ver CLAUDE.md § Bloque 2.
+ * Lógica compartida por `<bip-theme-provider>` y `[bipTheme]` — ver docs/plan-maestro.md § Bloque 2.
  * No se instancia directamente (no se registra en ningún módulo/standalone import): ambos
  * hosts la extienden y agregan su propio `@Component`/`@Directive` con
  * `providers: BIP_THEME_PROVIDERS` y `host: BIP_THEME_HOST_BINDINGS`. El `@Directive()`
@@ -95,7 +95,7 @@ export abstract class BipThemeHost {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly appDefaults = inject(BIP_THEME_DEFAULTS, { optional: true });
-  /** El provider padre, si hay uno — habilita la herencia/merge (ver CLAUDE.md § Anidación). */
+  /** El provider padre, si hay uno — habilita la herencia/merge (ver docs/plan-maestro.md § Bloque 2, Anidación). */
   private readonly parent = inject(BipThemeContext, { optional: true, skipSelf: true });
   private readonly context = inject(BipThemeContext, { self: true });
   private readonly directionality = inject(Directionality, {

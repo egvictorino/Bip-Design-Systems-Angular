@@ -65,8 +65,12 @@ export class BipAvatarGroup {
 
   protected readonly avatarRefs = contentChildren(BipAvatar, { read: ElementRef });
 
-  protected readonly overflowCount = computed(() => Math.max(0, this.avatarRefs().length - this.max()));
-  protected readonly overflowLabel = computed(() => this.locale().avatar.overflow(this.overflowCount()));
+  protected readonly overflowCount = computed(() =>
+    Math.max(0, this.avatarRefs().length - this.max())
+  );
+  protected readonly overflowLabel = computed(() =>
+    this.locale().avatar.overflow(this.overflowCount())
+  );
   protected readonly sizeContainerClass = computed(() => SIZE_CONTAINER_CLASS[this.size()]);
   protected readonly sizeTextClass = computed(() => SIZE_TEXT_CLASS[this.size()]);
 

@@ -10,11 +10,7 @@ import { BipTabPanel } from './tab-panel.component';
 @Component({
   imports: [BipTabs, BipTabList, BipTab, BipTabPanel],
   template: `
-    <bip-tabs
-      [value]="value"
-      [orientation]="orientation"
-      (valueChange)="onValueChange($event)"
-    >
+    <bip-tabs [value]="value" [orientation]="orientation" (valueChange)="onValueChange($event)">
       <bip-tab-list>
         <button type="button" bipTab value="general">General</button>
         <button type="button" bipTab value="detalles">Detalles</button>
@@ -147,6 +143,8 @@ describe('BipTabs', () => {
     })
     class OrphanHost {}
 
-    await expect(render(OrphanHost)).rejects.toThrow('<bip-tab-list> debe usarse dentro de <bip-tabs>');
+    await expect(render(OrphanHost)).rejects.toThrow(
+      '<bip-tab-list> debe usarse dentro de <bip-tabs>'
+    );
   });
 });

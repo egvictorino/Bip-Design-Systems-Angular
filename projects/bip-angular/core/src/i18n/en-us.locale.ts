@@ -180,6 +180,14 @@ export const enUS: BipLocale = {
     noResults: 'No results',
   },
 
+  select: {
+    options: 'Options',
+    noResults: 'No results',
+    loading: 'Loading options',
+    loadingText: 'Loading...',
+    clear: 'Clear selection',
+  },
+
   navbar: {
     mainNav: 'Main navigation',
     closeMenu: 'Close menu',
@@ -304,7 +312,8 @@ export const enUS: BipLocale = {
     add: 'Add',
     addImage: 'Add image',
     invalidImageType: 'Only image files are accepted.',
-    imageTooLarge: (maxSizeLabel) => `The image exceeds the maximum allowed size (${maxSizeLabel}).`,
+    imageTooLarge: (maxSizeLabel) =>
+      `The image exceeds the maximum allowed size (${maxSizeLabel}).`,
   },
 
   pagination: {

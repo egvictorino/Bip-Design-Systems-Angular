@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { BIP_TABLE_CONTEXT, BIP_TABLE_IN_HEAD } from './table-context';
 
 /**

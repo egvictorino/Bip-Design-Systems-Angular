@@ -17,7 +17,9 @@ import { BipTabPanel } from './tab-panel.component';
       </bip-tab-list>
       <bip-tab-panel value="general">Información general del expediente.</bip-tab-panel>
       <bip-tab-panel value="detalles">Detalles clínicos del paciente.</bip-tab-panel>
-      <bip-tab-panel value="historial">Historial completo (deshabilitado en este demo).</bip-tab-panel>
+      <bip-tab-panel value="historial"
+        >Historial completo (deshabilitado en este demo).</bip-tab-panel
+      >
     </bip-tabs>
   `,
 })

@@ -2,7 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, input, model, output } fr
 import { injectBipLocale } from '@bip-design-systems/angular/core';
 import type { BipButtonVariant } from '@bip-design-systems/angular/button';
 import { BipButton } from '@bip-design-systems/angular/button';
-import { BipModal, BipModalHeader, BipModalBody, BipModalFooter } from '@bip-design-systems/angular/modal';
+import {
+  BipModal,
+  BipModalHeader,
+  BipModalBody,
+  BipModalFooter,
+} from '@bip-design-systems/angular/modal';
 
 export type BipConfirmDialogVariant = 'danger' | 'warning' | 'info';
 

@@ -47,12 +47,18 @@ describe('BipAccordion', () => {
 
   it('todo cerrado por defecto', async () => {
     await render(HostComponent);
-    expect(screen.getByRole('button', { name: 'Sección uno' })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: 'Sección uno' })).toHaveAttribute(
+      'aria-expanded',
+      'false'
+    );
   });
 
   it('respeta un value inicial (single)', async () => {
     await render(HostComponent, { componentProperties: { value: 'uno' } });
-    expect(screen.getByRole('button', { name: 'Sección uno' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: 'Sección uno' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
   });
 
   it('aria-controls/aria-labelledby enlazan trigger y contenido', async () => {
@@ -73,7 +79,10 @@ describe('BipAccordion', () => {
     it('sin collapsible, clic en el item abierto no lo cierra', async () => {
       await render(HostComponent, { componentProperties: { value: 'uno' } });
       await userEvent.click(screen.getByRole('button', { name: 'Sección uno' }));
-      expect(screen.getByRole('button', { name: 'Sección uno' })).toHaveAttribute('aria-expanded', 'true');
+      expect(screen.getByRole('button', { name: 'Sección uno' })).toHaveAttribute(
+        'aria-expanded',
+        'true'
+      );
     });
 
     it('con collapsible, clic en el item abierto lo cierra', async () => {
@@ -116,13 +125,17 @@ describe('BipAccordion', () => {
     })
     class OrphanHost {}
 
-    await expect(render(OrphanHost)).rejects.toThrow('<bip-accordion-item> debe usarse dentro de <bip-accordion>');
+    await expect(render(OrphanHost)).rejects.toThrow(
+      '<bip-accordion-item> debe usarse dentro de <bip-accordion>'
+    );
   });
 
   it('lanza si el trigger se usa fuera de <bip-accordion-item>', async () => {
     @Component({
       imports: [BipAccordion, BipAccordionTrigger],
-      template: `<bip-accordion><button type="button" bipAccordionTrigger>X</button></bip-accordion>`,
+      template: `<bip-accordion
+        ><button type="button" bipAccordionTrigger>X</button></bip-accordion
+      >`,
     })
     class OrphanTriggerHost {}
 

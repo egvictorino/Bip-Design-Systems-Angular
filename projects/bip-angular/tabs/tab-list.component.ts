@@ -63,7 +63,9 @@ export class BipTabList implements OnDestroy {
   private readonly injector = inject(Injector);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly directionality = inject(Directionality);
-  private readonly dir = toSignal(this.directionality.change, { initialValue: this.directionality.value });
+  private readonly dir = toSignal(this.directionality.change, {
+    initialValue: this.directionality.value,
+  });
 
   private readonly items = contentChildren(BipTab, { descendants: true });
   private keyManager: FocusKeyManager<BipTab> | null = null;
@@ -112,7 +114,10 @@ export class BipTabList implements OnDestroy {
     dir: 'ltr' | 'rtl'
   ): void {
     this.keyManager?.destroy();
-    const manager = new FocusKeyManager(computed(() => [...items]), this.injector)
+    const manager = new FocusKeyManager(
+      computed(() => [...items]),
+      this.injector
+    )
       .withWrap()
       .withHomeAndEnd()
       .skipPredicate((item) => item.isDisabled);
@@ -134,7 +139,9 @@ export class BipTabList implements OnDestroy {
     const itemRect = activeItem.elementRef.nativeElement.getBoundingClientRect();
 
     const isRtl = this.directionality.value === 'rtl';
-    this.indicatorOffset.set(isRtl ? containerRect.right - itemRect.right : itemRect.left - containerRect.left);
+    this.indicatorOffset.set(
+      isRtl ? containerRect.right - itemRect.right : itemRect.left - containerRect.left
+    );
     this.indicatorWidth.set(itemRect.width);
   }
 }

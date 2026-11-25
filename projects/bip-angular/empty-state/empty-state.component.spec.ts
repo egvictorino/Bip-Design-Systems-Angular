@@ -58,6 +58,9 @@ describe('BipEmptyState', () => {
 
   it('el icon box es aria-hidden', async () => {
     const { container } = await render(HostMinimal);
-    expect(container.querySelector('.bip-empty-state-icon-box')).toHaveAttribute('aria-hidden', 'true');
+    expect(container.querySelector('.bip-empty-state-icon-box')).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    );
   });
 });

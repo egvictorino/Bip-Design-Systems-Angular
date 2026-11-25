@@ -183,6 +183,14 @@ export const esMX: BipLocale = {
     noResults: 'Sin resultados',
   },
 
+  select: {
+    options: 'Opciones',
+    noResults: 'Sin resultados',
+    loading: 'Cargando opciones',
+    loadingText: 'Cargando...',
+    clear: 'Limpiar selección',
+  },
+
   navbar: {
     mainNav: 'Navegación principal',
     closeMenu: 'Cerrar menú',
@@ -307,7 +315,8 @@ export const esMX: BipLocale = {
     add: 'Agregar',
     addImage: 'Agregar imagen',
     invalidImageType: 'Solo se aceptan archivos de imagen.',
-    imageTooLarge: (maxSizeLabel) => `La imagen supera el tamaño máximo permitido (${maxSizeLabel}).`,
+    imageTooLarge: (maxSizeLabel) =>
+      `La imagen supera el tamaño máximo permitido (${maxSizeLabel}).`,
   },
 
   pagination: {

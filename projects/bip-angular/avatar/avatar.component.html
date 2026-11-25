@@ -1,13 +1,24 @@
-<div [class]="innerClasses()" [attr.role]="displayMode() !== 'image' ? 'img' : null" [attr.aria-label]="displayMode() !== 'image' ? effectiveAlt() : null">
+<div
+  [class]="innerClasses()"
+  [attr.role]="displayMode() !== 'image' ? 'img' : null"
+  [attr.aria-label]="displayMode() !== 'image' ? effectiveAlt() : null"
+>
   @switch (displayMode()) {
     @case ('image') {
       <img [src]="src()" [alt]="effectiveAlt()" class="bip-avatar-img" (error)="onImageError()" />
     }
     @case ('initials') {
-      <span [class]="'bip-avatar-initials-text ' + sizeTextClass()" aria-hidden="true">{{ initials() }}</span>
+      <span [class]="'bip-avatar-initials-text ' + sizeTextClass()" aria-hidden="true">{{
+        initials()
+      }}</span>
     }
     @case ('icon') {
-      <svg viewBox="0 0 24 24" fill="currentColor" class="bip-avatar-person-icon" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="bip-avatar-person-icon"
+        aria-hidden="true"
+      >
         <path
           d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"
         />

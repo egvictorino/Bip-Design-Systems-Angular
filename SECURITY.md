@@ -16,7 +16,7 @@ Incluye:
 ## Versiones soportadas
 
 Solo la última versión publicada recibe parches de seguridad — no hay mantenimiento de
-versiones anteriores (proyecto en línea 0.x, ver `CLAUDE.md` § Estado de bloques).
+versiones anteriores (proyecto en línea 0.x, ver `CLAUDE.md` § Estado).
 
 ## Auditoría automatizada
 

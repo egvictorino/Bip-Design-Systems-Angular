@@ -41,7 +41,9 @@ export class BipSlider extends BipFormControlBase implements ControlValueAccesso
   protected readonly hasVisibleMessage = computed(
     () => (this.error() && !!this.errorMessage()) || !!this.helperText()
   );
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
   protected readonly showFooter = computed(() => !!this.label() || this.showValue());
 
   constructor() {

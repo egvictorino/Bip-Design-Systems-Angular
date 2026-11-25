@@ -9,7 +9,11 @@ import {
   signal,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
-import { BipFormControlBase, formatFileSize, injectBipLocale } from '@bip-design-systems/angular/core';
+import {
+  BipFormControlBase,
+  formatFileSize,
+  injectBipLocale,
+} from '@bip-design-systems/angular/core';
 import type { BipSize } from '@bip-design-systems/angular/core';
 import { BipSpinner } from '@bip-design-systems/angular/spinner';
 import { input as ngInput } from '@angular/core';
@@ -81,11 +85,15 @@ export class BipFileUpload extends BipFormControlBase implements ControlValueAcc
   protected readonly hasVisibleMessage = computed(
     () => (this.error() && !!this.errorMessage()) || !!this.helperText()
   );
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly outerLabelClass = computed(() => {
     const classes = [OUTER_LABEL_SIZE_CLASS[this.size()]];
-    classes.push(this.error() ? 'bip-file-upload-outer-label--error' : 'bip-file-upload-outer-label--normal');
+    classes.push(
+      this.error() ? 'bip-file-upload-outer-label--error' : 'bip-file-upload-outer-label--normal'
+    );
     if (this.isDisabled()) classes.push('bip-file-upload-outer-label--disabled');
     return classes.join(' ');
   });
@@ -99,9 +107,17 @@ export class BipFileUpload extends BipFormControlBase implements ControlValueAcc
     if (this.isDisabled()) {
       classes.push('bip-file-upload-dropzone--disabled');
     } else if (this.error()) {
-      classes.push(this.isDragging() ? 'bip-file-upload-dropzone--error-dragging' : 'bip-file-upload-dropzone--error');
+      classes.push(
+        this.isDragging()
+          ? 'bip-file-upload-dropzone--error-dragging'
+          : 'bip-file-upload-dropzone--error'
+      );
     } else {
-      classes.push(this.isDragging() ? 'bip-file-upload-dropzone--dragging' : 'bip-file-upload-dropzone--default');
+      classes.push(
+        this.isDragging()
+          ? 'bip-file-upload-dropzone--dragging'
+          : 'bip-file-upload-dropzone--default'
+      );
     }
     return classes.join(' ');
   });
@@ -109,12 +125,15 @@ export class BipFileUpload extends BipFormControlBase implements ControlValueAcc
   protected readonly uploadIconClass = computed(() => {
     const classes = ['bip-file-upload-upload-icon'];
     if (this.variant() === 'compact') classes.push('bip-file-upload-upload-icon--compact');
-    classes.push(this.error() ? 'bip-file-upload-upload-icon--error' : 'bip-file-upload-upload-icon--normal');
+    classes.push(
+      this.error() ? 'bip-file-upload-upload-icon--error' : 'bip-file-upload-upload-icon--normal'
+    );
     return classes.join(' ');
   });
 
   protected readonly dropzoneTitleClass = computed(
-    () => `bip-file-upload-dropzone-title ${this.error() ? 'bip-file-upload-dropzone-title--error' : 'bip-file-upload-dropzone-title--normal'}`
+    () =>
+      `bip-file-upload-dropzone-title ${this.error() ? 'bip-file-upload-dropzone-title--error' : 'bip-file-upload-dropzone-title--normal'}`
   );
 
   protected readonly maxSizeLabel = computed(() => {
@@ -149,7 +168,9 @@ export class BipFileUpload extends BipFormControlBase implements ControlValueAcc
 
     const maxSize = this.maxSize();
     if (maxSize !== undefined) {
-      newFiles.filter((f) => f.size > maxSize).forEach((f) => rejected.push({ file: f, reason: 'size' }));
+      newFiles
+        .filter((f) => f.size > maxSize)
+        .forEach((f) => rejected.push({ file: f, reason: 'size' }));
       newFiles = newFiles.filter((f) => f.size <= maxSize);
     }
 

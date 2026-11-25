@@ -6,7 +6,13 @@ import { BipStatsCardIcon } from './stats-card-icon.directive';
 
 @Component({
   imports: [BipStatsCard],
-  template: `<bip-stats-card data-testid="host" title="Ingresos" [value]="value" [trend]="trend" [loading]="loading" />`,
+  template: `<bip-stats-card
+    data-testid="host"
+    title="Ingresos"
+    [value]="value"
+    [trend]="trend"
+    [loading]="loading"
+  />`,
 })
 class HostComponent {
   value: string | number = '$12,400';

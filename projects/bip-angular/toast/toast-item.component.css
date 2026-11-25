@@ -1,7 +1,9 @@
 :host {
   display: block;
   will-change: transform;
-  transition: opacity var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out);
+  transition:
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
   opacity: 0;
 }
 
@@ -52,7 +54,16 @@
 .bip-toast-card {
   border-radius: var(--radius-container);
   overflow: hidden;
-  box-shadow: var(--shadow-lg), 0 0 0 1px var(--color-edge);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px var(--color-edge);
+}
+
+/* La tarjeta ya recorta las esquinas exteriores (radio + overflow hidden). El alert pinta su propio
+   fondo con `--radius-surface` en las cuatro esquinas: con un tema redondeado dejaba muescas
+   transparentes contra la barra de progreso y dentro del radio de la tarjeta. */
+.bip-toast-card > bip-alert {
+  border-radius: var(--radius-none);
 }
 
 .bip-toast-progress-track {

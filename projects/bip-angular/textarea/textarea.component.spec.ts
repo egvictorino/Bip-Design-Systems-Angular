@@ -65,7 +65,9 @@ describe('BipTextarea', () => {
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Requerido');
   });
 
@@ -79,10 +81,13 @@ describe('BipTextarea', () => {
     expect(screen.getByRole('textbox')).toHaveClass(`bip-textarea--${size}`);
   });
 
-  it.each(['outlined', 'filled', 'bare'] as const)('aplica la clase de la variante %s', async (variant) => {
-    await render(HostComponent, { componentProperties: { variant } });
-    expect(screen.getByRole('textbox')).toHaveClass(`bip-textarea--${variant}`);
-  });
+  it.each(['outlined', 'filled', 'bare'] as const)(
+    'aplica la clase de la variante %s',
+    async (variant) => {
+      await render(HostComponent, { componentProperties: { variant } });
+      expect(screen.getByRole('textbox')).toHaveClass(`bip-textarea--${variant}`);
+    }
+  );
 
   it('muestra el asterisco cuando required=true', async () => {
     await render(HostComponent, { componentProperties: { label: 'Campo', required: true } });

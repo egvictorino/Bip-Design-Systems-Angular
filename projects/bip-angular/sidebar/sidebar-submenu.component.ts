@@ -1,5 +1,14 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+} from '@angular/core';
 import { BipIdGenerator, injectBipLocale } from '@bip-design-systems/angular/core';
 import { BipTooltip } from '@bip-design-systems/angular/tooltip';
 import { BIP_SIDEBAR_CONTEXT } from './sidebar-context';
@@ -65,7 +74,8 @@ export class BipSidebarSubMenu {
       const onKeydown = (event: KeyboardEvent): void => {
         if (event.key !== 'Escape') return;
         this.isOpen.set(false);
-        const trigger: HTMLElement | null = this.elementRef.nativeElement.querySelector('[data-sidebar-item]');
+        const trigger: HTMLElement | null =
+          this.elementRef.nativeElement.querySelector('[data-sidebar-item]');
         trigger?.focus();
       };
       this.document.addEventListener('keydown', onKeydown);

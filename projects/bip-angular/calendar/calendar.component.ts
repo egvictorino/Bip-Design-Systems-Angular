@@ -16,6 +16,7 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { A11yModule } from '@angular/cdk/a11y';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -26,6 +27,7 @@ import {
   getMondayOffset,
   injectBipLocale,
   isSameDay,
+  localeDirection,
   startOfDay,
 } from '@bip-design-systems/angular/core';
 import type { CalendarEventStatus, CalendarView } from '@bip-design-systems/angular/core';
@@ -80,7 +82,7 @@ function minutesOfDay(date: Date): number {
  */
 @Component({
   selector: 'bip-calendar',
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, A11yModule],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -113,6 +115,14 @@ export class BipCalendar implements OnDestroy {
   protected readonly statusClass = STATUS_CLASS;
   protected readonly hourHeight = HOUR_HEIGHT_PX;
 
+  /**
+   * Los rangos "inicio – fin" del título semanal y de la hora de la agenda se aíslan con la
+   * dirección del idioma, no la de la página: en un layout RTL el algoritmo bidi reordena los
+   * extremos (runs numéricos separados por un guion neutro). `dir` va en un span interior para
+   * no volver físico el layout del elemento exterior (`margin-inline-start`, `text-align: start`).
+   */
+  protected readonly textDir = computed(() => localeDirection(this.locale().locale));
+
   // ── Encabezado ────────────────────────────────────────────────────────────
 
   protected readonly title = computed(() => {
@@ -122,7 +132,13 @@ export class BipCalendar implements OnDestroy {
     if (view === 'agenda') return this.locale().calendar.upcomingEvents;
     if (view === 'month') return formatDate(date, { locale, month: 'long', year: 'numeric' });
     if (view === 'day') {
-      return formatDate(date, { locale, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      return formatDate(date, {
+        locale,
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
     }
     const start = startOfWeek(date);
     const end = addDays(start, 6);
@@ -270,17 +286,25 @@ export class BipCalendar implements OnDestroy {
   private readonly injector = inject(Injector);
   private readonly document = inject(DOCUMENT);
   private rangeOverlayRef: OverlayRef | null = null;
+  /** Elemento enfocado al abrir el popover (la celda donde empezó el arrastre): se restaura al cerrar. */
+  private rangeReturnFocus: HTMLElement | null = null;
 
   private showRangePopover(): void {
     const anchor = this.monthGridRef;
     if (!anchor) return;
+    // Antes del dispose: al destruirse un popover anterior el foco cae a <body> y se perdería la celda.
+    const active = this.document.activeElement;
+    if (active instanceof HTMLElement && active !== this.document.body)
+      this.rangeReturnFocus = active;
     this.rangeOverlayRef?.dispose();
     const overlayRef = this.bipOverlay.create(
       {
         positionStrategy: this.bipOverlay
           .position()
           .flexibleConnectedTo(anchor)
-          .withPositions([{ originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' }])
+          .withPositions([
+            { originX: 'center', originY: 'center', overlayX: 'center', overlayY: 'center' },
+          ])
           .withPush(true),
         scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
         hasBackdrop: false,
@@ -289,12 +313,22 @@ export class BipCalendar implements OnDestroy {
     );
     overlayRef.attach(new TemplatePortal(this.rangePopoverTemplate, this.viewContainerRef));
     this.rangeOverlayRef = overlayRef;
+    // Diálogo modal: el foco pasa a él al abrir (como date-picker y time-picker); sin esto el foco
+    // se quedaba en la celda y ni Escape ni Tab llegaban al popover.
+    queueMicrotask(() =>
+      overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus()
+    );
   }
 
   private closeRangePopover(): void {
     this.rangeOverlayRef?.dispose();
     this.rangeOverlayRef = null;
     this.pendingRange.set(null);
+    // Confirmar, cancelar, Escape y el clic en la capa: el foco vuelve a donde estaba (si sigue en
+    // el DOM) en vez de caer a <body> al destruirse el popover.
+    const target = this.rangeReturnFocus;
+    this.rangeReturnFocus = null;
+    if (target?.isConnected) target.focus();
   }
 
   protected onRangePopoverEscape(event: Event): void {
@@ -324,10 +358,14 @@ export class BipCalendar implements OnDestroy {
     return Array.from({ length: Math.max(0, end - start) }, (_, i) => start + i);
   });
 
-  protected readonly gridHeight = computed(() => ((this.maxMinutes() - this.minMinutes()) / 60) * this.hourHeight);
+  protected readonly gridHeight = computed(
+    () => ((this.maxMinutes() - this.minMinutes()) / 60) * this.hourHeight
+  );
 
   protected eventsForColumn(day: Date, doctorId: string | undefined): BipCalendarEvent[] {
-    return this.events().filter((e) => isSameDay(e.start, day) && (!doctorId || e.doctorId === doctorId));
+    return this.events().filter(
+      (e) => isSameDay(e.start, day) && (!doctorId || e.doctorId === doctorId)
+    );
   }
 
   protected eventTop(event: BipCalendarEvent): number {
@@ -368,7 +406,11 @@ export class BipCalendar implements OnDestroy {
 
   protected eventAriaLabel(event: BipCalendarEvent): string {
     const statusLabel = this.locale().calendar.statusLabels[event.status];
-    const time = formatDate(event.start, { locale: this.locale().locale, hour: '2-digit', minute: '2-digit' });
+    const time = formatDate(event.start, {
+      locale: this.locale().locale,
+      hour: '2-digit',
+      minute: '2-digit',
+    });
     return `${event.title}, ${time}, ${statusLabel}`;
   }
 
@@ -430,7 +472,12 @@ export class BipCalendar implements OnDestroy {
   }
 
   protected agendaDayLabel(day: Date): string {
-    return formatDate(day, { locale: this.locale().locale, weekday: 'long', day: 'numeric', month: 'long' });
+    return formatDate(day, {
+      locale: this.locale().locale,
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
   }
 
   protected columnHeaderLabel(day: Date): string {

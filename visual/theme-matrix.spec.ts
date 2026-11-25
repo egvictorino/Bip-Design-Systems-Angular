@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Regresión visual del sistema de temas — ver CLAUDE.md § Bloque 11. Baselines commiteadas
+ * Regresión visual del sistema de temas — ver docs/plan-maestro.md § Bloque 11. Baselines commiteadas
  * en `visual/theme-matrix.spec.ts-snapshots/`. Para actualizar tras un cambio deliberado de
  * tokens.css/BipThemeProvider:
  *   pnpm test:visual:docker -- --update-snapshots
@@ -89,5 +89,5 @@ test.describe('theme matrix', () => {
   });
 
   // UncontrolledWithPersistence depende de localStorage — no se screenshotea (ver
-  // CLAUDE.md § Bloque 11), queda cubierta por theme-provider.spec.ts (Vitest).
+  // docs/plan-maestro.md § Bloque 11), queda cubierta por theme-provider.spec.ts (Vitest).
 });

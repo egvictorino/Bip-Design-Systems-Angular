@@ -62,14 +62,17 @@ export class BipNavbarItem {
     if (!container) return;
 
     const items = Array.from(
-      container.querySelectorAll<HTMLElement>('[data-navbar-item]:not([aria-disabled="true"]):not(:disabled)')
+      container.querySelectorAll<HTMLElement>(
+        '[data-navbar-item]:not([aria-disabled="true"]):not(:disabled)'
+      )
     );
     const currentIndex = items.indexOf(target);
     if (currentIndex === -1) return;
 
     let nextIndex = currentIndex;
     if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % items.length;
-    else if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + items.length) % items.length;
+    else if (event.key === 'ArrowLeft')
+      nextIndex = (currentIndex - 1 + items.length) % items.length;
     else if (event.key === 'Home') nextIndex = 0;
     else if (event.key === 'End') nextIndex = items.length - 1;
 

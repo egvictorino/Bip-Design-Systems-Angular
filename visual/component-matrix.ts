@@ -1,7 +1,8 @@
 /**
  * Manifiesto de cobertura visual por componente — un screenshot canónico por secondary
  * entry point de `projects/bip-angular/` (50, todos salvo `core` — ver SKIP_LIST abajo,
- * mismo criterio que `SKIP_LIST` en `testing/a11y.spec.ts`: no renderiza UI propia).
+ * mismo criterio que `SKIP_LIST` en `testing/a11y.spec.ts`: no renderiza UI propia), más
+ * shots extra (`shot`) para modos con geometría propia que la story canónica no muestra.
  *
  * `storyId` es la story canónica de cada componente (la primera exportada de su
  * `*.stories.ts`) — se extrajo del `index.json` real de Storybook
@@ -19,7 +20,13 @@
 export interface ComponentMatrixEntry {
   dir: string;
   storyId: string;
+  /** Nombre del PNG y del test; por defecto `dir`. Obligatorio (y único) en los shots extra. */
+  shot?: string;
   rtl?: true;
+  /** Agrega el shot `<shot>-dark` (`globals=colorScheme:dark`): para lo que solo falla en dark. */
+  dark?: true;
+  /** Congela el reloj (FROZEN_TIME) para stories que renderizan con `new Date()`. */
+  frozenTime?: true;
 }
 
 export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
@@ -30,13 +37,40 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
   { dir: 'breadcrumb', storyId: 'components-breadcrumb--basic', rtl: true },
   { dir: 'button', storyId: 'components-button--default' },
   { dir: 'calendar', storyId: 'components-calendar--month-view', rtl: true },
+  {
+    dir: 'calendar',
+    shot: 'calendar-week-view',
+    storyId: 'components-calendar--week-view',
+    dark: true,
+    rtl: true,
+  },
+  {
+    dir: 'calendar',
+    shot: 'calendar-agenda-view',
+    storyId: 'components-calendar--agenda-view',
+    rtl: true,
+  },
   { dir: 'card', storyId: 'components-card--simple' },
   { dir: 'checkbox', storyId: 'components-checkbox--default' },
   { dir: 'confirm-dialog', storyId: 'components-confirmdialog--danger' },
   { dir: 'container', storyId: 'components-container--default' },
   { dir: 'data-table', storyId: 'components-datatable--default' },
   { dir: 'date-picker', storyId: 'components-datepicker--default', rtl: true },
+  {
+    dir: 'date-picker',
+    shot: 'date-picker-with-value',
+    storyId: 'components-datepicker--with-value',
+    rtl: true,
+    frozenTime: true,
+  },
   { dir: 'date-range-picker', storyId: 'components-daterangepicker--default' },
+  {
+    dir: 'date-range-picker',
+    shot: 'date-range-picker-with-value',
+    storyId: 'components-daterangepicker--with-value',
+    rtl: true,
+    frozenTime: true,
+  },
   { dir: 'divider', storyId: 'components-divider--horizontal' },
   { dir: 'drawer-panel', storyId: 'components-drawerpanel--basic', rtl: true },
   { dir: 'dropdown', storyId: 'components-dropdown--basic', rtl: true },
@@ -48,6 +82,19 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
   { dir: 'link', storyId: 'components-link--default' },
   { dir: 'modal', storyId: 'components-modal--basic' },
   { dir: 'multi-select', storyId: 'components-multiselect--default', rtl: true },
+  {
+    dir: 'multi-select',
+    shot: 'multi-select-trigger-search',
+    storyId: 'components-multiselect--trigger-search',
+    rtl: true,
+  },
+  {
+    dir: 'multi-select',
+    shot: 'multi-select-variants',
+    storyId: 'components-multiselect--variants',
+    rtl: true,
+    dark: true,
+  },
   { dir: 'navbar', storyId: 'components-navbar--basic' },
   { dir: 'number-input', storyId: 'components-numberinput--default', rtl: true },
   { dir: 'odontogram', storyId: 'components-odontogram--default' },
@@ -57,6 +104,12 @@ export const COMPONENT_MATRIX: ComponentMatrixEntry[] = [
   { dir: 'radio', storyId: 'components-radio--default' },
   { dir: 'search-input', storyId: 'components-searchinput--default', rtl: true },
   { dir: 'select', storyId: 'components-select--default', rtl: true },
+  {
+    dir: 'select',
+    shot: 'select-searchable-clearable',
+    storyId: 'components-select--searchable-clearable',
+    rtl: true,
+  },
   { dir: 'sidebar', storyId: 'components-sidebar--basic', rtl: true },
   { dir: 'skeleton', storyId: 'components-skeleton--text' },
   { dir: 'slider', storyId: 'components-slider--default' },

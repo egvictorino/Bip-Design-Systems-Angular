@@ -4,11 +4,11 @@
   gap: var(--space-1);
 }
 
-:host.bip-textarea-wrapper--full-width {
+:host(.bip-textarea-wrapper--full-width) {
   width: 100%;
 }
 
-:host.bip-textarea-wrapper--full-width .bip-textarea {
+:host(.bip-textarea-wrapper--full-width) .bip-textarea {
   width: 100%;
 }
 
@@ -119,7 +119,8 @@
   border: 1px solid var(--color-edge);
   background-color: var(--color-field);
 }
-.bip-textarea--outlined:hover:not(:disabled) {
+/* El hover excluye el error (ver testing/error-border-hover.spec.ts). */
+.bip-textarea--outlined:not(.bip-textarea--error):hover:not(:disabled) {
   border-color: var(--color-edge-hover);
 }
 .bip-textarea--outlined:focus-visible {
@@ -157,18 +158,19 @@
   background-color: transparent;
   border-radius: var(--radius-none);
 }
-.bip-textarea--bare:hover:not(:disabled) {
-  border-bottom-color: var(--color-primary-hover);
+.bip-textarea--bare:not(.bip-textarea--error):hover:not(:disabled) {
+  border-bottom-color: var(--color-edge-primary-hover);
 }
+/* Foco con el anillo completo, como search-input--bare: el subrayado primary → primary-hover
+   (igual que el hover) daba 1.37:1 y con error no cambiaba nada (WCAG 1.4.11 / 2.4.7). */
 .bip-textarea--bare:focus-visible {
-  box-shadow: none;
-  border-bottom-color: var(--color-primary-hover);
+  box-shadow: var(--focus-ring);
 }
 .bip-textarea--bare.bip-textarea--error {
   border-bottom-color: var(--color-danger);
 }
 .bip-textarea--bare.bip-textarea--error:focus-visible {
-  box-shadow: none;
+  --focus-ring-color: var(--color-danger);
 }
 
 /* ─── Helper / Error / Counter ────────────────────────────────────────────── */

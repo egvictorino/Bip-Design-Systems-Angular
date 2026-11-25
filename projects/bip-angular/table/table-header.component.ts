@@ -2,7 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output } f
 import { BIP_TABLE_CONTEXT } from './table-context';
 import type { BipTableAlign, BipTableSortDirection } from './table.types';
 
-const ARIA_SORT: Record<Exclude<BipTableSortDirection, null> | 'none', 'ascending' | 'descending' | 'none'> = {
+const ARIA_SORT: Record<
+  Exclude<BipTableSortDirection, null> | 'none',
+  'ascending' | 'descending' | 'none'
+> = {
   asc: 'ascending',
   desc: 'descending',
   none: 'none',
@@ -19,7 +22,13 @@ const ARIA_SORT: Record<Exclude<BipTableSortDirection, null> | 'none', 'ascendin
     <span [class.bip-table-header-sortable-inner]="sortable()">
       <ng-content />
       @if (sortable()) {
-        <svg viewBox="0 0 16 16" fill="none" class="bip-table-sort-icon" [class.bip-table-sort-icon--active]="sortDirection()" aria-hidden="true">
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          class="bip-table-sort-icon"
+          [class.bip-table-sort-icon--active]="sortDirection()"
+          aria-hidden="true"
+        >
           @switch (sortDirection()) {
             @case ('asc') {
               <path d="M8 4.5L3.5 9.5h9L8 4.5z" fill="currentColor" />

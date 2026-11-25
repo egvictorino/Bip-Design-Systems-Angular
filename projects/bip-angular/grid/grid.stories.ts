@@ -8,7 +8,9 @@ import { BipGrid } from './grid.component';
   template: `
     <div bipGrid [columns]="columns" [gap]="gap">
       @for (i of [1, 2, 3, 4, 5, 6]; track i) {
-        <div style="background: var(--color-surface-3); padding: var(--space-4); border-radius: var(--radius-control);">
+        <div
+          style="background: var(--color-surface-3); padding: var(--space-4); border-radius: var(--radius-control);"
+        >
           Item {{ i }}
         </div>
       }

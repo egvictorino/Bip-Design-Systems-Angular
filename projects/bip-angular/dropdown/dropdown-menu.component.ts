@@ -27,10 +27,34 @@ export type BipDropdownPlacement = 'bottom-start' | 'bottom-end' | 'top-start' |
 const GAP_PX = 4;
 
 const PLACEMENT_POSITION: Record<BipDropdownPlacement, ConnectedPosition> = {
-  'bottom-start': { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-  'bottom-end': { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: GAP_PX },
-  'top-start': { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
-  'top-end': { originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -GAP_PX },
+  'bottom-start': {
+    originX: 'start',
+    originY: 'bottom',
+    overlayX: 'start',
+    overlayY: 'top',
+    offsetY: GAP_PX,
+  },
+  'bottom-end': {
+    originX: 'end',
+    originY: 'bottom',
+    overlayX: 'end',
+    overlayY: 'top',
+    offsetY: GAP_PX,
+  },
+  'top-start': {
+    originX: 'start',
+    originY: 'top',
+    overlayX: 'start',
+    overlayY: 'bottom',
+    offsetY: -GAP_PX,
+  },
+  'top-end': {
+    originX: 'end',
+    originY: 'top',
+    overlayX: 'end',
+    overlayY: 'bottom',
+    offsetY: -GAP_PX,
+  },
 };
 
 /**
@@ -62,7 +86,9 @@ export class BipDropdownMenu implements OnDestroy {
 
   private readonly allItems = contentChildren(BipDropdownFocusableItem, { descendants: true });
   /** Solo los items que me pertenecen directamente — excluye los de un <bip-dropdown-submenu> anidado (ver dropdown-menu-scope.ts). */
-  private readonly items = computed(() => this.allItems().filter((item) => item.menuScope === this));
+  private readonly items = computed(() =>
+    this.allItems().filter((item) => item.menuScope === this)
+  );
 
   @ViewChild('portalTemplate', { static: true })
   private readonly portalTemplate!: TemplateRef<unknown>;

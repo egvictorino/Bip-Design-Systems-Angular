@@ -14,7 +14,9 @@ pnpm lint && pnpm typecheck
 ```
 
 El plan maestro, las reglas de código y la Definición de Terminado de un componente viven en
-[CLAUDE.md](CLAUDE.md).
+[CLAUDE.md](CLAUDE.md). Las reglas de revisión, arquitectura y seguridad viven en
+[AGENTS.md](AGENTS.md) y aplican a humanos y agentes (el subagente `bip-reviewer` en
+`.claude/agents/` las usa para revisar un diff).
 
 ## Flujo de ramas
 
@@ -73,6 +75,11 @@ baselines (`-chromium-linux.png`) se generan en Docker y un run nativo falla por
 pnpm test:visual:docker                    # verificar contra baselines existentes
 pnpm test:visual:docker --update-snapshots # regenerar tras un cambio visual deliberado
 ```
+
+**Vitest y Docker/Playwright se corren por separado, nunca en paralelo**: la emulación `linux/amd64`
+y la suite de Vitest compiten por CPU y producen timeouts falsos en ambas (un fallo así no es una
+regresión: reintenta la suite sola). Los flags de `playwright test` se pasan tal cual, incluidos
+patrones con `|` o espacios: `pnpm test:visual:docker -g "a|b"`.
 
 La imagen Docker (`scripts/visual-docker.sh`) y el `container` del job `visual-regression` en
 `pr-validation.yml` se fijan a la versión exacta de `@playwright/test` — se suben juntos.

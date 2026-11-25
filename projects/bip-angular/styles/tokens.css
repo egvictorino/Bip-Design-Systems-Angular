@@ -43,6 +43,10 @@
      contra blanco); en dark no (3.3:1 contra superficies oscuras derivadas) — de ahí el
      mix hacia white, mismo patrón que --color-danger-text/--color-info-text. */
   --color-primary-text: var(--color-primary);
+  /* Hover/press de --color-primary-text (Button bare/soul): en light replican los derivados
+     de relleno, que ya oscurecen sobre fondo claro. */
+  --color-primary-text-hover: var(--color-primary-hover);
+  --color-primary-text-press: var(--color-primary-press);
   --color-secondary-hover: color-mix(in srgb, var(--color-secondary), black 12%);
   --color-secondary-press: color-mix(in srgb, var(--color-secondary), black 35%);
   --color-danger-hover: color-mix(in srgb, var(--color-danger), black 25%);
@@ -115,6 +119,9 @@
   --color-edge-hover: var(--color-link-hover);
   --color-edge-important: var(--color-danger);
   --color-edge-medium: #9e9e9e;
+  /* Hover/foco de borde de marca (sin texto encima): en light replica el relleno
+     hover. */
+  --color-edge-primary-hover: var(--color-primary-hover);
   --color-edge-success: #24ae42;
   --color-edge-unique: color-mix(in srgb, var(--color-unique), black 22%);
   --color-edge-warning: #cc8f34;
@@ -150,7 +157,7 @@
  * Esquema oscuro — activado por [data-color-scheme='dark'].
  *
  * No es una inversión ciega: cada grupo sigue su propia regla semántica
- * (ver CLAUDE.md § Design tokens). --color-txt-white NO se sobreescribe
+ * (ver CLAUDE.md § Reglas de código). --color-txt-white NO se sobreescribe
  * aquí a propósito — es "texto sobre relleno de marca", correcto en
  * ambos esquemas. Doble selector para cubrir data-color-scheme tanto en
  * <html> (gana por especificidad, 0,2,0) como en el wrapper del
@@ -171,12 +178,21 @@
   --color-unique: #c877ff;
 
   /* Interaction — derivados */
-  --color-primary-hover: color-mix(in srgb, var(--color-primary), white 15%);
-  --color-primary-press: color-mix(in srgb, var(--color-primary), white 30%);
+  /* Relleno de hover/press con --color-txt-on-primary (#fff) encima. La semilla dark ya da solo
+     4.64:1 con blanco, así que aclararla (white 15%/30%: 3.56/2.77:1) rompe AA; oscurece hacia
+     black: 15% -> #4758c5 (6.05:1), 30% -> #3b49a2 (7.89:1). El hover como BORDE/foco usa
+     --color-edge-primary-hover (aclara). */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary), black 15%);
+  --color-primary-press: color-mix(in srgb, var(--color-primary), black 30%);
   /* La semilla dark (#5468e8) medía 3.3–3.7:1 como color de texto contra superficies
      oscuras derivadas (selected/subtle/field) — bajo AA. white 20% da >=4.7:1 contra
      esas mismas superficies (ver comentario del bloque light). */
   --color-primary-text: color-mix(in srgb, var(--color-primary), white 20%);
+  /* Parten de --color-primary-text (no de la semilla): hover/press de texto deben quedar MÁS
+     claros que el reposo en dark (white 15%/30% sobre la semilla dejaba el hover en 4.8:1,
+     por debajo del reposo de 5.2:1). Sobre --color-field: 5.2 -> 6.4 -> 7.8:1. */
+  --color-primary-text-hover: color-mix(in srgb, var(--color-primary-text), white 15%);
+  --color-primary-text-press: color-mix(in srgb, var(--color-primary-text), white 30%);
   --color-secondary-hover: color-mix(in srgb, var(--color-secondary), white 18%);
   --color-secondary-press: color-mix(in srgb, var(--color-secondary), white 32%);
   --color-danger-hover: color-mix(in srgb, var(--color-danger), white 15%);
@@ -240,6 +256,9 @@
   --color-edge-hover: var(--color-link-hover);
   --color-edge-important: var(--color-danger);
   --color-edge-medium: #5c5c5c;
+  /* Aclara en dark (4.79:1 contra --color-field): el borde/foco necesita >=3:1
+     non-text. */
+  --color-edge-primary-hover: color-mix(in srgb, var(--color-primary), white 15%);
   --color-edge-success: #4ade80;
   --color-edge-unique: color-mix(in srgb, var(--color-unique), white 10%);
   --color-edge-warning: #fbbf24;

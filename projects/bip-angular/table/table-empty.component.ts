@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, numberAttribute, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  numberAttribute,
+  input,
+} from '@angular/core';
 import { injectBipLocale } from '@bip-design-systems/angular/core';
 import { BIP_TABLE_CONTEXT } from './table-context';
 
@@ -32,6 +39,7 @@ export class BipTableEmpty {
   readonly colSpan = input.required<number, unknown>({ transform: numberAttribute });
 
   protected readonly cellClasses = computed(
-    () => `bip-table-cell-empty ${this.context.compact() ? 'bip-table-cell--compact' : 'bip-table-cell--normal'}`
+    () =>
+      `bip-table-cell-empty ${this.context.compact() ? 'bip-table-cell--compact' : 'bip-table-cell--normal'}`
   );
 }

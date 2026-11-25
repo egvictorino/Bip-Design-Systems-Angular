@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  input,
+} from '@angular/core';
 import { BipVisuallyHidden, injectBipLocale } from '@bip-design-systems/angular/core';
 
 export type BipLinkUnderline = 'always' | 'hover' | 'none';

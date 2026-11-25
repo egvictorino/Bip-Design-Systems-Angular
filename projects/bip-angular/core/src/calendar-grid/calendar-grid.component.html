@@ -10,7 +10,12 @@
       >
         ‹
       </button>
-      <button type="button" class="bip-calendar-grid-heading-btn" [id]="headingId" (click)="showMonthPicker()">
+      <button
+        type="button"
+        class="bip-calendar-grid-heading-btn"
+        [id]="headingId"
+        (click)="showMonthPicker()"
+      >
         {{ monthYearLabel() }}
       </button>
       <button
@@ -36,21 +41,29 @@
           <span class="bip-calendar-grid-column-header" role="columnheader">{{ label }}</span>
         }
       </div>
-      @for (week of [0, 1, 2, 3, 4, 5]; track week) {
+      @for (week of weeks(); track week[0].key) {
         <div class="bip-calendar-grid-row" role="row">
-          @for (cell of days().slice(week * 7, week * 7 + 7); track cell.key) {
+          @for (cell of week; track cell.key) {
             <div
               class="bip-calendar-grid-cell"
               role="gridcell"
               [class.bip-calendar-grid-cell--in-range]="isInRange(cell.date)"
-              [attr.aria-selected]="mode() === 'range' ? isRangeFrom(cell.date) || isRangeTo(cell.date) || null : isSelected(cell.date) || null"
+              [attr.aria-selected]="
+                mode() === 'range'
+                  ? isRangeFrom(cell.date) || isRangeTo(cell.date) || null
+                  : isSelected(cell.date) || null
+              "
             >
               <button
                 type="button"
                 class="bip-calendar-grid-day"
                 [class.bip-calendar-grid-day--other-month]="!cell.inCurrentMonth"
                 [class.bip-calendar-grid-day--today]="isToday(cell.date)"
-                [class.bip-calendar-grid-day--selected]="mode() === 'single' ? isSelected(cell.date) : isRangeFrom(cell.date) || isRangeTo(cell.date)"
+                [class.bip-calendar-grid-day--selected]="
+                  mode() === 'single'
+                    ? isSelected(cell.date)
+                    : isRangeFrom(cell.date) || isRangeTo(cell.date)
+                "
                 [attr.data-date]="cell.key"
                 [attr.tabindex]="cell.key === focusedDateKey() ? 0 : -1"
                 [disabled]="isDayDisabled(cell.date)"
@@ -69,7 +82,12 @@
 
     @if (todayLabel()) {
       <div class="bip-calendar-grid-footer">
-        <button type="button" class="bip-calendar-grid-today-btn" [disabled]="todayDisabled()" (click)="onToday()">
+        <button
+          type="button"
+          class="bip-calendar-grid-today-btn"
+          [disabled]="todayDisabled()"
+          (click)="onToday()"
+        >
           {{ todayLabel() }}
         </button>
       </div>
@@ -112,7 +130,9 @@
           <button
             type="button"
             class="bip-calendar-grid-month-btn"
-            [class.bip-calendar-grid-month-btn--current]="idx === month() && pickerYear() === year()"
+            [class.bip-calendar-grid-month-btn--current]="
+              idx === month() && pickerYear() === year()
+            "
             [disabled]="isMonthDisabled(idx)"
             [attr.aria-pressed]="idx === month() && pickerYear() === year()"
             [attr.aria-label]="strings().monthOfYear(strings().monthNames[idx], pickerYear())"
@@ -135,7 +155,9 @@
       >
         ‹
       </button>
-      <span class="bip-calendar-grid-heading-static">{{ yearRangeLabel() }}</span>
+      <span class="bip-calendar-grid-heading-static"
+        ><span [attr.dir]="yearRangeDir()">{{ yearRangeLabel() }}</span></span
+      >
       <button
         type="button"
         class="bip-calendar-grid-nav-btn"

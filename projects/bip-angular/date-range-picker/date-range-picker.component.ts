@@ -17,6 +17,7 @@ import {
   untracked,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
+import { A11yModule } from '@angular/cdk/a11y';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -26,6 +27,7 @@ import {
   formatDate,
   injectBipLocale,
   isSameDay,
+  localeDirection,
   startOfDay,
 } from '@bip-design-systems/angular/core';
 import type { BipCalendarGridStrings, BipSize } from '@bip-design-systems/angular/core';
@@ -54,7 +56,7 @@ const SIZE_CLASS: Record<BipSize, string> = {
  */
 @Component({
   selector: 'bip-date-range-picker',
-  imports: [BipCalendarGrid],
+  imports: [A11yModule, BipCalendarGrid],
   templateUrl: './date-range-picker.component.html',
   styleUrl: './date-range-picker.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,7 +65,10 @@ const SIZE_CLASS: Record<BipSize, string> = {
     '[class.bip-date-range-picker-wrapper--full-width]': 'fullWidth()',
   },
 })
-export class BipDateRangePicker extends BipFormControlBase implements ControlValueAccessor, OnDestroy {
+export class BipDateRangePicker
+  extends BipFormControlBase
+  implements ControlValueAccessor, OnDestroy
+{
   readonly value = model<BipDateRange>({ ...EMPTY_RANGE });
 
   readonly min = input<Date | undefined>(undefined);
@@ -85,16 +90,24 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
 
   private onChange: (value: BipDateRange) => void = () => {};
 
-  @ViewChild('triggerRef', { static: true }) private readonly triggerRef!: ElementRef<HTMLButtonElement>;
-  @ViewChild('panelTemplate', { static: true }) private readonly panelTemplate!: TemplateRef<unknown>;
+  @ViewChild('triggerWrapperRef', { static: true })
+  private readonly triggerWrapperRef!: ElementRef<HTMLElement>;
+  @ViewChild('triggerRef', { static: true })
+  private readonly triggerRef!: ElementRef<HTMLButtonElement>;
+  @ViewChild('panelTemplate', { static: true })
+  private readonly panelTemplate!: TemplateRef<unknown>;
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
 
-  protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly hasVisibleMessage = computed(
+    () => (this.error() && !!this.errorMessage()) || !!this.helperText()
+  );
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly previewTo = computed(() => {
     const range = this.value();
@@ -126,8 +139,12 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
   protected readonly triggerClass = computed(() => {
     const classes = [SIZE_CLASS[this.size()]];
     if (this.error()) classes.push('bip-date-range-picker-trigger--error');
+    if (this.showClear()) classes.push('bip-date-range-picker-trigger--clearable');
     return classes.join(' ');
   });
+
+  /** El botón de limpiar es hermano del trigger (un control no puede anidarse en otro). */
+  protected readonly showClear = computed(() => !!this.value().from && !this.disabled());
 
   protected readonly displayValue = computed(() => {
     const { from, to } = this.value();
@@ -141,6 +158,13 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
     const fromLabel = formatDate(from, fmtOptions);
     return to ? `${fromLabel} – ${formatDate(to, fmtOptions)}` : `${fromLabel} – ...`;
   });
+
+  /**
+   * El valor "inicio – fin" se aísla con la dirección del idioma, no la de la página: sin esto, en
+   * un layout RTL el algoritmo bidi reordena las dos fechas (runs numéricos) y el fin queda a la
+   * izquierda aunque el locale sea LTR; el placeholder (con letras) ya se pintaba de izquierda a derecha.
+   */
+  protected readonly valueDir = computed(() => localeDirection(this.locale().locale));
 
   constructor() {
     super();
@@ -202,16 +226,17 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
     } else {
       this.commitRange({ from: range.from, to: date });
     }
-    this.closePanel();
+    // El foco real está en el panel: sin refocus caería a <body> al destruirse.
+    this.closePanel(true);
   }
 
   protected onDayHover(date: Date | null): void {
     this.hoverDate.set(date);
   }
 
-  protected onClearRange(event: Event): void {
-    event.stopPropagation();
+  protected onClearRange(): void {
     this.commitRange({ ...EMPTY_RANGE });
+    this.triggerRef.nativeElement.focus();
   }
 
   protected onClearFromGrid(): void {
@@ -223,7 +248,13 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
     this.closePanel(true);
   }
 
-  protected onBlur(): void {
+  /**
+   * Touched solo cuando el foco sale del wrapper (trigger + limpiar): tabular del trigger al botón
+   * de limpiar no es "salir" del control.
+   */
+  protected onFocusOut(event: FocusEvent): void {
+    const next = event.relatedTarget;
+    if (next instanceof Node && this.triggerWrapperRef.nativeElement.contains(next)) return;
     this.markTouched();
   }
 
@@ -235,8 +266,20 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
-            { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-            { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
+            {
+              originX: 'start',
+              originY: 'bottom',
+              overlayX: 'start',
+              overlayY: 'top',
+              offsetY: GAP_PX,
+            },
+            {
+              originX: 'start',
+              originY: 'top',
+              overlayX: 'start',
+              overlayY: 'bottom',
+              offsetY: -GAP_PX,
+            },
           ])
           .withPush(true),
         scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
@@ -246,12 +289,15 @@ export class BipDateRangePicker extends BipFormControlBase implements ControlVal
     );
     overlayRef.attach(new TemplatePortal(this.panelTemplate, this.viewContainerRef));
     overlayRef.outsidePointerEvents().subscribe((event) => {
-      const trigger = this.triggerRef.nativeElement;
-      if (event.target instanceof Node && trigger.contains(event.target)) return;
+      // El wrapper incluye el botón de limpiar: pulsarlo no cuenta como clic fuera.
+      const wrapper = this.triggerWrapperRef.nativeElement;
+      if (event.target instanceof Node && wrapper.contains(event.target)) return;
       this.closePanel();
     });
     this.overlayRef = overlayRef;
-    queueMicrotask(() => overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus());
+    queueMicrotask(() =>
+      overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus()
+    );
   }
 
   private hidePanel(): void {

@@ -146,6 +146,14 @@ export interface BipLocale {
     noResults: string;
   };
 
+  select: {
+    options: string;
+    noResults: string;
+    loading: string;
+    loadingText: string;
+    clear: string;
+  };
+
   navbar: {
     mainNav: string;
     closeMenu: string;

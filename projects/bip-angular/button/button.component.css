@@ -33,12 +33,12 @@
 }
 
 :host:disabled,
-:host[aria-disabled='true'] {
+:host([aria-disabled='true']) {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-:host[aria-disabled='true'] {
+:host([aria-disabled='true']) {
   pointer-events: none;
 }
 
@@ -74,33 +74,32 @@
 :host(.bip-button--secondary):active:not(:disabled):not([aria-disabled='true']) {
   background-color: var(--color-secondary-press);
 }
-:host(.bip-button--secondary):focus-visible {
-  --focus-ring-color: var(--color-secondary);
-}
+/* El foco del secondary usa el anillo primary: --color-secondary (#e7e7e7 / #2a2a2a) daría ~1.2:1
+   contra el hueco del anillo (WCAG 1.4.11). */
 
 :host(.bip-button--bare) {
   background-color: transparent;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
   border: 1px solid var(--color-primary);
 }
 :host(.bip-button--bare):hover:not(:disabled):not([aria-disabled='true']) {
-  color: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
+  color: var(--color-primary-text-hover);
+  border-color: var(--color-primary-text-hover);
 }
 :host(.bip-button--bare):active:not(:disabled):not([aria-disabled='true']) {
-  color: var(--color-primary-press);
-  border-color: var(--color-primary-press);
+  color: var(--color-primary-text-press);
+  border-color: var(--color-primary-text-press);
 }
 
 :host(.bip-button--soul) {
   background-color: transparent;
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 :host(.bip-button--soul):hover:not(:disabled):not([aria-disabled='true']) {
-  color: var(--color-primary-hover);
+  color: var(--color-primary-text-hover);
 }
 :host(.bip-button--soul):active:not(:disabled):not([aria-disabled='true']) {
-  color: var(--color-primary-press);
+  color: var(--color-primary-text-press);
 }
 
 :host(.bip-button--danger) {

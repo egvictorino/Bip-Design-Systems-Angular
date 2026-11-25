@@ -7,19 +7,19 @@
 
 /* ─── Variantes ──────────────────────────────────────────────────────────── */
 
-.bip-stats-card--outlined {
+:host(.bip-stats-card--outlined) {
   background-color: var(--color-surface-1);
   border: 1px solid var(--color-edge);
   padding: var(--space-5);
 }
 
-.bip-stats-card--flat {
+:host(.bip-stats-card--flat) {
   background-color: var(--color-surface-2);
   border: none;
   padding: var(--space-5);
 }
 
-.bip-stats-card--elevated {
+:host(.bip-stats-card--elevated) {
   background-color: var(--color-surface-1);
   border: none;
   padding: var(--space-5);
@@ -28,12 +28,12 @@
 
 /* ─── Tamaños ────────────────────────────────────────────────────────────── */
 
-.bip-stats-card--sm {
+:host(.bip-stats-card--sm) {
   padding: var(--space-4);
   gap: var(--space-2);
 }
 
-.bip-stats-card--lg {
+:host(.bip-stats-card--lg) {
   padding: var(--space-6);
   gap: var(--space-4);
 }
@@ -79,11 +79,11 @@
   line-height: 1;
 }
 
-.bip-stats-card--sm .bip-stats-card-value {
+:host(.bip-stats-card--sm) .bip-stats-card-value {
   font-size: var(--text-lg);
 }
 
-.bip-stats-card--lg .bip-stats-card-value {
+:host(.bip-stats-card--lg) .bip-stats-card-value {
   font-size: 2rem;
 }
 

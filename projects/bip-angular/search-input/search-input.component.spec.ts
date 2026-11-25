@@ -85,7 +85,9 @@ describe('BipSearchInput', () => {
   });
 
   it('con searchOnEnter, no emite search al escribir y sí al presionar Enter', async () => {
-    const { fixture } = await render(HostComponent, { componentProperties: { searchOnEnter: true } });
+    const { fixture } = await render(HostComponent, {
+      componentProperties: { searchOnEnter: true },
+    });
     const input = screen.getByRole('searchbox');
     const user = userEvent.setup();
     await user.type(input, 'ab');
@@ -128,7 +130,9 @@ describe('BipSearchInput', () => {
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Requerido');
   });
 

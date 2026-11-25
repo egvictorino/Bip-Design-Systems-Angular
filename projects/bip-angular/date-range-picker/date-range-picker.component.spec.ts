@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { enUS, mergeLocale, provideBipLocale } from '@bip-design-systems/angular/core';
 import { BipDateRangePicker } from './date-range-picker.component';
 import type { BipDateRange } from './date-range-picker.component';
 
@@ -44,6 +45,17 @@ class ReactiveFormHostComponent {
   readonly control = new FormControl<BipDateRange>({ from: null, to: null });
 }
 
+@Component({
+  imports: [BipDateRangePicker, ReactiveFormsModule],
+  template: `
+    <bip-date-range-picker [formControl]="control" label="Campo" />
+    <button type="button">Después</button>
+  `,
+})
+class TouchedHostComponent {
+  readonly control = new FormControl<BipDateRange>({ from: new Date(2026, 5, 10), to: null });
+}
+
 describe('BipDateRangePicker', () => {
   it('muestra el placeholder por defecto cuando no hay rango', async () => {
     await render(HostComponent);
@@ -51,7 +63,9 @@ describe('BipDateRangePicker', () => {
   });
 
   it('muestra solo "from" con puntos suspensivos cuando falta "to"', async () => {
-    await render(HostComponent, { componentProperties: { value: { from: new Date(2026, 5, 10), to: null } } });
+    await render(HostComponent, {
+      componentProperties: { value: { from: new Date(2026, 5, 10), to: null } },
+    });
     expect(screen.getByText('10/06/2026 – ...')).toBeInTheDocument();
   });
 
@@ -149,19 +163,72 @@ describe('BipDateRangePicker', () => {
     expect(screen.queryByRole('button', { name: 'Limpiar selección' })).not.toBeInTheDocument();
   });
 
+  describe('botón de limpiar (control hermano, no anidado en el trigger)', () => {
+    const setup = async () => {
+      const result = await render(HostComponent, {
+        componentProperties: { value: { from: new Date(2026, 5, 10), to: null } },
+      });
+      const clear = screen.getByRole('button', { name: 'Limpiar selección' });
+      const trigger = screen.getByRole('button', { name: /2026|junio|jun/ });
+      return { ...result, clear, trigger, user: userEvent.setup() };
+    };
+
+    it('es un <button> nativo que no es descendiente del trigger', async () => {
+      const { clear, trigger } = await setup();
+      expect(clear.tagName).toBe('BUTTON');
+      expect(trigger.contains(clear)).toBe(false);
+      expect(trigger.querySelector('[role="button"], button')).toBeNull();
+    });
+
+    it.each(['{Enter}', ' '])('se activa con el teclado (%j) y vacía el valor', async (key) => {
+      const { clear, user, fixture } = await setup();
+      clear.focus();
+      await user.keyboard(key);
+      expect(fixture.componentInstance.value).toEqual({ from: null, to: null });
+    });
+
+    it('el trigger lleva --clearable solo mientras hay valor', async () => {
+      const { trigger } = await setup();
+      expect(trigger).toHaveClass('bip-date-range-picker-trigger--clearable');
+    });
+
+    it('devuelve el foco al trigger y no abre el panel', async () => {
+      const { clear, trigger, user } = await setup();
+      await user.click(clear);
+      expect(trigger).toHaveFocus();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('no renderiza el botón de limpiar con disabled aunque haya valor', async () => {
+    const host = new ReactiveFormHostComponent();
+    host.control.setValue({ from: new Date(2026, 5, 10), to: null });
+    host.control.disable();
+    await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
+    expect(screen.queryByRole('button', { name: 'Limpiar selección' })).not.toBeInTheDocument();
+  });
+
   it('activa aria-invalid cuando error=true', async () => {
     await render(HostComponent, { componentProperties: { error: true } });
-    expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('button', { name: /DD\/MM\/AAAA/ })).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Rango requerido' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Rango requerido' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Rango requerido');
   });
 
   it('deshabilita "Mes anterior" al llegar al mes mínimo', async () => {
     await render(HostComponent, {
-      componentProperties: { value: { from: new Date(2026, 5, 15), to: null }, min: new Date(2026, 5, 10) },
+      componentProperties: {
+        value: { from: new Date(2026, 5, 15), to: null },
+        min: new Date(2026, 5, 10),
+      },
     });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /15\/06\/2026/ }));
@@ -181,7 +248,9 @@ describe('BipDateRangePicker', () => {
   });
 
   it('ArrowRight mueve el foco al día siguiente dentro de la grilla', async () => {
-    await render(HostComponent, { componentProperties: { value: { from: new Date(2026, 5, 1), to: null } } });
+    await render(HostComponent, {
+      componentProperties: { value: { from: new Date(2026, 5, 1), to: null } },
+    });
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /01\/06\/2026/ }));
     screen.getByRole('button', { name: /^lunes, 1 de junio de 2026$/ }).focus();
@@ -221,5 +290,148 @@ describe('BipDateRangePicker', () => {
     host.control.disable();
     await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
     expect(screen.getByRole('button', { name: 'Rango de estadía' })).toBeDisabled();
+  });
+});
+
+describe('BipDateRangePicker — touched y clic fuera con el botón de limpiar', () => {
+  const setup = async () => {
+    const result = await render(TouchedHostComponent);
+    const control = result.fixture.componentInstance.control;
+    const clear = screen.getByRole('button', { name: 'Limpiar selección' });
+    const trigger = document.querySelector<HTMLButtonElement>('.bip-date-range-picker-trigger')!;
+    return {
+      control,
+      clear,
+      trigger,
+      after: screen.getByRole('button', { name: 'Después' }),
+      user: userEvent.setup(),
+    };
+  };
+
+  it('tabular del trigger al botón de limpiar no marca touched', async () => {
+    const { control, trigger, clear, user } = await setup();
+    trigger.focus();
+    await user.tab();
+    expect(clear).toHaveFocus();
+    expect(control.touched).toBe(false);
+  });
+
+  it('salir del wrapper completo (limpiar → siguiente control) sí marca touched', async () => {
+    const { control, clear, after, user } = await setup();
+    clear.focus();
+    await user.tab();
+    expect(after).toHaveFocus();
+    expect(control.touched).toBe(true);
+  });
+
+  it('limpiar con el ratón no marca touched y deja el foco en el trigger', async () => {
+    const { control, clear, trigger, user } = await setup();
+    await user.click(clear);
+    expect(trigger).toHaveFocus();
+    expect(control.touched).toBe(false);
+  });
+
+  it('mousedown sobre limpiar no roba el foco (Safari/Firefox: relatedTarget nulo marcaría touched)', async () => {
+    const { clear, trigger } = await setup();
+    trigger.focus();
+    const notPrevented = clear.dispatchEvent(
+      new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    );
+    expect(notPrevented).toBe(false);
+  });
+
+  it('con el panel abierto, pulsar limpiar no lo cierra y vacía el valor', async () => {
+    const { control, trigger, clear, user } = await setup();
+    await user.click(trigger);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.click(clear);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(control.value).toEqual({ from: null, to: null });
+  });
+
+  it('un clic fuera del wrapper sigue cerrando el panel', async () => {
+    const { trigger, user } = await setup();
+    await user.click(trigger);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.click(document.body);
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+});
+
+@Component({
+  imports: [BipDateRangePicker],
+  template: `
+    <div dir="rtl">
+      <bip-date-range-picker label="Rango" [value]="value" />
+    </div>
+  `,
+})
+class RtlHostComponent {
+  value: BipDateRange = { from: new Date(2026, 0, 15), to: new Date(2026, 0, 20) };
+}
+
+describe('BipDateRangePicker — orden y aislamiento bidi del valor', () => {
+  // jsdom no aplica el algoritmo bidi: se fija la estructura (orden del DOM y `dir` del span que
+  // lo aísla), no el pintado, que cubre la baseline RTL de visual/.
+  const valueSpan = () => document.querySelector<HTMLElement>('.bip-date-range-picker-value')!;
+
+  it('aísla el valor con la dirección del locale dentro de un layout RTL', async () => {
+    await render(RtlHostComponent);
+    expect(valueSpan()).toHaveAttribute('dir', 'ltr');
+    expect(valueSpan().textContent?.trim()).toBe('15/01/2026 – 20/01/2026');
+  });
+
+  it('también aísla el rango parcial "inicio – ..."', async () => {
+    await render(RtlHostComponent, {
+      componentProperties: { value: { from: new Date(2026, 0, 15), to: null } },
+    });
+    expect(valueSpan()).toHaveAttribute('dir', 'ltr');
+    expect(valueSpan().textContent?.trim()).toBe('15/01/2026 – ...');
+  });
+
+  it('usa dir="rtl" con un locale de escritura RTL', async () => {
+    await render(RtlHostComponent, {
+      providers: [provideBipLocale(mergeLocale(enUS, { locale: 'he-IL' }))],
+    });
+    expect(valueSpan()).toHaveAttribute('dir', 'rtl');
+  });
+});
+
+describe('BipDateRangePicker — foco del panel', () => {
+  it('el diálogo atrapa el foco: anclas de cdkTrapFocus alrededor del panel', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: /DD\/MM\/AAAA/ }));
+    const dialog = await screen.findByRole('dialog');
+    // jsdom no simula Tab: el ciclo real se verifica en Docker (ver CHANGELOG).
+    await vi.waitFor(() => {
+      expect(dialog.previousElementSibling).toHaveClass('cdk-focus-trap-anchor');
+      expect(dialog.nextElementSibling).toHaveClass('cdk-focus-trap-anchor');
+    });
+  });
+
+  it('al completar el rango el foco vuelve al trigger (no cae a <body>)', async () => {
+    await render(HostComponent, {
+      componentProperties: { value: { from: new Date(2026, 5, 10), to: null } },
+    });
+    const user = userEvent.setup();
+    const trigger = screen.getByRole('button', { name: /10\/06\/2026/ });
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: /^lunes, 15 de junio de 2026$/ }));
+    await vi.waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+  });
+
+  it('el primer clic (fija "from") no cierra el panel ni mueve el foco al trigger', async () => {
+    await render(HostComponent);
+    const user = userEvent.setup();
+    const trigger = screen.getByRole('button', { name: /DD\/MM\/AAAA/ });
+    await user.click(trigger);
+    const dialog = screen.getByRole('dialog');
+    await user.click(dialog.querySelector<HTMLButtonElement>('[data-date]:not(:disabled)')!);
+    const stillOpen = screen.getByRole('dialog');
+    expect(stillOpen).toBeInTheDocument();
+    expect(stillOpen.contains(document.activeElement)).toBe(true);
+    expect(trigger).not.toHaveFocus();
   });
 });

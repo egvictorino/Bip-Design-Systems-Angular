@@ -34,7 +34,9 @@ describe('BipConfirmDialog', () => {
   it('renderiza título y descripción cuando open=true', async () => {
     await render(HostComponent);
     expect(screen.getByText('Confirmar eliminación')).toBeInTheDocument();
-    expect(screen.getByText('¿Estás seguro? Esta acción no se puede deshacer.')).toBeInTheDocument();
+    expect(
+      screen.getByText('¿Estás seguro? Esta acción no se puede deshacer.')
+    ).toBeInTheDocument();
   });
 
   it('no renderiza nada cuando open=false', async () => {

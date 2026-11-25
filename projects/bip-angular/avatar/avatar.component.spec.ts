@@ -38,7 +38,9 @@ describe('BipAvatar', () => {
   });
 
   it('alt explícito tiene prioridad sobre name', async () => {
-    await render(BipAvatar, { componentInputs: { name: 'Eduardo Gonzalez', alt: 'Foto de perfil' } });
+    await render(BipAvatar, {
+      componentInputs: { name: 'Eduardo Gonzalez', alt: 'Foto de perfil' },
+    });
     expect(screen.getByRole('img', { name: 'Foto de perfil' })).toBeInTheDocument();
   });
 

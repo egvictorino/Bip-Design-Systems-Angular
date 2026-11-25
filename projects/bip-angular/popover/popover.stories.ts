@@ -28,7 +28,10 @@ const meta: Meta<PopoverDemo> = {
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
   argTypes: {
-    placement: { control: 'select', options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'] },
+    placement: {
+      control: 'select',
+      options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
+    },
   },
 };
 

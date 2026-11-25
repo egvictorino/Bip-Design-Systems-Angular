@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { injectBipLocale } from '@bip-design-systems/angular/core';
 import { BipToastItem } from './toast-item.component';
 import { BipToast } from './toast.service';

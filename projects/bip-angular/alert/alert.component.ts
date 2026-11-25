@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  booleanAttribute,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { injectBipLocale } from '@bip-design-systems/angular/core';
 
 export type BipAlertVariant = 'info' | 'success' | 'warning' | 'danger';

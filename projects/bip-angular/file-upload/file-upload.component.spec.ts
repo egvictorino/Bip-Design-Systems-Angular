@@ -66,7 +66,9 @@ describe('BipFileUpload', () => {
   });
 
   it('reemplaza el archivo anterior cuando multiple=false', async () => {
-    const { fixture, container } = await render(HostComponent, { componentProperties: { value: [makeFile('a.pdf', 10)] } });
+    const { fixture, container } = await render(HostComponent, {
+      componentProperties: { value: [makeFile('a.pdf', 10)] },
+    });
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     const file = makeFile('b.pdf', 10);
     const user = userEvent.setup();
@@ -75,7 +77,9 @@ describe('BipFileUpload', () => {
   });
 
   it('acumula archivos cuando multiple=true', async () => {
-    const { fixture, container } = await render(HostComponent, { componentProperties: { multiple: true } });
+    const { fixture, container } = await render(HostComponent, {
+      componentProperties: { multiple: true },
+    });
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     const a = makeFile('a.pdf', 10);
     const b = makeFile('b.pdf', 10);
@@ -86,13 +90,17 @@ describe('BipFileUpload', () => {
   });
 
   it('rechaza archivos que exceden maxSize y emite rejected', async () => {
-    const { fixture, container } = await render(HostComponent, { componentProperties: { maxSize: 50 } });
+    const { fixture, container } = await render(HostComponent, {
+      componentProperties: { maxSize: 50 },
+    });
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     const tooBig = makeFile('big.pdf', 100);
     const user = userEvent.setup();
     await user.upload(input, tooBig);
     expect(fixture.componentInstance.value).toEqual([]);
-    expect(fixture.componentInstance.onRejected).toHaveBeenCalledWith([{ file: tooBig, reason: 'size' }]);
+    expect(fixture.componentInstance.onRejected).toHaveBeenCalledWith([
+      { file: tooBig, reason: 'size' },
+    ]);
   });
 
   it('rechaza archivos que exceden maxFiles', async () => {
@@ -104,11 +112,15 @@ describe('BipFileUpload', () => {
     const user = userEvent.setup();
     await user.upload(input, extra);
     expect(fixture.componentInstance.value).toHaveLength(1);
-    expect(fixture.componentInstance.onRejected).toHaveBeenCalledWith([{ file: extra, reason: 'count' }]);
+    expect(fixture.componentInstance.onRejected).toHaveBeenCalledWith([
+      { file: extra, reason: 'count' },
+    ]);
   });
 
   it('muestra la lista de archivos seleccionados', async () => {
-    await render(HostComponent, { componentProperties: { value: [makeFile('contrato.pdf', 2048)] } });
+    await render(HostComponent, {
+      componentProperties: { value: [makeFile('contrato.pdf', 2048)] },
+    });
     expect(screen.getByText('contrato.pdf')).toBeInTheDocument();
     expect(screen.getByText('2.0 KB')).toBeInTheDocument();
   });
@@ -149,7 +161,9 @@ describe('BipFileUpload', () => {
   });
 
   it('renderiza errorMessage con role="alert"', async () => {
-    await render(HostComponent, { componentProperties: { error: true, errorMessage: 'Adjunta al menos un archivo' } });
+    await render(HostComponent, {
+      componentProperties: { error: true, errorMessage: 'Adjunta al menos un archivo' },
+    });
     expect(screen.getByRole('alert')).toHaveTextContent('Adjunta al menos un archivo');
   });
 
@@ -165,7 +179,9 @@ describe('BipFileUpload', () => {
 
   it('propaga los cambios al FormControl', async () => {
     const host = new ReactiveFormHostComponent();
-    const { container } = await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
+    const { container } = await render(ReactiveFormHostComponent, {
+      componentProperties: { control: host.control },
+    });
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     const file = makeFile('nuevo.pdf', 10);
     const user = userEvent.setup();
@@ -176,7 +192,9 @@ describe('BipFileUpload', () => {
   it('setDisabledState() vía FormControl deshabilita el input', async () => {
     const host = new ReactiveFormHostComponent();
     host.control.disable();
-    const { container } = await render(ReactiveFormHostComponent, { componentProperties: { control: host.control } });
+    const { container } = await render(ReactiveFormHostComponent, {
+      componentProperties: { control: host.control },
+    });
     const input = container.querySelector('input[type="file"]') as HTMLInputElement;
     expect(input).toBeDisabled();
   });

@@ -92,12 +92,16 @@ export class BipSearchInput extends BipFormControlBase implements ControlValueAc
 
   private onChange: (value: string) => void = () => {};
 
-  protected readonly showClear = computed(() => !this.loading() && !this.disabled() && !!this.value());
+  protected readonly showClear = computed(
+    () => !this.loading() && !this.disabled() && !!this.value()
+  );
 
   protected readonly hasVisibleMessage = computed(
     () => (this.error() && !!this.errorMessage()) || !!this.helperText()
   );
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly labelClass = computed(() => {
     const classes = [LABEL_SIZE_CLASS[this.size()]];
@@ -118,14 +122,19 @@ export class BipSearchInput extends BipFormControlBase implements ControlValueAc
 
   protected readonly searchIconClass = computed(() => {
     const classes = [ICON_OFFSET_CLASS[this.size()]];
-    classes.push(this.error() ? 'bip-search-input-search-icon--error' : 'bip-search-input-search-icon--normal');
+    classes.push(
+      this.error() ? 'bip-search-input-search-icon--error' : 'bip-search-input-search-icon--normal'
+    );
     if (this.disabled()) classes.push('bip-search-input-search-icon--disabled');
     if (this.loading()) classes.push('bip-search-input-search-icon--spinning');
     return classes.join(' ');
   });
 
   protected readonly inputClass = computed(() => {
-    const classes = [`bip-search-input--${this.variant()}${this.error() ? '-error' : ''}`, INPUT_SIZE_CLASS[this.size()]];
+    const classes = [
+      `bip-search-input--${this.variant()}${this.error() ? '-error' : ''}`,
+      INPUT_SIZE_CLASS[this.size()],
+    ];
     return classes.join(' ');
   });
 

@@ -7,7 +7,13 @@ import { BipRadioGroup } from './radio-group.component';
   selector: 'bip-radio-group-demo',
   imports: [BipRadio, BipRadioGroup],
   template: `
-    <bip-radio-group label="Plan" [helperText]="helperText" [error]="error" [errorMessage]="errorMessage" size="md">
+    <bip-radio-group
+      label="Plan"
+      [helperText]="helperText"
+      [error]="error"
+      [errorMessage]="errorMessage"
+      size="md"
+    >
       <bip-radio value="free" label="Gratis" />
       <bip-radio value="pro" label="Pro" />
       <bip-radio value="enterprise" label="Empresa" />
@@ -32,7 +38,9 @@ type Story = StoryObj<RadioGroupDemo>;
 
 export const Default: Story = {};
 
-export const WithHelperText: Story = { args: { helperText: 'Puedes cambiar de plan en cualquier momento' } };
+export const WithHelperText: Story = {
+  args: { helperText: 'Puedes cambiar de plan en cualquier momento' },
+};
 
 export const WithError: Story = { args: { error: true, errorMessage: 'Debes elegir un plan' } };
 
@@ -49,5 +57,8 @@ export const WithError: Story = { args: { error: true, errorMessage: 'Debes eleg
 class RadioDisabledDemo {}
 
 export const DisabledOption: Story = {
-  render: () => ({ moduleMetadata: { imports: [RadioDisabledDemo] }, template: `<bip-radio-disabled-demo />` }),
+  render: () => ({
+    moduleMetadata: { imports: [RadioDisabledDemo] },
+    template: `<bip-radio-disabled-demo />`,
+  }),
 };

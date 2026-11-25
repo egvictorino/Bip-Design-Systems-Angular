@@ -17,6 +17,7 @@ import {
   untracked,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
+import { A11yModule } from '@angular/cdk/a11y';
 import { type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -45,7 +46,7 @@ const SIZE_CLASS: Record<BipSize, string> = {
  */
 @Component({
   selector: 'bip-date-picker',
-  imports: [BipCalendarGrid],
+  imports: [A11yModule, BipCalendarGrid],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,16 +78,24 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
 
   private onChange: (value: Date | null) => void = () => {};
 
-  @ViewChild('triggerRef', { static: true }) private readonly triggerRef!: ElementRef<HTMLButtonElement>;
-  @ViewChild('panelTemplate', { static: true }) private readonly panelTemplate!: TemplateRef<unknown>;
+  @ViewChild('triggerWrapperRef', { static: true })
+  private readonly triggerWrapperRef!: ElementRef<HTMLElement>;
+  @ViewChild('triggerRef', { static: true })
+  private readonly triggerRef!: ElementRef<HTMLButtonElement>;
+  @ViewChild('panelTemplate', { static: true })
+  private readonly panelTemplate!: TemplateRef<unknown>;
 
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly bipOverlay = inject(BipOverlay);
   private readonly injector = inject(Injector);
   private overlayRef: OverlayRef | null = null;
 
-  protected readonly hasVisibleMessage = computed(() => (this.error() && !!this.errorMessage()) || !!this.helperText());
-  protected readonly messageId = computed(() => (this.hasVisibleMessage() ? this.errorId : undefined));
+  protected readonly hasVisibleMessage = computed(
+    () => (this.error() && !!this.errorMessage()) || !!this.helperText()
+  );
+  protected readonly messageId = computed(() =>
+    this.hasVisibleMessage() ? this.errorId : undefined
+  );
 
   protected readonly gridStrings = computed<BipCalendarGridStrings>(() => {
     const dp = this.locale().datePicker;
@@ -111,8 +120,14 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
   protected readonly triggerClass = computed(() => {
     const classes = [SIZE_CLASS[this.size()]];
     if (this.error()) classes.push('bip-date-picker-trigger--error');
+    if (this.showClear()) classes.push('bip-date-picker-trigger--clearable');
     return classes.join(' ');
   });
+
+  /** El botón de limpiar es hermano del trigger (un control no puede anidarse en otro). */
+  protected readonly showClear = computed(
+    () => !!this.value() && !this.disabled() && !this.loading()
+  );
 
   protected readonly displayValue = computed(() => {
     const value = this.value();
@@ -173,17 +188,18 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
 
   protected onDaySelected(date: Date): void {
     this.emitChange(date);
-    this.closePanel();
+    // El foco real está en el panel: sin refocus caería a <body> al destruirse.
+    this.closePanel(true);
   }
 
   protected onTodaySelected(): void {
     this.emitChange(this.today);
-    this.closePanel();
+    this.closePanel(true);
   }
 
-  protected onClear(event: Event): void {
-    event.stopPropagation();
+  protected onClear(): void {
     this.emitChange(null);
+    this.triggerRef.nativeElement.focus();
   }
 
   protected onEscape(event: Event): void {
@@ -191,7 +207,13 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
     this.closePanel(true);
   }
 
-  protected onBlur(): void {
+  /**
+   * Touched solo cuando el foco sale del wrapper (trigger + limpiar): tabular del trigger al botón
+   * de limpiar no es "salir" del control.
+   */
+  protected onFocusOut(event: FocusEvent): void {
+    const next = event.relatedTarget;
+    if (next instanceof Node && this.triggerWrapperRef.nativeElement.contains(next)) return;
     this.markTouched();
   }
 
@@ -214,8 +236,20 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
           .position()
           .flexibleConnectedTo(this.triggerRef)
           .withPositions([
-            { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: GAP_PX },
-            { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -GAP_PX },
+            {
+              originX: 'start',
+              originY: 'bottom',
+              overlayX: 'start',
+              overlayY: 'top',
+              offsetY: GAP_PX,
+            },
+            {
+              originX: 'start',
+              originY: 'top',
+              overlayX: 'start',
+              overlayY: 'bottom',
+              offsetY: -GAP_PX,
+            },
           ])
           .withPush(true),
         scrollStrategy: this.bipOverlay.scrollStrategies.reposition(),
@@ -225,12 +259,15 @@ export class BipDatePicker extends BipFormControlBase implements ControlValueAcc
     );
     overlayRef.attach(new TemplatePortal(this.panelTemplate, this.viewContainerRef));
     overlayRef.outsidePointerEvents().subscribe((event) => {
-      const trigger = this.triggerRef.nativeElement;
-      if (event.target instanceof Node && trigger.contains(event.target)) return;
+      // El wrapper incluye el botón de limpiar: pulsarlo no cuenta como clic fuera.
+      const wrapper = this.triggerWrapperRef.nativeElement;
+      if (event.target instanceof Node && wrapper.contains(event.target)) return;
       this.closePanel();
     });
     this.overlayRef = overlayRef;
-    queueMicrotask(() => overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus());
+    queueMicrotask(() =>
+      overlayRef.overlayElement.querySelector<HTMLElement>('[role="dialog"]')?.focus()
+    );
   }
 
   private hidePanel(): void {

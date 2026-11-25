@@ -72,7 +72,9 @@ function toInlineJs(value: string): string {
 export function getThemeInitScript(options: ThemeInitScriptOptions = {}): string {
   const { storageKey, defaultTheme = 'square', defaultColorScheme = 'light' } = options;
   const safeTheme = VALID_THEMES.includes(defaultTheme) ? defaultTheme : 'square';
-  const safeColorScheme = VALID_COLOR_SCHEMES.includes(defaultColorScheme) ? defaultColorScheme : 'light';
+  const safeColorScheme = VALID_COLOR_SCHEMES.includes(defaultColorScheme)
+    ? defaultColorScheme
+    : 'light';
 
   const validThemesJs = VALID_THEMES.map((t) => toInlineJs(t)).join(',');
   const validColorSchemesJs = VALID_COLOR_SCHEMES.map((c) => toInlineJs(c)).join(',');

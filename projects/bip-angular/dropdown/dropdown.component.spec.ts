@@ -30,7 +30,9 @@ import { BipDropdownSubmenu } from './dropdown-submenu.component';
         <button type="button" bipDropdownItem disabled>Duplicar (deshabilitado)</button>
         <bip-dropdown-divider />
         <bip-dropdown-group label="Zona de peligro">
-          <button type="button" bipDropdownItem variant="danger" (click)="onDelete()">Eliminar</button>
+          <button type="button" bipDropdownItem variant="danger" (click)="onDelete()">
+            Eliminar
+          </button>
         </bip-dropdown-group>
         <button type="button" bipDropdownItemCheckbox [(checked)]="checked">Marcar</button>
         <bip-dropdown-submenu label="Más opciones">
@@ -139,7 +141,9 @@ describe('BipDropdown', () => {
   it('grupo tiene role="group" con su label', async () => {
     await render(HostComponent);
     await userEvent.click(screen.getByRole('button', { name: 'Opciones' }));
-    await waitFor(() => expect(screen.getByRole('group', { name: 'Zona de peligro' })).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByRole('group', { name: 'Zona de peligro' })).toBeInTheDocument()
+    );
   });
 
   it('item checkbox alterna aria-checked sin cerrar el menú', async () => {

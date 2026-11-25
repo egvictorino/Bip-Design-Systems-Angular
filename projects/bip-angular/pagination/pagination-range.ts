@@ -6,7 +6,11 @@ export type BipPaginationRangeItem = number | 'ellipsis';
  * `totalSlots = siblingCount*2 + 5` (primera página, última página, página actual,
  * `siblingCount` a cada lado, y hasta 2 elipsis).
  */
-export function getPageRange(page: number, totalPages: number, siblingCount = 1): BipPaginationRangeItem[] {
+export function getPageRange(
+  page: number,
+  totalPages: number,
+  siblingCount = 1
+): BipPaginationRangeItem[] {
   const totalSlots = siblingCount * 2 + 5;
 
   if (totalPages <= totalSlots) {
