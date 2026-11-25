@@ -8,6 +8,20 @@ pendientes; `1.0.0` cuando los Bloques 0-12 de `CLAUDE.md` estén completos).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-25
+
+> **Migración desde 0.1.0.** Revisa tus estilos propios antes de actualizar:
+>
+> - Las variantes de `BipText`, `BipCard`, `BipCardMedia`, `BipStatsCard`, `BipEmptyState`,
+>   `BipAlert`, `BipAvatar` y las celdas de tabla **ahora sí se aplican** (antes no llegaban al
+>   host), y sus clases por defecto le ganan a una clase propia puesta en el componente:
+>   `<bip-card class="p-4">` pierde ese padding y `bipText` ya no hereda color, tamaño ni peso. Usa
+>   los inputs (`padding`, `radius`, `color`, `size`…).
+> - `--focus-ring` se resuelve en cada elemento desde `base.css` (lo carga `bip.css`): un
+>   `--focus-ring` completo declarado en un ancestro ya no se hereda; ajusta `--focus-ring-width`,
+>   `--focus-ring-offset` o `--focus-ring-color`. Quien importe hojas sueltas de `styles/` debe
+>   incluir `base.css`.
+
 ### Added
 
 - `core/utils`: `localeDirection(tag)` → `'ltr' | 'rtl'` según el script del locale (`Intl.Locale`,
