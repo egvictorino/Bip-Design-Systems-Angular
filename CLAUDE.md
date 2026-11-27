@@ -139,9 +139,9 @@ Un componente está terminado solo si tiene **todo** esto:
 
 ## Estado
 
-Bloques 0–12 completos; `0.1.0` publicada en npm (provenance), Storybook en Pages. Detalle,
-checklist de paridad con React y hallazgos de calidad: [docs/plan-maestro.md](docs/plan-maestro.md)
-y `docs/reviews/bloque-11.md`.
+Bloques 0–12 completos; `0.2.0` publicada en npm (provenance), Storybook en Pages. Versiones y
+cambios: [CHANGELOG.md](CHANGELOG.md). Detalle, checklist de paridad con React y hallazgos de
+calidad: [docs/plan-maestro.md](docs/plan-maestro.md) y `docs/reviews/bloque-11.md`.
 
 ## Comandos
 
